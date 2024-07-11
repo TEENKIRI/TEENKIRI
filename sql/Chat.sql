@@ -1,16 +1,11 @@
-CREATE TABLE Games (
-    game_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    game_type ENUM('running', 'climbing') NOT NULL,
-    coins_bet INT NOT NULL,
-    coins_won INT DEFAULT 0,
-    played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    rank INT,
-    daily_game_count INT DEFAULT 0,
-    played_date DATE,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
+CREATE TABLE Chats ( 
+chat_id INT AUTO_INCREMENT PRIMARY KEY,
+user_id INT NOT NULL,
+course_id INT,
+message TEXT NOT NULL,
+sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (user_id) REFERENCES Users(user_id),
+FOREIGN KEY (course_id) REFERENCES Courses(course_id) );
 
 
 -- chat_id: 고유한 채팅 식별자.
