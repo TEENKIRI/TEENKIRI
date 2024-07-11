@@ -1,10 +1,10 @@
 CREATE TABLE Avatars (
-    avatar_id INT AUTO_INCREMENT PRIMARY KEY,
+    avatar_id bigint AUTO_INCREMENT PRIMARY KEY,
     avatar_name VARCHAR(50) NOT NULL,
     rank ENUM('A', 'B', 'C', 'D', 'E', 'F')
 );
 
--- 45개의 티니핑 캐릭터 추가
+-- 45개의 티니핑 캐릭터 추가 방식 예
 INSERT INTO Avatars (avatar_name, rank)
 VALUES 
     ('AvatarA', 'A'), ('AvatarB', 'B'), ..., ('AvatarAN', 'F');

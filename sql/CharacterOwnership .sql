@@ -1,7 +1,7 @@
 CREATE TABLE CharacterOwnership (
-    ownership_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    avatar_id INT NOT NULL,
+    ownership_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
+    avatar_id bigint NOT NULL,
     acquired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (avatar_id) REFERENCES Avatars(avatar_id)

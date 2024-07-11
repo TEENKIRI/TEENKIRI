@@ -1,7 +1,8 @@
 CREATE TABLE Users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     phone VARCHAR(15),
     address VARCHAR(255),
     email VARCHAR(100),
@@ -15,6 +16,7 @@ CREATE TABLE Users (
 -- user_id: 고유한 사용자 식별자.
 -- username: 사용자의 아이디.
 -- password: 암호화된 비밀번호.
+-- del_yn: 회원탈퇴 여부.
 -- phone: 사용자의 전화번호.
 -- address: 사용자의 주소.
 -- email: 사용자의 이메일 주소.

@@ -1,9 +1,9 @@
 CREATE TABLE Games (
-    game_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    game_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
     game_type ENUM('running', 'climbing') NOT NULL,
-    coins_bet INT NOT NULL,
-    coins_won INT DEFAULT 0,
+    coins_bet bigint NOT NULL,
+    coins_won bigint DEFAULT 0,
     played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );

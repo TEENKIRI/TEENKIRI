@@ -1,8 +1,8 @@
 CREATE TABLE Subject (
-    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id bigint AUTO_INCREMENT PRIMARY KEY,
     category ENUM('Korean', 'English', 'Math', 'Science') NOT NULL,
     grade ENUM('1', '2', '3', '4', '5', '6') NOT NULL,
-    teacher_id INT,
+    teacher_id bigint,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     rating FLOAT DEFAULT 0,

@@ -1,7 +1,7 @@
 CREATE TABLE Reviews (
-    review_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    course_id INT NOT NULL,
+    review_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
+    course_id bigint NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
