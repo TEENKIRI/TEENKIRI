@@ -7,7 +7,6 @@ CREATE TABLE Coins (
 );
 
 
-
 -- coin_id: 고유한 코인 식별자.
 -- user_id: 사용자의 ID.
 -- amount: 보유 코인 수.
