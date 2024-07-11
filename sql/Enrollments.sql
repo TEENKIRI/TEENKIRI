@@ -1,8 +1,8 @@
 CREATE TABLE Enrollments (
-    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    course_id INT NOT NULL,
-    progress INT DEFAULT 0,
+    enrollment_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
+    course_id bigint NOT NULL,
+    progress bigint DEFAULT 0,
     is_completed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),

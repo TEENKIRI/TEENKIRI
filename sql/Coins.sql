@@ -1,11 +1,10 @@
 CREATE TABLE Coins (
-    coin_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    coin_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
     amount INT NOT NULL DEFAULT 0,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
-
 
 -- coin_id: 고유한 코인 식별자.
 -- user_id: 사용자의 ID.

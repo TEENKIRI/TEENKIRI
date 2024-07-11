@@ -1,13 +1,13 @@
 CREATE TABLE Lectures (
-    lecture_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_id INT NOT NULL,
+    lecture_id bigint AUTO_INCREMENT PRIMARY KEY,
+    course_id bigint NOT NULL,
     title VARCHAR(255) NOT NULL,
     video_url VARCHAR(255),
-    progress INT DEFAULT 0,
+    progress bigint DEFAULT 0,
     quiz_score INT DEFAULT 0,
-    coin_reward INT DEFAULT 1,
+    coin_reward bigint DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    teacher_id INT,
+    teacher_id bigint,
     FOREIGN KEY (course_id) REFERENCES Courses(course_id),
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );

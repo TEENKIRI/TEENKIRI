@@ -1,6 +1,6 @@
 CREATE TABLE Payments (
-    payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    payment_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     payment_method ENUM('card', 'paypal', 'coupon') NOT NULL,
     payment_type ENUM('subscription', 'single_course') NOT NULL,
