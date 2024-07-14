@@ -1,12 +1,12 @@
 CREATE TABLE QnA (
     question_id bigint AUTO_INCREMENT PRIMARY KEY,
-    course_id bigint NOT NULL,
+    subject_id bigint NOT NULL,
     user_id bigint NOT NULL,
     question_text TEXT NOT NULL,
     answer_text TEXT,
     answered_by bigint,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (course_id) REFERENCES Courses(course_id),
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (answered_by) REFERENCES Users(user_id)
 );
