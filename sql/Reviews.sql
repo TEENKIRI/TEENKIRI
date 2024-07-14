@@ -1,12 +1,12 @@
 CREATE TABLE Reviews (
     review_id bigint AUTO_INCREMENT PRIMARY KEY,
     user_id bigint NOT NULL,
-    course_id bigint NOT NULL,
+    subject_id bigint NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
 
 

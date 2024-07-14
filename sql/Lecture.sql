@@ -1,6 +1,6 @@
 CREATE TABLE Lectures (
     lecture_id bigint AUTO_INCREMENT PRIMARY KEY,
-    course_id bigint NOT NULL,
+    subject_id bigint NOT NULL,
     title VARCHAR(255) NOT NULL,
     video_url VARCHAR(255),
     progress bigint DEFAULT 0,
@@ -8,7 +8,7 @@ CREATE TABLE Lectures (
     coin_reward bigint DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     teacher_id bigint,
-    FOREIGN KEY (course_id) REFERENCES Courses(course_id),
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
 
