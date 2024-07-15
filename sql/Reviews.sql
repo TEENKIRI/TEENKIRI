@@ -1,3 +1,4 @@
+
 CREATE TABLE Reviews (
     review_id bigint AUTO_INCREMENT PRIMARY KEY,
     user_id bigint NOT NULL,
@@ -9,10 +10,9 @@ CREATE TABLE Reviews (
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
 
-
 -- review_id: 고유한 리뷰 식별자.
 -- user_id: 리뷰 작성자의 ID.
--- course_id: 리뷰 대상 강좌의 ID.
+-- subject_id: 리뷰 대상 강좌의 ID.
 -- rating: 강좌 평점(1~5).
 -- review_text: 리뷰 내용.
 -- created_at: 리뷰 작성 시각.
