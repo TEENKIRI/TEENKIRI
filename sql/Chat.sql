@@ -1,12 +1,12 @@
-CREATE TABLE Chats ( 
-chat_id bigint AUTO_INCREMENT PRIMARY KEY,
-user_id bigint NOT NULL,
-subject_id bigint,
-message TEXT NOT NULL,
-sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-FOREIGN KEY (user_id) REFERENCES Users(user_id),
-FOREIGN KEY (subject_id) REFERENCES Subject(subject_id) );
-
+CREATE TABLE Chats (
+    chat_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint NOT NULL,
+    subject_id bigint,
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
+);
 
 -- chat_id: 고유한 채팅 식별자.
 -- user_id: 메시지를 보낸 사용자의 ID.

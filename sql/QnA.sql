@@ -11,6 +11,7 @@ CREATE TABLE QnA (
     FOREIGN KEY (answered_by) REFERENCES Users(user_id)
 );
 
+
 -- question_id: 고유한 질문 식별자.
 -- course_id: 질문이 속한 강좌의 ID.
 -- user_id: 질문 작성자의 ID.

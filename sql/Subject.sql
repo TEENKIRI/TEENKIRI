@@ -10,7 +10,6 @@ CREATE TABLE Subject (
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
 
-
 -- subject_id: 고유한 강좌 식별자.
 -- category: 강좌의 카테고리(Korean, English, Math, Science).
 -- grade: 강좌 대상 학년(1~6).
@@ -19,4 +18,3 @@ CREATE TABLE Subject (
 -- description: 강좌 설명.
 -- rating: 강좌 평점.
 -- created_at: 강좌 생성 시각.
--- FOREIGN KEY (teacher_id) REFERENCES Users(user_id): 강좌를 등록한 강사의 외래키 제약 조건.
