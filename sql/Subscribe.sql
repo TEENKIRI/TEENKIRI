@@ -1,5 +1,5 @@
 CREATE TABLE  (
-    subscribe_id bigint AUTO_INCREMENT PRIMARY KEY,  -- 찜 ID가 필요한지 논의 논의 논의(필요할 것 같기두 합니다)
+    subscribe_id bigint AUTO_INCREMENT PRIMARY KEY, 
     user_id bigint NOT NULL,
     subject_id bigint NOT NULL,
     wish_type ENUM('wishlist', 'enrolled') NOT NULL,

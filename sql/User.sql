@@ -6,9 +6,15 @@ CREATE TABLE Users (
     phone varchar(20) NOT NULL UNIQUE,
     address VARCHAR(255),
     email VARCHAR(100) NOT NULL UNIQUE,
+    nickname VARCHAR(100) NOT NULL UNIQUE,
     user_type ENUM('student', 'teacher', 'admin') NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    report_count INT,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
+    FOREIGN KEY (report_id) REFERENCES Reports(report_id)
+
 );
 
 -- user_id: 고유한 사용자 식별자.
@@ -21,3 +27,4 @@ CREATE TABLE Users (
 -- user_type: 사용자의 유형(student, teacher, admin).
 -- is_verified: 사용자 인증 여부.
 -- created_at: 계정 생성 시각.
+-- update_at: 계정 수정 시각.
