@@ -6,6 +6,7 @@ CREATE TABLE Lectures (
     progress float DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     teacher_id bigint,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
@@ -19,3 +20,4 @@ CREATE TABLE Lectures (
 -- progress: 강의 진행률.
 -- created_at: 강의 생성 시각.
 -- teacher_id: 강의를 진행하는 강사의 ID.
+-- del_yn : 강의 삭제 여부

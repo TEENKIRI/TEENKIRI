@@ -8,6 +8,17 @@ CREATE TABLE Chats (
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
 
+-- mySql에서 아래와 같은 이벤트 스케줄러를 통해 이틀마다 데이터를 삭제하도록 이벤트를 생성할 수 있음.
+CREATE EVENT IF NOT EXISTS delete_old_chats
+ON SCHEDULE EVERY 1 DAY
+DO
+  DELETE FROM Chats
+  WHERE sent_at < (NOW() - INTERVAL 2 DAY);
+
+-- 이벤트 스케줄러를 활성화하는 방법?
+SET GLOBAL event_scheduler = ON;
+
+
 -- chat_id: 고유한 채팅 식별자.
 -- user_id: 메시지를 보낸 사용자의 ID.
 -- subject_id: 해당 강좌의 ID (선택 사항임).
@@ -37,17 +48,6 @@ CREATE TABLE Reports (
 -- FOREIGN KEY (reporter_id) REFERENCES Users(user_id): 신고한 사용자의 외래키 제약 조건.
 -- FOREIGN KEY (reported_user_id) REFERENCES Users(user_id): 신고된 사용자의 외래키 제약 조건.
 -- FOREIGN KEY (chat_id) REFERENCES Chats(chat_id): 신고된 채팅 메시지의 외래키 제약 조건.
-
-
--- mySql에서 아래와 같은 이벤트 스케줄러를 통해 이틀마다 데이터를 삭제하도록 이벤트를 생성할 수 있음.
-CREATE EVENT IF NOT EXISTS delete_old_chats
-ON SCHEDULE EVERY 1 DAY
-DO
-  DELETE FROM Chats
-  WHERE sent_at < (NOW() - INTERVAL 2 DAY);
-
--- 이벤트 스케줄러를 활성화하는 방법?
-SET GLOBAL event_scheduler = ON;
 
 
 CREATE TABLE Enrollments (

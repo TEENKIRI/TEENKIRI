@@ -7,6 +7,7 @@ CREATE TABLE QnA (
     answered_by bigint,
     answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (answered_by) REFERENCES Users(user_id)
@@ -21,3 +22,4 @@ CREATE TABLE QnA (
 -- answered_by: 답변 작성자의 ID.
 -- created_at: 질문 작성 시각.
 -- answered_at: 답변 작성 시각.
+-- del_yn : 게시판 질문 삭제 여부
