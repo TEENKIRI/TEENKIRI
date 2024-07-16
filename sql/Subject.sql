@@ -8,6 +8,8 @@ CREATE TABLE Subject (
     rating FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
 
@@ -21,4 +23,5 @@ CREATE TABLE Subject (
 -- description: 강좌 설명.
 -- rating: 강좌 평점.
 -- created_at: 강좌 생성 시각.
--- del_yn: 강좌 삭제 여부
+-- del_yn: 강좌 삭제 여부.
+-- update_at: 강좌 수정 시각.

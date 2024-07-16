@@ -7,6 +7,8 @@ CREATE TABLE Reviews (
     review_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
@@ -18,3 +20,4 @@ CREATE TABLE Reviews (
 -- review_text: 리뷰 내용.
 -- created_at: 리뷰 작성 시각.
 -- del_yn : 리뷰 삭제 여부
+-- update_at: 리뷰 수정 시각
