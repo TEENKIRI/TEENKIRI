@@ -6,6 +6,7 @@ CREATE TABLE Reviews (
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
@@ -16,3 +17,4 @@ CREATE TABLE Reviews (
 -- rating: 강좌 평점(1~5).
 -- review_text: 리뷰 내용.
 -- created_at: 리뷰 작성 시각.
+-- del_yn : 리뷰 삭제 여부

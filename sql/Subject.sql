@@ -7,8 +7,11 @@ CREATE TABLE Subject (
     description TEXT,
     rating FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
+
+-- 등록한 강좌 입장에서
 
 -- subject_id: 고유한 강좌 식별자.
 -- category: 강좌의 카테고리(Korean, English, Math, Science).
@@ -18,3 +21,4 @@ CREATE TABLE Subject (
 -- description: 강좌 설명.
 -- rating: 강좌 평점.
 -- created_at: 강좌 생성 시각.
+-- del_yn: 강좌 삭제 여부
