@@ -16,6 +16,3 @@ CREATE TABLE Reports (
 -- chat_id: 신고된 채팅 메시지의 ID.
 -- reason: 신고 이유.
 -- created_at: 신고 접수 시각.
--- FOREIGN KEY (reporter_id) REFERENCES Users(user_id): 신고한 사용자의 외래키 제약 조건.
--- FOREIGN KEY (reported_user_id) REFERENCES Users(user_id): 신고된 사용자의 외래키 제약 조건.
--- FOREIGN KEY (chat_id) REFERENCES Chats(chat_id): 신고된 채팅 메시지의 외래키 제약 조건.
