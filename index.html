@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>video test html</title>
+    <link href="./static/lib/videojs/video-js.min.css" rel="stylesheet"/>
+</head>
+<style>
+    body>div{width:80%; max-width: 1000px; display: flex; flex-direction: column; margin: auto;}
+</style>
+<body>
+    <div>
+        <h1>video test html 입니당</h1>
+        <div>
+            <video controls id="lecture_movie" class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9" 
+                oncontextmenu="return false;">
+                <source src="./static/images/video1.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    
+    <script src="./static/lib/jquery-1.12.4.min.js"></script>
+    <script src="./static/lib/videojs/7.8.4/video.js"></script>
+    <script src="./static/js/video.js"></script>
+</body>
+</html>
