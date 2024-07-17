@@ -13,4 +13,4 @@ CREATE TABLE  (
 -- subject_id: 과목 ID (외래 키, Subject 테이블 참조) - 찜하거나 수강한 과목의 식별자.
 -- wish_type: 행동 유형 ('wish' 또는 'enrolled') - 사용자가 과목을 찜했는지(wishlist), 수강했는지(enrolled)를 나타냄.
     -- 또는 ENUM으로 선언도 가능. -> del_yn ENUM('Y', 'N') DEFAULT 'N'  (Y는 wish N은 위시 X)
--- created_at: 생성 시각 - 결제 항목이 생성된 날짜와 시간
+-- created_at: 생성 시각 - 결제 항목이 생성된 날짜와 시간.

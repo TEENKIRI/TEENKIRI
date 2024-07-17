@@ -9,7 +9,6 @@ CREATE TABLE Subject (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
 );
 

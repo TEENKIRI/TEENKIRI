@@ -8,7 +8,6 @@ CREATE TABLE Reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
