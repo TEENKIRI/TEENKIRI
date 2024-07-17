@@ -12,7 +12,6 @@ CREATE TABLE Reports (
     FOREIGN KEY (chat_id) REFERENCES Chats(chat_id)
 );
 
-
 -- report_id: 고유한 신고 식별자.
 -- reporter_id: 신고를 한 사용자의 ID.
 -- reported_user_id: 신고된 사용자의 ID.

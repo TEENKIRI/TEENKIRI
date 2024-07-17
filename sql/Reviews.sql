@@ -1,4 +1,3 @@
-
 CREATE TABLE Reviews (
     review_id bigint AUTO_INCREMENT PRIMARY KEY,
     user_id bigint NOT NULL,

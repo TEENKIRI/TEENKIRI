@@ -1,20 +1,18 @@
 CREATE TABLE Users (
-    user_id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
-    phone varchar(20) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL UNIQUE,
     address VARCHAR(255),
     email VARCHAR(100) NOT NULL UNIQUE,
     nickname VARCHAR(100) NOT NULL UNIQUE,
     user_type ENUM('student', 'teacher', 'admin') NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     report_count INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
-    FOREIGN KEY (report_id) REFERENCES Reports(report_id)
-
+    deleted_at TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N'
 );
 
 -- user_id: 고유한 사용자 식별자.
