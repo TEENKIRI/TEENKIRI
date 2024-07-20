@@ -47,7 +47,7 @@ public class PostController {
     @GetMapping("detail/{id}")
     public String postDetailDto(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.postDetail(id));
-        return "post/detail";  // 템플릿 경로 수정
+        return "post/detail";
     }
 
     // 게시물을 업데이트합니다.

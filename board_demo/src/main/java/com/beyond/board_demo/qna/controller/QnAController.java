@@ -1,5 +1,8 @@
 package com.beyond.board_demo.qna.controller;
 
+import com.beyond.board_demo.comment.dto.CommentResDto;
+import com.beyond.board_demo.comment.dto.CommentSaveReqDto;
+import com.beyond.board_demo.comment.service.CommentService;
 import com.beyond.board_demo.qna.dto.QnAAnswerReqDto;
 import com.beyond.board_demo.qna.dto.QnADetailDto;
 import com.beyond.board_demo.qna.dto.QnAListResDto;
@@ -17,10 +20,12 @@ import java.util.List;
 public class QnAController {
 
     private final QnAService qnAService;
+    private final CommentService commentService;
 
     @Autowired
-    public QnAController(QnAService qnAService) {
+    public QnAController(QnAService qnAService, CommentService commentService) {
         this.qnAService = qnAService;
+        this.commentService = commentService;
     }
 
     @GetMapping("create")
@@ -46,13 +51,27 @@ public class QnAController {
         return "qna/list";
     }
 
-    @GetMapping("detail/{id}")
+    //    @GetMapping("detail/{id}")
+//    public String getQuestionDetail(@PathVariable Long id, Model model) {
+//        QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
+//        model.addAttribute("question", questionDetail);
+//        return "qna/detail";
+//    }
+//    @GetMapping("detail/{id}")
+//    public String getQuestionDetail(@PathVariable Long id, Model model) {
+//        QnADetailDto qnaDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
+//        model.addAttribute("qna", qnaDetail);
+//        List<CommentResDto> comments = commentService.getCommentsByQnaId(id);
+//        model.addAttribute("comments", comments);
+//        return "qna/detail";
+//    }
+    @GetMapping("/detail/{id}")
     public String getQuestionDetail(@PathVariable Long id, Model model) {
-        QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
-        model.addAttribute("question", questionDetail);
+        QnADetailDto question = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
+//        List<CommentSaveReqDto> comments = qnAService.getCommentsByQnAId(id);
+        model.addAttribute("question", question);
         return "qna/detail";
     }
-
 
     @GetMapping("answer/{id}")
     public String answerQuestionForm(@PathVariable Long id, Model model) {

@@ -12,22 +12,49 @@
   <div class="page-header"><h3>Notice Detail</h3></div>
   <table class="table">
     <tr>
-      <td>제목</td>
+      <td>Title</td>
       <td th:text="${notice.title}"></td>
     </tr>
     <tr>
-      <td>작성자</td>
+      <td>Content</td>
+      <td th:text="${notice.content}"></td>
+    </tr>
+    <tr>
+      <td>Author</td>
       <td th:text="${notice.userNickname}"></td>
     </tr>
     <tr>
-      <td>Date</td>
-      <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
+      <td>Created Time</td>
+      <td th:text="${notice.createdTime}"></td>
     </tr>
     <tr>
-      <td>내용</td>
-      <td th:text="${notice.content}"></td>
+      <td>Updated Time</td>
+      <td th:text="${notice.updatedTime}"></td>
     </tr>
   </table>
+
+<!--  <div class="comments">-->
+<!--    <h4>Comments</h4>-->
+<!--    <div th:each="comment : ${comments}">-->
+<!--      <p><strong th:text="${comment.userNickname}"></strong>: <span th:text="${comment.content}"></span></p>-->
+<!--      <p><small th:text="${comment.createdTime}"></small></p>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="add-comment">-->
+<!--    <h4>Add a Comment</h4>-->
+<!--    <form th:action="@{/comment/create/notice/{noticeId}(noticeId=${notice.id})}" method="post">-->
+<!--      <div class="form-group">-->
+<!--        <label for="content">Content</label>-->
+<!--        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>-->
+<!--      </div>-->
+<!--      <div class="form-group">-->
+<!--        <label for="userEmail">Email</label>-->
+<!--        <input type="email" class="form-control" id="userEmail" name="userEmail" required>-->
+<!--      </div>-->
+<!--      <button type="submit" class="btn btn-primary mt-3">Submit</button>-->
+<!--    </form>-->
+<!--  </div>-->
 </div>
 </body>
 </html>

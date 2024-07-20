@@ -37,6 +37,7 @@ public class Notice extends BaseTimeEntity {
                 .content(this.getContent())
                 .userNickname(this.getUser().getNickname())
                 .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
