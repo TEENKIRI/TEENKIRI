@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QnA 상세보기</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="common/header :: headerFragment"></div>
+<div class="container">
+  <div class="page-header"><h3>QnA 상세보기</h3></div>
+  <table class="table">
+    <tr>
+      <td>작성자</td>
+      <td th:text="${question.questionUserNickname}"></td>
+    </tr>
+    <tr>
+      <td>제목</td>
+      <td th:text="${question.title}"></td>
+    </tr>
+    <tr>
+      <td>작성 시간</td>
+      <td th:text="${#temporals.format(question.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
+      <td>질문 내용</td>
+      <td th:text="${question.questionText}"></td>
+    </tr>
+    <tr>
+      <td>답변자</td>
+      <td th:if="${question.answeredByNickname != null}" th:text="${question.answeredByNickname}"></td>
+      <td th:if="${question.answeredByNickname == null}">답변 없음</td>
+    </tr>
+    <tr>
+      <td>답변 내용</td>
+      <td th:if="${question.answerText != null}" th:text="${question.answerText}"></td>
+      <td th:if="${question.answerText == null}">답변 없음</td>
+    </tr>
+    <tr>
+      <td>답변 시간</td>
+      <td th:if="${question.answeredAt != null}" th:text="${#temporals.format(question.answeredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+      <td th:if="${question.answeredAt == null}">답변 없음</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

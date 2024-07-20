@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QnA 작성</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="common/header :: headerFragment"></div>
+<div class="container">
+  <div class="page-header"><h3>QnA 작성</h3></div>
+  <form th:action="@{/qna/create}" method="post">
+    <div class="form-group">
+      <label for="userEmail">이메일</label>
+      <input type="email" class="form-control" name="userEmail" id="userEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="title">제목</label>
+      <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="form-group">
+      <label for="questionText">질문 내용</label>
+      <textarea class="form-control" name="questionText" id="questionText" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">제출</button>
+  </form>
+</div>
+</body>
+</html>
