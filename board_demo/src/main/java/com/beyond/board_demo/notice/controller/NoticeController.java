@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -30,9 +29,9 @@ public class NoticeController {
     }
 
     @PostMapping("create")
-    public String createNotice(@ModelAttribute NoticeSaveReqDto dto, Principal principal, Model model) {
+    public String createNotice(@ModelAttribute NoticeSaveReqDto dto, Model model) {
         try {
-            noticeService.createNotice(dto, principal.getName());
+            noticeService.createNotice(dto, dto.getUserEmail());
             return "redirect:/notice/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

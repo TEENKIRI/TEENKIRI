@@ -3,6 +3,7 @@
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.core.userdetails.User;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 //import org.springframework.security.web.SecurityFilterChain;
@@ -33,13 +34,13 @@
 //    @Bean
 //    public UserDetailsService userDetailsService() {
 //        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(org.springframework.security.core.userdetails.User
-//                .withUsername("admin")
+//        manager.createUser(User
+//                .withUsername("admin@domain.com")
 //                .password("{noop}password") // {noop} is used to indicate no password encoder
 //                .roles("ADMIN")
 //                .build());
-//        manager.createUser(org.springframework.security.core.userdetails.User
-//                .withUsername("user")
+//        manager.createUser(User
+//                .withUsername("user@domain.com")
 //                .password("{noop}password")
 //                .roles("USER")
 //                .build());
