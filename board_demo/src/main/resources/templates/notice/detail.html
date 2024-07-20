@@ -12,11 +12,11 @@
   <div class="page-header"><h3>Notice Detail</h3></div>
   <table class="table">
     <tr>
-      <td>Title</td>
+      <td>제목</td>
       <td th:text="${notice.title}"></td>
     </tr>
     <tr>
-      <td>Author</td>
+      <td>작성자</td>
       <td th:text="${notice.userNickname}"></td>
     </tr>
     <tr>
@@ -24,7 +24,7 @@
       <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     <tr>
-      <td>Content</td>
+      <td>내용</td>
       <td th:text="${notice.content}"></td>
     </tr>
   </table>

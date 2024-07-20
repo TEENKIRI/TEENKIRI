@@ -16,8 +16,8 @@
   <table class="table">
     <thead>
     <tr>
-      <th>Title</th>
-      <th>Author</th>
+      <th>제목</th>
+      <th>작성자</th>
       <th>Date</th>
     </tr>
     </thead>
@@ -26,6 +26,7 @@
       <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}"></a></td>
       <td th:text="${notice.userNickname}"></td>
       <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
+      <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" class="btn btn-primary">상세보기</a></td>
     </tr>
     </tbody>
   </table>
