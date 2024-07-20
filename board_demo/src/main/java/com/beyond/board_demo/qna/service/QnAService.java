@@ -1,0 +1,71 @@
+package com.beyond.board_demo.qna.service;
+
+import com.beyond.board_demo.qna.domain.QnA;
+import com.beyond.board_demo.qna.dto.QnAAnswerReqDto;
+import com.beyond.board_demo.qna.dto.QnAListResDto;
+import com.beyond.board_demo.qna.dto.QnASaveReqDto;
+import com.beyond.board_demo.qna.repository.QnARepository;
+import com.beyond.board_demo.user.domain.User;
+import com.beyond.board_demo.user.repository.UserRepository;
+import com.beyond.board_demo.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)
+public class QnAService {
+
+    private final QnARepository qnARepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
+
+    @Autowired
+    public QnAService(QnARepository qnARepository, UserRepository userRepository, UserService userService) {
+        this.qnARepository = qnARepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
+
+    @Transactional
+    public QnA createQuestion(QnASaveReqDto dto) {
+        User user = userService.findByEmail(dto.getUserEmail());
+        QnA qnA = dto.toEntity(user);
+        return qnARepository.save(qnA);
+    }
+
+    public List<QnAListResDto> qnaList() {
+        List<QnA> qnas = qnARepository.findAll();
+        List<QnAListResDto> qnaList = new ArrayList<>();
+        for (QnA qna : qnas) {
+            qnaList.add(qna.listFromEntity());
+        }
+        return qnaList;
+    }
+
+    public QnA getQuestionDetail(Long id) {
+        return qnARepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+    }
+
+    @Transactional
+    public QnA answerQuestion(Long id, QnAAnswerReqDto dto) {
+        QnA qna = qnARepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+
+        User answeredBy = userService.findByEmail(dto.getAnswererEmail());
+        if (answeredBy == null) {
+            throw new EntityNotFoundException("Answerer not found");
+        }
+
+        qna.setAnswerText(dto.getAnswerText());
+        qna.setAnsweredBy(answeredBy);
+        qna.setAnsweredAt(LocalDateTime.now());
+        return qnARepository.save(qna);
+    }
+}
