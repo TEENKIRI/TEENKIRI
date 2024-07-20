@@ -1,5 +1,8 @@
 package com.beyond.board_demo.qna.service;
 
+import com.beyond.board_demo.comment.domain.Comment;
+import com.beyond.board_demo.comment.dto.CommentSaveReqDto;
+import com.beyond.board_demo.comment.repository.CommentRepository;
 import com.beyond.board_demo.qna.domain.QnA;
 import com.beyond.board_demo.qna.dto.QnAAnswerReqDto;
 import com.beyond.board_demo.qna.dto.QnAListResDto;
@@ -24,12 +27,14 @@ public class QnAService {
     private final QnARepository qnARepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserRepository userRepository, UserService userService) {
+    public QnAService(QnARepository qnARepository, UserRepository userRepository, UserService userService, CommentRepository commentRepository) {
         this.qnARepository = qnARepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional

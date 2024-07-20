@@ -18,6 +18,7 @@ public class NoticeDetailDto {
     private String content;
     private String userNickname;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 
 
 }

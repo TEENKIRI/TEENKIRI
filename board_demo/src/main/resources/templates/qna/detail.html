@@ -43,6 +43,29 @@
       <td th:if="${question.answeredAt == null}">답변 없음</td>
     </tr>
   </table>
+
+<!--  <div class="comments">-->
+<!--    <h4>댓글</h4>-->
+<!--    <div th:each="comment : ${comments}">-->
+<!--      <p><strong th:text="${comment.userNickname}"></strong>: <span th:text="${comment.content}"></span></p>-->
+<!--      <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="add-comment">-->
+<!--    <h4>댓글 작성하기</h4>-->
+<!--    <form th:action="@{/comment/create/qna/{qnaId}(qnaId=${question.id})}" method="post">-->
+<!--      <div class="form-group">-->
+<!--        <label for="content">내용</label>-->
+<!--        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>-->
+<!--      </div>-->
+<!--      <div class="form-group">-->
+<!--        <label for="userEmail">이메일</label>-->
+<!--        <input type="email" class="form-control" id="userEmail" name="userEmail" required>-->
+<!--      </div>-->
+<!--      <button type="submit" class="btn btn-primary mt-3">제출</button>-->
+<!--    </form>-->
+<!--  </div>-->
 </div>
 </body>
 </html>
