@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CommentSaveReqDto {
-    private Long postId;
-    private String userEmail;
+public class CommentUpdateDto {
     private String content;
 }

@@ -1,13 +1,11 @@
 package com.beyond.board_demo.comment.domain;
 
-import com.beyond.board_demo.common.BaseTimeEntity;
 import com.beyond.board_demo.post.domain.Post;
-import com.beyond.board_demo.qna.domain.QnA;
-import com.beyond.board_demo.notice.domain.Notice;
 import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,12 +14,12 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "comment")
-public class Comment extends BaseTimeEntity {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 3000, nullable = false)
     private String content;
 
     @ManyToOne
@@ -29,14 +27,19 @@ public class Comment extends BaseTimeEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "qna_id", nullable = false)
+//    private Post post;
+//
 
-    @ManyToOne
-    @JoinColumn(name = "qna_id")
-    private QnA qna;
+    @Column(nullable = false)
+    private LocalDateTime createdTime;
 
-    @ManyToOne
-    @JoinColumn(name = "notice_id")
-    private Notice notice;
+    @PrePersist
+    protected void onCreate() {
+        createdTime = LocalDateTime.now();
+    }
 }
