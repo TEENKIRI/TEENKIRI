@@ -20,6 +20,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+//    공지사항은 추가하지 않음
     @PostMapping("create")
     public String createComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
         commentService.saveComment(dto);
