@@ -1,6 +1,7 @@
 package com.beyond.board_demo.comment.domain;
 
 import com.beyond.board_demo.post.domain.Post;
+import com.beyond.board_demo.qna.domain.QnA;
 import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
@@ -27,13 +28,12 @@ public class Comment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "qna_id", nullable = false)
-//    private Post post;
-//
+
+    @ManyToOne
+    @JoinColumn(name = "qna_id")
+    private QnA qna;
 
     @Column(nullable = false)
     private LocalDateTime createdTime;

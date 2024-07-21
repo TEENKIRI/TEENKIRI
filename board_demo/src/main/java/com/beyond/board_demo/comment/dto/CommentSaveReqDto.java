@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentSaveReqDto {
     private Long postId;
+    private Long qnaId;
     private String userEmail;
     private String content;
 }

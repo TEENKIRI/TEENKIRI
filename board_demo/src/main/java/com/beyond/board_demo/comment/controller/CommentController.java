@@ -23,7 +23,15 @@ public class CommentController {
     @PostMapping("create")
     public String createComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
         commentService.saveComment(dto);
-        redirectAttributes.addAttribute("id", dto.getPostId());
-        return "redirect:/post/detail/{id}";
+        if (dto.getPostId() != null) {
+            redirectAttributes.addAttribute("id", dto.getPostId());
+            return "redirect:/post/detail/{id}";
+        } else if (dto.getQnaId() != null) {
+            redirectAttributes.addAttribute("id", dto.getQnaId());
+            return "redirect:/qna/detail/{id}";
+        } else {
+            throw new IllegalArgumentException("Either postId or qnaId must be provided for redirection");
+        }
     }
+
 }

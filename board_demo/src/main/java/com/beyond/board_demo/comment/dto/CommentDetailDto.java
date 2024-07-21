@@ -19,13 +19,4 @@ public class CommentDetailDto {
     private LocalDateTime createdTime;
     private Long postId;
 
-    public static CommentDetailDto fromEntity(Comment comment) {
-        return CommentDetailDto.builder()
-                .id(comment.getId())
-                .userEmail(comment.getUser().getEmail())
-                .content(comment.getContent())
-                .createdTime(comment.getCreatedTime())
-                .postId(comment.getPost().getId())
-                .build();
-    }
 }
