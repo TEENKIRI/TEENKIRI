@@ -28,15 +28,18 @@ CREATE TABLE Subject_detail (
     grade ENUM('1', '2', '3', '4', '5', '6') NOT NULL,
     teacher_id BIGINT,
     subject_id BIGINT NOT NULL,
+    category_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     rating FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id),
-    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
+    FOREIGN KEY (category_id) REFERENCES Category(category_id)
 );
+
 
 -- Lectures 테이블
 CREATE TABLE Lectures (
@@ -86,7 +89,7 @@ CREATE TABLE Enrollments_detail (
     enrollments_detail_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     enrollments_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    lecture_title VARCHAR(255) NOT NULL,
+    subject_title VARCHAR(255) NOT NULL,
     progress FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -130,7 +133,6 @@ CREATE TABLE Reports (
     reported_user_id BIGINT NOT NULL,
     chat_id BIGINT NOT NULL,
     reason ENUM('욕설', '도배', '광고', '기타'),
-    report_log TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (reporter_id) REFERENCES Users(user_id),
@@ -172,3 +174,47 @@ DO
 
 -- 이벤트 스케줄러를 활성화
 SET GLOBAL event_scheduler = ON;
+
+
+
+CREATE TABLE comment (
+    comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT,
+    post_id BIGINT,
+    board_type ENUM('free_board', 'QnA') NOT NULL,
+    comment_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+
+
+CREATE TABLE board (
+    board_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    author_id BIGINT NOT NULL,
+    board_type ENUM('FREE_BOARD', 'NOTICE', 'EVENT') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
+    FOREIGN KEY (author_id) REFERENCES Users(user_id)
+);
+
+
+CREATE TABLE Category (
+    category_id int AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+);
+
+
+CREATE TABLE notifications ( 
+    notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
