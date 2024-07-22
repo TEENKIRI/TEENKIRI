@@ -1,0 +1,346 @@
+{
+	"info": {
+		"_postman_id": "845b4ce1-7121-4281-8ee9-c2c870da9d72",
+		"name": "TEENKIRI",
+		"description": "티니키리의 강좌와 강의 api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36983413"
+	},
+	"item": [
+		{
+			"name": "강좌",
+			"item": [
+				{
+					"name": "강좌 리스트",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"pagination\":{\r\n   \"total_records\": 100,\r\n   \"current_page\": 1,\r\n   \"total_pages\": 10,\r\n   \"next_page\": 2,\r\n   \"prev_page\": null\r\n},\r\n\"result\":[\r\n    {\r\n        \"id\":1,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"함께 슬기로운 국어 강좌\",\r\n        \"is_subscribe\":1\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"함께 슬기로운 국어 강좌\",\r\n        \"is_subscribe\":1\r\n    },\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "?subject_id=1&grade=[1,2,3]&sort_type=&page=1",
+							"query": [
+								{
+									"key": "subject_id",
+									"value": "1",
+									"description": "과목 ID"
+								},
+								{
+									"key": "grade",
+									"value": "[1,2,3]",
+									"description": "학년, 값이 없다면 전체학년"
+								},
+								{
+									"key": "sort_type",
+									"value": "",
+									"description": "최신순, 인기순, 평점순 정렬 타입"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "페이지 번호"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "추천 강좌 리스트",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"함께 슬기로운 국어 강좌\",\r\n        \"is_subscribe\":0\r\n    },\r\n    {\r\n        \"id\":4,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"같이 하는 수학 2024 강좌\",\r\n        \"is_subscribe\":1\r\n    },\r\n    {\r\n        \"id\":13,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"너랑 나랑 사회로운 생활\",\r\n        \"is_subscribe\":0\r\n    },\r\n    {\r\n        \"id\":33,\r\n        \"teacher_name\":\"핑핑즈 선생님\",\r\n        \"title\":\"너랑 나랑 사회로운 생활\",\r\n        \"is_subscribe\":0\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "강좌 상세",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1,\r\n    \"title\":\"함께 하는 슬기로운 수학 강좌\",\r\n    \"teacher_name\":\"똑똑핑\",\r\n    \"grade\":1,\r\n    \"rating\":5,\r\n    \"description\" : \"\",\r\n    \"lecture_count\":10,\r\n    \"is_subscribe\":0,\r\n    \"is_enrollment\":0\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "?id=1",
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "강좌 id\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "강좌 업로드",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "?user_id&subject_id&grade&title&description",
+							"query": [
+								{
+									"key": "user_id",
+									"value": null,
+									"description": "업로드한 유저 아이디"
+								},
+								{
+									"key": "subject_id",
+									"value": null,
+									"description": "연결되어있는 과목 아이디"
+								},
+								{
+									"key": "grade",
+									"value": null,
+									"description": "학년"
+								},
+								{
+									"key": "title",
+									"value": null,
+									"description": "강좌 명"
+								},
+								{
+									"key": "description",
+									"value": null,
+									"description": "강좌 설명"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "강의",
+			"item": [
+				{
+					"name": "강의 리스트",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"lecture_title\":\"1강 숫자를 배워봐요 (1부터 10까지)\",\r\n        \"time\":600,\r\n        \"progress\":100\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"lecture_title\":\"2강 더하기를 배워봐요\",\r\n        \"time\":500,\r\n        \"progress\":50\r\n    },\r\n    {\r\n        \"id\":3,\r\n        \"lecture_title\":\"3강 빼기를 배워봐요\",\r\n        \"time\":650,\r\n        \"progress\":0\r\n    },\r\n    {\r\n        \"id\":4,\r\n        \"lecture_title\":\"4강 나누기를 배워봐요\",\r\n        \"time\":650,\r\n        \"progress\":13\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "?subject_id=1",
+							"query": [
+								{
+									"key": "subject_id",
+									"value": "1",
+									"description": "강좌 id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "강의 상세",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1,\r\n    \"lecture_title\":\"1강 숫자를 배워봐요 (1부터 10까지)\",\r\n    \"teacher\":{\r\n        \"id\":1,\r\n        \"name\":\"똑똑핑\"\r\n    },\r\n    \"time\":600,\r\n    \"progress\":100,\r\n    \"is_complete\":0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "?lecture_id",
+							"query": [
+								{
+									"key": "lecture_id",
+									"value": null,
+									"description": "강의 ID"
+								},
+								{
+									"key": "subject_id",
+									"value": null,
+									"description": "강좌 ID",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "강의 업로드",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "?user_id&lecture_id&title&file_1&image_1&order",
+							"query": [
+								{
+									"key": "user_id",
+									"value": null,
+									"description": "업로드한 유저 id"
+								},
+								{
+									"key": "lecture_id",
+									"value": null,
+									"description": "강좌id"
+								},
+								{
+									"key": "title",
+									"value": null,
+									"description": "타이틀"
+								},
+								{
+									"key": "file_1",
+									"value": null,
+									"description": "비디오 파일"
+								},
+								{
+									"key": "image_1",
+									"value": null,
+									"description": "비디오 썸네일 이미지"
+								},
+								{
+									"key": "order",
+									"value": null,
+									"description": "순서"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "강의 수정",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "?user_id&lecture_id&title&file_1&image_1&order",
+							"query": [
+								{
+									"key": "user_id",
+									"value": null,
+									"description": "업로드한 유저 id"
+								},
+								{
+									"key": "lecture_id",
+									"value": null,
+									"description": "강좌id"
+								},
+								{
+									"key": "title",
+									"value": null,
+									"description": "타이틀"
+								},
+								{
+									"key": "file_1",
+									"value": null,
+									"description": "비디오 파일"
+								},
+								{
+									"key": "image_1",
+									"value": null,
+									"description": "비디오 썸네일 이미지"
+								},
+								{
+									"key": "order",
+									"value": null,
+									"description": "순서"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "학생별 강의 진행률",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "?id&progress&is_complete",
+							"query": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "학생 유저 id"
+								},
+								{
+									"key": "progress",
+									"value": null,
+									"description": "현재 시청 중인 영상의 시청률 (0-100) : %"
+								},
+								{
+									"key": "is_complete",
+									"value": null,
+									"description": "0 : 1 / 해당 강의 시청 완료여부"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
