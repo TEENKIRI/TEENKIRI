@@ -88,9 +88,8 @@ package com.beyond.board_demo.qna.controller;
 
 import com.beyond.board_demo.comment.dto.CommentSaveReqDto;
 import com.beyond.board_demo.comment.service.CommentService;
-import com.beyond.board_demo.qna.dto.QnAAnswerReqDto;
-import com.beyond.board_demo.qna.dto.QnADetailDto;
-import com.beyond.board_demo.qna.dto.QnASaveReqDto;
+import com.beyond.board_demo.post.dto.PostUpdateDto;
+import com.beyond.board_demo.qna.dto.*;
 import com.beyond.board_demo.qna.service.QnAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -158,6 +157,23 @@ public class QnAController {
     @PostMapping("answer/{id}")
     public String answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto) {
         qnAService.answerQuestion(id, dto);
+        return "redirect:/qna/detail/" + id;
+    }
+
+//    @PostMapping("update/{id}")
+//    public String postUpdate(@PathVariable Long id, @ModelAttribute PostUpdateDto dto, Model model) {
+//        postService.postUpdate(id, dto);
+//        return "redirect:/post/detail/" + id;
+//    }
+    @PostMapping("update/question/{id}")
+    public String qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto){
+        qnAService.QnAQUpdate(id, dto);
+        return "redirect:/qna/detail/" + id;
+    }
+
+    @PostMapping("update/answer/{id}")
+    public String qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto){
+        qnAService.QnAAUpdate(id, dto);
         return "redirect:/qna/detail/" + id;
     }
 }

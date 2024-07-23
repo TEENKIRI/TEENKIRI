@@ -2,7 +2,10 @@ package com.beyond.board_demo.qna.domain;
 
 import com.beyond.board_demo.common.BaseTimeEntity;
 import com.beyond.board_demo.common.DelYN;
+import com.beyond.board_demo.post.dto.PostUpdateDto;
+import com.beyond.board_demo.qna.dto.QnAAtoUpdateDto;
 import com.beyond.board_demo.qna.dto.QnAListResDto;
+import com.beyond.board_demo.qna.dto.QnAQtoUpdateDto;
 import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
@@ -54,5 +57,14 @@ public class QnA extends BaseTimeEntity {
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
                 .build();
+    }
+
+    public void QnAQUpdate(QnAQtoUpdateDto dto){
+        this.questionText = dto.getQuestionText();
+        this.title = dto.getTitle();
+    }
+
+    public void QnAAUpdate(QnAAtoUpdateDto dto){
+        this.answerText = dto.getAnswerText();
     }
 }
