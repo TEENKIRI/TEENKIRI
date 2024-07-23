@@ -2,15 +2,15 @@ CREATE TABLE Subject_detail (
     subject_detail_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     grade ENUM('1', '2', '3', '4', '5', '6') NOT NULL,
     teacher_id BIGINT,
-    subject_id BIGINT NOT NULL,
+    subject_id BIGINT ,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     rating FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id),
-    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
 );
 
 -- 등록한 강좌 입장에서
