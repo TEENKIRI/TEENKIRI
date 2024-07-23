@@ -43,30 +43,78 @@
       <td th:if="${question.answeredAt == null}">답변 없음</td>
     </tr>
   </table>
-
-  <div class="comments">
-    <h4>댓글</h4>
-    <div th:each="comment : ${comments}">
-      <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
-      <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
-    </div>
-  </div>
-
-  <div class="add-comment">
-    <h4>댓글 작성하기</h4>
-    <form th:action="@{/qna/comment/create}" method="post">
-      <input type="hidden" name="qnaId" th:value="${question.id}"/>
-      <div class="form-group">
-        <label for="content">내용</label>
-        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="userEmail">이메일</label>
-        <input type="email" class="form-control" id="userEmail" name="userEmail" required>
-      </div>
-      <button type="submit" class="btn btn-primary mt-3">제출</button>
-    </form>
+  <div class="float-end">
+    <button onclick="showUpdateForm('question')" class="btn btn-primary">질문 수정</button>
+    <button onclick="showUpdateForm('answer')" class="btn btn-primary">답변 수정</button>
+    <a th:href="@{/post/delete/{id}(id=${question.id})}" class="btn btn-primary">삭제</a>
   </div>
 </div>
+<br>
+<div id="update-question-form" class="mt-4" style="display:none;">
+  <form th:action="@{/qna/update/question/{id}(id=${question.id})}" method="post">
+    <div class="form-group">
+      <label for="questionTitle">질문 제목</label>
+      <input type="text" class="form-control" name="title" id="questionTitle" th:value="${question.title}">
+    </div>
+    <div class="form-group">
+      <label for="questionContents">질문 내용</label>
+      <textarea class="form-control" name="contents" id="questionContents" rows="3" th:text="${question.questionText}"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <button type="submit" class="btn btn-secondary">질문 수정 완료</button>
+    </div>
+  </form>
+</div>
+<div id="update-answer-form" class="mt-4" style="display:none;">
+  <form th:action="@{/qna/update/answer/{id}(id=${question.id})}" method="post">
+    <div class="form-group">
+      <label for="answerContents">답변 내용</label>
+      <textarea class="form-control" name="contents" id="answerContents" rows="3" th:text="${question.answerText}"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <button type="submit" class="btn btn-secondary">답변 수정 완료</button>
+    </div>
+  </form>
+</div>
+<br>
+<div class="comments">
+  <h4>댓글</h4>
+  <div th:each="comment : ${comments}">
+    <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
+    <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
+  </div>
+</div>
+
+<div class="add-comment">
+  <h4>댓글 작성하기</h4>
+  <form th:action="@{/qna/comment/create}" method="post">
+    <input type="hidden" name="qnaId" th:value="${question.id}"/>
+    <div class="form-group">
+      <label for="content">내용</label>
+      <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="userEmail">이메일</label>
+      <input type="email" class="form-control" id="userEmail" name="userEmail" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">댓글 작성</button>
+  </form>
+</div>
+</div>
+
+<script>
+  function showUpdateForm(type) {
+    if (type === 'question') {
+      document.getElementById('update-question-form').style.display = 'block';
+      document.getElementById('update-answer-form').style.display = 'none';
+    } else if (type === 'answer') {
+      document.getElementById('update-answer-form').style.display = 'block';
+      document.getElementById('update-question-form').style.display = 'none';
+    }
+  }
+</script>
+
 </body>
 </html>
