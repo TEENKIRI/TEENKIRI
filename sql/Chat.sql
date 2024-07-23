@@ -1,7 +1,7 @@
 CREATE TABLE Chats (
-    chat_id bigint AUTO_INCREMENT PRIMARY KEY,
-    user_id bigint NOT NULL,
-    subject_id bigint,
+    chat_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    subject_id BIGINT,
     message TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
