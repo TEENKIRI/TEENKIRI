@@ -1,6 +1,7 @@
 package com.beyond.board_demo.notice.domain;
 
 import com.beyond.board_demo.common.BaseTimeEntity;
+import com.beyond.board_demo.common.DelYN;
 import com.beyond.board_demo.notice.dto.NoticeDetailDto;
 import com.beyond.board_demo.notice.dto.NoticeListResDto;
 import com.beyond.board_demo.user.domain.User;
@@ -29,6 +30,11 @@ public class Notice extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
+    private DelYN delYN;
 
     public NoticeDetailDto fromDetailEntity() {
         return NoticeDetailDto.builder()
