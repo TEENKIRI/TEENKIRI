@@ -1,15 +1,17 @@
 CREATE TABLE Lectures (
     lecture_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     subject_id BIGINT NOT NULL,
-    lecture_title VARCHAR(255) NOT NULL, -- 강의 이름
+    user_id BIGINT,
+    lecture_title VARCHAR(255) NOT NULL,
     video_url TEXT,
+    progress FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    teacher_id BIGINT,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id),
-    FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
 
 
 -- lecture_id: 고유한 강의 식별자.

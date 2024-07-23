@@ -2,14 +2,14 @@ CREATE TABLE Enrollments (
     enrollment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     subject_id BIGINT NOT NULL,
-    enrollment_title VARCHAR(255) NOT NULL, -- 강좌 이름
+    enrollment_title VARCHAR(255) NOT NULL,
     progress FLOAT DEFAULT 0,
     is_completed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id)
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
 
 -- 학생 입장에서
