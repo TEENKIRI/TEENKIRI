@@ -27,8 +27,7 @@ CREATE TABLE Subject_detail (
     subject_detail_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     grade ENUM('1', '2', '3', '4', '5', '6') NOT NULL,
     teacher_id BIGINT,
-    subject_id BIGINT NOT NULL,
-    category_id INT NOT NULL,
+    subject_id BIGINT ,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     rating FLOAT DEFAULT 0,
@@ -37,7 +36,6 @@ CREATE TABLE Subject_detail (
     del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (teacher_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
-    FOREIGN KEY (category_id) REFERENCES Category(category_id)
 );
 
 
@@ -45,29 +43,17 @@ CREATE TABLE Subject_detail (
 CREATE TABLE Lectures (
     lecture_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     subject_id BIGINT NOT NULL,
+    user_id BIGINT,
     lecture_title VARCHAR(255) NOT NULL,
     video_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
-    teacher_id BIGINT,
-    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
-    FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
-);
-
--- Lectures_detail 테이블
-CREATE TABLE Lectures_detail (
-    lecture_detail_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    lecture_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    title VARCHAR(255) NOT NULL,
     progress FLOAT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
-    FOREIGN KEY (lecture_id) REFERENCES Lectures(lecture_id),
+    FOREIGN KEY (subject_id) REFERENCES Subject(subject_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
 
 -- Enrollments 테이블
 CREATE TABLE Enrollments (
@@ -84,19 +70,6 @@ CREATE TABLE Enrollments (
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
 
--- Enrollments_detail 테이블
-CREATE TABLE Enrollments_detail (
-    enrollments_detail_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    enrollments_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    subject_title VARCHAR(255) NOT NULL,
-    progress FLOAT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
-    FOREIGN KEY (enrollments_id) REFERENCES Enrollments(enrollment_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
 
 -- Chats 테이블
 CREATE TABLE Chats (
@@ -161,7 +134,6 @@ CREATE TABLE Subscription (
     subject_id BIGINT NOT NULL,
     wish_type ENUM('wishlist', 'enrolled') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
@@ -181,13 +153,14 @@ SET GLOBAL event_scheduler = ON;
 CREATE TABLE Comment (
     comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT,
-    post_id BIGINT,
-    board_type ENUM('free_board', 'QnA', 'Report') NOT NULL,
+    board_id BIGINT,
+    board_type ENUM('free_board', 'QnA') NOT NULL,
     comment_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (board_id) REFERENCES Board(board_id)
 );
 
 
@@ -197,18 +170,13 @@ CREATE TABLE Board (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     author_id BIGINT NOT NULL,
-    board_type ENUM('FREE_BOARD', 'NOTICE', 'REPORT') NOT NULL,
+    board_type ENUM('free_board', 'NOTICE', 'REPORT') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (author_id) REFERENCES Users(user_id)
 );
 
-
-CREATE TABLE Category (
-    category_id int AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-);
 
 
 CREATE TABLE Notification ( 
