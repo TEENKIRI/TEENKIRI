@@ -161,6 +161,7 @@ CREATE TABLE Subscription (
     subject_id BIGINT NOT NULL,
     wish_type ENUM('wishlist', 'enrolled') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
@@ -177,11 +178,11 @@ SET GLOBAL event_scheduler = ON;
 
 
 
-CREATE TABLE comment (
+CREATE TABLE Comment (
     comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT,
     post_id BIGINT,
-    board_type ENUM('free_board', 'QnA') NOT NULL,
+    board_type ENUM('free_board', 'QnA', 'Report') NOT NULL,
     comment_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -191,12 +192,12 @@ CREATE TABLE comment (
 
 
 
-CREATE TABLE board (
+CREATE TABLE Board (
     board_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     author_id BIGINT NOT NULL,
-    board_type ENUM('FREE_BOARD', 'NOTICE', 'EVENT') NOT NULL,
+    board_type ENUM('FREE_BOARD', 'NOTICE', 'REPORT') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     del_yn ENUM('N', 'Y') DEFAULT 'N',
@@ -210,11 +211,12 @@ CREATE TABLE Category (
 );
 
 
-CREATE TABLE notifications ( 
+CREATE TABLE Notification ( 
     notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
