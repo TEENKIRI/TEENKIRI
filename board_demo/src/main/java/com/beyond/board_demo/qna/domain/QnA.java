@@ -1,8 +1,8 @@
 package com.beyond.board_demo.qna.domain;
 
+import com.beyond.board_demo.comment.domain.Comment;
 import com.beyond.board_demo.common.BaseTimeEntity;
 import com.beyond.board_demo.common.DelYN;
-import com.beyond.board_demo.post.dto.PostUpdateDto;
 import com.beyond.board_demo.qna.dto.QnAAtoUpdateDto;
 import com.beyond.board_demo.qna.dto.QnAListResDto;
 import com.beyond.board_demo.qna.dto.QnAQtoUpdateDto;
@@ -11,6 +11,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,7 +49,8 @@ public class QnA extends BaseTimeEntity {
     @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
-
+    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     public QnAListResDto listFromEntity() {
         return QnAListResDto.builder()
@@ -59,12 +61,12 @@ public class QnA extends BaseTimeEntity {
                 .build();
     }
 
-    public void QnAQUpdate(QnAQtoUpdateDto dto){
+    public void QnAQUpdate(QnAQtoUpdateDto dto) {
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
     }
 
-    public void QnAAUpdate(QnAAtoUpdateDto dto){
+    public void QnAAUpdate(QnAAtoUpdateDto dto) {
         this.answerText = dto.getAnswerText();
     }
 }

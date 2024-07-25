@@ -1,10 +1,15 @@
 package com.beyond.board_demo.notice.controller;
 
+import com.beyond.board_demo.notice.domain.Notice;
 import com.beyond.board_demo.notice.dto.NoticeDetailDto;
 import com.beyond.board_demo.notice.dto.NoticeListResDto;
 import com.beyond.board_demo.notice.dto.NoticeSaveReqDto;
+import com.beyond.board_demo.notice.dto.NoticeUpdateDto;
 import com.beyond.board_demo.notice.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +45,8 @@ public class NoticeController {
     }
 
     @GetMapping("list")
-    public String getAllNotices(Model model) {
-        List<NoticeListResDto> notices = noticeService.getAllNotices();
-        model.addAttribute("notices", notices);
+    public String getAllNotices(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("noticeList", noticeService.noticeList(pageable));
         return "notice/list";
     }
 
@@ -51,5 +55,17 @@ public class NoticeController {
         NoticeDetailDto noticeDetail = noticeService.getNoticeDetail(id);
         model.addAttribute("notice", noticeDetail);
         return "notice/detail";
+    }
+
+    @PostMapping("update/{id}")
+    public String noticeUpdate(@PathVariable Long id, @ModelAttribute NoticeUpdateDto dto){
+        noticeService.noticeUpdate(id, dto);
+        return "redirect:/notice/detail/" + id;
+    }
+
+    @GetMapping("delete/{id}")
+    public String noticeDelete(@PathVariable Long id, Model model){
+        noticeService.noticeDelete(id);
+        return "redirect:/notice/list";
     }
 }

@@ -4,11 +4,17 @@ import com.beyond.board_demo.notice.domain.Notice;
 import com.beyond.board_demo.notice.dto.NoticeListResDto;
 import com.beyond.board_demo.notice.dto.NoticeSaveReqDto;
 import com.beyond.board_demo.notice.dto.NoticeDetailDto;
+import com.beyond.board_demo.notice.dto.NoticeUpdateDto;
 import com.beyond.board_demo.notice.repository.NoticeRepository;
+import com.beyond.board_demo.qna.domain.QnA;
+import com.beyond.board_demo.qna.dto.QnAListResDto;
+import com.beyond.board_demo.qna.dto.QnAQtoUpdateDto;
 import com.beyond.board_demo.user.domain.Role;
 import com.beyond.board_demo.user.domain.User;
 import com.beyond.board_demo.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,19 +48,30 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public List<NoticeListResDto> getAllNotices() {
-        List<Notice> notices = noticeRepository.findAll();
-        List<NoticeListResDto> noticeList = new ArrayList<>();
-
-        for(Notice notice : notices){
-            noticeList.add(notice.fromListEntity());
-        }
-        return noticeList;
+    public Page<NoticeListResDto> noticeList(Pageable pageable) {
+        Page<Notice> notices = noticeRepository.findAll(pageable);
+        Page<NoticeListResDto> noticeListResDtos = notices.map(a -> a.listFromEntity());
+        return noticeListResDtos;
     }
 
     public NoticeDetailDto getNoticeDetail(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
         return notice.fromDetailEntity();
+    }
+
+    @Transactional
+    public void noticeUpdate(Long id, NoticeUpdateDto dto){
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
+        notice.toUpdate(dto);
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void noticeDelete(Long id) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        noticeRepository.delete(notice);
     }
 }

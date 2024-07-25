@@ -3,6 +3,7 @@ package com.beyond.board_demo.qna.service;
 import com.beyond.board_demo.comment.domain.Comment;
 import com.beyond.board_demo.comment.dto.CommentSaveReqDto;
 import com.beyond.board_demo.comment.repository.CommentRepository;
+import com.beyond.board_demo.notice.domain.Notice;
 import com.beyond.board_demo.post.domain.Post;
 import com.beyond.board_demo.post.dto.PostUpdateDto;
 import com.beyond.board_demo.qna.domain.QnA;
@@ -88,5 +89,12 @@ public class QnAService {
                 .orElseThrow(() -> new EntityNotFoundException("QnA is not found"));
         qnA.QnAAUpdate(dto);
         qnARepository.save(qnA);
+    }
+
+    @Transactional
+    public void qnaDelete(Long id) {
+        QnA qnA = qnARepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        qnARepository.delete(qnA);
     }
 }

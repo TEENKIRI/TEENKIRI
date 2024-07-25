@@ -33,7 +33,7 @@
             <td th:text ="${post.id}"></td>
             <td th:text ="${post.title}"></td>
             <td th:text ="${post.user_email}"></td>
-            <td><a th:href="@{/post/detail/{id}(id=${post.id})}">상세보기</a></td>
+            <td><a th:href="@{/post/detail/{id}(id=${post.id})}" class="btn btn-primary">상세보기</a></td>
         </tr>
         </tbody>
     </table>
