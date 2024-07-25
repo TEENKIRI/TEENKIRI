@@ -24,7 +24,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="question : ${questions}">
+    <tr th:each="question : ${qnaList}">
       <td th:text="${question.questionUserName}"></td>
       <td th:text="${question.title}"></td>
       <td th:text="${#temporals.format(question.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -33,6 +33,12 @@
     </tr>
     </tbody>
   </table>
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, qnaList.totalPages-1)}"
+        th:classappend="${pageNum == qnaList.pageable.pageNumber}? active">
+      <a class="page-link" th:href="@{/qna/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+    </li>
+  </ul>
 </div>
 </body>
 </html>

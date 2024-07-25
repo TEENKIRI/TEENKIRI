@@ -1,16 +1,19 @@
 package com.beyond.board_demo.user.controller;
 
+import com.beyond.board_demo.user.domain.User;
 import com.beyond.board_demo.user.dto.UserDetailDto;
 import com.beyond.board_demo.user.dto.UserListResDto;
 import com.beyond.board_demo.user.dto.UserSaveReqDto;
 import com.beyond.board_demo.user.dto.UserUpdateDto;
 import com.beyond.board_demo.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("user")
@@ -42,10 +45,9 @@ public class UserController {
 
     // 모든 사용자 목록을 보여줍니다.
     @GetMapping("list")
-    public String userList(Model model) {
-        List<UserListResDto> userList = userService.userList();
-        model.addAttribute("userList", userList);
-        return "user/list";  // 템플릿 경로
+    public String userListPage(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("userList", userService.userList(pageable));
+        return "user/list";
     }
 
     // 특정 사용자 상세 정보를 보여줍니다.
@@ -65,7 +67,7 @@ public class UserController {
 
     // 사용자를 삭제합니다.
     @GetMapping("delete/{id}")
-    public String userDelete(@PathVariable Long id, Model model) {
+    public String userDelete(@PathVariable Long id) {
         userService.userDelete(id);
         return "redirect:/user/list";
     }

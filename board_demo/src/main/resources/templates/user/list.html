@@ -35,6 +35,12 @@
         </tr>
         </tbody>
     </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, userList.totalPages-1)}"
+            th:classappend="${pageNum == userList.pageable.pageNumber}? active">
+            <a class="page-link" th:href="@{/user/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+        </li>
+    </ul>
 </div>
 </body>
 </html>
