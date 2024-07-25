@@ -49,8 +49,7 @@ public class QnAService {
 
     public Page<QnAListResDto> qnaList(Pageable pageable) {
         Page<QnA> qnAS = qnARepository.findAll(pageable);
-        Page<QnAListResDto> qnAListResDtos = qnAS.map(a -> a.listFromEntity());
-        return qnAListResDtos;
+        return qnAS.map(a -> a.listFromEntity());
     }
 
     public QnA getQuestionDetail(Long id) {

@@ -9,6 +9,8 @@ import com.beyond.board_demo.post.repository.PostRepository;
 import com.beyond.board_demo.user.domain.User;
 import com.beyond.board_demo.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,14 +36,9 @@ public class PostService {
         return savedPost;
     }
 
-    public List<PostListResDto> postList() {
-        List<Post> posts = postRepository.findAll();
-        List<PostListResDto> postListResDtos = new ArrayList<>();
-
-        for (Post post : posts) {
-            postListResDtos.add(post.listFromEntity());
-        }
-        return postListResDtos;
+    public Page<PostListResDto> postList(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(a -> a.listFromEntity());
     }
 
     public PostDetailDto postDetail(Long id) {
