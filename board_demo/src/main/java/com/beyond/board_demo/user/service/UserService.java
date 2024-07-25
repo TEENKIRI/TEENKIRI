@@ -8,6 +8,8 @@ import com.beyond.board_demo.user.dto.UserSaveReqDto;
 import com.beyond.board_demo.user.dto.UserUpdateDto;
 import com.beyond.board_demo.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +42,10 @@ public class UserService {
     }
 
     // 사용자 리스트
-    public List<UserListResDto> userList() {
-        List<UserListResDto> userResDtoList = new ArrayList<>();
-        List<User> userList = userRepository.findAll();
-        for (User user : userList) {
-            userResDtoList.add(user.listFromEntity());
-        }
-        return userResDtoList;
+    public Page<UserListResDto> userList(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        Page<UserListResDto> userListResDtos = users.map(a -> a.listFromEntity());
+        return userListResDtos;
     }
 
     public UserDetailDto userDetail(Long id) {

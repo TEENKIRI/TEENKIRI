@@ -13,6 +13,8 @@ import com.beyond.board_demo.user.domain.User;
 import com.beyond.board_demo.user.repository.UserRepository;
 import com.beyond.board_demo.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,13 +47,10 @@ public class QnAService {
         return qnARepository.save(qnA);
     }
 
-    public List<QnAListResDto> qnaList() {
-        List<QnA> qnas = qnARepository.findAll();
-        List<QnAListResDto> qnaList = new ArrayList<>();
-        for (QnA qna : qnas) {
-            qnaList.add(qna.listFromEntity());
-        }
-        return qnaList;
+    public Page<QnAListResDto> qnaList(Pageable pageable) {
+        Page<QnA> qnAS = qnARepository.findAll(pageable);
+        Page<QnAListResDto> qnAListResDtos = qnAS.map(a -> a.listFromEntity());
+        return qnAListResDtos;
     }
 
     public QnA getQuestionDetail(Long id) {

@@ -92,6 +92,9 @@ import com.beyond.board_demo.post.dto.PostUpdateDto;
 import com.beyond.board_demo.qna.dto.*;
 import com.beyond.board_demo.qna.service.QnAService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -127,8 +130,8 @@ public class QnAController {
     }
 
     @GetMapping("list")
-    public String getAllQuestions(Model model) {
-        model.addAttribute("questions", qnAService.qnaList());
+    public String getAllQuestions(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("qnaList", qnAService.qnaList(pageable));
         return "qna/list";
     }
 
