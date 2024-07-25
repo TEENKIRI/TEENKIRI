@@ -4,6 +4,7 @@ import com.beyond.board_demo.common.BaseTimeEntity;
 import com.beyond.board_demo.common.DelYN;
 import com.beyond.board_demo.notice.dto.NoticeDetailDto;
 import com.beyond.board_demo.notice.dto.NoticeListResDto;
+import com.beyond.board_demo.notice.dto.NoticeUpdateDto;
 import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
@@ -47,7 +48,7 @@ public class Notice extends BaseTimeEntity {
                 .build();
     }
 
-    public  NoticeListResDto fromListEntity() {
+    public  NoticeListResDto listFromEntity() {
         return NoticeListResDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
@@ -55,4 +56,11 @@ public class Notice extends BaseTimeEntity {
                 .createdTime(this.getCreatedTime())
                 .build();
     }
+
+    public void toUpdate(NoticeUpdateDto dto){
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+
+    }
+
 }

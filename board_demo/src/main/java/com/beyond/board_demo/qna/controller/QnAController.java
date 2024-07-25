@@ -160,11 +160,7 @@ public class QnAController {
         return "redirect:/qna/detail/" + id;
     }
 
-//    @PostMapping("update/{id}")
-//    public String postUpdate(@PathVariable Long id, @ModelAttribute PostUpdateDto dto, Model model) {
-//        postService.postUpdate(id, dto);
-//        return "redirect:/post/detail/" + id;
-//    }
+
     @PostMapping("update/question/{id}")
     public String qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto){
         qnAService.QnAQUpdate(id, dto);
@@ -176,4 +172,12 @@ public class QnAController {
         qnAService.QnAAUpdate(id, dto);
         return "redirect:/qna/detail/" + id;
     }
+
+    @GetMapping("delete/{id}")
+    public String qnaDelete(@PathVariable Long id){
+        qnAService.qnaDelete(id);
+        return "redirect:/qna/list";
+    }
 }
+
+

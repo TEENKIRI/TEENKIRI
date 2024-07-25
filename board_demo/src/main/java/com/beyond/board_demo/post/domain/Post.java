@@ -1,5 +1,6 @@
 package com.beyond.board_demo.post.domain;
 
+import com.beyond.board_demo.comment.domain.Comment;
 import com.beyond.board_demo.common.BaseTimeEntity;
 import com.beyond.board_demo.common.DelYN;
 import com.beyond.board_demo.post.dto.PostDetailDto;
@@ -9,6 +10,7 @@ import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,6 +36,9 @@ public class Post extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     public PostListResDto listFromEntity() {
         return PostListResDto.builder()
