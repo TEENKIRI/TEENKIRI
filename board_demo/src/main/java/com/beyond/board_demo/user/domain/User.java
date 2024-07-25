@@ -1,7 +1,7 @@
 package com.beyond.board_demo.user.domain;
 
-import com.beyond.board_demo.common.BaseTimeEntity;
-import com.beyond.board_demo.common.DelYN;
+import com.beyond.board_demo.common.domain.BaseTimeEntity;
+import com.beyond.board_demo.common.domain.DelYN;
 import com.beyond.board_demo.post.domain.Post;
 import com.beyond.board_demo.user.dto.UserDetailDto;
 import com.beyond.board_demo.user.dto.UserListResDto;

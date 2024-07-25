@@ -9,7 +9,7 @@
 <body>
 <div th:replace="common/header :: headerFragment"></div>
 <div class="container">
-  <div class="page-header"><h3>Notice List</h3></div>
+  <div class="page-header"><h3>공지사항</h3></div>
   <div class="float-end">
     <a href="/notice/create" class="btn btn-primary">공지사항 작성하기</a>
   </div>
@@ -30,6 +30,12 @@
     </tr>
     </tbody>
   </table>
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, noticeList.totalPages-1)}"
+        th:classappend="${pageNum == noticeList.pageable.pageNumber}? active">
+      <a class="page-link" th:href="@{/notice/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+    </li>
+  </ul>
 </div>
 </body>
 </html>

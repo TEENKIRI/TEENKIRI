@@ -1,9 +1,7 @@
 package com.beyond.board_demo.user.dto;
 
 
-import com.beyond.board_demo.common.DelYN;
 import com.beyond.board_demo.user.domain.Role;
-import com.beyond.board_demo.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
