@@ -1,10 +1,10 @@
-package com.beyond.board_demo.notice.domain;
+package com.beyond.board_demo.event.domain;
 
 import com.beyond.board_demo.common.domain.BaseTimeEntity;
 import com.beyond.board_demo.common.domain.DelYN;
-import com.beyond.board_demo.notice.dto.NoticeDetailDto;
-import com.beyond.board_demo.notice.dto.NoticeListResDto;
-import com.beyond.board_demo.notice.dto.NoticeUpdateDto;
+import com.beyond.board_demo.event.dto.EventDetailDto;
+import com.beyond.board_demo.event.dto.EventListResDto;
+import com.beyond.board_demo.event.dto.EventUpdateDto;
 import com.beyond.board_demo.user.domain.User;
 import lombok.*;
 
@@ -16,8 +16,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "notice")
-public class Notice extends BaseTimeEntity {
+@Table(name = "event")
+public class Event extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,8 +37,8 @@ public class Notice extends BaseTimeEntity {
     @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
-    public NoticeDetailDto fromDetailEntity() {
-        return NoticeDetailDto.builder()
+    public EventDetailDto fromDetailEntity() {
+        return EventDetailDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
                 .content(this.getContent())
@@ -48,8 +48,8 @@ public class Notice extends BaseTimeEntity {
                 .build();
     }
 
-    public  NoticeListResDto listFromEntity() {
-        return NoticeListResDto.builder()
+    public EventListResDto listFromEntity() {
+        return EventListResDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
                 .userNickname(this.getUser().getNickname())
@@ -57,7 +57,7 @@ public class Notice extends BaseTimeEntity {
                 .build();
     }
 
-    public void toUpdate(NoticeUpdateDto dto){
+    public void toUpdate(EventUpdateDto dto){
         this.title = dto.getTitle();
         this.content = dto.getContent();
 

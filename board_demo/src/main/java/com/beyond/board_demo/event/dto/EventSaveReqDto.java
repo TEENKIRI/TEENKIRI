@@ -1,7 +1,7 @@
-package com.beyond.board_demo.notice.dto;
+package com.beyond.board_demo.event.dto;
 
+import com.beyond.board_demo.event.domain.Event;
 import com.beyond.board_demo.notice.domain.Notice;
-import com.beyond.board_demo.post.domain.Post;
 import com.beyond.board_demo.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoticeSaveReqDto {
+public class EventSaveReqDto {
     private String title;
     private String content;
-    private String email;
+    private String userEmail;
 
-    public Notice toEntity(User user){
-        return Notice.builder()
+    public Event toEntity(User user){
+        return Event.builder()
                 .title(this.title)
                 .content(this.content)
                 .user(user)

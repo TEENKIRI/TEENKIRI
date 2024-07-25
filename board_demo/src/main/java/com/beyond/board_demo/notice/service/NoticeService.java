@@ -6,9 +6,6 @@ import com.beyond.board_demo.notice.dto.NoticeSaveReqDto;
 import com.beyond.board_demo.notice.dto.NoticeDetailDto;
 import com.beyond.board_demo.notice.dto.NoticeUpdateDto;
 import com.beyond.board_demo.notice.repository.NoticeRepository;
-import com.beyond.board_demo.qna.domain.QnA;
-import com.beyond.board_demo.qna.dto.QnAListResDto;
-import com.beyond.board_demo.qna.dto.QnAQtoUpdateDto;
 import com.beyond.board_demo.user.domain.Role;
 import com.beyond.board_demo.user.domain.User;
 import com.beyond.board_demo.user.repository.UserRepository;
@@ -43,15 +40,13 @@ public class NoticeService {
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-
         Notice notice = dto.toEntity(user);
         return noticeRepository.save(notice);
     }
 
     public Page<NoticeListResDto> noticeList(Pageable pageable) {
         Page<Notice> notices = noticeRepository.findAll(pageable);
-        Page<NoticeListResDto> noticeListResDtos = notices.map(a -> a.listFromEntity());
-        return noticeListResDtos;
+        return notices.map(a->a.listFromEntity());
     }
 
     public NoticeDetailDto getNoticeDetail(Long id) {

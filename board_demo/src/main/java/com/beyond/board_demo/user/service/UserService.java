@@ -34,9 +34,7 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
         User user = dto.toEntity();
-
         // cascade persist 테스트, remove 테스트는 회원삭제도 대체
-
         User savedUser = userRepository.save(user);
         return savedUser;
     }

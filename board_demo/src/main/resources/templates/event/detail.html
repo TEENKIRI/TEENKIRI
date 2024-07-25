@@ -9,32 +9,30 @@
 <body>
 <div th:replace="common/header :: headerFragment"></div>
 <div class="container">
-  <div class="page-header"><h3>공지사항</h3></div>
+  <div class="page-header"><h3>이벤트 </h3></div>
   <table class="table">
     <tr>
       <td>제목</td>
-      <td th:text="${notice.title}"></td>
+      <td th:text="${event.title}"></td>
     </tr>
     <tr>
       <td>내용</td>
-      <td th:text="${notice.content}"></td>
+      <td th:text="${event.content}"></td>
     </tr>
     <tr>
       <td>관리자</td>
-      <td th:text="${notice.userNickname}"></td>
+      <td th:text="${event.userNickname}"></td>
     </tr>
     <tr>
       <td>생성시간</td>
-      <td th:text="${notice.createdTime}"></td>
+      <td th:text="${event.createdTime}"></td>
     </tr>
     <tr>
       <td>수정시간</td>
-      <td th:text="${notice.updatedTime}"></td>
+      <td th:text="${event.updatedTime}"></td>
     </tr>
   </table>
-  <div class="float-end">
-    <a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-primary">삭제</a>
-  </div>
+
 </div>
 </body>
 </html>

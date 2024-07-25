@@ -1,8 +1,8 @@
 package com.beyond.board_demo.qna.domain;
 
 import com.beyond.board_demo.comment.domain.Comment;
-import com.beyond.board_demo.common.BaseTimeEntity;
-import com.beyond.board_demo.common.DelYN;
+import com.beyond.board_demo.common.domain.BaseTimeEntity;
+import com.beyond.board_demo.common.domain.DelYN;
 import com.beyond.board_demo.qna.dto.QnAAtoUpdateDto;
 import com.beyond.board_demo.qna.dto.QnAListResDto;
 import com.beyond.board_demo.qna.dto.QnAQtoUpdateDto;

@@ -1,4 +1,4 @@
-package com.beyond.board_demo.common;
+package com.beyond.board_demo.common.dto;
 
 
 import lombok.Data;

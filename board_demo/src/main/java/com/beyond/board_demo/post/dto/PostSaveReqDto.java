@@ -18,8 +18,7 @@ public class PostSaveReqDto {
     private String contents;
     private String email;
 
-    public Post toEntity(User user
-    ){
+    public Post toEntity(User user){
         return Post.builder()
                 .title(this.title)
                 .contents(this.contents)

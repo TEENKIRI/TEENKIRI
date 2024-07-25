@@ -1,8 +1,8 @@
 package com.beyond.board_demo.post.domain;
 
 import com.beyond.board_demo.comment.domain.Comment;
-import com.beyond.board_demo.common.BaseTimeEntity;
-import com.beyond.board_demo.common.DelYN;
+import com.beyond.board_demo.common.domain.BaseTimeEntity;
+import com.beyond.board_demo.common.domain.DelYN;
 import com.beyond.board_demo.post.dto.PostDetailDto;
 import com.beyond.board_demo.post.dto.PostListResDto;
 import com.beyond.board_demo.post.dto.PostUpdateDto;
