@@ -30,13 +30,19 @@
         </thead>
         <tbody id="bodyData">
         <tr th:each=" post : ${postList}">
-            <td th:text ="${post.id}"></td>
-            <td th:text ="${post.title}"></td>
-            <td th:text ="${post.user_email}"></td>
+            <td th:text="${post.id}"></td>
+            <td th:text="${post.title}"></td>
+            <td th:text="${post.user_email}"></td>
             <td><a th:href="@{/post/detail/{id}(id=${post.id})}" class="btn btn-primary">상세보기</a></td>
         </tr>
         </tbody>
     </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, postList.totalPages-1)}"
+            th:classappend="${pageNum == postList.pageable.pageNumber}? active">
+            <a class="page-link" th:href="@{/post/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+        </li>
+    </ul>
 </div>
 
 

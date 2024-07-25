@@ -5,6 +5,9 @@ import com.beyond.board_demo.post.dto.PostSaveReqDto;
 import com.beyond.board_demo.post.dto.PostUpdateDto;
 import com.beyond.board_demo.post.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +44,8 @@ public class PostController {
 
     // 모든 게시물 목록을 보여줍니다.
     @GetMapping("list")
-    public String postListResDtosList(Model model) {
-        model.addAttribute("postList", postService.postList());
+    public String postListResDtosList(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("postList", postService.postList(pageable));
         return "post/list";  // 템플릿 경로 수정
     }
 
