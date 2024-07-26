@@ -31,8 +31,8 @@ public class EventService {
     }
 
     @Transactional
-    public Event createEvent(EventSaveReqDto dto, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public Event createEvent(EventSaveReqDto dto) {
+        User user = userRepository.findByEmail(dto.getUserEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getRole() != Role.ADMIN) {

@@ -2,6 +2,7 @@ package com.beyond.teenkiri.qna.controller;
 
 import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.service.CommentService;
+import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.service.QnAService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,8 @@ public class QnAController {
     @PostMapping("answer/{id}")
     public String answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto, Model model) {
         try {
-            qnAService.answerQuestion(id, dto);
+//            QnA qna =qnAService.answerQuestion(id, dto);
+            model.addAttribute("question", dto);
             return "redirect:/qna/detail/" + id;
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -114,4 +116,5 @@ public class QnAController {
             return "redirect:/qna/list";
         }
     }
+
 }
