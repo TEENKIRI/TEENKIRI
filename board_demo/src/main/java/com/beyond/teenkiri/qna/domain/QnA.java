@@ -62,11 +62,13 @@ public class QnA extends BaseTimeEntity {
     }
 
     public void QnAQUpdate(QnAQtoUpdateDto dto) {
+
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
     }
 
     public void QnAAUpdate(QnAAtoUpdateDto dto) {
         this.answerText = dto.getAnswerText();
+        this.answeredAt = LocalDateTime.now();
     }
 }
