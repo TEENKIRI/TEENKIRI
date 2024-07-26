@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.teenkiri;
+package com.beyond.teenkiri;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
