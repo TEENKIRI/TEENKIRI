@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QnAQtoUpdateDto {
+    private String userEmail;
     private String questionText;
     private String title;
 }

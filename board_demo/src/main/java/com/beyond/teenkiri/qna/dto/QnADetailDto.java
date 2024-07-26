@@ -21,6 +21,7 @@ public class QnADetailDto {
     private String answeredByNickname;
     private LocalDateTime createdTime;
     private LocalDateTime answeredAt;
+    private String userEmail;
 
     public static QnADetailDto fromEntity(QnA qna) {
         return QnADetailDto.builder()
@@ -32,6 +33,7 @@ public class QnADetailDto {
                 .answeredByNickname(qna.getAnsweredBy() != null ? qna.getAnsweredBy().getNickname() : null)
                 .createdTime(qna.getCreatedTime())
                 .answeredAt(qna.getAnsweredAt())
+                .userEmail(qna.getUser().getEmail())
                 .build();
     }
 }

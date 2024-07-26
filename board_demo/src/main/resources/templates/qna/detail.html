@@ -53,12 +53,16 @@
 <div id="update-question-form" class="mt-4" style="display:none;">
   <form th:action="@{/qna/update/question/{id}(id=${question.id})}" method="post">
     <div class="form-group">
+      <label for="userEmail">이메일</label>
+      <input type="email" class="form-control" name="userEmail" id="userEmail" th:value="${question.userEmail}" required>
+    </div>
+    <div class="form-group">
       <label for="questionTitle">질문 제목</label>
       <input type="text" class="form-control" name="title" id="questionTitle" th:value="${question.title}">
     </div>
     <div class="form-group">
       <label for="questionContents">질문 내용</label>
-      <textarea class="form-control" name="contents" id="questionContents" rows="3" th:text="${question.questionText}"></textarea>
+      <textarea class="form-control" name="questionText" id="questionContents" rows="3" th:text="${question.questionText}"></textarea>
     </div>
     <br>
     <div class="form-group">
@@ -69,8 +73,12 @@
 <div id="update-answer-form" class="mt-4" style="display:none;">
   <form th:action="@{/qna/update/answer/{id}(id=${question.id})}" method="post">
     <div class="form-group">
+      <label for="answererEmail">답변자 이메일</label>
+      <input type="email" class="form-control" name="answererEmail" id="answererEmail" required>
+    </div>
+    <div class="form-group">
       <label for="answerContents">답변 내용</label>
-      <textarea class="form-control" name="contents" id="answerContents" rows="3" th:text="${question.answerText}"></textarea>
+      <textarea class="form-control" name="answerText" id="answerContents" rows="3" th:text="${question.answerText}"></textarea>
     </div>
     <br>
     <div class="form-group">
