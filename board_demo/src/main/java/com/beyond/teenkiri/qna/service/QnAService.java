@@ -50,7 +50,8 @@ public class QnAService {
 
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto) {
-        User answeredBy = userService.findByEmail(dto.getAnswererEmail());
+        User answeredBy = userService.findByEmail(dto.getAnswererBy());
+//        User answeredBy = userService.findByEmail(dto.getAnswererEmail());
         if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
