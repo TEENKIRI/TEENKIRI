@@ -33,7 +33,7 @@ public class EventController {
     @PostMapping("create")
     public String createEvent(@ModelAttribute EventSaveReqDto dto, Model model) {
         try {
-            eventService.createEvent(dto, dto.getUserEmail());
+            eventService.createEvent(dto);
             return "redirect:/event/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

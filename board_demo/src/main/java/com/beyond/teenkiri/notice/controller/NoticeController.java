@@ -33,7 +33,7 @@ public class NoticeController {
     @PostMapping("create")
     public String createNotice(@ModelAttribute NoticeSaveReqDto dto, Model model) {
         try {
-            noticeService.createNotice(dto, dto.getEmail());
+            noticeService.createNotice(dto);
             return "redirect:/notice/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

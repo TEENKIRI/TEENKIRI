@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,7 +44,7 @@ public class QnAService {
 
     public QnA getQuestionDetail(Long id) {
         return qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+                .orElseThrow(() -> new EntityNotFoundException("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR"));
     }
 
     @Transactional
@@ -55,9 +54,8 @@ public class QnAService {
         if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-
         QnA qna = qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+                .orElseThrow(() -> new EntityNotFoundException("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
         qna = dto.toEntity(answeredBy, qna);
         return qnARepository.save(qna);
     }

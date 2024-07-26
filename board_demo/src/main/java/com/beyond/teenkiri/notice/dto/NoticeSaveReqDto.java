@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class NoticeSaveReqDto {
     private String title;
     private String content;
-    private String email;
+    private String userEmail;
 
     public Notice toEntity(User user){
         return Notice.builder()

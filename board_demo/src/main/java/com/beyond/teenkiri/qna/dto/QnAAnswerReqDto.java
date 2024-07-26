@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class QnAAnswerReqDto {
-//    private String answererEmail;
+    //    private String answererEmail;
     private String answererBy;
     private String answerText;
 

@@ -31,8 +31,8 @@ public class NoticeService {
     }
 
     @Transactional
-    public Notice createNotice(NoticeSaveReqDto dto, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public Notice createNotice(NoticeSaveReqDto dto) {
+        User user = userRepository.findByEmail(dto.getUserEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getRole() != Role.ADMIN) {
