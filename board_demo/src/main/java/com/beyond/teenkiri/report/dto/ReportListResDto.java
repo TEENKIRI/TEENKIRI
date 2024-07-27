@@ -18,5 +18,6 @@ public class ReportListResDto {
     private String suspectEmail;
     private Reason reason;
     private Long qnaId;
+    private Long postId;
     private LocalDateTime createdTime;
 }

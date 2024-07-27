@@ -1,5 +1,7 @@
 package com.beyond.teenkiri.report.controller;
 
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
@@ -13,26 +15,37 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-
 @Controller
 @RequestMapping("report")
+
 public class ReportController {
 
     private final ReportService reportService;
     private final QnARepository qnaRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    public ReportController(ReportService reportService, QnARepository qnaRepository) {
+    public ReportController(ReportService reportService, QnARepository qnaRepository, PostRepository postRepository) {
         this.reportService = reportService;
         this.qnaRepository = qnaRepository;
+        this.postRepository = postRepository;
     }
 
     @GetMapping("create")
-    public String reportCreateScreen(@RequestParam("qnaId") Long qnaId, Model model) {
-        QnA qna = qnaRepository.findById(qnaId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-        model.addAttribute("suspectEmail", qna.getUser().getEmail());
-        model.addAttribute("qnaId", qnaId);
+    public String reportCreateScreen(@RequestParam(value = "qnaId", required = false) Long qnaId,
+                                     @RequestParam(value = "postId", required = false) Long postId,
+                                     Model model) {
+        if (qnaId != null) {
+            QnA qna = qnaRepository.findById(qnaId)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+            model.addAttribute("suspectEmail", qna.getUser().getEmail());
+            model.addAttribute("qnaId", qnaId);
+        } else if (postId != null) {
+            Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
+            model.addAttribute("suspectEmail", post.getUser().getEmail());
+            model.addAttribute("postId", postId);
+        }
         return "/report/create";
     }
 

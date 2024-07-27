@@ -19,7 +19,8 @@
             <th>신고자 이메일</th>
             <th>피신고자 이메일</th>
             <th>사유</th>
-            <th>QnA아이디</th>
+            <th>QnA 아이디</th>
+            <th>Post 아이디</th>
             <th>생성 시간</th>
         </tr>
         </thead>
@@ -29,7 +30,8 @@
             <td th:text="${report.reportEmail}"></td>
             <td th:text="${report.suspectEmail}"></td>
             <td th:text="${report.reason}"></td>
-            <tD th:text="${report.qnaId}"></tD>
+            <td th:text="${report.qnaId != null ? report.qnaId : 'N/A'}"></td>
+            <td th:text="${report.postId != null ? report.postId : 'N/A'}"></td>
             <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
