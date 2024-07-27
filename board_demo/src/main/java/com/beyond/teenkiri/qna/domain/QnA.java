@@ -52,12 +52,14 @@ public class QnA extends BaseTimeEntity {
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    // 수정
     public QnAListResDto listFromEntity() {
         return QnAListResDto.builder()
                 .id(this.id)
                 .questionUserName(this.getUser().getNickname())
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
+                .answerText(this.answerText)
                 .build();
     }
 

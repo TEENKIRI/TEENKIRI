@@ -29,7 +29,10 @@
       <td th:text="${questions.title}"></td>
       <td th:text="${#temporals.format(questions.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
       <td><a th:href="@{/qna/detail/{id}(id=${questions.id})}" class="btn btn-primary">상세보기</a></td>
-      <td><a th:href="@{/qna/answer/{id}(id=${questions.id})}" class="btn btn-primary">답변하기</a></td>
+      <td>
+        <a th:if="${questions.answerText == null}" th:href="@{/qna/answer/{id}(id=${questions.id})}" class="btn btn-primary">답변하기</a>
+      </td>
+
     </tr>
     </tbody>
   </table>

@@ -75,7 +75,7 @@ public class QnAController {
     @PostMapping("answer/{id}")
     public String answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto, Model model) {
         try {
-//            QnA qna =qnAService.answerQuestion(id, dto);
+            qnAService.answerQuestion(id, dto);
             model.addAttribute("question", dto);
             return "redirect:/qna/detail/" + id;
         } catch (SecurityException | EntityNotFoundException e) {

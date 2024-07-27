@@ -44,7 +44,7 @@
     </tr>
   </table>
   <div class="float-end">
-    <button onclick="showUpdateForm('question')" class="btn btn-primary">질문 수정</button>
+    <button th:if="${question.answerText == null}" onclick="showUpdateForm('question')" class="btn btn-primary">질문 수정</button>
     <button onclick="showUpdateForm('answer')" class="btn btn-primary">답변 수정</button>
     <a th:href="@{/qna/delete/{id}(id=${question.id})}" class="btn btn-primary">삭제</a>
   </div>
