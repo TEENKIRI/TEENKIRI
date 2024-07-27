@@ -39,12 +39,14 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "qna_id", nullable = false)
     private QnA qna;
 
-    public ReportListResDto fromListEntity() {
+    public ReportListResDto listFromEntity() {
         return ReportListResDto.builder()
+                .id(this.id)
                 .reportEmail(this.user.getEmail())
-                .suspectEmail(this.user.getEmail())
+                .suspectEmail(this.qna.getUser().getEmail())
                 .reason(this.reason)
                 .qnaId(this.qna.getId())
+                .createdTime(this.getCreatedTime())
                 .build();
     }
 

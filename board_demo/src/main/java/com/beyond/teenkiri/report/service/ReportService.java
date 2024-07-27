@@ -39,11 +39,12 @@ public class ReportService {
         QnA qnA = qnARepository.findById(dto.getQnaId())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         Report report = dto.toEntity(user, qnA);
+        reportRepository.save(report);
         return report;
     }
 
     public Page<ReportListResDto> reportList(Pageable pageable){
         Page<Report> reports = reportRepository.findAll(pageable);
-        return reports.map(a -> a.fromListEntity());
+        return reports.map(a -> a.listFromEntity());
     }
 }

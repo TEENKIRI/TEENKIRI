@@ -16,6 +16,7 @@
   <table class="table">
     <thead>
     <tr>
+      <th>id</th>
       <th>작성자</th>
       <th>제목</th>
       <th>생성 시간</th>
@@ -25,6 +26,7 @@
     </thead>
     <tbody>
     <tr th:each="questions : ${qnaList}">
+      <td th:text="${questions.id}"></td>
       <td th:text="${questions.questionUserName}"></td>
       <td th:text="${questions.title}"></td>
       <td th:text="${#temporals.format(questions.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
