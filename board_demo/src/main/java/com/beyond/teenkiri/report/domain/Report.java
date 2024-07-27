@@ -3,6 +3,7 @@ package com.beyond.teenkiri.report.domain;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.report.dto.ReportDetailDto;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.user.domain.User;
@@ -36,29 +37,36 @@ public class Report extends BaseTimeEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "qna_id", nullable = false)
+    @JoinColumn(name = "qna_id", nullable = true)
     private QnA qna;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = true)
+    private Post post;
+
+//    ALTER TABLE report MODIFY COLUMN qna_id BIGINT NULL;
+//    ALTER TABLE report MODIFY COLUMN post_id BIGINT NULL;
+//    데이터 베이스 수정을 통해서 null값이 가능하도록 한다.
     public ReportListResDto listFromEntity() {
         return ReportListResDto.builder()
                 .id(this.id)
                 .reportEmail(this.user.getEmail())
-                .suspectEmail(this.qna.getUser().getEmail())
+                .suspectEmail(this.qna != null ? this.qna.getUser().getEmail() : this.post.getUser().getEmail())
                 .reason(this.reason)
-                .qnaId(this.qna.getId())
+                .qnaId(this.qna != null ? this.qna.getId() : null )
+                .postId(this.post != null ? this.post.getId() : null)
                 .createdTime(this.getCreatedTime())
                 .build();
     }
-
-    public ReportDetailDto fromDetailEntity() {
-        return ReportDetailDto.builder()
-                .id(this.id)
-                .reportEmail(this.user.getEmail())
-                .suspectEmail(this.user.getEmail())
-                .reason(this.reason)
-                .qnaId(this.qna.getId())
-                .build();
-    }
-
-
+//
+//    public ReportDetailDto fromDetailEntity() {
+//        return ReportDetailDto.builder()
+//                .id(this.id)
+//                .reportEmail(this.user.getEmail())
+//                .suspectEmail(this.qna != null ? this.qna.getUser().getEmail() : this.post.getUser().getEmail())
+//                .reason(this.reason)
+//                .qnaId(this.qna != null ? this.qna.getId() : null)
+//                .postId(this.post != null ? this.post.getId() : null)
+//                .build();
+//    }
 }
