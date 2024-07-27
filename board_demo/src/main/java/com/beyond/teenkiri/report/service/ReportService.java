@@ -1,9 +1,9 @@
 package com.beyond.teenkiri.report.service;
 
-import com.beyond.teenkiri.qna.domain.QnA;
-import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
+import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.report.domain.Report;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
@@ -34,6 +34,7 @@ public class ReportService {
         this.postRepository = postRepository;
     }
 
+
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto){
         User user = userService.findByEmail(dto.getReportEmail());
@@ -52,8 +53,15 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    public Page<ReportListResDto> reportList(Pageable pageable){
-        Page<Report> reports = reportRepository.findAll(pageable);
+    public Page<ReportListResDto> reportList(Pageable pageable, String type) {
+        Page<Report> reports;
+        if ("qna".equals(type)) {
+            reports = reportRepository.findByQnaIsNotNull(pageable);
+        } else if ("post".equals(type)) {
+            reports = reportRepository.findByPostIsNotNull(pageable);
+        } else {
+            reports = reportRepository.findAll(pageable);
+        }
         return reports.map(Report::listFromEntity);
     }
 }

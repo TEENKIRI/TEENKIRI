@@ -58,15 +58,4 @@ public class Report extends BaseTimeEntity {
                 .createdTime(this.getCreatedTime())
                 .build();
     }
-//
-//    public ReportDetailDto fromDetailEntity() {
-//        return ReportDetailDto.builder()
-//                .id(this.id)
-//                .reportEmail(this.user.getEmail())
-//                .suspectEmail(this.qna != null ? this.qna.getUser().getEmail() : this.post.getUser().getEmail())
-//                .reason(this.reason)
-//                .qnaId(this.qna != null ? this.qna.getId() : null)
-//                .postId(this.post != null ? this.post.getId() : null)
-//                .build();
-//    }
 }

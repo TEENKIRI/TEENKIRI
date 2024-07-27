@@ -1,9 +1,9 @@
 package com.beyond.teenkiri.report.controller;
 
-import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+
 @Controller
 @RequestMapping("report")
-
 public class ReportController {
 
     private final ReportService reportService;
@@ -33,8 +33,7 @@ public class ReportController {
 
     @GetMapping("create")
     public String reportCreateScreen(@RequestParam(value = "qnaId", required = false) Long qnaId,
-                                     @RequestParam(value = "postId", required = false) Long postId,
-                                     Model model) {
+                                     @RequestParam(value = "postId", required = false) Long postId, Model model) {
         if (qnaId != null) {
             QnA qna = qnaRepository.findById(qnaId)
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
@@ -45,6 +44,8 @@ public class ReportController {
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
             model.addAttribute("suspectEmail", post.getUser().getEmail());
             model.addAttribute("postId", postId);
+        } else {
+            throw new IllegalArgumentException("QnA ID 또는 Post ID가 필요합니다.");
         }
         return "/report/create";
     }
@@ -54,15 +55,16 @@ public class ReportController {
         try {
             reportService.reportCreate(dto);
             return "redirect:/report/list";
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/report/list";
         }
     }
 
     @GetMapping("list")
-    public String reportList(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("reportList", reportService.reportList(pageable));
+    public String reportList(@RequestParam(value = "type", required = false) String type, Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("reportList", reportService.reportList(pageable, type));
+        model.addAttribute("filterType", type != null ? type : "all");
         return "report/list";
     }
 }
