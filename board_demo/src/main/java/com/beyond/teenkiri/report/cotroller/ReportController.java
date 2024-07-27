@@ -6,6 +6,7 @@ import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,18 +37,18 @@ public class ReportController {
     }
 
     @PostMapping("create")
-    public String reportCreatePost(@ModelAttribute ReportSaveReqDto dto, Model model){
+    public String reportCreatePost(@ModelAttribute ReportSaveReqDto dto, Model model) {
         try {
             reportService.reportCreate(dto);
             return "redirect:/report/list";
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/report/list";
         }
     }
 
     @GetMapping("list")
-    public String reportList(Model model, @PageableDefault(size = 10, sort = "createdTime") Pageable pageable){
+    public String reportList(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("reportList", reportService.reportList(pageable));
         return "report/list";
     }

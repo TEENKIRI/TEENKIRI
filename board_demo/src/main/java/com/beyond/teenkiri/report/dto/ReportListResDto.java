@@ -6,13 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportListResDto {
+    private Long id;
     private String reportEmail;
     private String suspectEmail;
     private Reason reason;
     private Long qnaId;
+    private LocalDateTime createdTime;
 }

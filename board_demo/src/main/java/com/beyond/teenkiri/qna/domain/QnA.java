@@ -36,7 +36,7 @@ public class QnA extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user; // 작성자
 
     @ManyToOne
     @JoinColumn(name = "answered_by")

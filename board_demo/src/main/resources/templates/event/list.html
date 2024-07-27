@@ -16,6 +16,7 @@
   <table class="table">
     <thead>
     <tr>
+      <th>id</th>
       <th>제목</th>
       <th>작성자</th>
       <th>시간</th>
@@ -23,6 +24,7 @@
     </thead>
     <tbody>
     <tr th:each="event : ${eventList}">
+      <td th:text="${event.id}"></td>
       <td><a th:href="@{/event/detail/{id}(id=${event.id})}" th:text="${event.title}"></a></td>
       <td th:text="${event.userNickname}"></td>
       <td th:text="${#temporals.format(event.createdTime, 'yyyy-MM-dd HH:mm')}"></td>

@@ -7,6 +7,7 @@ import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.service.QnAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +46,7 @@ public class QnAController {
     }
 
     @GetMapping("list")
-    public String getAllQuestions(Model model, @PageableDefault(size = 10, sort = "createdTime") Pageable pageable) {
+    public String getAllQuestions(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("qnaList", qnAService.qnaList(pageable));
         return "qna/list";
     }
