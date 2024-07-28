@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디 찾기</title>
+</head>
+<body>
+<h2>아이디 찾기</h2>
+<form id="find-id-form" action="/api/user/find-id" method="post">
+    <label for="username">이름:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="phone">전화번호:</label>
+    <input type="text" id="phone" name="phone" required>
+    <br>
+    <button type="submit">아이디 찾기</button>
+</form>
+<a href="/api/user/login">로그인</a>
+</body>
+</html>
