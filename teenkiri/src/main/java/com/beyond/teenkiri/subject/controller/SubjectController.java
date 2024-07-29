@@ -35,6 +35,14 @@ public class SubjectController {
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
+//    강좌 순위별 리스트 페이지 :: delyn n인 것만
+    @GetMapping("/subject/rating/list")
+    public ResponseEntity<?> subjectRatingListView(@PageableDefault(page = 0, size=4 ) Pageable pageable){
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectRatingList(pageable);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
 
 //    강좌 상세 페이지
     @GetMapping("/subject/detail/{id}")
