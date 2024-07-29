@@ -34,7 +34,6 @@ public class Post extends BaseTimeEntity {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

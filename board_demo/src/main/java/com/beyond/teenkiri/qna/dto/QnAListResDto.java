@@ -36,5 +36,6 @@ public class QnAListResDto {
     private String questionUserName;
     private String title;
     private LocalDateTime createdTime;
+    private LocalDateTime answeredAt;
     private String answerText; // 수정
 }

@@ -14,12 +14,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class QnAAnswerReqDto {
-    //    private String answererEmail;
     private String answererBy;
     private String answerText;
+    private LocalDateTime answeredAt;
+    private LocalDateTime createdTime;
 
     public QnA toEntity(User answeredBy, QnA existingQnA) {
-        return QnA.builder()
+        QnA qna = QnA.builder()
                 .id(existingQnA.getId())
                 .title(existingQnA.getTitle())
                 .questionText(existingQnA.getQuestionText())
@@ -30,5 +31,8 @@ public class QnAAnswerReqDto {
                 .delYN(existingQnA.getDelYN())
                 .comments(existingQnA.getComments())
                 .build();
+
+        qna.setCreatedTime(existingQnA.getCreatedTime());
+        return qna;
     }
 }

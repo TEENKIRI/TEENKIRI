@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.notice.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notice.domain.Notice;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ public class NoticeSaveReqDto {
     private String title;
     private String content;
     private String userEmail;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     public Notice toEntity(User user){
         return Notice.builder()

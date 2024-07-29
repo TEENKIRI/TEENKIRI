@@ -28,13 +28,14 @@
     <tr th:each="questions : ${qnaList}">
       <td th:text="${questions.id}"></td>
       <td th:text="${questions.questionUserName}"></td>
-      <td th:text="${questions.title}"></td>
+      <td>
+        <a th:href="@{/qna/detail/{id}(id=${questions.id})}" th:text="${questions.title}"></a>
+      </td>
       <td th:text="${#temporals.format(questions.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
       <td><a th:href="@{/qna/detail/{id}(id=${questions.id})}" class="btn btn-primary">상세보기</a></td>
       <td>
         <a th:if="${questions.answerText == null}" th:href="@{/qna/answer/{id}(id=${questions.id})}" class="btn btn-primary">답변하기</a>
       </td>
-
     </tr>
     </tbody>
   </table>
