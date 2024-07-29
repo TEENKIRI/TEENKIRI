@@ -10,6 +10,7 @@ import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.repository.SubjectRepository;
+import com.beyond.teenkiri.subject.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +30,13 @@ import java.nio.file.StandardOpenOption;
 @Transactional
 public class LectureService {
     private final LectureRepository lectureRepository;
-    private final SubjectRepository subjectRepository;
+    private final SubjectService subjectService;
     private final CommonMethod commonMethod;
 
     @Autowired
-    public LectureService(LectureRepository lectureRepository, SubjectRepository subjectRepository, CommonMethod commonMethod) {
+    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod) {
         this.lectureRepository = lectureRepository;
-        this.subjectRepository = subjectRepository;
+        this.subjectService = subjectService;
         this.commonMethod = commonMethod;
     }
 
@@ -48,7 +49,7 @@ public class LectureService {
 
     //    강의 ((((강좌 그룹별)))) 리스트 페이지
     public Page<LectureListResDto> lectureListByGroup(Long subjectId, Pageable pageable){
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(()-> new EntityNotFoundException("없는 강좌입니다."));
+        Subject subject = subjectService.findSubjectById(subjectId);
         Page<Lecture> lectures = lectureRepository.findAllBySubjectId(subject.getId() ,pageable);
         Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromListEntity());
         return lectureListResDtos;
@@ -64,8 +65,7 @@ public class LectureService {
     //    강의 생성
     public Lecture lectureCreate(LectureSaveReqDto dto){
 
-        Subject subject = subjectRepository.findById(dto.getSubjectId())
-                .orElseThrow(() -> new EntityNotFoundException("없는 강좌입니다."));
+        Subject subject = subjectService.findSubjectById(dto.getSubjectId());
 
         MultipartFile image = dto.getImage();
         MultipartFile video = dto.getVideo();
@@ -89,8 +89,45 @@ public class LectureService {
     public Lecture lectureUpdate(LectureUpdateReqDto dto){
         Lecture lecture = lectureRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
-        lecture.toUpdate(dto, "","");
+
+        MultipartFile image = dto.getImage();
+        MultipartFile video = dto.getVideo();
+        Path imagePath = commonMethod.fileSave(image, lecture.getId());
+        Path videoPath = commonMethod.fileSave(video, lecture.getId());
+        String imageUrl = "", videoUrl = "";
+        if(imagePath != null){
+            imageUrl = imagePath.toString();
+        }
+        if(videoPath != null){
+            videoUrl = videoPath.toString();
+        }
+        lecture.toUpdate(dto, videoUrl ,imageUrl);
+        lectureRepository.save(lecture);
         return lecture;
+    }
+
+    public Lecture lectureDelete(Long id){
+        Lecture lecture = lectureRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        lecture.toDeleteUpdate();
+        return lecture;
+    }
+
+    public Long lectureDeleteDeep(Long id){
+        Lecture lecture = lectureRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        lectureRepository.deleteById(lecture.getId());
+        return id;
+    }
+
+
+
+
+//    ====================
+
+    public Lecture findLectureById(Long id){
+        return lectureRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
     }
 
 
