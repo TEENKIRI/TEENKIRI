@@ -3,7 +3,6 @@ package com.beyond.teenkiri.lecture.domain;
 import com.beyond.teenkiri.common.BaseTimeEntity;
 import com.beyond.teenkiri.common.DelYN;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
