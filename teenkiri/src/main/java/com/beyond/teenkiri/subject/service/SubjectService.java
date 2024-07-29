@@ -44,6 +44,15 @@ public class SubjectService {
         return subjectListResDtos;
     }
 
+
+//    강좌 순위별 list
+    public Page<SubjectListResDto> subjectRatingList(Pageable pageable){
+        Page<Subject> subject = subjectRepository.findAllBydelYNOrderByRatingDesc(DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
+
 //    강좌 상세
     public SubjectDetResDto subjectDetail(Long id){
 //        🚨추후 멤버.. 추가되면 권한체크 + 멤버 연결 체크
