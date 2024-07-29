@@ -2,6 +2,7 @@ package com.beyond.teenkiri.lecture.domain;
 
 import com.beyond.teenkiri.common.BaseTimeEntity;
 import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,10 +31,10 @@ public class Lecture extends BaseTimeEntity {
 //    private User user;
 
     @Column(columnDefinition = "TEXT")
-    private String video_url;
+    private String videoUrl;
 
     @Column(columnDefinition = "TEXT")
-    private String image_url;
+    private String imageUrl;
 
     @Builder.Default
     private Float progress = 0F;
@@ -43,6 +44,22 @@ public class Lecture extends BaseTimeEntity {
     private DelYN delYN = DelYN.N;
 
 
+    public void updateImagePath(String imagePath){
+        this.imageUrl = imagePath;
+    }
+
+    public void updateVideoPath(String videoPath){
+        this.videoUrl = videoPath;
+    }
+
+    public LectureListResDto fromEntity() {
+        return LectureListResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .imageUrl(this.imageUrl)
+                .progress(null) // 🚨 유저별 진행률
+                .build();
+    }
 }
 
 /*
