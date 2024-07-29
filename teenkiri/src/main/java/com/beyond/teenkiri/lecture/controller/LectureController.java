@@ -5,6 +5,7 @@ import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
+import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
 import com.beyond.teenkiri.lecture.service.LectureService;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,17 +65,27 @@ public class LectureController {
 
     //    강의 업데이트
     @PatchMapping("/lecture/update/{id}")
-    public ResponseEntity<?> lectureUpdate(){
-
-        return null;
+    public ResponseEntity<?> lectureUpdate(LectureUpdateReqDto dto){
+        Lecture lecture = lectureService.lectureUpdate(dto);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "강의 업데이트 완료", lecture.getId());
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
 
     //    강의 삭제
     @DeleteMapping("/lecture/delete/{id}")
-    public ResponseEntity<?> lectureDelete(){
+    public ResponseEntity<?> lectureDelete(@PathVariable Long id){
+        Lecture lecture = lectureService.lectureDelete(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "강의 삭제 완료", lecture.getId());
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
 
-        return null;
+    //    강의 DB상 완전 삭제
+    @DeleteMapping("/lecture/delete/deep/{id}")
+    public ResponseEntity<?> lectureDeleteDeep(@PathVariable Long id){
+        Long lectureDeleteId = lectureService.lectureDeleteDeep(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "강의 삭제 완료", lectureDeleteId);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
 

@@ -33,10 +33,12 @@ public class Lecture extends BaseTimeEntity {
 //    private User user;
 
     @Column(columnDefinition = "TEXT")
-    private String videoUrl;
+    @Builder.Default
+    private String videoUrl = "";
 
     @Column(columnDefinition = "TEXT")
-    private String imageUrl;
+    @Builder.Default
+    private String imageUrl = "";
 
     @Builder.Default
     private Float progress = 0F;
@@ -83,6 +85,10 @@ public class Lecture extends BaseTimeEntity {
         if(!this.imageUrl.equals(imageUrl)){
             this.imageUrl = imageUrl;
         }
+    }
+
+    public void toDeleteUpdate() {
+        this.delYN = DelYN.Y;
     }
 }
 
