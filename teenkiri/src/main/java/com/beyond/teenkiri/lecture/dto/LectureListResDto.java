@@ -13,5 +13,6 @@ public class LectureListResDto {
     private Long id;
     private String title;
     private String imageUrl;
+    private String videoUrl;
     private Float progress;
 }
