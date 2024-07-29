@@ -34,7 +34,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.STUDENT;
 
     @Column(length = 20, nullable = false, unique = true)
     private String phone;
@@ -43,7 +43,6 @@ public class User extends BaseTimeEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

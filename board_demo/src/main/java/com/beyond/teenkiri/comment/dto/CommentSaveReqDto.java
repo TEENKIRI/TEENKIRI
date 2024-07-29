@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.comment.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,6 @@ public class CommentSaveReqDto {
     private Long qnaId;
     private String userEmail;
     private String content;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 }

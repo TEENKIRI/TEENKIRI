@@ -26,7 +26,7 @@ public class Report extends BaseTimeEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private DelYN delYN = DelYN.N;
+    private DelYN delYN;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

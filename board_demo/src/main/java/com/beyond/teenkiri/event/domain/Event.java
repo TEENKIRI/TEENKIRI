@@ -34,7 +34,6 @@ public class Event extends BaseTimeEntity {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
     public EventDetailDto fromDetailEntity() {

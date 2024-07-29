@@ -20,10 +20,12 @@ public class UserSaveReqDto {
     private String email;
     private String password;
     // 사용자가 String 요청해도 Role 클래스 자동 형변환
-    private Role role;
+    @Builder.Default
+    private Role role = Role.STUDENT;
     private String phone;
     private String address;
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     // DTO -> Entity 변환
     public User toEntity() {

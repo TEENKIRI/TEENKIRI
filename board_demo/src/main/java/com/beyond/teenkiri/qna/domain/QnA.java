@@ -13,8 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -46,7 +45,6 @@ public class QnA extends BaseTimeEntity {
     private LocalDateTime answeredAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -62,12 +60,12 @@ public class QnA extends BaseTimeEntity {
                 .questionUserName(this.getUser().getNickname())
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
+                .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
                 .build();
     }
 
     public void QnAQUpdate(QnAQtoUpdateDto dto) {
-
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
     }

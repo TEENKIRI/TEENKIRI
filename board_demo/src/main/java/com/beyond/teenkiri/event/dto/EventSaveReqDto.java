@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.event.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ public class EventSaveReqDto {
     private String title;
     private String content;
     private String userEmail;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     public Event toEntity(User user){
         return Event.builder()
