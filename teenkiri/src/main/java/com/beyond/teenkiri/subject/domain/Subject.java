@@ -3,6 +3,7 @@ package com.beyond.teenkiri.subject.domain;
 import com.beyond.teenkiri.common.BaseTimeEntity;
 import com.beyond.teenkiri.common.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
+import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Builder
@@ -45,6 +47,10 @@ public class Subject extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+//    연결된 강의
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.PERSIST)
+    private List<Lecture> lectures;
 
 
     @Column(columnDefinition = "TEXT")

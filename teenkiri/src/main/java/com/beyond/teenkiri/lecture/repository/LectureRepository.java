@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LectureRepository extends JpaRepository<Lecture,Long> {
     Page<Lecture> findBydelYN(DelYN delYN, Pageable pageable);
+    Page<Lecture> findBysubjectIdAndDelYN(DelYN delYN, Long subjectId, Pageable pageable);
+    Page<Lecture> findAllBySubjectId(Long subjectId, Pageable pageable);
 }

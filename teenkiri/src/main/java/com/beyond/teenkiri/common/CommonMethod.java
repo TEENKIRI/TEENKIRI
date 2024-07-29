@@ -1,13 +1,22 @@
 package com.beyond.teenkiri.common;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
+@Service
 public class CommonMethod {
 
-    public static Boolean fileSizeCheck(MultipartFile file){
+    public Boolean fileSizeCheck(MultipartFile file){
         String filename = file.getOriginalFilename();
-        if (filename != null) {
+//        if (filename != null) {
             String extension = filename.substring(filename.lastIndexOf('.') + 1);
             long maxSize = getMaxFileSizeForExtension(extension);
 
@@ -18,11 +27,11 @@ public class CommonMethod {
             }else{
                 return true;
             }
-        }
-        return null;
+//        }
+//        return null;
     }
 
-    public static long getMaxFileSizeForExtension(String extension) {
+    public long getMaxFileSizeForExtension(String extension) {
         switch (extension.toLowerCase()) {
             case "jpg":
             case "jpeg":
@@ -32,6 +41,25 @@ public class CommonMethod {
                 return 5L * 1024 * 1024 * 1024; // 5GB
             default:
                 return -1; // 허용되지 않은 확장자
+        }
+    }
+
+    public Path fileSave(MultipartFile file, Long id){
+        try{
+            if(file.isEmpty()){ // 비어있는 파일
+                return null;
+            }
+            Boolean fileBoolean = fileSizeCheck(file);
+            if (Boolean.FALSE.equals(fileBoolean)) {
+                throw new IllegalArgumentException("파일의 크기가 너무 큽니다.");
+            }
+
+            byte[] fileBytes = file.getBytes();
+            Path filePath = Paths.get("C:/Users/rro06/OneDrive/Desktop/tmp/", id + "_" + file.getOriginalFilename());
+            Files.write(filePath,fileBytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            return filePath;
+        } catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패");
         }
     }
 }
