@@ -19,3 +19,8 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+
+  servlet:
+    multipart:
+      maxFileSize: 5120MB # 최대 5GB
+      maxRequestSize: 5120MB # 최대 5GB
