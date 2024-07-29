@@ -13,10 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CourseController {
@@ -30,7 +27,7 @@ public class CourseController {
 
     //    과목 리스트
     @GetMapping("/course/list")
-    public ResponseEntity<?> courseListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
+    public ResponseEntity<?> courseListView(@PageableDefault(page = 0, size=10, sort = "id",
             direction = Sort.Direction.DESC ) Pageable pageable){
         Page<CourseListResDto> courseListResDtos = courseService.courseList(pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject list",courseListResDtos);
@@ -40,7 +37,7 @@ public class CourseController {
 
     // 과목 생성
     @PostMapping("/course/create")
-    public ResponseEntity<?> courseCreate(@ModelAttribute CourseSaveReqDto dto){
+    public ResponseEntity<?> courseCreate(@RequestBody CourseSaveReqDto dto){
         Course course = courseService.courseCreate(dto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",course.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
