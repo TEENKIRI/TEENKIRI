@@ -2,6 +2,7 @@ package com.beyond.teenkiri.lecture.controller;
 
 import com.beyond.teenkiri.common.CommonResDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
+import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
 import com.beyond.teenkiri.lecture.service.LectureService;
@@ -25,7 +26,7 @@ public class LectureController {
     }
 
     //    강의 리스트 페이지
-    @GetMapping("/lecture/list/")
+    @GetMapping("/lecture/list")
     public ResponseEntity<?> lectureListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
             direction = Sort.Direction.DESC ) Pageable pageable){
         Page<LectureListResDto> lectureListResDtos = lectureService.lectureList(pageable);
@@ -34,10 +35,10 @@ public class LectureController {
     }
 
     //    강의 ((((강좌 그룹별)))) 리스트 페이지
-    @GetMapping("/subject/lecture/list/{subject_id}")
-    public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable Long id, @PageableDefault(page = 0, size=10, sort = "createdTime",
+    @GetMapping("/subject/lecture/list/{subjectId}")
+    public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable("subjectId") Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
             direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<LectureListResDto> lectureListResDtos = lectureService.lectureListByGroup(pageable);
+        Page<LectureListResDto> lectureListResDtos = lectureService.lectureListByGroup(subjectId, pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return lecture list by subject group", lectureListResDtos);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
@@ -46,8 +47,9 @@ public class LectureController {
     //    강의 상세 페이지
     @GetMapping("/lecture/detail/{id}")
     public ResponseEntity<?> lectureDetailView(@PathVariable Long id){
-
-        return null;
+        LectureDetResDto lectureDetResDto = lectureService.lectureDetail(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return lecture detail", lectureDetResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
 

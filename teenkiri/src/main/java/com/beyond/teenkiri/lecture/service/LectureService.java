@@ -30,28 +30,35 @@ import java.nio.file.StandardOpenOption;
 public class LectureService {
     private final LectureRepository lectureRepository;
     private final SubjectRepository subjectRepository;
+    private final CommonMethod commonMethod;
 
     @Autowired
-    public LectureService(LectureRepository lectureRepository, SubjectRepository subjectRepository) {
+    public LectureService(LectureRepository lectureRepository, SubjectRepository subjectRepository, CommonMethod commonMethod) {
         this.lectureRepository = lectureRepository;
         this.subjectRepository = subjectRepository;
+        this.commonMethod = commonMethod;
     }
 
     //    강의 리스트 페이지
     public Page<LectureListResDto> lectureList(Pageable pageable){
         Page<Lecture> lectures = lectureRepository.findBydelYN(DelYN.N, pageable);
-        Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromEntity());
-        return null;
+        Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromListEntity());
+        return lectureListResDtos;
     }
 
     //    강의 ((((강좌 그룹별)))) 리스트 페이지
-    public Page<LectureListResDto> lectureListByGroup(Pageable pageable){
-        return null;
+    public Page<LectureListResDto> lectureListByGroup(Long subjectId, Pageable pageable){
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(()-> new EntityNotFoundException("없는 강좌입니다."));
+        Page<Lecture> lectures = lectureRepository.findAllBySubjectId(subject.getId() ,pageable);
+        Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromListEntity());
+        return lectureListResDtos;
     }
 
     //    강의 상세 페이지
     public LectureDetResDto lectureDetail(Long id){
-        return null;
+        Lecture lecture = lectureRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        LectureDetResDto lectureDetResDto = lecture.fromDetEntity();
+        return lectureDetResDto;
     }
 
     //    강의 생성
@@ -63,47 +70,27 @@ public class LectureService {
         MultipartFile image = dto.getImage();
         MultipartFile video = dto.getVideo();
 
-        // 🚨 파일 확장자 체크 필요
-        if(image != null){
-            Boolean imageBoolean = CommonMethod.fileSizeCheck(image);
-            if(Boolean.FALSE.equals(imageBoolean)){
-                throw new IllegalArgumentException("image 파일의 크기가 너무 큽니다.");
-            }
-        }
-
-        if(video != null){
-            Boolean videoBoolean = CommonMethod.fileSizeCheck(video);
-            if(Boolean.FALSE.equals(videoBoolean)){
-                throw new IllegalArgumentException("video 파일의 크기가 너무 큽니다.");
-            }
-        }
-
-
-
-
         Lecture lecture;
-        try{
-            lecture = lectureRepository.save(dto.toEntity(subject));
-            byte[] imageBytes = image.getBytes();
-            Path imagePath = Paths.get("C:/Users/rro06/OneDrive/Desktop/tmp/", lecture.getId() + "_" + image.getOriginalFilename());
-            Files.write(imagePath,imageBytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
-            byte[] videoBytes = video.getBytes();
-            Path videoPath = Paths.get("C:/Users/rro06/OneDrive/Desktop/tmp/", lecture.getId() + "_" + video.getOriginalFilename());
-            Files.write(videoPath,videoBytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-
+        lecture = lectureRepository.save(dto.toEntity(subject));
+        Path imagePath = commonMethod.fileSave(image, lecture.getId());
+        Path videoPath = commonMethod.fileSave(video, lecture.getId());
+        if(imagePath != null){
             lecture.updateImagePath(imagePath.toString());
-            lecture.updateVideoPath(videoPath.toString());
-
-        }catch (IOException e){
-            throw new RuntimeException("강의 저장 실패");
         }
+        if(videoPath != null){
+            lecture.updateVideoPath(videoPath.toString());
+        }
+
         return lecture;
     }
 
     //    강의 업데이트
     public Lecture lectureUpdate(LectureUpdateReqDto dto){
-        return null;
+        Lecture lecture = lectureRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        lecture.toUpdate(dto, "","");
+        return lecture;
     }
 
 

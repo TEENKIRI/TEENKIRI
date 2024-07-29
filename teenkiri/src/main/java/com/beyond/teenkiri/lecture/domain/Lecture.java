@@ -2,7 +2,9 @@ package com.beyond.teenkiri.lecture.domain;
 
 import com.beyond.teenkiri.common.BaseTimeEntity;
 import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
+import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,13 +54,35 @@ public class Lecture extends BaseTimeEntity {
         this.videoUrl = videoPath;
     }
 
-    public LectureListResDto fromEntity() {
+    public LectureListResDto fromListEntity() {
         return LectureListResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .progress(null) // 🚨 유저별 진행률
                 .build();
+    }
+
+    public LectureDetResDto fromDetEntity() {
+        return LectureDetResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .imageUrl(this.imageUrl)
+                .videoUrl(this.videoUrl)
+                .progress(null) // 🚨 유저별 진행률
+                .build();
+    }
+
+    public void toUpdate(LectureUpdateReqDto dto, String videoUrl, String imageUrl) {
+        if(!this.title.equals(dto.getTitle())){
+            this.title = dto.getTitle();
+        }
+        if(!this.videoUrl.equals(videoUrl)){
+            this.videoUrl = videoUrl;
+        }
+        if(!this.imageUrl.equals(imageUrl)){
+            this.imageUrl = imageUrl;
+        }
     }
 }
 
