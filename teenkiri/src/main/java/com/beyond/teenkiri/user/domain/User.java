@@ -1,11 +1,13 @@
-package com.beyond.teenkiri.domain;
+package com.beyond.teenkiri.user.domain;
 
 
 import com.beyond.teenkiri.common.BaseTimeEntity;
 import com.beyond.teenkiri.common.DelYN;
+//import com.beyond.teenkiri.subscribe.domain.Subscribe;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,6 +43,9 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
+
+//    @OneToMany(mappedBy = "subscribe_id")
+//    private List<Subscribe> subscribe;
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    private List<Post> posts;
