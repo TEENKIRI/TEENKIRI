@@ -1,9 +1,11 @@
 package com.beyond.teenkiri.user.domain;
 
-
-import com.beyond.teenkiri.common.BaseTimeEntity;
-import com.beyond.teenkiri.common.DelYN;
-//import com.beyond.teenkiri.subscribe.domain.Subscribe;
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
+import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.user.dto.UserDetailDto;
+import com.beyond.teenkiri.user.dto.UserListResDto;
+import com.beyond.teenkiri.user.dto.UserUpdateDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,7 +34,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.STUDENT;
 
     @Column(length = 20, nullable = false, unique = true)
     private String phone;
@@ -41,46 +43,42 @@ public class User extends BaseTimeEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('N', 'Y') DEFAULT 'N'")
     private DelYN delYN;
 
-//    @OneToMany(mappedBy = "subscribe_id")
-//    private List<Subscribe> subscribe;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Post> posts;
-//
-//    public UserListResDto listFromEntity() {
-//        return UserListResDto.builder()
-//                .id(this.id)
-//                .email(this.email)
-//                .name(this.name)
-//                .address(this.address)
-//                .phone(this.phone)
-//                .nickname(this.nickname)
-//                .build();
-//    }
-//
-//    public void toUpdate(UserUpdateDto dto) {
-//        this.name = dto.getName();
-//        this.nickname = dto.getNickname();
-//        this.password = dto.getPassword();
-//        this.address = dto.getAddress();
-//        this.phone = dto.getPhone();
-//    }
-//
-//    public UserDetailDto detailFromEntity() {
-//        return UserDetailDto.builder()
-//                .id(this.getId())
-//                .email(this.getEmail())
-//                .name(this.getName())
-//                .nickname(this.nickname)
-//                .password(this.getPassword())
-//                .role(this.getRole())
-//                .createdTime(this.getCreatedTime())
-//                .postCounts((long) this.getPosts().size())
-//                .address(this.getAddress())
-//                .phone(this.getPhone())
-//                .build();
-//    }
+    public UserListResDto listFromEntity() {
+        return UserListResDto.builder()
+                .id(this.id)
+                .email(this.email)
+                .name(this.name)
+                .address(this.address)
+                .phone(this.phone)
+                .nickname(this.nickname)
+                .build();
+    }
+
+    public void toUpdate(UserUpdateDto dto) {
+        this.name = dto.getName();
+        this.nickname = dto.getNickname();
+        this.password = dto.getPassword();
+        this.address = dto.getAddress();
+        this.phone = dto.getPhone();
+    }
+
+    public UserDetailDto detailFromEntity() {
+        return UserDetailDto.builder()
+                .id(this.getId())
+                .email(this.getEmail())
+                .name(this.getName())
+                .nickname(this.nickname)
+                .password(this.getPassword())
+                .role(this.getRole())
+                .createdTime(this.getCreatedTime())
+                .postCounts((long) this.getPosts().size())
+                .address(this.getAddress())
+                .phone(this.getPhone())
+                .build();
+    }
 }
