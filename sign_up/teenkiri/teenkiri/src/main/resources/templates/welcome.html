@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>환영 페이지</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="welcome-message"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcome-message').innerText = `${username}님 환영합니다!`;
+        } else {
+            document.getElementById('welcome-message').innerText = '로그인이 필요합니다.';
+        }
+    });
+</script>
+</body>
+</html>
