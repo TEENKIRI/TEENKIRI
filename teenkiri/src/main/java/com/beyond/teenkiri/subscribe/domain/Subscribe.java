@@ -1,15 +1,5 @@
 package com.beyond.teenkiri.subscribe.domain;
 
-import com.beyond.teenkiri.common.BaseTimeEntity;
-import com.beyond.teenkiri.user.domain.User;
-import com.beyond.teenkiri.subject.domain.Subject;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-
 //@Getter
 //@Builder
 //@AllArgsConstructor

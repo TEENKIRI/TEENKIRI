@@ -1,8 +1,7 @@
 package com.beyond.teenkiri.lecture.repository;
 
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.lecture.domain.Lecture;
-import com.beyond.teenkiri.subject.domain.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

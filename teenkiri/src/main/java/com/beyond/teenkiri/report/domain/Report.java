@@ -4,7 +4,6 @@ import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.report.dto.ReportDetailDto;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;

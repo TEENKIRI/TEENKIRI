@@ -34,6 +34,7 @@ public class Notice extends BaseTimeEntity {
 
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private DelYN delYN = DelYN.N;
 
     public NoticeDetailDto fromDetailEntity() {

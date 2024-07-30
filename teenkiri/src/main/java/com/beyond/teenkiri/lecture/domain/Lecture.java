@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.lecture.domain;
 
-import com.beyond.teenkiri.common.BaseTimeEntity;
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;

@@ -2,7 +2,7 @@ package com.beyond.teenkiri.course.domain;
 
 // 과목 Table
 
-import com.beyond.teenkiri.common.BaseTimeEntity;
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.subject.controller;
 
-import com.beyond.teenkiri.common.CommonResDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;

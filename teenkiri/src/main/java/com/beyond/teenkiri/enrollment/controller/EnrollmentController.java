@@ -1,13 +1,12 @@
 package com.beyond.teenkiri.enrollment.controller;
 
-import com.beyond.teenkiri.common.CommonResDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.enrollment.domain.Enrollment;
 import com.beyond.teenkiri.enrollment.dto.EnrollDetResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollListResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollSaveReqDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollUpdateReqDto;
 import com.beyond.teenkiri.enrollment.service.EnrollmentService;
-import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.lecture.service;
 
 import com.beyond.teenkiri.common.CommonMethod;
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
@@ -9,7 +9,6 @@ import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
 import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.subject.repository.SubjectRepository;
 import com.beyond.teenkiri.subject.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,11 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 
 @Service

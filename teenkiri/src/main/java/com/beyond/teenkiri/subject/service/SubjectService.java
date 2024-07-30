@@ -1,9 +1,8 @@
 package com.beyond.teenkiri.subject.service;
 
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.repository.CourseRepository;
-import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.subject.domain.Subject;

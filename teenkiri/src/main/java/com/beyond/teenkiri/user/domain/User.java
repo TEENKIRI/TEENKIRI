@@ -34,6 +34,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Role role = Role.STUDENT;
 
     @Column(length = 20, nullable = false, unique = true)

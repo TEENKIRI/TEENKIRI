@@ -32,7 +32,7 @@ public class QnAAnswerReqDto {
                 .comments(existingQnA.getComments())
                 .build();
 
-        qna.setCreatedTime(existingQnA.getCreatedTime());
+        qna.patchCreateTime(existingQnA.getCreatedTime());
         return qna;
     }
 }

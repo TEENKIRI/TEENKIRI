@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.subject.dto;
 
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.subject.domain.Grade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
