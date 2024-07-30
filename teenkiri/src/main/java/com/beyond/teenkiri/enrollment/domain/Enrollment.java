@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.enrollment.domain;
 
-import com.beyond.teenkiri.common.BaseTimeEntity;
-import com.beyond.teenkiri.common.DelYN;
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.enrollment.dto.EnrollDetResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollListResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollUpdateReqDto;

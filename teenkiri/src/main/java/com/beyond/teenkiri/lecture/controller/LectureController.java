@@ -1,13 +1,12 @@
 package com.beyond.teenkiri.lecture.controller;
 
-import com.beyond.teenkiri.common.CommonResDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
 import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
 import com.beyond.teenkiri.lecture.service.LectureService;
-import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

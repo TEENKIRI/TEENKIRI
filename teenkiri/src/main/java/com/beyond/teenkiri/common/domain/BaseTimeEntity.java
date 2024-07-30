@@ -16,7 +16,12 @@ public abstract class BaseTimeEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedTime;
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+
+    public void patchCreateTime(LocalDateTime localDateTime){
+        this.createdTime = localDateTime;
+    }
+
+    public void patchUpdatedTime(LocalDateTime localDateTime){
+        this.updatedTime = localDateTime;
     }
 }

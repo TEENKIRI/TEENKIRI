@@ -1,11 +1,10 @@
 package com.beyond.teenkiri.course.controller;
 
-import com.beyond.teenkiri.common.CommonResDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.course.dto.CourseSaveReqDto;
 import com.beyond.teenkiri.course.service.CourseService;
-import com.beyond.teenkiri.subject.dto.SubjectSaveReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

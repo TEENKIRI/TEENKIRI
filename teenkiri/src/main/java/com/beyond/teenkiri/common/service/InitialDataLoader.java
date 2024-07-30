@@ -22,8 +22,10 @@ public class InitialDataLoader implements CommandLineRunner {
         if (userRepository.findByEmail("admin@test.com").isEmpty()) {
             userService.userCreate(UserSaveReqDto.builder()
                     .name("admin")
+                    .nickname("adminNick")
                     .email("admin@test.com")
                     .password("12341234")
+                    .phone("01011112222")
                     .role(Role.ADMIN)
                     .build());
         }
