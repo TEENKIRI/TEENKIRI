@@ -3,8 +3,30 @@
 <head>
     <title>회원가입</title>
     <meta charset="UTF-8">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* 그라데이션 색상 */
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white; /* 텍스트 색상 */
+            font-family: Arial, sans-serif;
+        }
+
+        #error-message {
+            color: red;
+        }
+
+        #success-message {
+            color: green;
+        }
+    </style>
 </head>
 <body>
+<h2>회원가입</h2>
 <form id="register-form">
     <label for="username">이름:</label>
     <input type="text" id="username" name="username" required><br>
@@ -22,8 +44,8 @@
     <input type="text" id="phone" name="phone" required><br>
     <button type="button" onclick="register()">회원가입</button>
 </form>
-<div id="error-message" style="color: red;"></div>
-<div id="success-message" style="color: green;"></div>
+<div id="error-message"></div>
+<div id="success-message"></div>
 <script>
     let isEmailVerified = false;
     let isNicknameChecked = false;
@@ -42,7 +64,7 @@
         if (response.ok) {
             alert('인증 코드가 이메일로 전송되었습니다.');
         } else {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
             document.getElementById('error-message').innerText = `이메일 전송에 실패했습니다: ${errorData.message}`;
         }
     }
@@ -63,7 +85,7 @@
             isEmailVerified = true;
             document.getElementById('success-message').innerText = '이메일 인증에 성공했습니다.';
         } else {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
             document.getElementById('error-message').innerText = `이메일 인증에 실패했습니다: ${errorData.message}`;
         }
     }
@@ -83,12 +105,18 @@
             isNicknameChecked = true;
             document.getElementById('success-message').innerText = '사용 가능한 닉네임입니다.';
         } else {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
             document.getElementById('error-message').innerText = `닉네임 중복 확인에 실패했습니다: ${errorData.message}`;
         }
     }
 
     async function register() {
+        const password = document.getElementById('password').value;
+        if (password.length <= 7) {
+            document.getElementById('error-message').innerText = '비밀번호는 8자 이상이어야 합니다.';
+            return;
+        }
+
         if (!isEmailVerified) {
             document.getElementById('error-message').innerText = '이메일 인증을 완료해주세요.';
             return;
@@ -101,7 +129,6 @@
 
         const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
         const nickname = document.getElementById('nickname').value;
         const address = document.getElementById('address').value;
         const phone = document.getElementById('phone').value;
@@ -118,7 +145,7 @@
             alert('회원가입이 완료되었습니다.');
             // Redirect or further logic here
         } else {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
             document.getElementById('error-message').innerText = `회원가입에 실패했습니다: ${errorData.message}`;
         }
     }

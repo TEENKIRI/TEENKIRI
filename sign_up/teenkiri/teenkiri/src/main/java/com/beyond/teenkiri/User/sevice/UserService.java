@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 import java.util.Random;
 
 @Service
@@ -37,7 +37,7 @@ public class UserService {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        return jwtTokenProvider.createToken(user.getEmail(), List.of(user.getUserType().name()));
+        return jwtTokenProvider.createToken(user.getEmail(), user.getUserType().name());
     }
 
     public String findId(UserFindIdDto findIdDto) {
@@ -52,7 +52,7 @@ public class UserService {
         User user = userRepository.findByUsernameAndPhoneAndEmail(findPasswordDto.getUsername(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
-        String resetToken = jwtTokenProvider.createToken(user.getEmail(), List.of(user.getUserType().name()));
+        String resetToken = jwtTokenProvider.createToken(user.getEmail(), user.getUserType().name());
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
         String resetLink = "http://localhost:8081/api/reset-password?token=" + resetToken; // /api 경로 추가
@@ -69,11 +69,22 @@ public class UserService {
             throw new RuntimeException("동일하지 않은 비밀번호 입니다.");
         }
 
+        if (passwordResetDto.getNewPassword().length() <= 7) {
+            throw new RuntimeException("비밀번호는 8자 이상이어야 합니다.");
+        }
+
+        if (passwordEncoder.matches(passwordResetDto.getNewPassword(), user.getPassword())) {
+            throw new RuntimeException("이전과 동일한 비밀번호로 설정할 수 없습니다.");
+        }
+
         user.setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
         userRepository.save(user);
     }
 
     public void register(UserSaveReqDto saveReqDto) {
+        if (saveReqDto.getPassword().length() <= 7) {
+            throw new RuntimeException("비밀번호는 8자 이상이어야 합니다.");
+        }
         if (userRepository.existsByEmail(saveReqDto.getEmail())) {
             throw new RuntimeException("이미 사용중인 이메일 입니다.");
         }
@@ -122,4 +133,11 @@ public class UserService {
     public boolean checkNickname(String nickname) {
         return !userRepository.existsByNickname(nickname);
     }
+
+    public void logout(String token) {
+        jwtTokenProvider.addToBlacklist(token);
+    }
+
+
+
 }
