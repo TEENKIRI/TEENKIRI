@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
 @Controller
 public class UserController {
 
@@ -128,4 +127,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 재설정에 실패했습니다: " + e.getMessage());
         }
     }
+
+    @PostMapping("/api/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        userService.logout(token);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
