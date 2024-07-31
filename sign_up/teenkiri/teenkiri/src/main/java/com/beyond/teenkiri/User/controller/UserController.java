@@ -47,6 +47,12 @@ public class UserController {
         return "welcome";
     }
 
+    @GetMapping("/api/delete-account")
+    public String deletePage() {
+        return "delete-account";
+    }
+
+
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginDto) {
         try {
@@ -137,6 +143,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
-
+    @PostMapping("/api/delete-account")
+    public ResponseEntity<?> deleteAccount(@RequestHeader("Authorization") String token, @RequestBody String confirmation) {
+        if (!"틴끼리 사이트 회원 탈퇴에 동의합니다".equals(confirmation)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴 문구가 올바르지 않습니다.");
+        }
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        userService.deleteAccount(token);
+        return ResponseEntity.ok().build();
+    }
 }
+
