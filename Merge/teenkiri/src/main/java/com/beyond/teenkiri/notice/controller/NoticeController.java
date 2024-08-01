@@ -27,42 +27,42 @@ public class NoticeController {
 
     @GetMapping("create")
     public String createNoticeForm() {
-        return "notice/create";
+        return "board/notice/create";
     }
 
     @PostMapping("create")
     public String createNotice(@ModelAttribute NoticeSaveReqDto dto, Model model) {
         try {
             noticeService.createNotice(dto);
-            return "redirect:/notice/list";
+            return "redirect:/board/notice/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "notice/create";
+            return "board/notice/create";
         }
     }
 
     @GetMapping("list")
     public String getAllNotices(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("noticeList", noticeService.noticeList(pageable));
-        return "notice/list";
+        return "board/notice/list";
     }
 
     @GetMapping("detail/{id}")
     public String getNoticeDetail(@PathVariable Long id, Model model) {
         NoticeDetailDto noticeDetail = noticeService.getNoticeDetail(id);
         model.addAttribute("notice", noticeDetail);
-        return "notice/detail";
+        return "board/notice/detail";
     }
 
     @PostMapping("update/{id}")
     public String noticeUpdate(@PathVariable Long id, @ModelAttribute NoticeUpdateDto dto){
         noticeService.noticeUpdate(id, dto);
-        return "redirect:/notice/detail/" + id;
+        return "redirect:/board/notice/detail/" + id;
     }
 
     @GetMapping("delete/{id}")
     public String noticeDelete(@PathVariable Long id, Model model){
         noticeService.noticeDelete(id);
-        return "redirect:/notice/list";
+        return "redirect:/board/notice/list";
     }
 }

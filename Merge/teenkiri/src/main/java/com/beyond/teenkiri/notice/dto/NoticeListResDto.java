@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class NoticeListResDto {
     private Long id;
     private String title;
-    private String userNickname;
+    private String nickname;
     private LocalDateTime createdTime;
 }
 
