@@ -20,20 +20,60 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// Spring Boot Starters
+	// Core
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
 
-	// 타임리프(템플릿 엔진 - JSP, 타임리프 등) 의존성 추가
+	// Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Data
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-	// chat
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// Mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Logging
+	implementation 'org.slf4j:slf4j-api'
+	implementation 'ch.qos.logback:logback-classic'
+	implementation 'ch.qos.logback:logback-core'
+
+	// JSON Web Token (JWT)
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Database
+	// JDBC
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	// Redis
+	implementation 'redis.clients:jedis'
+	implementation 'org.springframework.data:spring-data-redis'
+
+	// Testing
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
