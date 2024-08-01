@@ -15,9 +15,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+
 @Controller
+@RequestMapping("/ssr")
 public class SubjectSsrController {
     private final SubjectService subjectService;
 
@@ -29,55 +33,62 @@ public class SubjectSsrController {
 
 //    강좌 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/list")
-    public ResponseEntity<?> subjectListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
-            direction = Sort.Direction.DESC ) Pageable pageable){
+    public String subjectListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
+            direction = Sort.Direction.DESC ) Pageable pageable, Model model){
         Page<SubjectListResDto> subjectListResDto = subjectService.subjectList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject list",subjectListResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        model.addAttribute("subjectList", subjectListResDto);
+        return "subject/list";
     }
 
 //    강좌 순위별 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/rating/list")
-    public ResponseEntity<?> subjectRatingListView(@PageableDefault(page = 0, size=4 ) Pageable pageable){
+    public String subjectRatingListView(@PageableDefault(page = 0, size=4 ) Pageable pageable, Model model){
         Page<SubjectListResDto> subjectListResDto = subjectService.subjectRatingList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        model.addAttribute("subjectList", subjectListResDto);
+        return "subject/rating/list";
     }
 
 
 //    강좌 상세 페이지
     @GetMapping("/subject/detail/{id}")
-    public ResponseEntity<?> subjectDetailView(@PathVariable(value = "id") Long id){
+    public String subjectDetailView(@PathVariable(value = "id") Long id, Model model){
         SubjectDetResDto subjectDetResDto = subjectService.subjectDetail(id);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject detail",subjectDetResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        model.addAttribute("subject", subjectDetResDto);
+        return "subject/detail";
     }
 
+//    강좌 생성 페이지
+    @GetMapping("/subject/create")
+    public String subjectCreateView(){
+        return "subject/create";
+    }
 
 //    강좌 생성
     @PostMapping("/subject/create")
-    public ResponseEntity<?> subjectCreate(@RequestBody SubjectSaveReqDto dto){
-        Subject subject = subjectService.subjectCreate(dto);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",subject.getId());
-        return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
+    public String subjectCreate(@RequestBody SubjectSaveReqDto dto, Model model){
+       try {
+            subjectService.subjectCreate(dto);
+            return "redirect:/subject/list";
+        } catch (SecurityException | EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "subject/create";
+        }
     }
 
 
 //    강좌 업데이트
     @PatchMapping("/subject/update")
-    public ResponseEntity<?> subjectUpdate(SubjectUpdateReqDto dto){
+    public String subjectUpdate(SubjectUpdateReqDto dto, Model model){
         Long subjectId = subjectService.subjectUpdate(dto);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "complete subject update",subjectId);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        return "redirect:/subject/detail/" + subjectId;
     }
 
 
 //    강좌 삭제
     @DeleteMapping("/subject/delete/{id}")
-    public ResponseEntity<?> subjectDelete(@PathVariable(value = "id") Long id){
+    public String subjectDelete(@PathVariable(value = "id") Long id, Model model){
         Long subjectId = subjectService.subjectDelete(id);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "complete subject delete",subjectId);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        return "redirect:/subject/list";
     }
 
 
