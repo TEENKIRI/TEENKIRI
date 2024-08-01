@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.qna.dto;
 
 import com.beyond.teenkiri.qna.domain.QnA;
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

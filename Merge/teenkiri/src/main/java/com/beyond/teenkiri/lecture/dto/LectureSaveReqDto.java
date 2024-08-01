@@ -2,7 +2,6 @@ package com.beyond.teenkiri.lecture.dto;
 
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

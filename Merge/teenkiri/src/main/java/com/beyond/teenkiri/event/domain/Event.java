@@ -5,7 +5,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.dto.EventDetailDto;
 import com.beyond.teenkiri.event.dto.EventListResDto;
 import com.beyond.teenkiri.event.dto.EventUpdateDto;
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import lombok.*;
 
 import javax.persistence.*;

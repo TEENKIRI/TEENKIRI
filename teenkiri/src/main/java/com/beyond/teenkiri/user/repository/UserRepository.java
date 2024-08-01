@@ -1,6 +1,6 @@
-package com.beyond.teenkiri.user.repository;
+package com.beyond.teenkiri.user_board.repository;
 
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

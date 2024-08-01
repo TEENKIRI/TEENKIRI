@@ -1,7 +1,7 @@
-package com.beyond.teenkiri.user.dto;
+package com.beyond.teenkiri.user_board.dto;
 
 
-import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user_board.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

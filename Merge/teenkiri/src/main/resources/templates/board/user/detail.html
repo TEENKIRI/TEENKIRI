@@ -56,11 +56,11 @@
     </table>
     <div class="float-end">
         <button onclick="showUpdateForm()" class="btn btn-primary">수정</button>
-        <a th:href="@{/user/delete/{id}(id=${user.id})}" class="btn btn-primary">삭제</a>
+        <a th:href="@{/user/board/delete/{id}(id=${user.id})}" class="btn btn-primary">삭제</a>
     </div>
     <br>
     <div id="update-form" class="mt-4">
-        <form th:action="@{/user/update/{id}(id=${user.id})}" method="post">
+        <form th:action="@{/user/board/update/{id}(id=${user.id})}" method="post">
             <div class="form-group">
                 <label for="name">이름</label>
                 <input type="text" class="form-control" name="name" id="name" th:value="${user.name}">
