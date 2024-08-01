@@ -38,6 +38,6 @@ out/
 
 
 ### etc
-
 Merge/teenkiri/src/main/resources/application.yml
 Merge/teenkiri/src/main/resources/application**.yml
+teenkiri/application.log

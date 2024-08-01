@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.qna.dto;
 
 import com.beyond.teenkiri.qna.domain.QnA;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class QnAAnswerReqDto {
     private LocalDateTime answeredAt;
     private LocalDateTime createdTime;
 
-    public QnA toEntity(User answeredBy, QnA existingQnA) {
+    public QnA toEntity(user answeredBy, QnA existingQnA) {
         QnA qna = QnA.builder()
                 .id(existingQnA.getId())
                 .title(existingQnA.getTitle())

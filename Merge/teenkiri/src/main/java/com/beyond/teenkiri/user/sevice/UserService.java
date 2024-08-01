@@ -1,20 +1,23 @@
 package com.beyond.teenkiri.user.sevice;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenProvider;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.util.Random;
 
-@Service
+@Service("userService")
 public class UserService {
 
     @Autowired
+    @Qualifier("userRepository")
     private UserRepository userRepository;
 
     @Autowired
@@ -143,7 +146,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인할 수 없습니다: " + email));
 
-        user.setDelYn(User.DeletionStatus.Y);
+        user.setDelYN(DelYN.Y);
         user.setNickname("<알수없음>" + System.currentTimeMillis());
         userRepository.save(user);
     }

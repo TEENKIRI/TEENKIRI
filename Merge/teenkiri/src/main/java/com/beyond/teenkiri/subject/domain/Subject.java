@@ -5,7 +5,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +41,7 @@ public class Subject extends BaseTimeEntity {
 //    유저 : 선생님
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userTeacher;
+    private user userTeacher;
 
 //    과목
     @ManyToOne

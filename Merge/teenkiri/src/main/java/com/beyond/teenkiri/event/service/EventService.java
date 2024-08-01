@@ -7,7 +7,7 @@ import com.beyond.teenkiri.event.dto.EventSaveReqDto;
 import com.beyond.teenkiri.event.dto.EventUpdateDto;
 import com.beyond.teenkiri.event.repository.EventRepository;
 import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.user_board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ public class EventService {
 
     @Transactional
     public Event createEvent(EventSaveReqDto dto) {
-        User user = userRepository.findByEmail(dto.getUserEmail())
+        user user = userRepository.findByEmail(dto.getUserEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getRole() != Role.ADMIN) {

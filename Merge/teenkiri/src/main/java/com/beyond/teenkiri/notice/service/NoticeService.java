@@ -7,7 +7,7 @@ import com.beyond.teenkiri.notice.dto.NoticeDetailDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
 import com.beyond.teenkiri.notice.repository.NoticeRepository;
 import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.user_board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ public class NoticeService {
 
     @Transactional
     public Notice createNotice(NoticeSaveReqDto dto) {
-        User user = userRepository.findByEmail(dto.getUserEmail())
+        user user = userRepository.findByEmail(dto.getUserEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getRole() != Role.ADMIN) {

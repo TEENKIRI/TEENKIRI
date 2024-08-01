@@ -2,7 +2,7 @@ package com.beyond.teenkiri.user_board.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +28,8 @@ public class UserSaveReqDto {
     private DelYN delYN = DelYN.N;
 
     // DTO -> Entity 변환
-    public User toEntity() {
-        return User.builder()
+    public user toEntity() {
+        return user.builder()
                 .password(this.password)
                 .name(this.name)
                 .nickname(this.nickname)

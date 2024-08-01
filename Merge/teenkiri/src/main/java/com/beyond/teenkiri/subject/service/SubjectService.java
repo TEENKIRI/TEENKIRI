@@ -4,7 +4,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.repository.CourseRepository;
 import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
@@ -66,7 +66,7 @@ public class SubjectService {
 //    강좌 생성 및 DB 저장
     public Subject subjectCreate(SubjectSaveReqDto dto){
 //        🚨추후 멤버..
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(()-> new EntityNotFoundException("없는 유저입니다."));
+        user user = userRepository.findById(dto.getUserId()).orElseThrow(()-> new EntityNotFoundException("없는 유저입니다."));
 
         if(!user.getRole().equals(Role.ADMIN)){ // 관리자 레벨만 강좌를 생성할 수 있도록 권한설정
             throw new IllegalArgumentException("권한이 부족합니다.");

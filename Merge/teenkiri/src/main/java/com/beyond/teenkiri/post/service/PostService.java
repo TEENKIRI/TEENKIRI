@@ -6,7 +6,7 @@ import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.post.dto.PostSaveReqDto;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
 import com.beyond.teenkiri.post.repository.PostRepository;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ public class PostService {
     }
 
     public Post postCreate(PostSaveReqDto dto) {
-        User user = userService.findByEmail(dto.getEmail());
+        user user = userService.findByEmail(dto.getEmail());
         Post post = dto.toEntity(user);
         Post savedPost = postRepository.save(post);
         return savedPost;
