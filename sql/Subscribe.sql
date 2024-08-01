@@ -1,9 +1,9 @@
-CREATE TABLE  (
-    subscribe_id bigint AUTO_INCREMENT PRIMARY KEY, 
-    user_id bigint NOT NULL,
-    subject_id bigint NOT NULL,
+CREATE TABLE Subscription (
+    subscribe_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    subject_id BIGINT NOT NULL,
     wish_type ENUM('wishlist', 'enrolled') NOT NULL,
-    -- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 찜 생성시각이 필요한지 의문이지만 일단 넣음
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );

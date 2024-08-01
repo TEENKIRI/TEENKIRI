@@ -1,12 +1,12 @@
 CREATE TABLE Reviews (
-    review_id bigint AUTO_INCREMENT PRIMARY KEY,
-    user_id bigint NOT NULL,
-    subject_id bigint NOT NULL,
+    review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    subject_id BIGINT NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    del_yn ENUM('N', 'Y') DEFAULT 'N',
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    del_yn ENUM('N', 'Y') DEFAULT 'N',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (subject_id) REFERENCES Subject(subject_id)
 );
