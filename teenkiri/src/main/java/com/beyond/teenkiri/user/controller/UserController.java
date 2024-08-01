@@ -1,9 +1,9 @@
-package com.beyond.teenkiri.user.controller;
+package com.beyond.teenkiri.user_board.controller;
 
-import com.beyond.teenkiri.user.dto.UserDetailDto;
-import com.beyond.teenkiri.user.dto.UserSaveReqDto;
-import com.beyond.teenkiri.user.dto.UserUpdateDto;
-import com.beyond.teenkiri.user.service.UserService;
+import com.beyond.teenkiri.user_board.dto.UserDetailDto;
+import com.beyond.teenkiri.user_board.dto.UserSaveReqDto;
+import com.beyond.teenkiri.user_board.dto.UserUpdateDto;
+import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

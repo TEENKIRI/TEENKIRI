@@ -12,7 +12,7 @@
 <div class="container">
     <div class="page-header"><h3>회원목록</h3></div>
     <div class="float-end">
-        <a href="/user/create" class="btn btn-primary">회원가입</a>
+        <a href="/user/board/create" class="btn btn-primary">회원가입</a>
         <a href="/post/create" class="btn btn-primary">글쓰기</a>
 
     </div>
@@ -31,14 +31,14 @@
             <td th:text ="${user.name}"></td>
             <td th:text ="${user.nickname}"></td>
             <td th:text ="${user.email}"></td>
-            <td><a th:href="@{/user/detail/{id}(id=${user.id})}">상세보기</a></td>
+            <td><a th:href="@{/user/board/detail/{id}(id=${user.id})}">상세보기</a></td>
         </tr>
         </tbody>
     </table>
     <ul class="pagination justify-content-center">
         <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, userList.totalPages-1)}"
             th:classappend="${pageNum == userList.pageable.pageNumber}? active">
-            <a class="page-link" th:href="@{/user/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+            <a class="page-link" th:href="@{/user/board/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
         </li>
     </ul>
 </div>
