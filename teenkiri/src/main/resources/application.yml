@@ -24,3 +24,14 @@ spring:
     multipart:
       maxFileSize: 5120MB # 최대 5GB
       maxRequestSize: 5120MB # 최대 5GB
+
+# aws s3 설정
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA2UC3DSYQWDSN7N6G
+      secret-key: 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
+    region:
+      static: ap-southeast-2
+    s3:
+      bucket: jungeun-file
