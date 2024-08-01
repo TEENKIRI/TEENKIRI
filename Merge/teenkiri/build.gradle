@@ -30,6 +30,9 @@ dependencies {
 
 	// 타임리프(템플릿 엔진 - JSP, 타임리프 등) 의존성 추가
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// chat
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
