@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.report.controller;
+package com.beyond.teenkiri.report.cotroller;
 
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
@@ -47,17 +47,17 @@ public class ReportController {
         } else {
             throw new IllegalArgumentException("QnA ID 또는 Post ID가 필요합니다.");
         }
-        return "/report/create";
+        return "/board/report/create";
     }
 
     @PostMapping("create")
     public String reportCreatePost(@ModelAttribute ReportSaveReqDto dto, Model model) {
         try {
             reportService.reportCreate(dto);
-            return "redirect:/report/list";
+            return "redirect:/board/report/list";
         } catch (IllegalArgumentException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/report/list";
+            return "redirect:/board/report/list";
         }
     }
 
@@ -65,6 +65,6 @@ public class ReportController {
     public String reportList(@RequestParam(value = "type", required = false) String type, Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("reportList", reportService.reportList(pageable, type));
         model.addAttribute("filterType", type != null ? type : "all");
-        return "report/list";
+        return "board/report/list";
     }
 }

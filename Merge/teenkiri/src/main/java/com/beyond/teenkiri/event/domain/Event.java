@@ -41,7 +41,7 @@ public class Event extends BaseTimeEntity {
                 .id(this.getId())
                 .title(this.getTitle())
                 .content(this.getContent())
-                .userNickname(this.getUser().getNickname())
+                .nickname(this.getUser().getNickname())
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
@@ -51,7 +51,7 @@ public class Event extends BaseTimeEntity {
         return EventListResDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
-                .userNickname(this.getUser().getNickname())
+                .nickname(this.getUser().getNickname())
                 .createdTime(this.getCreatedTime())
                 .build();
     }

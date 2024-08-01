@@ -31,24 +31,24 @@ public class QnAController {
 
     @GetMapping("create")
     public String createQuestionForm() {
-        return "qna/create";
+        return "board/qna/create";
     }
 
     @PostMapping("create")
     public String createQuestion(@ModelAttribute QnASaveReqDto dto, Model model) {
         try {
             qnAService.createQuestion(dto);
-            return "redirect:/qna/list";
+            return "redirect:/board/qna/list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "qna/create";
+            return "board/qna/create";
         }
     }
 
     @GetMapping("list")
     public String getAllQuestions(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("qnaList", qnAService.qnaList(pageable));
-        return "qna/list";
+        return "board/qna/list";
     }
 
     @GetMapping("detail/{id}")
@@ -56,21 +56,21 @@ public class QnAController {
         QnADetailDto question = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
         model.addAttribute("question", question);
         model.addAttribute("comments", commentService.getCommentsByQnaId(id));
-        return "qna/detail";
+        return "board/qna/detail";
     }
 
     @PostMapping("comment/create")
     public String createQnaComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
         commentService.saveComment(dto);
         redirectAttributes.addAttribute("id", dto.getQnaId());
-        return "redirect:/qna/detail/{id}";
+        return "redirect:/board/qna/detail/{id}";
     }
 
     @GetMapping("answer/{id}")
     public String answerQuestionForm(@PathVariable Long id, Model model) {
         QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
         model.addAttribute("question", questionDetail);
-        return "qna/answer";
+        return "board/qna/answer";
     }
 
     @PostMapping("answer/{id}")
@@ -78,10 +78,10 @@ public class QnAController {
         try {
             qnAService.answerQuestion(id, dto);
             model.addAttribute("question", dto);
-            return "redirect:/qna/detail/" + id;
+            return "redirect:/board/qna/detail/" + id;
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "qna/answer";
+            return "board/qna/answer";
         }
     }
 
@@ -89,10 +89,10 @@ public class QnAController {
     public String qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto, Model model) {
         try {
             qnAService.QnAQUpdate(id, dto);
-            return "redirect:/qna/detail/" + id;
+            return "redirect:/board/qna/detail/" + id;
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/detail/" + id;
+            return "redirect:/board/qna/detail/" + id;
         }
     }
 
@@ -100,10 +100,10 @@ public class QnAController {
     public String qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto, Model model) {
         try {
             qnAService.QnAAUpdate(id, dto);
-            return "redirect:/qna/detail/" + id;
+            return "redirect:/board/qna/detail/" + id;
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/detail/" + id;
+            return "redirect:/board/qna/detail/" + id;
         }
     }
 
@@ -111,10 +111,10 @@ public class QnAController {
     public String qnaDelete(@PathVariable Long id, Model model) {
         try {
             qnAService.qnaDelete(id);
-            return "redirect:/qna/list";
+            return "redirect:/board/qna/list";
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/list";
+            return "redirect:/board/qna/list";
         }
     }
 

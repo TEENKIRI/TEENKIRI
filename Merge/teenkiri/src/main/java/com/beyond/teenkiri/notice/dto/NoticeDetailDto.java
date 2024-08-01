@@ -15,7 +15,7 @@ public class NoticeDetailDto {
     private Long id;
     private String title;
     private String content;
-    private String userNickname;
+    private String nickname;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 

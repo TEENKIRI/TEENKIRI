@@ -27,7 +27,7 @@ public class PostController {
     // 게시물 생성 화면을 보여줍니다.
     @GetMapping("create")
     public String postCreateScreen() {
-        return "post/create";
+        return "/board/post/create";
     }
 
     // 게시물을 생성합니다.
@@ -35,10 +35,10 @@ public class PostController {
     public String postCreatePost(@ModelAttribute PostSaveReqDto dto, Model model) {
         try {
             postService.postCreate(dto);
-            return "redirect:/post/list";
+            return "redirect:/board/post/list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "post/create";
+            return "board/post/create";
         }
     }
 
@@ -46,7 +46,7 @@ public class PostController {
     @GetMapping("list")
     public String postListResDtosList(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("postList", postService.postList(pageable));
-        return "post/list";  // 템플릿 경로 수정
+        return "board/post/list";  // 템플릿 경로 수정
     }
 
     // 특정 게시물의 상세 정보를 보여줍니다.
@@ -54,20 +54,20 @@ public class PostController {
     public String postDetailDto(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.postDetail(id));
         model.addAttribute("comments", commentService.getCommentsByPostId(id));
-        return "post/detail";
+        return "board/post/detail";
     }
 
     // 게시물을 업데이트합니다.
     @PostMapping("update/{id}")
     public String postUpdate(@PathVariable Long id, @ModelAttribute PostUpdateDto dto, Model model) {
         postService.postUpdate(id, dto);
-        return "redirect:/post/detail/" + id;
+        return "redirect:/board/post/detail/" + id;
     }
 
     // 게시물을 삭제합니다.
     @GetMapping("delete/{id}")
     public String postDelete(@PathVariable Long id, Model model) {
         postService.postDelete(id);
-        return "redirect:/post/list";
+        return "redirect:/board/post/list";
     }
 }
