@@ -6,14 +6,14 @@
 2024-07-31 17:26:42.325  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:26:42.529  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:26:42.529  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
-2024-07-31 17:26:42.566  INFO 20548 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2024-07-31 17:26:42.566  INFO 20548 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2024-07-31 17:26:42.566  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 36 ms. Found 0 JDBC repository interfaces.
 2024-07-31 17:26:42.577  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:26:42.578  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2024-07-31 17:26:42.736  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 153 ms. Found 1 JPA repository interfaces.
 2024-07-31 17:26:42.744  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:26:42.745  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2024-07-31 17:26:42.751  INFO 20548 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-07-31 17:26:42.751  INFO 20548 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
 2024-07-31 17:26:42.752  INFO 20548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:26:43.824  INFO 20548 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
 2024-07-31 17:26:43.834  INFO 20548 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
@@ -80,14 +80,14 @@ Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'sp
 2024-07-31 17:27:17.651  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:27:17.860  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:27:17.860  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
-2024-07-31 17:27:17.885  INFO 12868 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2024-07-31 17:27:17.885  INFO 12868 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2024-07-31 17:27:17.886  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 0 JDBC repository interfaces.
 2024-07-31 17:27:17.899  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:27:17.901  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2024-07-31 17:27:18.063  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 157 ms. Found 1 JPA repository interfaces.
 2024-07-31 17:27:18.076  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:27:18.076  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2024-07-31 17:27:18.083  INFO 12868 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-07-31 17:27:18.083  INFO 12868 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
 2024-07-31 17:27:18.084  INFO 12868 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:27:19.028  INFO 12868 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
 2024-07-31 17:27:19.039  INFO 12868 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
@@ -103,7 +103,7 @@ Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'sp
 2024-07-31 17:27:20.486  INFO 12868 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
 2024-07-31 17:27:20.511  INFO 12868 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
 2024-07-31 17:27:20.583  WARN 12868 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-07-31 17:27:21.480  INFO 12868 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@67683210, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@329aa2d1, org.springframework.security.web.context.SecurityContextPersistenceFilter@75882ac2, org.springframework.security.web.header.HeaderWriterFilter@d43f205, org.springframework.security.web.authentication.logout.LogoutFilter@396519b, com.beyond.teenkiri.User.config.JwtAuthFilter@103033fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@43255f91, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c5c0306, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25511895, org.springframework.security.web.session.SessionManagementFilter@647b3fd3, org.springframework.security.web.access.ExceptionTranslationFilter@24e31f06, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@63a9af28]
+2024-07-31 17:27:21.480  INFO 12868 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@67683210, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@329aa2d1, org.springframework.security.web.context.SecurityContextPersistenceFilter@75882ac2, org.springframework.security.web.header.HeaderWriterFilter@d43f205, org.springframework.security.web.authentication.logout.LogoutFilter@396519b, com.beyond.teenkiri.user.config.JwtAuthFilter@103033fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@43255f91, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c5c0306, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25511895, org.springframework.security.web.session.SessionManagementFilter@647b3fd3, org.springframework.security.web.access.ExceptionTranslationFilter@24e31f06, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@63a9af28]
 2024-07-31 17:27:21.953  INFO 12868 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
 2024-07-31 17:27:21.965  INFO 12868 --- [main] com.beyond.teenkiri.TeenkiriApplication  : Started TeenkiriApplication in 5.521 seconds (JVM running for 6.021)
 2024-07-31 17:27:25.315  INFO 12868 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
@@ -117,14 +117,14 @@ Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'sp
 2024-07-31 17:36:59.960  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:37:00.181  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:37:00.181  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
-2024-07-31 17:37:00.210  INFO 3936 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2024-07-31 17:37:00.210  INFO 3936 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2024-07-31 17:37:00.210  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 0 JDBC repository interfaces.
 2024-07-31 17:37:00.224  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:37:00.226  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2024-07-31 17:37:00.426  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 182 ms. Found 1 JPA repository interfaces.
 2024-07-31 17:37:00.438  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
 2024-07-31 17:37:00.438  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2024-07-31 17:37:00.457  INFO 3936 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.User.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-07-31 17:37:00.457  INFO 3936 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.beyond.teenkiri.user.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
 2024-07-31 17:37:00.458  INFO 3936 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
 2024-07-31 17:37:01.567  INFO 3936 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
 2024-07-31 17:37:01.579  INFO 3936 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
@@ -140,7 +140,7 @@ Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'sp
 2024-07-31 17:37:03.247  INFO 3936 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
 2024-07-31 17:37:03.268  INFO 3936 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
 2024-07-31 17:37:03.330  WARN 3936 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-07-31 17:37:04.154  INFO 3936 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@67683210, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@329aa2d1, org.springframework.security.web.context.SecurityContextPersistenceFilter@75882ac2, org.springframework.security.web.header.HeaderWriterFilter@d43f205, org.springframework.security.web.authentication.logout.LogoutFilter@396519b, com.beyond.teenkiri.User.config.JwtAuthFilter@103033fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@43255f91, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c5c0306, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25511895, org.springframework.security.web.session.SessionManagementFilter@647b3fd3, org.springframework.security.web.access.ExceptionTranslationFilter@24e31f06, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@63a9af28]
+2024-07-31 17:37:04.154  INFO 3936 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@67683210, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@329aa2d1, org.springframework.security.web.context.SecurityContextPersistenceFilter@75882ac2, org.springframework.security.web.header.HeaderWriterFilter@d43f205, org.springframework.security.web.authentication.logout.LogoutFilter@396519b, com.beyond.teenkiri.user.config.JwtAuthFilter@103033fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@43255f91, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c5c0306, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25511895, org.springframework.security.web.session.SessionManagementFilter@647b3fd3, org.springframework.security.web.access.ExceptionTranslationFilter@24e31f06, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@63a9af28]
 2024-07-31 17:37:04.690  INFO 3936 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
 2024-07-31 17:37:04.704  INFO 3936 --- [main] com.beyond.teenkiri.TeenkiriApplication  : Started TeenkiriApplication in 6.074 seconds (JVM running for 6.515)
 2024-07-31 17:37:14.592  INFO 3936 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
@@ -150,7 +150,7 @@ Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'sp
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -208,7 +208,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -266,7 +266,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -324,7 +324,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -382,7 +382,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -440,7 +440,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
@@ -498,7 +498,7 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1
 
 org.springframework.security.core.userdetails.UsernameNotFoundException: dldpsk1541@gmail.com
 	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:151) ~[spring-security-core-5.7.8.jar:5.7.8]
-	at com.beyond.teenkiri.User.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
+	at com.beyond.teenkiri.user.config.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:30) ~[main/:na]
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.27.jar:5.3.27]
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346) ~[spring-security-web-5.7.8.jar:5.7.8]
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.7.8.jar:5.7.8]
