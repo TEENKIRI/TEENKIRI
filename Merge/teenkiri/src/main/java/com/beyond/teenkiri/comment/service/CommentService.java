@@ -8,7 +8,7 @@ import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.user_board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class CommentService {
 
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
-        User user = userRepository.findByEmail(dto.getUserEmail())
+        user user = userRepository.findByEmail(dto.getUserEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Comment comment = new Comment();

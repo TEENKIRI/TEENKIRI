@@ -5,7 +5,6 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notice.dto.NoticeDetailDto;
 import com.beyond.teenkiri.notice.dto.NoticeListResDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
-import com.beyond.teenkiri.user_board.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +29,7 @@ public class Notice extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private com.beyond.teenkiri.user_board.domain.user user;
 
 
     @Enumerated(EnumType.STRING)

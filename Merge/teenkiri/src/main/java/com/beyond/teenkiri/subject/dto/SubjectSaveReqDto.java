@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.subject.dto;
 
 import com.beyond.teenkiri.course.domain.Course;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class SubjectSaveReqDto {
 
     private String description;
 
-    public Subject toEntity(User userTeacher, Course course){
+    public Subject toEntity(user userTeacher, Course course){
         return Subject.builder()
                 .title(this.title)
                 .grade(this.grade)

@@ -6,7 +6,6 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.dto.QnAAtoUpdateDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.dto.QnAQtoUpdateDto;
-import com.beyond.teenkiri.user_board.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,11 +34,11 @@ public class QnA extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // 작성자
+    private com.beyond.teenkiri.user_board.domain.user user; // 작성자
 
     @ManyToOne
     @JoinColumn(name = "answered_by")
-    private User answeredBy;
+    private com.beyond.teenkiri.user_board.domain.user answeredBy;
 
     @Column
     private LocalDateTime answeredAt;

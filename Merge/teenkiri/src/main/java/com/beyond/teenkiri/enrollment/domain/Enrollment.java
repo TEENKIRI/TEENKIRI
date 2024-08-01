@@ -7,7 +7,6 @@ import com.beyond.teenkiri.enrollment.dto.EnrollListResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollUpdateReqDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.user_board.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Enrollment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private com.beyond.teenkiri.user_board.domain.user user;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")

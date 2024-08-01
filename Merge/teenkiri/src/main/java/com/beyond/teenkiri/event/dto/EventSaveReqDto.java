@@ -2,7 +2,7 @@ package com.beyond.teenkiri.event.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.domain.Event;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class EventSaveReqDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public Event toEntity(User user){
+    public Event toEntity(user user){
         return Event.builder()
                 .title(this.title)
                 .content(this.content)

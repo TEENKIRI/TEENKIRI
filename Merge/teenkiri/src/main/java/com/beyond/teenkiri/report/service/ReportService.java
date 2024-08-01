@@ -8,7 +8,7 @@ import com.beyond.teenkiri.report.domain.Report;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.repository.ReportRepository;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class ReportService {
 
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto){
-        User user = userService.findByEmail(dto.getReportEmail());
+        user user = userService.findByEmail(dto.getReportEmail());
         QnA qnA = null;
         Post post = null;
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@Controller("userController")
 public class UserController {
 
     @Autowired
@@ -18,38 +18,38 @@ public class UserController {
 
     @GetMapping("/api/login")
     public String loginPage() {
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/api/register")
     public String registerPage() {
-        return "register";
+        return "user/register";
     }
 
     @GetMapping("/api/find-id")
     public String findIdPage() {
-        return "find-id";
+        return "user/find-id";
     }
 
     @GetMapping("/api/find-password")
     public String findPasswordPage() {
-        return "find-password";
+        return "user/find-password";
     }
 
     @GetMapping("/api/reset-password")
     public String resetPasswordPage(@RequestParam("token") String token, Model model) {
         model.addAttribute("token", token);
-        return "reset-password";
+        return "user/reset-password";
     }
 
     @GetMapping("/api/welcome")
     public String welcomePage() {
-        return "welcome";
+        return "user/welcome";
     }
 
     @GetMapping("/api/delete-account")
     public String deletePage() {
-        return "delete-account";
+        return "user/delete-account";
     }
 
     @PostMapping("/api/login")

@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.user.domain;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,11 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "user_table")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String username;
@@ -57,9 +59,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private DeletionStatus delYn = DeletionStatus.N;
+    private DelYN delYN = DelYN.N;
 
-    public User(String username, String password, String phone, String address, String email, String nickname, UserType userType, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DeletionStatus delYn) {
+    public User(String username, String password, String phone, String address, String email, String nickname, UserType userType, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DelYN delYn) {
         this.username = username;
         this.password = password;
         this.phone = phone;
@@ -72,14 +74,11 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-        this.delYn = delYn;
+        this.delYN = delYN;
     }
 
     public enum UserType {
         STUDENT, TEACHER, ADMIN
     }
 
-    public enum DeletionStatus {
-        N, Y
-    }
 }
