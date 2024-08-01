@@ -15,6 +15,7 @@ CREATE TABLE Users (
     del_yn ENUM('N', 'Y') DEFAULT 'N'
 );
 
+
 -- user_id: 고유한 사용자 식별자.
 -- username: 사용자의 아이디.
 -- password: 암호화된 비밀번호.

@@ -4,7 +4,6 @@ CREATE TABLE Reports (
     reported_user_id BIGINT NOT NULL,
     chat_id BIGINT NOT NULL,
     reason ENUM('욕설', '도배', '광고', '기타'),
-    report_log TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (reporter_id) REFERENCES Users(user_id),
