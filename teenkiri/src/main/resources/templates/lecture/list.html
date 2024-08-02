@@ -10,6 +10,14 @@
 <div th:replace="common/header :: headerFragment"></div>
 <div class="container">
   <div class="page-header"><h3>강의</h3></div>
+  <div class="float-start">
+    <div class="form-group">
+      <label for="userEmail">수강자 이메일</label>
+      <input type="text" id="userEmail" name="userEmail">
+      <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}">
+    </div>
+    <button onclick="userSubjectJoin()" class="btn btn-primary">수강신청</button>
+  </div>
   <div class="float-end">
     <a th:href="@{/ssr/lecture/create/{id}(id=${subjectId})}" class="btn btn-primary">강의 만들기</a>
   </div>
@@ -29,7 +37,7 @@
       <td th:text="${#temporals.format(lecture.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
       <td>
         <a th:href="@{/ssr/lecture/detail/{id}(id=${lecture.id})}" class="btn btn-primary">상세보기</a>
-        <a th:href="@{/ssr/user/lecture/detail/{id}(id=${lecture.id})}" class="btn btn-primary">수강하러가기</a>
+        <a th:href="@{/ssr/user/lecture/detail/{id}(id=${lecture.id})}" class="btn btn-primary">강의보러가기</a>
       </td>
     </tr>
     </tbody>
@@ -41,5 +49,25 @@
     </li>
   </ul>
 </div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  async function userSubjectJoin(){
+    const userEmail = document.querySelector("#userEmail");
+    const subjectId = document.querySelector("#subjectId");
+    const postJson = {
+    "userEmail" : userEmail.value,
+    "subjectId" : subjectId.value
+    }
+    try {
+        const response = await axios.post("/ssr/my/subject/create", postJson);
+        if(response.data.status_code === 201){
+          location.reload();
+        }
+        console.log(response)
+    } catch (e) {
+        console.log(e.message)
+    }
+  }
+</script>
 </body>
 </html>
