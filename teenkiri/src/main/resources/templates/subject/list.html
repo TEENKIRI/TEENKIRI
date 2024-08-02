@@ -11,7 +11,7 @@
 <div class="container">
   <div class="page-header"><h3>강좌</h3></div>
   <div class="float-end">
-    <a href="/subject/create" class="btn btn-primary">강좌 만들기</a>
+    <a href="/ssr/subject/create" class="btn btn-primary">강좌 만들기</a>
   </div>
   <table class="table">
     <thead>
@@ -26,9 +26,12 @@
     <tr th:each="subject : ${subjectList}">
       <td th:text="${subject.id}"></td>
       <td><a th:href="@{/subject/detail/{id}(id=${subject.id})}" th:text="${subject.title}"></a></td>
-      <td th:text="${subject.userNickname}"></td>
+      <td th:text="${subject.teacherName}"></td>
       <td th:text="${#temporals.format(subject.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
-      <td><a th:href="@{/subject/detail/{id}(id=${subject.id})}" class="btn btn-primary">상세보기</a></td>
+      <td>
+        <a th:href="@{/ssr/subject/detail/{id}(id=${subject.id})}" class="btn btn-primary">상세보기</a>
+        <a th:href="@{/ssr/subject/detail/{id}(id=${subject.id})}" class="btn btn-primary">강좌관리</a>
+      </td>
     </tr>
     </tbody>
   </table>

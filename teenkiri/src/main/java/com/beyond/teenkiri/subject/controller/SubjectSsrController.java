@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.subject.controller;
 
-import com.beyond.teenkiri.common.dto.CommonResDto;
-import com.beyond.teenkiri.subject.domain.Subject;
+import com.beyond.teenkiri.course.dto.CourseListResDto;
+import com.beyond.teenkiri.course.service.CourseService;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectSaveReqDto;
@@ -12,11 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -24,10 +23,12 @@ import javax.persistence.EntityNotFoundException;
 @RequestMapping("/ssr")
 public class SubjectSsrController {
     private final SubjectService subjectService;
+    private final CourseService courseService;
 
     @Autowired
-    public SubjectSsrController(SubjectService subjectService){
+    public SubjectSsrController(SubjectService subjectService, CourseService courseService){
         this.subjectService = subjectService;
+        this.courseService = courseService;
     }
 
 
@@ -59,16 +60,20 @@ public class SubjectSsrController {
 
 //    강좌 생성 페이지
     @GetMapping("/subject/create")
-    public String subjectCreateView(){
+    public String subjectCreateView(Model model, Pageable pageable){
+        Page<CourseListResDto> courses = courseService.courseList(pageable);
+        model.addAttribute("courseList",courses);
         return "subject/create";
     }
 
 //    강좌 생성
     @PostMapping("/subject/create")
-    public String subjectCreate(@RequestBody SubjectSaveReqDto dto, Model model){
+    public String subjectCreate(SubjectSaveReqDto dto,
+                                Model model){
+        System.out.println("22222222222222222222222222222222");
        try {
-            subjectService.subjectCreate(dto);
-            return "redirect:/subject/list";
+            subjectService.subjectCreate(dto,null);
+            return "redirect:/ssr/subject/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "subject/create";
@@ -88,7 +93,7 @@ public class SubjectSsrController {
     @DeleteMapping("/subject/delete/{id}")
     public String subjectDelete(@PathVariable(value = "id") Long id, Model model){
         Long subjectId = subjectService.subjectDelete(id);
-        return "redirect:/subject/list";
+        return "redirect:/ssr/subject/list";
     }
 
 
