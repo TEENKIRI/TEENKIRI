@@ -64,12 +64,17 @@ public class Subject extends BaseTimeEntity {
     private DelYN delYN = DelYN.N;
 
 
+    private String subjectThumUrl;
+
+
     public SubjectListResDto fromListEntity() {
         return SubjectListResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .teacherName(this.userTeacher.getName())
                 .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
@@ -84,7 +89,13 @@ public class Subject extends BaseTimeEntity {
                 .rating(this.rating)
                 .delYN(this.delYN)
                 .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
+    }
+
+    public void updateImagePath(String s3ImagePath) {
+        this.subjectThumUrl = s3ImagePath;
     }
 }
 

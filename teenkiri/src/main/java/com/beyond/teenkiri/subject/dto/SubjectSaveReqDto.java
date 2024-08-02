@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectSaveReqDto {
-    private Long userId; // 🚨 멤버 생성 시 삭제
+    private String userEmail; // 🚨 멤버 생성 시 삭제
 
     private String title;
     private Grade grade; // 학년
