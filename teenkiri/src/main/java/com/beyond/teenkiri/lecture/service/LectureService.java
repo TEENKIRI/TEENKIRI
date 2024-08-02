@@ -2,11 +2,9 @@ package com.beyond.teenkiri.lecture.service;
 
 import com.beyond.teenkiri.common.CommonMethod;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.lecture.domain.Lecture;
-import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
-import com.beyond.teenkiri.lecture.dto.LectureListResDto;
-import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
-import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
+import com.beyond.teenkiri.lecture.dto.*;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.service.SubjectService;
@@ -18,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 
 
@@ -27,12 +26,14 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final SubjectService subjectService;
     private final CommonMethod commonMethod;
+    private final UploadAwsFileService uploadAwsFileService;
 
     @Autowired
-    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod) {
+    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod, UploadAwsFileService uploadAwsFileService) {
         this.lectureRepository = lectureRepository;
         this.subjectService = subjectService;
         this.commonMethod = commonMethod;
+        this.uploadAwsFileService = uploadAwsFileService;
     }
 
     //    강의 리스트 페이지
@@ -57,27 +58,57 @@ public class LectureService {
         return lectureDetResDto;
     }
 
+//    유저별 강의 수강용 상세 페이지
+    public LectureDetPerUserResDto lectureDetailPerUser(Long id){
+        Lecture lecture = lectureRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        LectureDetPerUserResDto lectureDetPerUserResDto = lecture.fromDetPerUserEntity();
+        return lectureDetPerUserResDto;
+    }
+
     //    강의 생성
-    public Lecture lectureCreate(LectureSaveReqDto dto){
+    public Lecture lectureCreate(LectureSaveReqDto dto, MultipartFile videoSsr, MultipartFile imageSsr){
 
         Subject subject = subjectService.findSubjectById(dto.getSubjectId());
 
-        MultipartFile image = dto.getImage();
-        MultipartFile video = dto.getVideo();
+//        MultipartFile image = dto.getImage();
+//        MultipartFile video = dto.getVideo();
+        MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
+        MultipartFile video = (videoSsr == null) ? dto.getVideo() : videoSsr;
+
 
         Lecture lecture;
 
         lecture = lectureRepository.save(dto.toEntity(subject));
-        Path imagePath = commonMethod.fileSave(image, lecture.getId());
-        Path videoPath = commonMethod.fileSave(video, lecture.getId());
-        if(imagePath != null){
-            lecture.updateImagePath(imagePath.toString());
-        }
-        if(videoPath != null){
-            lecture.updateVideoPath(videoPath.toString());
-        }
 
+        try {
+            MultipartFile imageFile = image;
+
+            if(!imageFile.isEmpty()){
+                String bgImagePathFileName = lecture.getId() + "_"  + imageFile.getOriginalFilename();
+                byte[] bgImagePathByte =  imageFile.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                lecture.updateImagePath(s3ImagePath);
+            }
+
+            MultipartFile videoFile = video;
+            if(!videoFile.isEmpty()){
+                String bgImagePathFileName = lecture.getId() + "_"  + videoFile.getOriginalFilename();
+                byte[] bgImagePathByte =  videoFile.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                lecture.updateVideoPath(s3ImagePath);
+            }
+        }catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패");
+        }
         return lecture;
+//        Path imagePath = commonMethod.fileSave(image, lecture.getId());
+//        Path videoPath = commonMethod.fileSave(video, lecture.getId());
+//        if(imagePath != null){
+//            lecture.updateImagePath(imagePath.toString());
+//        }
+//        if(videoPath != null){
+//            lecture.updateVideoPath(videoPath.toString());
+//        }
     }
 
     //    강의 업데이트

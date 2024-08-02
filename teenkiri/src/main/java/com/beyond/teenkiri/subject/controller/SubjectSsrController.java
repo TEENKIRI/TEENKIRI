@@ -69,10 +69,10 @@ public class SubjectSsrController {
 //    강좌 생성
     @PostMapping("/subject/create")
     public String subjectCreate(SubjectSaveReqDto dto,
+                                @RequestPart(value="subjectThum") MultipartFile subjectThum,
                                 Model model){
-        System.out.println("22222222222222222222222222222222");
        try {
-            subjectService.subjectCreate(dto,null);
+            subjectService.subjectCreate(dto,subjectThum);
             return "redirect:/ssr/subject/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

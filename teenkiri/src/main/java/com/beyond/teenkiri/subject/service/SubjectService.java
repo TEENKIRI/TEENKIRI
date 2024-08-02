@@ -81,18 +81,17 @@ public class SubjectService {
         Subject subject = dto.toEntity(user,course);
 
         subjectRepository.save(subject);
-
-//        try{
-//            MultipartFile image = subjectThum;
-//            if(!subjectThum.isEmpty()){
-//                String bgImagePathFileName = course.getId() + "_"  + image.getOriginalFilename();
-//                byte[] bgImagePathByte =  image.getBytes();
-//                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
-//                subject.updateImagePath(s3ImagePath);
-//            }
-//        }catch (IOException e) {
-//            throw new RuntimeException("파일 저장 실패");
-//        }
+        try{
+            MultipartFile image = subjectThum;
+            if(!subjectThum.isEmpty()){
+                String bgImagePathFileName = course.getId() + "_"  + image.getOriginalFilename();
+                byte[] bgImagePathByte =  image.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                subject.updateImagePath(s3ImagePath);
+            }
+        }catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패");
+        }
 
         return subject; // save된 subject return;
     }

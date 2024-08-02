@@ -2,6 +2,7 @@ package com.beyond.teenkiri.lecture.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.lecture.dto.LectureDetPerUserResDto;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
@@ -36,6 +37,9 @@ public class Lecture extends BaseTimeEntity {
     @Builder.Default
     private String videoUrl = "";
 
+    @Builder.Default
+    private Float videoDuration = 0F;
+
     @Column(columnDefinition = "TEXT")
     @Builder.Default
     private String imageUrl = "";
@@ -62,6 +66,8 @@ public class Lecture extends BaseTimeEntity {
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .progress(null) // 🚨 유저별 진행률
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
@@ -71,7 +77,18 @@ public class Lecture extends BaseTimeEntity {
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .videoUrl(this.videoUrl)
-                .progress(null) // 🚨 유저별 진행률
+                .build();
+    }
+
+    public LectureDetPerUserResDto fromDetPerUserEntity() {
+        return LectureDetPerUserResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .imageUrl(this.imageUrl)
+                .videoUrl(this.videoUrl)
+                .progress(0F) // 유저별 진행률
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
