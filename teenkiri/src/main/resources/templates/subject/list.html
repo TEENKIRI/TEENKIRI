@@ -30,7 +30,7 @@
       <td th:text="${#temporals.format(subject.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
       <td>
         <a th:href="@{/ssr/subject/detail/{id}(id=${subject.id})}" class="btn btn-primary">상세보기</a>
-        <a th:href="@{/ssr/subject/detail/{id}(id=${subject.id})}" class="btn btn-primary">강좌관리</a>
+        <a th:href="@{/ssr/lecture/list/{id}(id=${subject.id})}" class="btn btn-primary">강좌관리</a>
       </td>
     </tr>
     </tbody>

@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LectureDetResDto {
+public class LectureDetPerUserResDto {
     private Long id;
     private String title;
     private String imageUrl;
     private String videoUrl;
+    private Float progress;
 
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
