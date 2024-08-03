@@ -26,6 +26,7 @@
             <th>id</th>
             <th>title</th>
             <th>email</th>
+            <th>작성시간</th>
         </tr>
         </thead>
         <tbody id="bodyData">
@@ -34,6 +35,7 @@
             <td th:text="${post.title}"></td>
             <td th:text="${post.user_email}"></td>
             <td><a th:href="@{/post/detail/{id}(id=${post.id})}" class="btn btn-primary">상세보기</a></td>
+            <td th:text="${#temporals.format(event.updatedTime, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>

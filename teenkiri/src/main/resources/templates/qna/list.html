@@ -22,6 +22,7 @@
       <th>생성 시간</th>
       <th>상세보기</th>
       <th>답변하기</th>
+      <th>수정 시간</th>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +37,7 @@
       <td>
         <a th:if="${questions.answerText == null}" th:href="@{/qna/answer/{id}(id=${questions.id})}" class="btn btn-primary">답변하기</a>
       </td>
+      <td th:text="${#temporals.format(questions.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     </tbody>
   </table>
