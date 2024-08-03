@@ -103,6 +103,7 @@
     <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
     <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
   </div>
+  <a th:href="@{/report/create(commentId=${comment.id}, suspectEmail=${comment.userEmail})}" class="btn btn-danger">신고하기</a>
 </div>
 
 <div class="add-comment">
