@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
   servlet:
@@ -30,7 +30,7 @@ spring:
     host: smtp.google.com
     port: 587
     username: dldpsk122212@gmail.com
-    password: xzvr vxlv frlj zyxz
+    password: phlj naoz tbmo aidz
     properties:
       mail:
         transport:
@@ -56,6 +56,3 @@ logging:
     com.beyond.teenkiri: DEBUG
   file:
     name: application.log
-
-
-asdasdasdasdasd

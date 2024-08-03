@@ -40,7 +40,7 @@ public class ChatService {
     }
 
     // 메시지에서 욕설을 필터링하는 함수
-    private String filterMessage(String content) {
+    public String filterMessage(String content) {
         for (Pattern pattern : forbiddenWordsPatterns) { // 모든 금지된 단어 패턴에 대해
             content = pattern.matcher(content).replaceAll(m -> "*".repeat(m.group().length())); // 패턴과 일치하는 부분을 *로 대체
         }

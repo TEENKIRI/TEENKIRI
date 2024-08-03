@@ -99,12 +99,17 @@ public class UserController {
 
     @PostMapping("/api/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestBody UserSaveReqDto saveReqDto) {
-        boolean isAvailable = userService.checkNickname(saveReqDto.getNickname());
-        if (isAvailable) {
-            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "닉네임 사용 가능", null));
-        } else {
+        try {
+            boolean isAvailable = userService.checkNickname(saveReqDto.getNickname());
+            if (isAvailable) {
+                return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "닉네임 사용 가능", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new CommonResDto(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.", null));
+            }
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.", null));
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null));
         }
     }
 
