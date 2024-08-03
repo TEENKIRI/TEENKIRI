@@ -20,7 +20,7 @@ public class LectureSaveReqDto {
     private String title;
     private Long subjectId; // 강좌 id
     private MultipartFile video; // 강의 video
-    private Float videoDuration; // 강의 video의 전체 시간
+    private Integer videoDuration; // 강의 video의 전체 시간
     private MultipartFile image; // 이미지 파일
 
     public Lecture toEntity(Subject subject) {
