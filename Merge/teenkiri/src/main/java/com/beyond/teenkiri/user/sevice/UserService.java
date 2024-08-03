@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.user.sevice;
 
+import com.beyond.teenkiri.chatting.service.ChatService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenProvider;
 import com.beyond.teenkiri.user.domain.User;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Random;
 
@@ -31,6 +31,9 @@ public class UserService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private ChatService chatService; // ChatService 주입
 
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
@@ -92,6 +95,12 @@ public class UserService {
             throw new RuntimeException("이미 사용중인 이메일 입니다.");
         }
 
+        // 닉네임 비속어 필터링 추가
+        String filteredNickname = chatService.filterMessage(saveReqDto.getNickname());
+        if (!filteredNickname.equals(saveReqDto.getNickname())) {
+            throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
+        }
+
         User user = User.builder()
                 .username(saveReqDto.getUsername())
                 .email(saveReqDto.getEmail())
@@ -134,6 +143,11 @@ public class UserService {
     }
 
     public boolean checkNickname(String nickname) {
+        String filteredNickname = chatService.filterMessage(nickname);
+        if (!filteredNickname.equals(nickname)) {
+            throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
+        }
+
         return !userRepository.existsByNickname(nickname);
     }
 

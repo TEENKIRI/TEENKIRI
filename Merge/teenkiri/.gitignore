@@ -41,3 +41,4 @@ out/
 teenkiri/src/main/resources/application.yml
 teenkiri/src/main/resources/application**.yml
 teenkiri/application.log
+teenkiri/application**.log
