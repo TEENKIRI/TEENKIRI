@@ -16,7 +16,11 @@ public class LectureDetPerUserResDto {
     private String title;
     private String imageUrl;
     private String videoUrl;
-    private Float progress;
+    private Float progress; // 유저별 progress
+    private Integer userLectureDuration; // 유저별 강의 본 시간
+    private Integer videoDuration; // 강의 video의 전체 시간
+    private Long enrollmentId; //해당 유저의 진행률 Id
+    private Boolean isCompleted;
 
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;

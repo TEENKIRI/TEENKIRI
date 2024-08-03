@@ -3,11 +3,17 @@ package com.beyond.teenkiri.lecture.service;
 import com.beyond.teenkiri.common.CommonMethod;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
+import com.beyond.teenkiri.enrollment.domain.Enrollment;
+import com.beyond.teenkiri.enrollment.dto.EnrollSaveReqDto;
+import com.beyond.teenkiri.enrollment.repository.EnrollmentRepository;
+import com.beyond.teenkiri.enrollment.service.EnrollmentService;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.dto.*;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.service.SubjectService;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +33,18 @@ public class LectureService {
     private final SubjectService subjectService;
     private final CommonMethod commonMethod;
     private final UploadAwsFileService uploadAwsFileService;
+    private final EnrollmentService enrollmentService;
+//    private final EnrollmentRepository enrollmentRepository;
+    private final UserService userService;
 
     @Autowired
-    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod, UploadAwsFileService uploadAwsFileService) {
+    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod, UploadAwsFileService uploadAwsFileService, EnrollmentService enrollmentService, UserService userService) {
         this.lectureRepository = lectureRepository;
         this.subjectService = subjectService;
         this.commonMethod = commonMethod;
         this.uploadAwsFileService = uploadAwsFileService;
+        this.enrollmentService = enrollmentService;
+        this.userService = userService;
     }
 
     //    강의 리스트 페이지
@@ -59,9 +70,26 @@ public class LectureService {
     }
 
 //    유저별 강의 수강용 상세 페이지
-    public LectureDetPerUserResDto lectureDetailPerUser(Long id){
+    public LectureDetPerUserResDto lectureDetailPerUser(Long id, String userEmail){
+        System.out.println(11111);
         Lecture lecture = lectureRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
-        LectureDetPerUserResDto lectureDetPerUserResDto = lecture.fromDetPerUserEntity();
+        User user = userService.findByEmail(userEmail);
+        System.out.println(2222);
+        Enrollment enrollment = enrollmentService.findByLectureIdAndUserId(user,lecture);
+        LectureDetPerUserResDto lectureDetPerUserResDto;
+        if(enrollment == null){
+            // 처음 접속한 강의, 진행률 데이터 추가
+            EnrollSaveReqDto enrollSaveReqDto = EnrollSaveReqDto.builder()
+                    .lectureId(lecture.getId())
+                    .userEmail(userEmail)
+                    .build();
+            Enrollment newEnrollment = enrollmentService.enrollCreate(enrollSaveReqDto);
+            lectureDetPerUserResDto = lecture.fromDetPerUserEntity(newEnrollment);
+        }else{
+            lectureDetPerUserResDto = lecture.fromDetPerUserEntity(enrollment);
+        }
+
+        System.out.println(lectureDetPerUserResDto);
         return lectureDetPerUserResDto;
     }
 

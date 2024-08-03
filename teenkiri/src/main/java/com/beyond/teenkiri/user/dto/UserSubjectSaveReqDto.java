@@ -1,5 +1,7 @@
 package com.beyond.teenkiri.user.dto;
 
+import com.beyond.teenkiri.enrollment.dto.EnrollSaveReqDto;
+import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
@@ -20,6 +22,13 @@ public class UserSubjectSaveReqDto {
         return UserSubject.builder()
                 .user(user)
                 .subject(subject)
+                .build();
+    }
+
+    public EnrollSaveReqDto toEnrollEntity(Lecture lecture) {
+        return EnrollSaveReqDto.builder()
+                .userEmail(this.userEmail)
+                .lectureId(lecture.getId())
                 .build();
     }
 }

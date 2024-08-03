@@ -1,54 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:div="">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>강의 페이지</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
-  <link href="/static/lib/videojs/video-js.min.css" rel="stylesheet"/>
+  <link href="/lib/videojs/video-js.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div th:replace="common/header :: headerFragment"></div>
 <div class="container">
+  <input type="hidden" id="videoDuration" name="videoDuration" th:value="${lecture.videoDuration}">
+  <input type="hidden" id="enrollmentId" name="enrollmentId" th:value="${lecture.enrollmentId}">
   <div class="page-header"><h3>강의 수강하기 상세페이지</h3></div>
+  <div class="form-group">
+    <label for="userEmail">강의를 수강하는 학생 이메일</label>
+    <input type="text" id="userEmail" name="userEmail" th:value="${userEmail}"><br>
+    <label for="userLectureDuration">현재 수강한 시간</label>
+    <input type="text" id="userLectureDuration" name="userLectureDuration" th:value="${lecture.userLectureDuration}" readonly="true">
+<!--    <button onclick="MovieModule.userUpdateEnrollment()" class="btn btn-primary">진행률 수정</button><br>-->
+    <br>
+    <span>입력한 유저의 진행률이, [현재 시청시간]을 기준으로 업데이트 됩니다</span>
+    <div th:if="${lecture.isCompleted == true}">수강완료</div>
+    <div th:unless="${lecture.isCompleted == false}">수강 진행 중</div>
+    <br><br>
+  </div>
   <div>
     <div>
       <h1 th:text="${lecture.title}"></h1>
       <div>
-        <video controls id="lecture_movie" class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
-               oncontextmenu="return false;">
+        <video controls id="lecture_movie" class="video-js vjs-default-skin vjs-big-play-centered">
           <source th:src="${lecture.videoUrl}" type="video/mp4">
         </video>
       </div>
     </div>
   </div>
 </div>
-<script src="/static/lib/jquery-1.12.4.min.js"></script>
-<script defer src="/static/lib/videojs/7.8.4/video.js"></script>
-<!--<script defer src="/static/js/video.js"></script>-->
+<script src="/lib/jquery-1.12.4.min.js"></script>
+<script src="/lib/videojs/7.8.4/video.js"></script>
+<!--<script defer src="/js/video.js"></script>-->
 <script>
+  console.log(2222222222222222222222);
   const MovieModule = (function () {
+    const videoDurationTime = document.querySelector("#videoDuration").value;
+    const enrollmentId = document.querySelector("#enrollmentId").value;
+    const post_watch_time = document.querySelector("#userLectureDuration").value;
+    const userEmail = document.querySelector("#userEmail").value;
+    // post_watch_time = 업데이트 전 userLectureDuration
 
     let maxTime = 0;
     let video_end = false;
-    let currentTime = 0;
+    let currentTime = post_watch_time;
     let is_post_watch_time = true;
-    let post_watch_time = 0
+    // let post_watch_time = 0
     let myPlayer
-    let USED_NUM_ARR = []
     let is_first_play = true;
     let CHANGE_TIMER;
 
   function init() {
     settingVideo();
+    console.log(111);
   }
 
   function settingVideo() {
     videojs("lecture_movie", {
       width: "960"
     }).ready(function () {
+      console.log("start video setting")
       myPlayer = this;
-      // myPlayer.play();
       myPlayer.on("loadedmetadata", function (e) {
         myPlayer.currentTime(currentTime);
         let duration = Math.floor(myPlayer.duration());
@@ -56,42 +75,20 @@
         let sec = duration - 60 * min;
       });
 
-      myPlayer.on("ended", function (event) {
-        // console.log("video end!");
-        video_end = true;
-        currentTime = Math.floor(myPlayer.currentTime());
-        maxTime = Math.floor(currentTime);
-        if (Math.abs(post_watch_time - maxTime) > 10) {
-          alert("시청한 시간보다 앞으로가기는 하실 수 없습니다.");
-          myPlayer.currentTime(post_watch_time);
-          maxTime = post_watch_time;
-          is_post_watch_time = true;
-          return false;
-        }
-        updateWatchTime();
-        is_post_watch_time = false;
-      });
-
-      myPlayer.on("error", function (event) {
-        // console.log("비디오 송출 에러!!", event);
-        if (USED_NUM_ARR.length >= 3) {
-          myPlayer.pause();
-          alert(
-            "사용자 증가로 접속이 원활하지 않습니다.\n잠시 후 다시 시도해주세요. 감사합니다."
-          );
-          location.replace("./list.html");
-          console.log(event.message);
-          return false;
-        } else {
-          checkAnotherUrl();
-        }
-      });
 
       myPlayer.on("play", function (e) {
         if (is_first_play === true) {
           is_first_play = false;
           myPlayer.currentTime(currentTime);
         }
+      });
+
+      myPlayer.on("ended", function (event) {
+        video_end = true;
+        currentTime = Math.floor(myPlayer.currentTime());
+        maxTime = Math.floor(currentTime);
+        updateWatchTime();
+        is_post_watch_time = false;
       });
 
       let update_time_event = setInterval(function () {
@@ -102,12 +99,10 @@
         if (!myPlayer.paused()) {
           updateWatchTime();
         }
-      }, 10000);
+      }, 3000);
     });
     videojs.options.autoplay = true;
     updateCurrentTime();
-    // 출처 - https://blog.naver.com/nanan75/221657098392
-    // 앞으로감기시, 최대로 본곳까지는 앞으로 감기 가능하도록 maxTime으로 변경
   }
 
   function updateCurrentTime() {
@@ -117,72 +112,64 @@
         if (currentTime > maxTime) {
           maxTime = Math.floor(currentTime);
         }
+        document.querySelector("#userLectureDuration").value = currentTime;
       }
     }, 1000);
   }
 
+
+
+
   function updateWatchTime() {
         if (post_watch_time <= maxTime) {
-            NOW_DATE = new Date();
-            console.log(post_watch_time-maxTime)
+          console.log("보내도 되는 상황")
+          let settings = {
+              "url": "",
+              "method": "PATCH",
+              "timeout": 0,
+              "data": ""
+          };
+          let data_obj = {
+            "id":enrollmentId,
+            "userEmail":userEmail
+          };
+          if(video_end){
+            settings.url = "/enroll/update/complete/"+enrollmentId;
+            data_obj.isCompleted = true
+          }else{
+            settings.url = "/enroll/update/duration/"+enrollmentId;
+            data_obj.userLectureDuration = maxTime
+          }
 
-            if(VOD_DURATION <= maxTime){
-                maxTime = VOD_DURATION
-                post_watch_time = VOD_DURATION
-            }
+          settings.data = data_obj;
 
-            post_watch_time = maxTime
-            LAST_POST_TIME = post_watch_time
-            var data_obj = {
-                'watch_time': maxTime
-            }
-            // console.log(data_obj.watch_time)
-            var settings = {
-                "url": "/api/v1/vod/" + VOD_ID + "/update_watch_time",
-                "method": "POST",
-                "timeout": 0,
-                "data": data_obj
-            };
+          $.ajax(settings).done(function (response) {
+            console.log("보냄@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log(response)
+          });
 
-            $.ajax(settings).done(function (response) {
-                // console.log(response);
-                if (response.is_finished === 1) {
-                    if(IS_PASS_TIME_ID_ARR.indexOf(VOD_ID) != -1){
-                        var data_question_obj = {
-                            'answers[0]': '0',
-                            'vod_id' : IS_PASS_TIME_ID_ARR[IS_PASS_TIME_ID_ARR.indexOf(VOD_ID)]
-                        }
-                        var settings = {
-                          "url": "/api/v1/question/store",
-                          "method": "POST",
-                          "timeout": 0,
-                          "data": data_question_obj
-                        };
 
-                        $.ajax(settings).done(function (response) {
-                          console.log(response);
-                        }).fail(function (response) {
-                            alert(ALERT_TEXT_OBJ.basic[2] + response.status);
-                            location.reload();
-                        });
-                    }
-                    activeExam()
-                }
-            }).fail(function (response) {
-                alert(ALERT_TEXT_OBJ.basic[2] + response.status);
-                location.reload();
-            });
+        }else{
+          console.log("XX")
         }
+
+    }
+
+    function userUpdateEnrollment(){
+      console.log("22222222222")
     }
 
 
   return {
     init: init,
+    userUpdateEnrollment: userUpdateEnrollment
   };
 })();
 (function () {
   MovieModule.init();
 })();
+
+
 
 </script>
 </body>

@@ -64,7 +64,7 @@
 
         thisVideo.onloadedmetadata = function() {
             window.URL.revokeObjectURL(fileURL);
-            videoDuration = thisVideo.duration;
+            videoDuration = Math.floor(thisVideo.duration); // 소수점 내림으로 고점.
             console.log(videoDuration);
             formData.append('video', video);
             formData.append('videoDuration', videoDuration);

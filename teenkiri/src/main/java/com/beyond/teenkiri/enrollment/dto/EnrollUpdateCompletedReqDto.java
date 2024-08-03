@@ -1,6 +1,5 @@
 package com.beyond.teenkiri.enrollment.dto;
 
-import com.beyond.teenkiri.enrollment.domain.Enrollment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnrollUpdateReqDto {
+public class EnrollUpdateCompletedReqDto {
+    private String userEmail;
+
     private Long id; // enrollmentId
-    private Float progress;
     private Boolean isCompleted;
 
 }
