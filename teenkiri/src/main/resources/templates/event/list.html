@@ -27,7 +27,7 @@
       <td th:text="${event.id}"></td>
       <td><a th:href="@{/event/detail/{id}(id=${event.id})}" th:text="${event.title}"></a></td>
       <td th:text="${event.userNickname}"></td>
-      <td th:text="${#temporals.format(event.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${#temporals.format(event.updatedTime, 'yyyy-MM-dd HH:mm')}"></td>
       <td><a th:href="@{/event/detail/{id}(id=${event.id})}" class="btn btn-primary">상세보기</a></td>
     </tr>
     </tbody>
