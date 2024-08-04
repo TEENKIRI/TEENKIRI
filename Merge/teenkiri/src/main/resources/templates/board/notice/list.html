@@ -26,7 +26,7 @@
     <tr th:each="notice : ${noticeList}">
       <td th:text="${notice.id}"></td>
       <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}"></a></td>
-      <td th:text="${notice.userNickname}"></td>
+      <td th:text="${notice.nickname}"></td>
       <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
       <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" class="btn btn-primary">상세보기</a></td>
     </tr>
