@@ -33,7 +33,8 @@ public class Post extends BaseTimeEntity {
     private com.beyond.teenkiri.user_board.domain.user user;
 
     @Enumerated(EnumType.STRING)
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;

@@ -76,4 +76,8 @@ public class QnA extends BaseTimeEntity {
         this.answerText = dto.getAnswerText();
         this.answeredAt = LocalDateTime.now();
     }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
 }
