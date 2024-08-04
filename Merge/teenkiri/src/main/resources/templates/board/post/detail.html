@@ -34,11 +34,11 @@
         </tr>
         <tr>
             <td>등록일</td>
-            <td th:text="${post.createdTime}"></td>
+            <td th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         <tr>
             <td>수정일</td>
-            <td th:text="${post.updatedTime}"></td>
+            <td th:text="${#temporals.format(post.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
     </table>
     <div class="float-end">
