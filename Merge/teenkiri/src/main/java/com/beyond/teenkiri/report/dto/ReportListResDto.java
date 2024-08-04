@@ -20,5 +20,7 @@ public class ReportListResDto {
     private Long qnaId;
     private Long postId;
     private Long commentId;
+    private Long commentPostId;
+    private Long commentQnaId;
     private LocalDateTime createdTime;
 }

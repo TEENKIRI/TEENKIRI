@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-
 @Controller
 @RequestMapping("report")
 public class ReportController {
@@ -40,23 +39,29 @@ public class ReportController {
                                      @RequestParam(value = "postId", required = false) Long postId,
                                      @RequestParam(value = "commentId", required = false) Long commentId,
                                      Model model) {
-        if (qnaId != null) {
-            QnA qna = qnaRepository.findById(qnaId)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-            model.addAttribute("suspectEmail", qna.getUser().getEmail());
-            model.addAttribute("qnaId", qnaId);
+        if (commentId != null) {
+            Comment comment = commentRepository.findById(commentId)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
+            model.addAttribute("suspectEmail", comment.getUser().getEmail());
+            model.addAttribute("commentId", commentId);
+            if (comment.getPost() != null) {
+                model.addAttribute("postId", comment.getPost().getId());
+            }
+            if (comment.getQna() != null) {
+                model.addAttribute("qnaId", comment.getQna().getId());
+            }
         } else if (postId != null) {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
             model.addAttribute("suspectEmail", post.getUser().getEmail());
             model.addAttribute("postId", postId);
-        } else if (commentId != null) {
-            Comment comment = commentRepository.findById(commentId)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
-            model.addAttribute("suspectEmail", comment.getUser().getEmail());
-            model.addAttribute("commentId", commentId);
+        } else if (qnaId != null) {
+            QnA qna = qnaRepository.findById(qnaId)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+            model.addAttribute("suspectEmail", qna.getUser().getEmail());
+            model.addAttribute("qnaId", qnaId);
         } else {
-            throw new IllegalArgumentException("QnA ID 또는 Post ID 또는 CommentID가 필요합니다.");
+            throw new IllegalArgumentException("QnA ID, Post ID 또는 Comment ID가 필요합니다.");
         }
         return "/board/report/create";
     }

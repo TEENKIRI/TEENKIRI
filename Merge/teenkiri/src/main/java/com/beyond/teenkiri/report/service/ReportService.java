@@ -38,23 +38,24 @@ public class ReportService {
         this.commentRepository = commentRepository;
     }
 
-
     @Transactional
-    public Report reportCreate(ReportSaveReqDto dto){
+    public Report reportCreate(ReportSaveReqDto dto) {
         user user = userService.findByEmail(dto.getReportEmail());
         QnA qnA = null;
         Post post = null;
         Comment comment = null;
 
-        if (dto.getQnaId() != null) {
-            qnA = qnARepository.findById(dto.getQnaId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+        if (dto.getCommentId() != null) {
+            comment = commentRepository.findById(dto.getCommentId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
+            post = comment.getPost();
+            qnA = comment.getQna();
         } else if (dto.getPostId() != null) {
             post = postRepository.findById(dto.getPostId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
-        }else if (dto.getCommentId() != null){
-            comment = commentRepository.findById(dto.getCommentId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
+        } else if (dto.getQnaId() != null) {
+            qnA = qnARepository.findById(dto.getQnaId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         }
 
         Report report = dto.toEntity(user, qnA, post, comment);
@@ -74,4 +75,5 @@ public class ReportService {
         }
         return reports.map(Report::listFromEntity);
     }
+
 }

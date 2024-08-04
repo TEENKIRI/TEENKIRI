@@ -120,6 +120,8 @@ public class Report extends BaseTimeEntity {
                 .qnaId(this.qna != null ? this.qna.getId() : null)
                 .postId(this.post != null ? this.post.getId() : null)
                 .commentId(this.comment != null ? this.comment.getId() : null)
+                .commentPostId(this.comment != null && this.comment.getPost() != null ? this.comment.getPost().getId() : null)
+                .commentQnaId(this.comment != null && this.comment.getQna() != null ? this.comment.getQna().getId() : null)
                 .createdTime(this.getCreatedTime())
                 .build();
     }
