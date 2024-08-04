@@ -19,5 +19,6 @@ public class ReportListResDto {
     private Reason reason;
     private Long qnaId;
     private Long postId;
+    private Long commentId;
     private LocalDateTime createdTime;
 }
