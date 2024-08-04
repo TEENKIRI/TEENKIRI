@@ -17,6 +17,7 @@
             <option value="all" th:selected="${filterType == 'all'}">전체</option>
             <option value="qna" th:selected="${filterType == 'qna'}">QnA 신고</option>
             <option value="post" th:selected="${filterType == 'post'}">Post 신고</option>
+            <option value="comment" th:selected="${filterType == 'comment'}">댓글 신고</option>
         </select>
     </div>
     <table class="table table-striped">
@@ -28,6 +29,7 @@
             <th>사유</th>
             <th class="qna-col">QnA 아이디</th>
             <th class="post-col">Post 아이디</th>
+            <th class="comment-col">Comment 아이디</th>
             <th>생성 시간</th>
         </tr>
         </thead>
@@ -39,6 +41,7 @@
             <td th:text="${report.reason}"></td>
             <td class="qna-col" th:text="${report.qnaId != null ? report.qnaId : ''}"></td>
             <td class="post-col" th:text="${report.postId != null ? report.postId : ''}"></td>
+            <td class="comment-col" th:text="${report.commentId != null ? report.commentId : ''}"></td>
             <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
@@ -68,12 +71,14 @@
         var filterType = document.getElementById("filterType").value;
         var qnaCols = document.querySelectorAll('.qna-col');
         var postCols = document.querySelectorAll('.post-col');
+        var commentCols = document.querySelectorAll('.comment-col');
         var reportTableBody = document.getElementById('reportTableBody');
         var rows = reportTableBody.getElementsByTagName('tr');
 
         if (filterType === 'qna') {
             qnaCols.forEach(col => col.style.display = 'table-cell');
             postCols.forEach(col => col.style.display = 'none');
+            commentCols.forEach(col => col.style.display = 'none');
 
             for (var i = 0; i < rows.length; i++) {
                 var qnaId = rows[i].querySelector('.qna-col').innerText;
@@ -86,6 +91,7 @@
         } else if (filterType === 'post') {
             qnaCols.forEach(col => col.style.display = 'none');
             postCols.forEach(col => col.style.display = 'table-cell');
+            commentCols.forEach(col => col.style.display = 'none');
 
             for (var i = 0; i < rows.length; i++) {
                 var postId = rows[i].querySelector('.post-col').innerText;
@@ -95,9 +101,23 @@
                     rows[i].style.display = 'table-row';
                 }
             }
+        } else if (filterType === 'comment') {
+            qnaCols.forEach(col => col.style.display = 'none');
+            postCols.forEach(col => col.style.display = 'none');
+            commentCols.forEach(col => col.style.display = 'table-cell');
+
+            for (var i = 0; i < rows.length; i++) {
+                var commentId = rows[i].querySelector('.comment-col').innerText;
+                if (!commentId.trim()) {
+                    rows[i].style.display = 'none';
+                } else {
+                    rows[i].style.display = 'table-row';
+                }
+            }
         } else {
             qnaCols.forEach(col => col.style.display = 'table-cell');
             postCols.forEach(col => col.style.display = 'table-cell');
+            commentCols.forEach(col => col.style.display = 'table-cell');
 
             for (var i = 0; i < rows.length; i++) {
                 rows[i].style.display = 'table-row';

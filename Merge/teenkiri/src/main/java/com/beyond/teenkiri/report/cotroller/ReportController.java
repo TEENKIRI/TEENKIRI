@@ -1,5 +1,7 @@
 package com.beyond.teenkiri.report.cotroller;
 
+import com.beyond.teenkiri.comment.domain.Comment;
+import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.post.domain.Post;
@@ -23,17 +25,21 @@ public class ReportController {
     private final ReportService reportService;
     private final QnARepository qnaRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public ReportController(ReportService reportService, QnARepository qnaRepository, PostRepository postRepository) {
+    public ReportController(ReportService reportService, QnARepository qnaRepository, PostRepository postRepository, CommentRepository commentRepository) {
         this.reportService = reportService;
         this.qnaRepository = qnaRepository;
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
     @GetMapping("create")
     public String reportCreateScreen(@RequestParam(value = "qnaId", required = false) Long qnaId,
-                                     @RequestParam(value = "postId", required = false) Long postId, Model model) {
+                                     @RequestParam(value = "postId", required = false) Long postId,
+                                     @RequestParam(value = "commentId", required = false) Long commentId,
+                                     Model model) {
         if (qnaId != null) {
             QnA qna = qnaRepository.findById(qnaId)
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
@@ -44,8 +50,13 @@ public class ReportController {
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
             model.addAttribute("suspectEmail", post.getUser().getEmail());
             model.addAttribute("postId", postId);
+        } else if (commentId != null) {
+            Comment comment = commentRepository.findById(commentId)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
+            model.addAttribute("suspectEmail", comment.getUser().getEmail());
+            model.addAttribute("commentId", commentId);
         } else {
-            throw new IllegalArgumentException("QnA ID 또는 Post ID가 필요합니다.");
+            throw new IllegalArgumentException("QnA ID 또는 Post ID 또는 CommentID가 필요합니다.");
         }
         return "/board/report/create";
     }
@@ -54,10 +65,10 @@ public class ReportController {
     public String reportCreatePost(@ModelAttribute ReportSaveReqDto dto, Model model) {
         try {
             reportService.reportCreate(dto);
-            return "redirect:/board/report/list";
+            return "redirect:/report/list";
         } catch (IllegalArgumentException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/board/report/list";
+            return "redirect:/report/list";
         }
     }
 
