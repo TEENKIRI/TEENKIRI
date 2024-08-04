@@ -65,4 +65,10 @@ public class NoticeController {
         noticeService.noticeDelete(id);
         return "redirect:/board/notice/list";
     }
+
+    @GetMapping("/testException")
+    public String testException() {
+        throw new RuntimeException("테스트 예외 발생");
+    }
+
 }

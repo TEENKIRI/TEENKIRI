@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.nio.channels.FileChannel;
+
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     Page<Enrollment> findAllBySubjectId(Long subjectId, Pageable pageable);
+    Page<Enrollment> findAllByUserId(Long userId, Pageable pageable);
 }

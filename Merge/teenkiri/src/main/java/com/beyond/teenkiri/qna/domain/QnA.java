@@ -49,9 +49,6 @@ public class QnA extends BaseTimeEntity {
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-//    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Report> reports;
-
     // 수정
     public QnAListResDto listFromEntity() {
         return QnAListResDto.builder()
@@ -60,7 +57,7 @@ public class QnA extends BaseTimeEntity {
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
                 .answeredAt(this.answeredAt)
-                .answerText(this.answerText)
+                .answerText(this.answerText != null ? "답변 완료" : "미답변")
                 .build();
     }
 
