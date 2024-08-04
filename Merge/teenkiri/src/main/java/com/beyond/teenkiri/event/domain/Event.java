@@ -52,6 +52,7 @@ public class Event extends BaseTimeEntity {
                 .title(this.getTitle())
                 .nickname(this.getUser().getNickname())
                 .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 

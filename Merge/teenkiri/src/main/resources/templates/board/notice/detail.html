@@ -30,11 +30,11 @@
     </tr>
     <tr>
       <td>생성시간</td>
-      <td th:text="${notice.createdTime}"></td>
+      <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     <tr>
       <td>수정시간</td>
-      <td th:text="${notice.updatedTime}"></td>
+      <td th:text="${#temporals.format(notice.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
   </table>
   <div class="float-end">
