@@ -26,6 +26,7 @@ public class CommentSaveReqDto {
     private DelYN delYn = DelYN.N;
 
 
+    // toEntity 메서드 추가
     public Comment PostToEntity(com.beyond.teenkiri.user_board.domain.user user, Post post){
         return Comment.builder()
                 .content(this.content)
