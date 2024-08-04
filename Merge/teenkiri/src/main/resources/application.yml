@@ -46,9 +46,9 @@ spring:
     port: 6379
     #password: 1234
 
-  jwt:
-    secret: secret_key
-    expiration: 86400000  # 1 day in milliseconds
+jwt:
+  secret: secret_key
+  expiration: 86400000  # 1 day in milliseconds
 
 logging:
   level:
