@@ -38,7 +38,7 @@ public class QnAController {
     public String createQuestion(@ModelAttribute QnASaveReqDto dto, Model model) {
         try {
             qnAService.createQuestion(dto);
-            return "redirect:/board/qna/list";
+            return "redirect:/qna/list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/qna/create";
@@ -63,7 +63,7 @@ public class QnAController {
     public String createQnaComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
         commentService.saveComment(dto);
         redirectAttributes.addAttribute("id", dto.getQnaId());
-        return "redirect:/board/qna/detail/{id}";
+        return "redirect:/qna/detail/{id}";
     }
 
     @GetMapping("answer/{id}")

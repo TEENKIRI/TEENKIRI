@@ -35,7 +35,7 @@ public class PostController {
     public String postCreatePost(@ModelAttribute PostSaveReqDto dto, Model model) {
         try {
             postService.postCreate(dto);
-            return "redirect:/board/post/list";
+            return "redirect:/post/list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/post/create";
@@ -61,13 +61,13 @@ public class PostController {
     @PostMapping("update/{id}")
     public String postUpdate(@PathVariable Long id, @ModelAttribute PostUpdateDto dto, Model model) {
         postService.postUpdate(id, dto);
-        return "redirect:/board/post/detail/" + id;
+        return "redirect:/post/detail/" + id;
     }
 
     // 게시물을 삭제합니다.
     @GetMapping("delete/{id}")
     public String postDelete(@PathVariable Long id, Model model) {
         postService.postDelete(id);
-        return "redirect:/board/post/list";
+        return "redirect:/post/list";
     }
 }
