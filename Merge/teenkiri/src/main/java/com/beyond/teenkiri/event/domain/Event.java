@@ -31,9 +31,9 @@ public class Event extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private com.beyond.teenkiri.user_board.domain.user user;
 
-
     @Enumerated(EnumType.STRING)
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     public EventDetailDto fromDetailEntity() {
         return EventDetailDto.builder()
@@ -62,4 +62,7 @@ public class Event extends BaseTimeEntity {
 
     }
 
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
 }

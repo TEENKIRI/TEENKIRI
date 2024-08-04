@@ -63,4 +63,7 @@ public class Notice extends BaseTimeEntity {
 
     }
 
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
 }
