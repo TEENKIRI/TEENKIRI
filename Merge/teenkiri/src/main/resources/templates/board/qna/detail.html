@@ -24,6 +24,10 @@
       <td th:text="${#temporals.format(question.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     <tr>
+      <td>수정 시간</td>
+      <td th:text="${#temporals.format(question.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
       <td>질문 내용</td>
       <td th:text="${question.questionText}"></td>
     </tr>

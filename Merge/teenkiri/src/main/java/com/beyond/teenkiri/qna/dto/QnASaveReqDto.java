@@ -19,6 +19,7 @@ public class QnASaveReqDto {
     private String title;
     private String questionText;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
