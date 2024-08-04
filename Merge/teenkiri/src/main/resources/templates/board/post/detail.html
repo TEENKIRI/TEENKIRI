@@ -70,6 +70,7 @@
     <div th:each="comment : ${comments}">
         <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
         <p><small th:text="${comment.createdTime}"></small></p>
+        <a th:href="@{/report/create(commentId=${comment.id},postId=${post.id}, suspectEmail=${comment.userEmail})}" class="btn btn-danger">신고하기</a>
     </div>
 </div>
 
