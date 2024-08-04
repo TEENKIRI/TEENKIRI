@@ -63,4 +63,8 @@ public class Post extends BaseTimeEntity {
         this.title = dto.getTitle();
         this.contents = dto.getContents();
     }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
 }
