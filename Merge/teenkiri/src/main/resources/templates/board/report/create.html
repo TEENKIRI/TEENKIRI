@@ -38,6 +38,10 @@
             <label for="postId">Post ID</label>
             <input type="text" class="form-control" name="postId" id="postId" th:value="${postId}" readonly>
         </div>
+        <div class="form-group" th:if="${commentId != null}">
+            <label for="commentId">Comment ID</label>
+            <input type="text" class="form-control" name="commentId" id="commentId" th:value="${commentId}" readonly>
+        </div>
         <button type="submit" class="btn btn-secondary mt-3">제출</button>
     </form>
 </div>
