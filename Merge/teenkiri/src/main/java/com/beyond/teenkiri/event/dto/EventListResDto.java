@@ -17,4 +17,5 @@ public class EventListResDto {
     private String title;
     private String nickname;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }
