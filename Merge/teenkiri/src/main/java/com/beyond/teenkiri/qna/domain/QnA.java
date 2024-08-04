@@ -59,6 +59,7 @@ public class QnA extends BaseTimeEntity {
                 .questionUserName(this.getUser().getNickname())
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
                 .build();
@@ -67,6 +68,7 @@ public class QnA extends BaseTimeEntity {
     public void QnAQUpdate(QnAQtoUpdateDto dto) {
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
+        this.getUpdatedTime();
     }
 
     public void QnAAUpdate(QnAAtoUpdateDto dto) {
