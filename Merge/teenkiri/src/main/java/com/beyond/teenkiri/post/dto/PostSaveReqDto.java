@@ -25,6 +25,7 @@ public class PostSaveReqDto {
         return Post.builder()
                 .title(this.title)
                 .contents(this.contents)
+                .delYN(this.delYN)
                 .user(user)
                 .build();
     }
