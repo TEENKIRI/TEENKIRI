@@ -44,7 +44,8 @@ public class QnA extends BaseTimeEntity {
     private LocalDateTime answeredAt;
 
     @Enumerated(EnumType.STRING)
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;

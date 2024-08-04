@@ -20,6 +20,7 @@
 
 package com.beyond.teenkiri.qna.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
