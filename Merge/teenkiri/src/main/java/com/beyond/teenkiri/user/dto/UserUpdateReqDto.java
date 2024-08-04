@@ -15,5 +15,4 @@ public class UserUpdateReqDto {
     private String nickname;
     private String password;
     private String address;
-
 }

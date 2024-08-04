@@ -1,11 +1,14 @@
 package com.beyond.teenkiri.user.domain;
 
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -59,6 +62,9 @@ public class User {
     @Column(nullable = false)
     @Builder.Default
     private DelYN delYN = DelYN.N;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Subject> subjects = new ArrayList<>();
 
     public User(String username, String password, String phone, String address, String email, String nickname, UserType userType, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DelYN delYn) {
         this.username = username;
