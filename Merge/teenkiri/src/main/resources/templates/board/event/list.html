@@ -16,10 +16,12 @@
   <table class="table">
     <thead>
     <tr>
-      <th>id</th>
+      <th>ID</th>
       <th>제목</th>
       <th>작성자</th>
-      <th>시간</th>
+      <th>생성 시간</th>
+      <th>수정 시간</th>
+
     </tr>
     </thead>
     <tbody>
@@ -28,14 +30,17 @@
       <td><a th:href="@{/event/detail/{id}(id=${event.id})}" th:text="${event.title}"></a></td>
       <td th:text="${event.nickname}"></td>
       <td th:text="${#temporals.format(event.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
-      <td><a th:href="@{/event/detail/{id}(id=${event.id})}" class="btn btn-primary">상세보기</a></td>
+      <td th:text="${#temporals.format(event.updatedTime, 'yyyy-MM-dd HH:mm')}"></td>
+      <td>
+        <a th:href="@{/event/detail/{id}(id=${event.id})}" class="btn btn-primary">상세보기</a>
+      </td>
     </tr>
     </tbody>
   </table>
   <ul class="pagination justify-content-center">
     <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, eventList.totalPages-1)}"
-        th:classappend="${pageNum == eventList.pageable.pageNumber}? active">
-      <a class="page-link" th:href="@{/event/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+        th:classappend="${pageNum == eventList.pageable.pageNumber} ? 'active'">
+      <a class="page-link" th:href="@{/event/list/(page=${pageNum})}" th:text="${pageNum + 1}"></a>
     </li>
   </ul>
 </div>
