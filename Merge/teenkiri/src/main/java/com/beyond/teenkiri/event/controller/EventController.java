@@ -57,12 +57,12 @@ public class EventController {
     @PostMapping("update/{id}")
     public String EventUpdate(@PathVariable Long id, @ModelAttribute EventUpdateDto dto){
         eventService.eventUpdate(id, dto);
-        return "redirect:/board/event/detail/" + id;
+        return "redirect:/event/detail/" + id;
     }
 
     @GetMapping("delete/{id}")
     public String EventDelete(@PathVariable Long id, Model model){
         eventService.eventDelete(id);
-        return "redirect:/board/event/list";
+        return "redirect:/event/list";
     }
 }

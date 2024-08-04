@@ -46,6 +46,15 @@ public class UserService {
         return jwtTokenProvider.createToken(user.getEmail(), user.getUserType().name());
     }
 
+    public String getEmailFromToken(String token) {
+        return jwtTokenProvider.getEmailFromToken(token);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
     public String findId(UserFindIdDto findIdDto) {
         User user = userRepository.findByUsernameAndPhone(findIdDto.getUsername(), findIdDto.getPhone())
                 .orElseThrow(() -> new RuntimeException("없는 사용자 입니다."));
@@ -151,9 +160,6 @@ public class UserService {
         return !userRepository.existsByNickname(nickname);
     }
 
-    public void logout(String token) {
-        jwtTokenProvider.addToBlacklist(token);
-    }
 
     public void deleteAccount(String token) {
         String email = jwtTokenProvider.getEmailFromToken(token);
@@ -163,5 +169,11 @@ public class UserService {
         user.setDelYN(DelYN.Y);
         user.setNickname("<알수없음>" + System.currentTimeMillis());
         userRepository.save(user);
+    }
+
+    public User getUserFromToken(String token) {
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
