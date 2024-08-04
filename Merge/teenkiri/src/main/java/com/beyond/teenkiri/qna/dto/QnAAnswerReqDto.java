@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.qna.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.user_board.domain.user;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ public class QnAAnswerReqDto {
     private String answerText;
     private LocalDateTime answeredAt;
     private LocalDateTime createdTime;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     public QnA toEntity(user answeredBy, QnA existingQnA) {
         QnA qna = QnA.builder()
@@ -31,7 +34,6 @@ public class QnAAnswerReqDto {
                 .delYN(existingQnA.getDelYN())
                 .comments(existingQnA.getComments())
                 .build();
-
         qna.patchCreateTime(existingQnA.getCreatedTime());
         return qna;
     }
