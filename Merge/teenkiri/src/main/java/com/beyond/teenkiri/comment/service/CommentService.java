@@ -36,25 +36,18 @@ public class CommentService {
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
         user user = userRepository.findByEmail(dto.getUserEmail())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        Comment comment = new Comment();
-        comment.setContent(dto.getContent());
-        comment.setUser(user);
-
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
         if (dto.getPostId() != null) {
             Post post = postRepository.findById(dto.getPostId())
-                    .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-            comment.setPost(post);
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+            return commentRepository.save(dto.PostToEntity(user, post));
         } else if (dto.getQnaId() != null) {
             QnA qna = qnaRepository.findById(dto.getQnaId())
-                    .orElseThrow(() -> new EntityNotFoundException("QnA not found"));
-            comment.setQna(qna);
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+            return commentRepository.save(dto.QnAToEntity(user, qna));
         } else {
-            throw new IllegalArgumentException("Either postId or qnaId must be provided");
+            throw new IllegalArgumentException("댓글이 달릴 게시글 또는 QnA ID가 필요합니다.");
         }
-
-        return commentRepository.save(comment);
     }
 
     public List<CommentDetailDto> getCommentsByPostId(Long postId) {
@@ -65,6 +58,7 @@ public class CommentService {
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
                         .createdTime(comment.getCreatedTime())
+                        .updatedTime(comment.getUpdatedTime())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -77,6 +71,7 @@ public class CommentService {
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
                         .createdTime(comment.getCreatedTime())
+                        .updatedTime(comment.getUpdatedTime())
                         .build())
                 .collect(Collectors.toList());
     }
