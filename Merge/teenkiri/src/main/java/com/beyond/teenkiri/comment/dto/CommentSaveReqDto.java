@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,8 @@ public class CommentSaveReqDto {
     private Long qnaId;
     private String userEmail;
     private String content;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
     @Builder.Default
     private DelYN delYn = DelYN.N;
 
@@ -26,6 +30,7 @@ public class CommentSaveReqDto {
         return Comment.builder()
                 .content(this.content)
                 .delYN(this.delYn)
+                .createdTime(this.createdTime)
                 .user(user)
                 .post(post)
                 .build();
@@ -35,6 +40,7 @@ public class CommentSaveReqDto {
         return Comment.builder()
                 .content(this.content)
                 .delYN(this.delYn)
+                .createdTime(this.createdTime)
                 .user(user)
                 .qna(qnA)
                 .build();
