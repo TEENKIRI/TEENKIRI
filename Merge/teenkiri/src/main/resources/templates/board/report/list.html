@@ -30,6 +30,7 @@
             <th class="qna-col">QnA 아이디</th>
             <th class="post-col">Post 아이디</th>
             <th class="comment-col">Comment 아이디</th>
+            <th class="comment-col">관련 게시글 ID</th>
             <th>생성 시간</th>
         </tr>
         </thead>
@@ -39,9 +40,10 @@
             <td th:text="${report.reportEmail}"></td>
             <td th:text="${report.suspectEmail}"></td>
             <td th:text="${report.reason}"></td>
-            <td class="qna-col" th:text="${report.qnaId != null ? report.qnaId : ''}"></td>
-            <td class="post-col" th:text="${report.postId != null ? report.postId : ''}"></td>
-            <td class="comment-col" th:text="${report.commentId != null ? report.commentId : ''}"></td>
+            <td class="qna-col" th:text="${report.qnaId}"></td>
+            <td class="post-col" th:text="${report.postId}"></td>
+            <td class="comment-col" th:text="${report.commentId}"></td>
+            <td class="comment-col" th:text="${report.commentId != null ? (report.commentPostId != null ? 'Post ID: ' + report.commentPostId : 'QnA ID: ' + report.commentQnaId) : ''}"></td>
             <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
@@ -79,47 +81,32 @@
             qnaCols.forEach(col => col.style.display = 'table-cell');
             postCols.forEach(col => col.style.display = 'none');
             commentCols.forEach(col => col.style.display = 'none');
-
-            for (var i = 0; i < rows.length; i++) {
-                var qnaId = rows[i].querySelector('.qna-col').innerText;
-                if (!qnaId.trim()) {
-                    rows[i].style.display = 'none';
-                } else {
-                    rows[i].style.display = 'table-row';
-                }
-            }
         } else if (filterType === 'post') {
             qnaCols.forEach(col => col.style.display = 'none');
             postCols.forEach(col => col.style.display = 'table-cell');
             commentCols.forEach(col => col.style.display = 'none');
-
-            for (var i = 0; i < rows.length; i++) {
-                var postId = rows[i].querySelector('.post-col').innerText;
-                if (!postId.trim()) {
-                    rows[i].style.display = 'none';
-                } else {
-                    rows[i].style.display = 'table-row';
-                }
-            }
         } else if (filterType === 'comment') {
             qnaCols.forEach(col => col.style.display = 'none');
             postCols.forEach(col => col.style.display = 'none');
             commentCols.forEach(col => col.style.display = 'table-cell');
-
-            for (var i = 0; i < rows.length; i++) {
-                var commentId = rows[i].querySelector('.comment-col').innerText;
-                if (!commentId.trim()) {
-                    rows[i].style.display = 'none';
-                } else {
-                    rows[i].style.display = 'table-row';
-                }
-            }
         } else {
             qnaCols.forEach(col => col.style.display = 'table-cell');
             postCols.forEach(col => col.style.display = 'table-cell');
             commentCols.forEach(col => col.style.display = 'table-cell');
+        }
 
-            for (var i = 0; i < rows.length; i++) {
+        for (var i = 0; i < rows.length; i++) {
+            var qnaId = rows[i].querySelector('.qna-col').innerText;
+            var postId = rows[i].querySelector('.post-col').innerText;
+            var commentId = rows[i].querySelector('.comment-col').innerText;
+
+            if (filterType === 'qna' && !qnaId.trim()) {
+                rows[i].style.display = 'none';
+            } else if (filterType === 'post' && !postId.trim()) {
+                rows[i].style.display = 'none';
+            } else if (filterType === 'comment' && !commentId.trim()) {
+                rows[i].style.display = 'none';
+            } else {
                 rows[i].style.display = 'table-row';
             }
         }
