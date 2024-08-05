@@ -1,6 +1,5 @@
 package com.beyond.teenkiri.course.dto;
 
-import com.beyond.teenkiri.course.domain.Course;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourseListResDto {
+public class CourseDetResDto {
     private Long id;
     private String title;
+    private String userName;
 
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
