@@ -20,6 +20,7 @@ public class QnADetailDto {
     private String questionUserNickname;
     private String answeredByNickname;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
     private LocalDateTime answeredAt;
     private String userEmail;
 
@@ -32,6 +33,7 @@ public class QnADetailDto {
                 .questionUserNickname(qna.getUser().getNickname())
                 .answeredByNickname(qna.getAnsweredBy() != null ? qna.getAnsweredBy().getNickname() : null)
                 .createdTime(qna.getCreatedTime())
+                .updatedTime(qna.getUpdatedTime())
                 .answeredAt(qna.getAnsweredAt())
                 .userEmail(qna.getUser().getEmail())
                 .build();

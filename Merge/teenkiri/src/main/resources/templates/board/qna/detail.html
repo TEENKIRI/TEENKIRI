@@ -20,8 +20,12 @@
       <td th:text="${question.title}"></td>
     </tr>
     <tr>
-      <td>작성 시간</td>
+      <td>질문 작성 시간</td>
       <td th:text="${#temporals.format(question.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
+      <td>질문 수정 시간</td>
+      <td th:text="${#temporals.format(question.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     <tr>
       <td>질문 내용</td>
@@ -42,6 +46,7 @@
       <td th:if="${question.answeredAt != null}" th:text="${#temporals.format(question.answeredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
       <td th:if="${question.answeredAt == null}">답변 없음</td>
     </tr>
+
   </table>
   <div class="float-end">
     <button th:if="${question.answerText == null}" onclick="showUpdateForm('question')" class="btn btn-primary">질문 수정</button>
@@ -93,6 +98,7 @@
   <div th:each="comment : ${comments}">
     <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
     <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
+    <a th:href="@{/report/create(commentId=${comment.id}, suspectEmail=${comment.userEmail})}" class="btn btn-danger">신고하기</a>
   </div>
 </div>
 

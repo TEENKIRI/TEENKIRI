@@ -17,7 +17,6 @@
     <thead>
     <tr>
       <th>id</th>
-      <th>작성자</th>
       <th>제목</th>
       <th>생성 시간</th>
       <th>상세보기</th>
@@ -28,7 +27,6 @@
     <tbody>
     <tr th:each="questions : ${qnaList}">
       <td th:text="${questions.id}"></td>
-      <td th:text="${questions.questionUserName}"></td>
       <td>
         <a th:href="@{/qna/detail/{id}(id=${questions.id})}" th:text="${questions.title}"></a>
       </td>

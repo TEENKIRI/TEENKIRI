@@ -24,6 +24,7 @@ public class NoticeSaveReqDto {
         return Notice.builder()
                 .title(this.title)
                 .content(this.content)
+                .delYN(this.delYN)
                 .user(user)
                 .build();
     }

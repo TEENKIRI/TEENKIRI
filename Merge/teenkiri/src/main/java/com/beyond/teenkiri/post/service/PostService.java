@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.post.service;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.dto.PostDetailDto;
 import com.beyond.teenkiri.post.dto.PostListResDto;
@@ -35,10 +36,9 @@ public class PostService {
     }
 
     public Page<PostListResDto> postList(Pageable pageable) {
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
         return posts.map(a -> a.listFromEntity());
     }
-
     public PostDetailDto postDetail(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
@@ -54,7 +54,20 @@ public class PostService {
     }
 
     @Transactional
-    public void postDelete(Long id) {
+    public void postDeleteDeep(Long id) {
         postRepository.deleteById(id);
+    }
+//    public Ordering orderCancel(Long id) {
+//        Ordering ordering = orderingRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
+//        ordering.updateStatus(OrderStatus.CANCELED);
+//        return ordering;
+//    }
+    @Transactional
+    public Post postDelete(Long id){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        post.updateDelYN(DelYN.Y);
+        return post;
     }
 }

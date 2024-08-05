@@ -44,7 +44,8 @@ public class QnA extends BaseTimeEntity {
     private LocalDateTime answeredAt;
 
     @Enumerated(EnumType.STRING)
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -59,6 +60,7 @@ public class QnA extends BaseTimeEntity {
                 .questionUserName(this.getUser().getNickname())
                 .title(this.getTitle())
                 .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
                 .build();
@@ -67,10 +69,15 @@ public class QnA extends BaseTimeEntity {
     public void QnAQUpdate(QnAQtoUpdateDto dto) {
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
+        this.getUpdatedTime();
     }
 
     public void QnAAUpdate(QnAAtoUpdateDto dto) {
         this.answerText = dto.getAnswerText();
         this.answeredAt = LocalDateTime.now();
+    }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
     }
 }
