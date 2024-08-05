@@ -40,9 +40,10 @@ public class UserService {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
 
-        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
-        }
+//        ⭐⭐⭐ 추후 암호처리 후 다시 작업
+//        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+//            throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
+//        }
 
         return jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
     }

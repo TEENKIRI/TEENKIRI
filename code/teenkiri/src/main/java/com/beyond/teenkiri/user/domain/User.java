@@ -69,6 +69,6 @@ public class User extends BaseTimeEntity {
         this.role = role;
         this.isVerified = isVerified;
         this.reportCount = reportCount;
-        this.delYN = delYN;
+        this.delYN = DelYN.N;
     }
 }
