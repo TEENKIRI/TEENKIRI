@@ -44,7 +44,7 @@ public class UserService {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        return jwtTokenProvider.createToken(user.getEmail(), user.getUserType().name());
+        return jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
     }
 
     public String getEmailFromToken(String token) {
@@ -57,7 +57,7 @@ public class UserService {
     }
 
     public String findId(UserFindIdDto findIdDto) {
-        User user = userRepository.findByUsernameAndPhone(findIdDto.getUsername(), findIdDto.getPhone())
+        User user = userRepository.findByNameAndPhone(findIdDto.getUsername(), findIdDto.getPhone())
                 .orElseThrow(() -> new RuntimeException("없는 사용자 입니다."));
 
         String email = user.getEmail();
@@ -65,10 +65,10 @@ public class UserService {
     }
 
     public void sendPasswordResetLink(UserFindPasswordDto findPasswordDto) {
-        User user = userRepository.findByUsernameAndPhoneAndEmail(findPasswordDto.getUsername(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
+        User user = userRepository.findByNameAndPhoneAndEmail(findPasswordDto.getUsername(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
-        String resetToken = jwtTokenProvider.createToken(user.getEmail(), user.getUserType().name());
+        String resetToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
         String resetLink = "http://localhost:8081/api/reset-password?token=" + resetToken; // /api 경로 추가
