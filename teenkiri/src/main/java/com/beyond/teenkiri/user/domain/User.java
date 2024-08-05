@@ -49,6 +49,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserSubject> userSubjects;
+
     public UserListResDto listFromEntity() {
         return UserListResDto.builder()
                 .id(this.id)
