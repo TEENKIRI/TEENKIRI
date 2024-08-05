@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,9 +13,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseTimeEntity {
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdTime;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime updatedTime;
 
 }

@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.comment.domain;
 
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.qna.domain.QnA;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "comment")
-public class Comment {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,4 +45,6 @@ public class Comment {
     protected void onCreate() {
         createdTime = LocalDateTime.now();
     }
+
+
 }

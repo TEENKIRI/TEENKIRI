@@ -34,7 +34,7 @@ public class NoticeController {
     public String createNotice(@ModelAttribute NoticeSaveReqDto dto, Model model) {
         try {
             noticeService.createNotice(dto);
-            return "redirect:/board/notice/list";
+            return "redirect:/notice/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/notice/create";
@@ -57,12 +57,12 @@ public class NoticeController {
     @PostMapping("update/{id}")
     public String noticeUpdate(@PathVariable Long id, @ModelAttribute NoticeUpdateDto dto){
         noticeService.noticeUpdate(id, dto);
-        return "redirect:/board/notice/detail/" + id;
+        return "redirect:/notice/detail/" + id;
     }
 
     @GetMapping("delete/{id}")
     public String noticeDelete(@PathVariable Long id, Model model){
         noticeService.noticeDelete(id);
-        return "redirect:/board/notice/list";
+        return "redirect:/notice/list";
     }
 }

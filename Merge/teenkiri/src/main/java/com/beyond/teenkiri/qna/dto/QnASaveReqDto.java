@@ -19,6 +19,7 @@ public class QnASaveReqDto {
     private String title;
     private String questionText;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
@@ -27,6 +28,7 @@ public class QnASaveReqDto {
                 .user(user)
                 .title(this.title)
                 .questionText(this.questionText)
+                .delYN(this.delYN)
                 .build();
     }
 }

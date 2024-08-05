@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.report.dto;
 
+import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.post.domain.Post;
@@ -21,16 +22,19 @@ public class ReportSaveReqDto {
     private Reason reason;
     private Long qnaId;
     private Long postId;
+    private Long commentId;
 
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public Report toEntity(user user, QnA qna, Post post) {
+    public Report toEntity(user user, QnA qna, Post post, Comment comment) {
         return Report.builder()
                 .user(user)
                 .reason(this.reason)
                 .qna(qna)
                 .post(post)
+                .delYN(this.delYN)
+                .comment(comment)
                 .build();
     }
 }

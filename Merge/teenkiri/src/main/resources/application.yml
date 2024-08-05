@@ -7,7 +7,7 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/teenkiri
+    url: jdbc:mariadb://localhost:3307/teenkiri
     username: root
     password: 1234
 
@@ -46,9 +46,9 @@ spring:
     port: 6379
     #password: 1234
 
-jwt:
-  secret: secret_key
-  expiration: 86400000  # 1 day in milliseconds
+  jwt:
+    secret: secret_key
+    expiration: 86400000  # 1 day in milliseconds
 
 logging:
   level:
