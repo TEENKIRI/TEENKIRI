@@ -56,7 +56,7 @@ public class LectureController {
     //    강의 생성
     @PostMapping("/lecture/create")
     public ResponseEntity<?> lectureCreate(@ModelAttribute LectureSaveReqDto dto){
-        Lecture lecture = lectureService.lectureCreate(dto);
+        Lecture lecture = lectureService.lectureCreate(dto, null, null);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "강의 생성 완료", lecture.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
