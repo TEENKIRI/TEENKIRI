@@ -1,15 +1,37 @@
 package com.beyond.teenkiri.user.dto;
 
+import com.beyond.teenkiri.common.domain.Address;
+import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
+
 
 @Getter
 @Builder
 public class UserSaveReqDto {
-    private String username;
+    private String name;
     private String email;
     private String password;
     private String nickname;
-    private String address;
+    private Address address;
     private String phone;
+    @Builder.Default
+    private Role role = Role.STUDENT;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
+
+    public User toEntity(){
+        return User.builder()
+                .password(this.password)
+                .name(this.name)
+                .nickname(this.nickname)
+                .email(this.email)
+                .role(this.role)
+                .address(this.address)
+                .delYN(this.delYN)
+                .phone(this.phone)
+                .build();
+    }
 }

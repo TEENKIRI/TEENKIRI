@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>틴틴끼리끼리 틴틴~끼리끼리</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white; /* 텍스트 색상 */
+            font-family: Arial, sans-serif;
+        }
+
+        #welcome-message {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<h2>틴끼리 틴끼리 틴틴틴!!</h2>
+<div id="welcome-message"></div>
+<a href="#" onclick="logout()">로그아웃</a>
+<a href="/api/delete-account">회원 탈퇴</a>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcome-message').innerText = `${username}님~~~~~~~~ 환영합니다아^^ 얏호~!~!!`;
+        } else {
+            document.getElementById('welcome-message').innerText = '로그인이 필요합니다.';
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/api/login';
+    }
+</script>
+</body>
+</html>
