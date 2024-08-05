@@ -2,6 +2,8 @@ package com.beyond.teenkiri.lecture.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.enrollment.domain.Enrollment;
+import com.beyond.teenkiri.lecture.dto.LectureDetPerUserResDto;
 import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
@@ -36,6 +38,10 @@ public class Lecture extends BaseTimeEntity {
     @Builder.Default
     private String videoUrl = "";
 
+    // 소수점이 나와도, 내림으로 진행 (추후 진행률 받을 때 이슈 생길 가능성으로 인해) : 소수점 내림은 프론트에서 진행
+    @Builder.Default
+    private Integer videoDuration = 0;
+
     @Column(columnDefinition = "TEXT")
     @Builder.Default
     private String imageUrl = "";
@@ -62,6 +68,8 @@ public class Lecture extends BaseTimeEntity {
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .progress(null) // 🚨 유저별 진행률
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
@@ -71,7 +79,22 @@ public class Lecture extends BaseTimeEntity {
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .videoUrl(this.videoUrl)
-                .progress(null) // 🚨 유저별 진행률
+                .build();
+    }
+
+    public LectureDetPerUserResDto fromDetPerUserEntity(Enrollment enrollment) {
+        return LectureDetPerUserResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .imageUrl(this.imageUrl)
+                .videoUrl(this.videoUrl)
+                .progress(enrollment.getProgress()) // 유저별 진행률
+                .userLectureDuration(enrollment.getUserLectureDuration()) // 유저별 강의를 시청한 시간
+                .videoDuration(this.videoDuration) // video 전체 시간 (초단위)
+                .enrollmentId(enrollment.getId())
+                .isCompleted(enrollment.getIsCompleted())
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
