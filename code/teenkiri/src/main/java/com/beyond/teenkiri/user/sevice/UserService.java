@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Random;
 
 @Service("userService")
@@ -109,21 +110,11 @@ public class UserService {
         if (!filteredNickname.equals(saveReqDto.getNickname())) {
             throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
         }
-
-        User user = User.builder()
-                .username(saveReqDto.getUsername())
-                .email(saveReqDto.getEmail())
-                .password(passwordEncoder.encode(saveReqDto.getPassword()))
-                .nickname(saveReqDto.getNickname())
-                .address(saveReqDto.getAddress())
-                .phone(saveReqDto.getPhone())
-                .userType(User.UserType.STUDENT)
-                .isVerified(false)
-                .build();
-
-        System.out.println("사용자 저장 전: " + user);
+        User user = saveReqDto.toEntity();
         userRepository.save(user);
+        System.out.println("사용자 저장 전: " + user);
         System.out.println("사용자 저장 완료: " + user);
+
     }
 
     public void sendVerificationEmail(String email) {
