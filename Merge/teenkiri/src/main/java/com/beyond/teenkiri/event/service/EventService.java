@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.event.service;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.event.dto.EventDetailDto;
 import com.beyond.teenkiri.event.dto.EventListResDto;
@@ -43,7 +44,7 @@ public class EventService {
     }
 
     public Page<EventListResDto> eventList(Pageable pageable) {
-        Page<Event> Events = eventRepository.findAll(pageable);
+        Page<Event> Events = eventRepository.findByDelYN(DelYN.N, pageable);
         return Events.map(a->a.listFromEntity());
     }
 
@@ -62,9 +63,10 @@ public class EventService {
     }
 
     @Transactional
-    public void eventDelete(Long id) {
-        Event Event = eventRepository.findById(id)
+    public Event eventDelete(Long id) {
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-        eventRepository.delete(Event);
+        event.updateDelYN(DelYN.Y);
+        return event;
     }
 }

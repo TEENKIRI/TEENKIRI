@@ -16,5 +16,6 @@ public class NoticeListResDto {
     private String title;
     private String nickname;
     private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }
 

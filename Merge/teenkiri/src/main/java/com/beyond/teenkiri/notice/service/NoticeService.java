@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.notice.service;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notice.domain.Notice;
 import com.beyond.teenkiri.notice.dto.NoticeListResDto;
 import com.beyond.teenkiri.notice.dto.NoticeSaveReqDto;
@@ -43,7 +44,7 @@ public class NoticeService {
     }
 
     public Page<NoticeListResDto> noticeList(Pageable pageable) {
-        Page<Notice> notices = noticeRepository.findAll(pageable);
+        Page<Notice> notices = noticeRepository.findByDelYN(DelYN.N, pageable);
         return notices.map(a->a.listFromEntity());
     }
 
@@ -62,9 +63,10 @@ public class NoticeService {
     }
 
     @Transactional
-    public void noticeDelete(Long id) {
+    public Notice noticeDelete(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-        noticeRepository.delete(notice);
+        notice.updateDelYN(DelYN.Y);
+        return notice;
     }
 }

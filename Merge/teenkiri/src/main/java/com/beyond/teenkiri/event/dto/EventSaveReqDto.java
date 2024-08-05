@@ -25,6 +25,7 @@ public class EventSaveReqDto {
                 .title(this.title)
                 .content(this.content)
                 .user(user)
+                .delYN(this.delYN)
                 .build();
     }
 }

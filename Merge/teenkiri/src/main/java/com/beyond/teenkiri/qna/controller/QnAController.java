@@ -38,7 +38,7 @@ public class QnAController {
     public String createQuestion(@ModelAttribute QnASaveReqDto dto, Model model) {
         try {
             qnAService.createQuestion(dto);
-            return "redirect:/board/qna/list";
+            return "redirect:/qna/list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/qna/create";
@@ -63,7 +63,7 @@ public class QnAController {
     public String createQnaComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
         commentService.saveComment(dto);
         redirectAttributes.addAttribute("id", dto.getQnaId());
-        return "redirect:/board/qna/detail/{id}";
+        return "redirect:/qna/detail/{id}";
     }
 
     @GetMapping("answer/{id}")
@@ -78,7 +78,7 @@ public class QnAController {
         try {
             qnAService.answerQuestion(id, dto);
             model.addAttribute("question", dto);
-            return "redirect:/board/qna/detail/" + id;
+            return "redirect:/qna/detail/" + id;
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/qna/answer";
@@ -89,10 +89,10 @@ public class QnAController {
     public String qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto, Model model) {
         try {
             qnAService.QnAQUpdate(id, dto);
-            return "redirect:/board/qna/detail/" + id;
+            return "redirect:/qna/detail/" + id;
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/board/qna/detail/" + id;
+            return "redirect:/qna/detail/" + id;
         }
     }
 
@@ -100,10 +100,10 @@ public class QnAController {
     public String qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto, Model model) {
         try {
             qnAService.QnAAUpdate(id, dto);
-            return "redirect:/board/qna/detail/" + id;
+            return "redirect:/qna/detail/" + id;
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/board/qna/detail/" + id;
+            return "redirect:/qna/detail/" + id;
         }
     }
 
@@ -111,10 +111,10 @@ public class QnAController {
     public String qnaDelete(@PathVariable Long id, Model model) {
         try {
             qnAService.qnaDelete(id);
-            return "redirect:/board/qna/list";
+            return "redirect:/qna/list";
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/board/qna/list";
+            return "redirect:/qna/list";
         }
     }
 

@@ -33,7 +33,8 @@ public class Post extends BaseTimeEntity {
     private com.beyond.teenkiri.user_board.domain.user user;
 
     @Enumerated(EnumType.STRING)
-    private DelYN delYN;
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -42,6 +43,8 @@ public class Post extends BaseTimeEntity {
         return PostListResDto.builder()
                 .id(this.id)
                 .title(this.title)
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .user_email(this.user.getEmail())
                 .build();
     }
@@ -60,5 +63,9 @@ public class Post extends BaseTimeEntity {
     public void toUpdate(PostUpdateDto dto) {
         this.title = dto.getTitle();
         this.contents = dto.getContents();
+    }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
     }
 }

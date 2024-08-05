@@ -53,6 +53,7 @@ public class Notice extends BaseTimeEntity {
                 .title(this.getTitle())
                 .nickname(this.getUser().getNickname())
                 .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
@@ -62,4 +63,7 @@ public class Notice extends BaseTimeEntity {
 
     }
 
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
 }
