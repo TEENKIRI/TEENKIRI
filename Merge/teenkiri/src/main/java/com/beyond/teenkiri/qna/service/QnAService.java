@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.qna.service;
 
 import com.beyond.teenkiri.comment.repository.CommentRepository;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
@@ -38,7 +39,7 @@ public class QnAService {
     }
 
     public Page<QnAListResDto> qnaList(Pageable pageable) {
-        Page<QnA> qnAS = qnARepository.findAll(pageable);
+        Page<QnA> qnAS = qnARepository.findByDelYN(DelYN.N, pageable);
         return qnAS.map(QnA::listFromEntity);
     }
 
@@ -81,9 +82,11 @@ public class QnAService {
     }
 
     @Transactional
-    public void qnaDelete(Long id) {
+    public QnA qnaDelete(Long id) {
         QnA qnA = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-        qnARepository.delete(qnA);
+        qnA.updateDelYN(DelYN.Y);
+        //qnARepository.delete(qnA);
+        return qnA;
     }
 }

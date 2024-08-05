@@ -20,6 +20,7 @@
       <th>작성자</th>
       <th>제목</th>
       <th>생성 시간</th>
+      <th>수정 시간</th>
       <th>상세보기</th>
       <th>답변하기</th>
     </tr>
@@ -32,6 +33,7 @@
         <a th:href="@{/qna/detail/{id}(id=${questions.id})}" th:text="${questions.title}"></a>
       </td>
       <td th:text="${#temporals.format(questions.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+      <td th:text="${#temporals.format(questions.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
       <td><a th:href="@{/qna/detail/{id}(id=${questions.id})}" class="btn btn-primary">상세보기</a></td>
       <td>
         <a th:if="${questions.answerText == null}" th:href="@{/qna/answer/{id}(id=${questions.id})}" class="btn btn-primary">답변하기</a>
