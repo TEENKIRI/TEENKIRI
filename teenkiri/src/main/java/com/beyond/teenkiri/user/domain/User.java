@@ -1,11 +1,11 @@
-package com.beyond.teenkiri.user.domain;
+package com.beyond.teenkiri.user_board.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.user.dto.UserDetailDto;
-import com.beyond.teenkiri.user.dto.UserListResDto;
-import com.beyond.teenkiri.user.dto.UserUpdateDto;
+import com.beyond.teenkiri.user_board.dto.UserDetailDto;
+import com.beyond.teenkiri.user_board.dto.UserListResDto;
+import com.beyond.teenkiri.user_board.dto.UserUpdateDto;
 import lombok.*;
 
 import javax.persistence.*;

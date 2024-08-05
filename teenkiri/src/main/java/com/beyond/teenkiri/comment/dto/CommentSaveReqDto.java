@@ -17,4 +17,5 @@ public class CommentSaveReqDto {
     private String content;
     @Builder.Default
     private DelYN delYN = DelYN.N;
+
 }

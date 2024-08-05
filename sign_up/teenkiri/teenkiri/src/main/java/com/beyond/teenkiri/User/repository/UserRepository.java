@@ -1,6 +1,6 @@
-package com.beyond.teenkiri.User.repository;
+package com.beyond.teenkiri.user.repository;
 
-import com.beyond.teenkiri.User.domain.User;
+import com.beyond.teenkiri.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

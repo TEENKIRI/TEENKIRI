@@ -12,8 +12,8 @@
 <div class="container">
     <div class="page-header"><h3>회원목록</h3></div>
     <div class="float-end">
-        <a href="/user/create" class="btn btn-primary">회원가입</a>
-        <a href="/post/create" class="btn btn-primary">글쓰기</a>
+<!--        <a href="/user/create" class="btn btn-primary">회원가입</a>-->
+<!--        <a href="/post/create" class="btn btn-primary">글쓰기</a>-->
 
     </div>
     <table class="table">
@@ -23,6 +23,7 @@
             <th>이름</th>
             <th>닉네임</th>
             <th>email</th>
+            <th>가입일</th>
         </tr>
         </thead>
         <tbody id="bodyData">
@@ -31,7 +32,8 @@
             <td th:text ="${user.name}"></td>
             <td th:text ="${user.nickname}"></td>
             <td th:text ="${user.email}"></td>
-            <td><a th:href="@{/user/detail/{id}(id=${user.id})}">상세보기</a></td>
+            <td th:text="${#temporals.format(event.createdTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td><a th:href="@{/user/detail/{id}(id=${user.id})}" class="btn btn-primary">상세보기</a></td>
         </tr>
         </tbody>
     </table>

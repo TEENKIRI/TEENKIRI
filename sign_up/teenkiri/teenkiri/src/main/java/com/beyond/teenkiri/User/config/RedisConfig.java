@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.User.config;
+package com.beyond.teenkiri.user.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

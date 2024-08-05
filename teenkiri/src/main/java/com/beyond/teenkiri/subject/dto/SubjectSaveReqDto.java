@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.subject.dto;
 
 import com.beyond.teenkiri.course.domain.Course;
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.subject.domain.Subject;
 import lombok.AllArgsConstructor;

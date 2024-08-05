@@ -6,7 +6,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.dto.QnAAtoUpdateDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.dto.QnAQtoUpdateDto;
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import lombok.*;
 
 import javax.persistence.*;

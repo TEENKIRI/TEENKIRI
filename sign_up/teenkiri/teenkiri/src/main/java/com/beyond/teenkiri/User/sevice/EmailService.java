@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.User.sevice;
+package com.beyond.teenkiri.user.sevice;
 
 
 import lombok.RequiredArgsConstructor;

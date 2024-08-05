@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.User.domain;
+package com.beyond.teenkiri.user.domain;
 
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;

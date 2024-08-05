@@ -1,8 +1,8 @@
-package com.beyond.teenkiri.User.controller;
+package com.beyond.teenkiri.user.controller;
 
 import com.beyond.teenkiri.Common.dto.CommonResDto;
-import com.beyond.teenkiri.User.dto.*;
-import com.beyond.teenkiri.User.sevice.UserService;
+import com.beyond.teenkiri.user.dto.*;
+import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

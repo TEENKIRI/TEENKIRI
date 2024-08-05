@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.user.dto;
+package com.beyond.teenkiri.user_board.dto;
 
 
 import lombok.AllArgsConstructor;

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>아이디 찾기</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<form id="find-id-form">
+    <label for="username">이름:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="phone">핸드폰 번호:</label>
+    <input type="text" id="phone" name="phone" required><br>
+    <button type="button" onclick="findId()">아이디 찾기</button>
+</form>
+<div id="error-message" style="color: red;"></div>
+<div id="success-message" style="color: green;"></div>
+<script>
+    async function findId() {
+        const username = document.getElementById('username').value;
+        const phone = document.getElementById('phone').value;
+
+        const response = await fetch('/api/find-id', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, phone })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('success-message').innerText = `아이디는 ${data.data} 입니다~!~!라.`;
+        } else {
+            const errorData = await response.text();
+            document.getElementById('error-message').innerText = `아이디 찾기 실패했습니다ㅠㅠ: ${errorData}`;
+        }
+    }
+</script>
+</body>
+</html>

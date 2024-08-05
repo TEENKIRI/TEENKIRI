@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.User.config;
+package com.beyond.teenkiri.user.config;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

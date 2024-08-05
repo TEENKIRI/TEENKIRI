@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원 탈퇴</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>회원 탈퇴</h2>
+<p>아래 문구를 입력해주세요: "틴끼리 사이트 회원 탈퇴에 동의합니다"</p>
+<form id="delete-account-form">
+    <label for="confirmation">확인 문구:</label>
+    <input type="text" id="confirmation" name="confirmation" required><br>
+    <button type="button" onclick="deleteAccount()">회원 탈퇴</button>
+</form>
+<div id="error-message" style="color: red;"></div>
+<div id="success-message" style="color: green;"></div>
+
+<script>
+    async function deleteAccount() {
+        const confirmation = document.getElementById('confirmation').value;
+        const token = localStorage.getItem('token');
+
+        const response = await fetch('/api/delete-account', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(confirmation)
+        });
+
+        if (response.ok) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            document.getElementById('success-message').innerText = '회원 탈퇴가 완료되었습니다.';
+        } else {
+            const errorData = await response.json();
+            document.getElementById('error-message').innerText = `회원 탈퇴에 실패했습니다: ${errorData.message}`;
+        }
+    }
+</script>
+</body>
+</html>
