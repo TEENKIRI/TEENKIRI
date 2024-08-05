@@ -52,6 +52,10 @@
             <td>주소</td>
             <td th:text="${user.address}"></td>
         </tr>
+        <tr>
+            <td>수정일시</td>
+            <td th:text="${user.updateTime}"></td>
+        </tr>
 
     </table>
     <div class="float-end">
@@ -81,7 +85,14 @@
                 <label for="address">주소</label>
                 <input type="text" class="form-control" name="address" id="address" th:value="${user.address}">
             </div>
-
+            <tr>
+                <td>가입일시</td>
+                <td th:text="${user.createdTime}"></td>
+            </tr>
+            <tr>
+                <td>수정일시</td>
+                <td th:text="${user.updatedTime}"></td>
+            </tr>
             <br>
             <div class="form-group">
                 <button type="submit" class="btn btn-secondary">수정완료</button>

@@ -2,7 +2,7 @@ package com.beyond.teenkiri.event.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.domain.Event;
-import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user_board.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

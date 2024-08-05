@@ -4,9 +4,9 @@ import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-import com.beyond.teenkiri.user.domain.Role;
-import com.beyond.teenkiri.user.domain.User;
-import com.beyond.teenkiri.user.service.UserService;
+import com.beyond.teenkiri.user_board.domain.Role;
+import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +51,7 @@ public class QnAService {
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto) {
         User answeredBy = userService.findByEmail(dto.getAnswererBy());
 //        User answeredBy = userService.findByEmail(dto.getAnswererEmail());
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
+        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN || answeredBy.getRole() != Role.TEACHER) {
             throw new SecurityException("권한이 없습니다.");
         }
         QnA qna = qnARepository.findById(id)
@@ -73,7 +73,7 @@ public class QnAService {
         QnA qnA = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("QnA is not found"));
         User answeredBy = userService.findByEmail(dto.getAnswererEmail());
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
+        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN || answeredBy.getRole() != Role.TEACHER) {
             throw new SecurityException("권한이 없습니다.");
         }
         qnA.QnAAUpdate(dto);

@@ -1,9 +1,9 @@
-package com.beyond.teenkiri.User.sevice;
+package com.beyond.teenkiri.user.sevice;
 
-import com.beyond.teenkiri.User.config.JwtTokenProvider;
-import com.beyond.teenkiri.User.domain.User;
-import com.beyond.teenkiri.User.dto.*;
-import com.beyond.teenkiri.User.repository.UserRepository;
+import com.beyond.teenkiri.user.config.JwtTokenProvider;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.dto.*;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

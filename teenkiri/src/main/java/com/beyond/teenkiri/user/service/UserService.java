@@ -1,11 +1,11 @@
-package com.beyond.teenkiri.user.service;
+package com.beyond.teenkiri.user_board.service;
 
-import com.beyond.teenkiri.user.domain.User;
-import com.beyond.teenkiri.user.dto.UserDetailDto;
-import com.beyond.teenkiri.user.dto.UserListResDto;
-import com.beyond.teenkiri.user.dto.UserSaveReqDto;
-import com.beyond.teenkiri.user.dto.UserUpdateDto;
-import com.beyond.teenkiri.user.repository.UserRepository;
+import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user_board.dto.UserDetailDto;
+import com.beyond.teenkiri.user_board.dto.UserListResDto;
+import com.beyond.teenkiri.user_board.dto.UserSaveReqDto;
+import com.beyond.teenkiri.user_board.dto.UserUpdateDto;
+import com.beyond.teenkiri.user_board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -24,15 +24,41 @@
       <td th:text="${event.userNickname}"></td>
     </tr>
     <tr>
-      <td>생성시간</td>
+      <td>등록일</td>
       <td th:text="${event.createdTime}"></td>
     </tr>
     <tr>
-      <td>수정시간</td>
+      <td>수정일</td>
       <td th:text="${event.updatedTime}"></td>
     </tr>
   </table>
-
+  <div class="float-end">
+    <button onclick="showUpdateForm()" class="btn btn-primary">수정</button>
+    <a th:href="@{/event/delete/{id}(id=${event.id})}" class="btn btn-primary">삭제</a>
+  </div>
 </div>
+<br>
+<div id="update-form" class="mt-4">
+  <form th:action="@{/event/update/{id}(id=${event.id})}" method="post">
+    <div class="form-group">
+      <label for="title">제목</label>
+      <input type="text" class="form-control" name="title" id="title" th:value="${event.title}">
+    </div>
+    <div class="form-group">
+      <label for="contents">내용</label>
+      <textarea class="form-control" name="contents" id="contents" th:text="${event.contents}"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <button type="submit" class="btn btn-secondary">수정완료</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function showUpdateForm(){
+      document.getElementById('update-form').style.display = 'block';
+  }
+</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.User.config;
+package com.beyond.teenkiri.user.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
