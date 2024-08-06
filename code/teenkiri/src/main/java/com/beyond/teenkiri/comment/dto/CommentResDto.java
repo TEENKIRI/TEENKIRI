@@ -1,4 +1,4 @@
-//package com.beyond.board_demo.comment.dto;
+package com.beyond.teenkiri.comment.dto;//package com.beyond.board_demo.comment.dto;
 //
 //import com.beyond.board_demo.comment.domain.Comment;
 //import lombok.AllArgsConstructor;

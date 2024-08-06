@@ -5,9 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2238f5d9-0360-4cec-a05d-10abee66064f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Merge/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Merge/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/application.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/resources/main/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/resources/main/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/comment/dto/CommentResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/comment/dto/CommentResDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +37,12 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="teenkiri" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -46,10 +64,13 @@
   "keyToString": {
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelOrder2": "2",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RequestMappingsPanelWidth2": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "/Users/milcho/Project/TEENKIRI/code/teenkiri/src/main/java/com/beyond/teenkiri",
     "node.js.detected.package.eslint": "true",
@@ -57,6 +78,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "a73ec33ba6909016f1bafeaa625f0c03",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -86,7 +108,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1722854410570</updated>
-      <workItem from="1722854411987" duration="3570000" />
+      <workItem from="1722854411987" duration="5678000" />
+      <workItem from="1722870177244" duration="2261000" />
     </task>
     <servers />
   </component>
