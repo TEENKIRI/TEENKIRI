@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserFindPasswordDto {
-    private String username;
+    private String name;
     private String phone;
     private String email;
 }
