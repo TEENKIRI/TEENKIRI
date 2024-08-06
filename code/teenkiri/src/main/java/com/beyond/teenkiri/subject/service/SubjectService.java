@@ -69,20 +69,17 @@ public class SubjectService {
 
 
     //    강좌 생성 및 DB 저장
-    public Subject subjectCreate(SubjectSaveReqDto dto, MultipartFile subjectThum){
-//        🚨추후 멤버..
-        User user = userService.findByEmail(dto.getUserEmail());
+    public Subject subjectCreate(SubjectSaveReqDto dto,MultipartFile subjectThum){
+//        로그인 된 선생님 이메일 추가하기
+        User user = userService.findByEmail(dto.getUserTeacherEmail());
 
-        if(!user.getRole().equals(Role.ADMIN)){ // 관리자 레벨만 강좌를 생성할 수 있도록 권한설정
-            throw new IllegalArgumentException("권한이 부족합니다.");
-        }
         Course course = courseRepository.findById(dto.getCourseId()).orElseThrow(()-> new EntityNotFoundException("없는 과목 입니다."));
         Subject subject = dto.toEntity(user,course);
 
         subjectRepository.save(subject);
         try{
             MultipartFile image = subjectThum;
-            if(!subjectThum.isEmpty()){
+            if(!image.isEmpty()){
                 String bgImagePathFileName = course.getId() + "_"  + image.getOriginalFilename();
                 byte[] bgImagePathByte =  image.getBytes();
                 String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);

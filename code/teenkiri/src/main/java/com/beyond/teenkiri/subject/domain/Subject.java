@@ -29,6 +29,7 @@ public class Subject extends BaseTimeEntity {
     @Column(nullable = false,length = 255)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     private Grade grade; // 학년이 숫자로 넣는게 불가하여, 문구버전 ENUM으로 변경
 //    private Integer gradeEnumValue;
 //    @Transient
