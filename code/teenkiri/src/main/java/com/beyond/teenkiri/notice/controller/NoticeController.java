@@ -31,7 +31,7 @@ public class NoticeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNotice(@ModelAttribute NoticeSaveReqDto dto) {
+    public ResponseEntity<?> createNotice(@RequestBody NoticeSaveReqDto dto) {
         try {
             Notice notice = noticeService.createNotice(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "공지사항이 성공적으로 등록되었습니다.", notice.getId());

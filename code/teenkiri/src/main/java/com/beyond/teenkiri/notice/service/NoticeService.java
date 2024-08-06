@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
@@ -34,16 +34,27 @@ public class NoticeService {
 
     @Transactional
     public Notice createNotice(NoticeSaveReqDto dto) {
+        // 현재 인증된 사용자의 이메일을 가져옴
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 이메일로 사용자 정보 조회
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        // 사용자가 ADMIN 권한이 있는지 확인
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-        Notice notice = dto.toEntity(user);
+
+        // Notice 엔티티 생성 및 User 설정
+        Notice notice = dto.toEntity();
+        notice.setUser(user);
+
+        // Notice 엔티티를 데이터베이스에 저장
         return noticeRepository.save(notice);
     }
+
+
 
     public Page<NoticeListResDto> noticeList(Pageable pageable) {
         Page<Notice> notices = noticeRepository.findByDelYN(DelYN.N, pageable);
