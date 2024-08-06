@@ -11,6 +11,7 @@ import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,8 +46,8 @@ public class CourseService {
 
     //    과목 생성
     public Course courseCreate(CourseSaveReqDto dto){
-//        🚨추후 멤버..
-        User user = userService.findByEmail(dto.getUserEmail());
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
 
         if(!user.getRole().equals(Role.ADMIN)){ // 관리자 레벨만 강좌를 생성할 수 있도록 권한설정
             throw new IllegalArgumentException("권한이 부족합니다.");

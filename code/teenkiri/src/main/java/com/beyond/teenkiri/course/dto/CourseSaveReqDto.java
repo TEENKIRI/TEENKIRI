@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseSaveReqDto {
-    private String userEmail; // 🚨 멤버 생성 시 삭제
+//    private String userEmail; // 🚨 멤버 생성 시 삭제
 
     private String title;
 
