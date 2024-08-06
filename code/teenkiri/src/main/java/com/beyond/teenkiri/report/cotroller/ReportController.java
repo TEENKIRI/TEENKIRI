@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -51,6 +52,7 @@ public class ReportController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<?> reportList(@RequestParam(value = "type", required = false) String type,
                                         @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -59,6 +61,7 @@ public class ReportController {
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/detail")
     public ResponseEntity<?> reportDetails(@RequestParam(value = "qnaId", required = false) Long qnaId,
                                            @RequestParam(value = "postId", required = false) Long postId,
