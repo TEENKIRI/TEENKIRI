@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.user.sevice;
+package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;

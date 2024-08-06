@@ -1,7 +1,6 @@
-package com.beyond.teenkiri.user.sevice;
+package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.chatting.service.ChatService;
-import com.beyond.teenkiri.common.domain.Address;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenProvider;
 import com.beyond.teenkiri.user.domain.User;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Random;
 
 @Service("userService")
