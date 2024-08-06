@@ -72,7 +72,7 @@ public class SubjectSsrController {
                                 @RequestPart(value="subjectThum") MultipartFile subjectThum,
                                 Model model){
        try {
-            subjectService.subjectCreate(dto,subjectThum);
+            subjectService.subjectCreate(dto);
             return "redirect:/ssr/subject/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

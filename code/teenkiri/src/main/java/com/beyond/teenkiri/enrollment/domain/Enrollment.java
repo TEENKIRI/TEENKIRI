@@ -8,7 +8,7 @@ import com.beyond.teenkiri.enrollment.dto.EnrollUpdateCompletedReqDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollUpdateUserDurationReqDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.user_board.domain.User;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

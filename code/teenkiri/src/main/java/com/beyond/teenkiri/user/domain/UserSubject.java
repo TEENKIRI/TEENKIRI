@@ -2,9 +2,6 @@ package com.beyond.teenkiri.user.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.user.dto.UserDetailDto;
-import com.beyond.teenkiri.user.dto.UserListResDto;
-import com.beyond.teenkiri.user.dto.UserUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
