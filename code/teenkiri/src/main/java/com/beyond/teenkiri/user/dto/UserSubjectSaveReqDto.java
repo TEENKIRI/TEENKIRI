@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSubjectSaveReqDto {
-    private String userEmail;
+//    private String userEmail;
     private Long subjectId;
 
     public UserSubject toEntity(Subject subject, User user) {
@@ -25,9 +25,9 @@ public class UserSubjectSaveReqDto {
                 .build();
     }
 
-    public EnrollSaveReqDto toEnrollEntity(Lecture lecture) {
+    public EnrollSaveReqDto toEnrollEntity(User user,Lecture lecture) {
         return EnrollSaveReqDto.builder()
-                .userEmail(this.userEmail)
+                .userEmail(user.getEmail())
                 .lectureId(lecture.getId())
                 .build();
     }

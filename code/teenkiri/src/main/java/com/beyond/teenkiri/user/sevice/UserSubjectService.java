@@ -8,6 +8,7 @@ import com.beyond.teenkiri.user.domain.UserSubject;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
 import com.beyond.teenkiri.user.repository.UserSubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,10 @@ public class UserSubjectService {
     }
 
     public UserSubject userSubjectSign(UserSubjectSaveReqDto reqDto){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+
         Subject subject = subjectService.findSubjectById(reqDto.getSubjectId());
-        User user = userService.findByEmail(reqDto.getUserEmail());
         UserSubject userSubject = reqDto.toEntity(subject,user);
 
         userSubjectRepository.save(userSubject);

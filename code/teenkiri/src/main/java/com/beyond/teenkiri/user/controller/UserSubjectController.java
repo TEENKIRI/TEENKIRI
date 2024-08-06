@@ -1,40 +1,32 @@
 package com.beyond.teenkiri.user.controller;
 
-import com.beyond.teenkiri.subject.service.SubjectService;
+import com.beyond.teenkiri.common.dto.CommonResDto;
+import com.beyond.teenkiri.user.domain.UserSubject;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
 import com.beyond.teenkiri.user.sevice.UserSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-
-@Controller
-@RequestMapping("/ssr")
-public class UserSubjectSsrController {
+@RestController
+public class UserSubjectController {
     private final UserSubjectService userSubjectService;
-    private final SubjectService subjectService;
 
     @Autowired
-    public UserSubjectSsrController(UserSubjectService userSubjectService, SubjectService subjectService){
+    public UserSubjectController(UserSubjectService userSubjectService){
         this.userSubjectService = userSubjectService;
-        this.subjectService = subjectService;
     }
 
 
 //    강좌 수강하기
     @PostMapping("/my/subject/create")
-    public String subjectCreate(@RequestBody UserSubjectSaveReqDto dto, Model model, HttpServletRequest request){
-        String referer = request.getHeader("Referer"); // 헤더에서 이전 페이지를 읽는다.
-        try {
-            userSubjectService.userSubjectSign(dto);
-            return "redirect:"+ referer; // 이전 페이지로 리다이렉트
-        } catch (SecurityException | EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:"+ referer;
-        }
+    public ResponseEntity<?> subjectCreate(@RequestBody UserSubjectSaveReqDto dto){
+        UserSubject userSubject = userSubjectService.userSubjectSign(dto);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 수강 신청이 완료되었습니다.",userSubject.getId());
+        return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
 
 
