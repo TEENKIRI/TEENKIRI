@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.user.sevice;
 
 import com.beyond.teenkiri.chatting.service.ChatService;
+import com.beyond.teenkiri.common.domain.Address;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenProvider;
 import com.beyond.teenkiri.user.domain.User;
@@ -72,7 +73,7 @@ public class UserService {
         String resetToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
-        String resetLink = "http://localhost:8081/api/reset-password?token=" + resetToken; // /api 경로 추가
+        String resetLink = "http://localhost:8081/user/reset-password?token=" + resetToken; // /api 경로 추가
         emailService.sendSimpleMessage(findPasswordDto.getEmail(), "비밀번호 재설정", "비밀번호 재설정 링크: " + resetLink);
     }
 
@@ -168,4 +169,36 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
+
+
+    public void updateUserInfo(String token, UserEditReqDto editReqDto) {
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
+            if (!editReqDto.getPassword().equals(editReqDto.getConfirmPassword())) {
+                throw new RuntimeException("동일하지 않은 비밀번호 입니다.");
+            }
+            user.setPassword(passwordEncoder.encode(editReqDto.getPassword()));
+        }
+
+        if (editReqDto.getNickname() != null && !editReqDto.getNickname().isEmpty()) {
+            String filteredNickname = chatService.filterMessage(editReqDto.getNickname());
+            if (!filteredNickname.equals(editReqDto.getNickname())) {
+                throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
+            }
+            if (userRepository.existsByNickname(editReqDto.getNickname())) {
+                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+            }
+            user.setNickname(editReqDto.getNickname());
+        }
+
+        if (editReqDto.getAddress() != null) {
+            user.setAddress(editReqDto.getAddress());
+        }
+
+        userRepository.save(user);
+    }
+
 }

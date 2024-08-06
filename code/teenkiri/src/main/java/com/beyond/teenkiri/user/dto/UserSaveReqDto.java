@@ -7,7 +7,6 @@ import com.beyond.teenkiri.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
-
 @Getter
 @Builder
 public class UserSaveReqDto {
@@ -17,21 +16,27 @@ public class UserSaveReqDto {
     private String nickname;
     private Address address;
     private String phone;
+
     @Builder.Default
     private Role role = Role.STUDENT;
+
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public User toEntity(){
+    public User toEntity() {
         return User.builder()
-                .password(this.password)
                 .name(this.name)
-                .nickname(this.nickname)
                 .email(this.email)
-                .role(this.role)
+                .password(this.password)
+                .nickname(this.nickname)
                 .address(this.address)
-                .delYN(this.delYN)
                 .phone(this.phone)
+                .role(this.role)
+                .delYN(this.delYN)
                 .build();
+    }
+
+    public NicknameCheckDto toNicknameCheckDto() {
+        return new NicknameCheckDto(this.nickname);
     }
 }
