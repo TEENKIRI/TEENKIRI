@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 public class SubjectController {
     private final SubjectService subjectService;
@@ -26,7 +27,7 @@ public class SubjectController {
     }
 
 
-//    강좌 리스트 페이지 :: delyn n인 것만
+    //    강좌 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/list")
     public ResponseEntity<?> subjectListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
             direction = Sort.Direction.DESC ) Pageable pageable){
@@ -35,7 +36,7 @@ public class SubjectController {
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
-//    강좌 순위별 리스트 페이지 :: delyn n인 것만
+    //    강좌 순위별 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/rating/list")
     public ResponseEntity<?> subjectRatingListView(@PageableDefault(page = 0, size=4 ) Pageable pageable){
         Page<SubjectListResDto> subjectListResDto = subjectService.subjectRatingList(pageable);
@@ -44,7 +45,7 @@ public class SubjectController {
     }
 
 
-//    강좌 상세 페이지
+    //    강좌 상세 페이지
     @GetMapping("/subject/detail/{id}")
     public ResponseEntity<?> subjectDetailView(@PathVariable(value = "id") Long id){
         SubjectDetResDto subjectDetResDto = subjectService.subjectDetail(id);
@@ -53,17 +54,17 @@ public class SubjectController {
     }
 
 
-//    강좌 생성
+    //    강좌 생성
     @PostMapping("/subject/create")
     public ResponseEntity<?> subjectCreate(@RequestPart SubjectSaveReqDto dto){
         System.out.println("33333333333333333");
-        Subject subject = subjectService.subjectCreate(dto);
+        Subject subject = subjectService.subjectCreate(dto, null);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",subject.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
 
 
-//    강좌 업데이트
+    //    강좌 업데이트
     @PatchMapping("/subject/update")
     public ResponseEntity<?> subjectUpdate(SubjectUpdateReqDto dto){
         Long subjectId = subjectService.subjectUpdate(dto);
@@ -72,7 +73,7 @@ public class SubjectController {
     }
 
 
-//    강좌 삭제
+    //    강좌 삭제
     @DeleteMapping("/subject/delete/{id}")
     public ResponseEntity<?> subjectDelete(@PathVariable(value = "id") Long id){
         Long subjectId = subjectService.subjectDelete(id);

@@ -37,12 +37,12 @@ public class CourseSsrController {
     }
 
     // 과목 상세페이지 화면
-//    @GetMapping("/course/detail/{id}")
-//    public String courseDetail(@PathVariable Long id, Model model){
-//        CourseDetResDto courseDetResDto = courseService.courseDetail(id);
-//        model.addAttribute("course", courseDetResDto);
-//        return "course/detail";
-//    }
+    @GetMapping("/course/detail/{id}")
+    public String courseDetail(@PathVariable Long id, Model model){
+        CourseDetResDto courseDetResDto = courseService.courseDetail(id);
+        model.addAttribute("course", courseDetResDto);
+        return "course/detail";
+    }
 
     // 과목 생성 화면
     @GetMapping("/course/create")
@@ -53,7 +53,7 @@ public class CourseSsrController {
     // 과목 생성
     @PostMapping("/course/create")
     public String courseCreate(CourseSaveReqDto dto, Model model){
-        
+
         try {
             Course course = courseService.courseCreate(dto);
             return "redirect:/ssr/course/list";

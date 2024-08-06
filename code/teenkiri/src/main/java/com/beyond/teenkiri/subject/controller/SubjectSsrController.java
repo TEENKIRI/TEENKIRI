@@ -71,8 +71,8 @@ public class SubjectSsrController {
     public String subjectCreate(SubjectSaveReqDto dto,
                                 @RequestPart(value="subjectThum") MultipartFile subjectThum,
                                 Model model){
-       try {
-            subjectService.subjectCreate(dto);
+        try {
+            subjectService.subjectCreate(dto,subjectThum);
             return "redirect:/ssr/subject/list";
         } catch (SecurityException | EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
