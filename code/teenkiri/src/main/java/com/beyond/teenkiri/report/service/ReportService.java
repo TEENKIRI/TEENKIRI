@@ -10,12 +10,13 @@ import com.beyond.teenkiri.report.domain.Report;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.repository.ReportRepository;
-import com.beyond.teenkiri.user_board.domain.user;
-import com.beyond.teenkiri.user_board.repository.UserRepository;
-import com.beyond.teenkiri.user_board.service.UserService;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
+import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,8 @@ public class ReportService {
 
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto) {
-        user user = userService.findByEmail(dto.getReportEmail());
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
         QnA qnA = null;
         Post post = null;
         Comment comment = null;
@@ -60,7 +62,6 @@ public class ReportService {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         }
-
         Report report = dto.toEntity(user, qnA, post, comment);
         return reportRepository.save(report);
     }

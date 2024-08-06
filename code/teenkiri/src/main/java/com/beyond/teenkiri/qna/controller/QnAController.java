@@ -33,7 +33,7 @@ public class QnAController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuestion(@ModelAttribute QnASaveReqDto dto) {
+    public ResponseEntity<?> createQuestion(@RequestBody QnASaveReqDto dto) {
         try {
             QnA qna = qnAService.createQuestion(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "질문이 성공적으로 등록되었습니다.", qna.getId());
@@ -66,7 +66,7 @@ public class QnAController {
     }
 
     @PostMapping("/comment/create")
-    public ResponseEntity<?> createQnaComment(@ModelAttribute CommentSaveReqDto dto) {
+    public ResponseEntity<?> createQnaComment(@RequestBody CommentSaveReqDto dto) {
         commentService.saveComment(dto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "댓글이 성공적으로 등록되었습니다.", dto.getQnaId());
         return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
@@ -74,7 +74,7 @@ public class QnAController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/answer/{id}")
-    public ResponseEntity<?> answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto) {
+    public ResponseEntity<?> answerQuestion(@PathVariable Long id, @RequestBody QnAAnswerReqDto dto) {
         try {
             qnAService.answerQuestion(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문에 대한 답변이 성공적으로 등록되었습니다.", id);
@@ -87,7 +87,7 @@ public class QnAController {
     }
 
     @PostMapping("/update/question/{id}")
-    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto) {
+    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id, @RequestBody QnAQtoUpdateDto dto) {
         try {
             qnAService.QnAQUpdate(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문이 성공적으로 업데이트되었습니다.", id);
@@ -101,7 +101,7 @@ public class QnAController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/answer/{id}")
-    public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto) {
+    public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, @RequestBody QnAAtoUpdateDto dto) {
         try {
             qnAService.QnAAUpdate(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "답변이 성공적으로 업데이트되었습니다.", id);

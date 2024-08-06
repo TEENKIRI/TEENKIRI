@@ -4,6 +4,7 @@ import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class CommentSaveReqDto {
 
 
     // toEntity 메서드 추가
-    public Comment PostToEntity(com.beyond.teenkiri.user_board.domain.user user, Post post){
+    public Comment PostToEntity(User user, Post post){
         return Comment.builder()
                 .content(this.content)
                 .delYN(this.delYn)
@@ -37,7 +38,7 @@ public class CommentSaveReqDto {
                 .build();
     }
 
-    public Comment QnAToEntity(com.beyond.teenkiri.user_board.domain.user user, QnA qnA){
+    public Comment QnAToEntity(User user, QnA qnA){
         return Comment.builder()
                 .content(this.content)
                 .delYN(this.delYn)

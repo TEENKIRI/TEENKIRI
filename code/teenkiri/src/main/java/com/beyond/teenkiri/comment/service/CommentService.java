@@ -8,9 +8,10 @@ import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-import com.beyond.teenkiri.user_board.domain.user;
-import com.beyond.teenkiri.user_board.repository.UserRepository;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,8 @@ public class CommentService {
 
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
-        user user = userRepository.findByEmail(dto.getUserEmail())
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
         if (dto.getPostId() != null) {
             Post post = postRepository.findById(dto.getPostId())

@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.report.controller;
+package com.beyond.teenkiri.report.cotroller;
 
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
@@ -39,7 +39,7 @@ public class ReportController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> reportCreatePost(@ModelAttribute ReportSaveReqDto dto) {
+    public ResponseEntity<?> reportCreatePost(@RequestBody ReportSaveReqDto dto) {
         try {
             reportService.reportCreate(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "신고가 성공적으로 등록되었습니다.", dto.getReportEmail());
@@ -59,7 +59,7 @@ public class ReportController {
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
-    @GetMapping("/details")
+    @GetMapping("/detail")
     public ResponseEntity<?> reportDetails(@RequestParam(value = "qnaId", required = false) Long qnaId,
                                            @RequestParam(value = "postId", required = false) Long postId,
                                            @RequestParam(value = "commentId", required = false) Long commentId) {

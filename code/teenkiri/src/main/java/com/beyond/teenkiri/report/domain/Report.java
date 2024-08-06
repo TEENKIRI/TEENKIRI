@@ -70,6 +70,8 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
+import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -97,7 +99,7 @@ public class Report extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "qna_id", nullable = true)
@@ -137,4 +139,15 @@ public class Report extends BaseTimeEntity {
             return null;
         }
     }
+
+//    public ReportSaveReqDto toEntity(User user, QnA qna, Post post, Comment comment) {
+//        return ReportSaveReqDto.builder()
+//                .reportEmail(this.user.getEmail())
+//                .suspectEmail(this.determineSuspectEmail())
+//                .postId(post.getId())
+//                .qnaId(qna.getId())
+//                .commentId(comment.getId())
+//                .reason(this.reason)
+//                .build();
+//    }
 }
