@@ -47,13 +47,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
-//                .antMatchers("/api/login", "/api/register").permitAll() // adjust this according to your endpoints
-                .anyRequest().authenticated()
+                .antMatchers("/public/**").permitAll() // '/public/' 경로는 인증 없이 접근 가능
+//                .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 .and()
-                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .formLogin()
+//                .loginPage("/login") // 커스텀 로그인 페이지
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
+
 }
