@@ -45,18 +45,18 @@ public class QnAService {
 
     public QnA getQuestionDetail(Long id) {
         return qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
     }
 
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto) {
-        user answeredBy = userService.findByEmail(dto.getAnswererBy());
+        user answeredBy = userService.findByEmail(dto.getAnswererEmail());
 //        User answeredBy = userService.findByEmail(dto.getAnswererEmail());
         if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
         QnA qna = qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
         qna = dto.toEntity(answeredBy, qna);
         return qnARepository.save(qna);
     }
@@ -64,20 +64,31 @@ public class QnAService {
     @Transactional
     public void QnAQUpdate(Long id, QnAQtoUpdateDto dto) {
         QnA qnA = qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("QnA is not found"));
-        qnA.QnAQUpdate(dto);
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        if (qnA.getUser().getEmail().equals(dto.getUserEmail())){
+            qnA.QnAQUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
         qnARepository.save(qnA);
     }
 
     @Transactional
     public void QnAAUpdate(Long id, QnAAtoUpdateDto dto) {
         QnA qnA = qnARepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("QnA is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
         user answeredBy = userService.findByEmail(dto.getAnswererEmail());
         if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-        qnA.QnAAUpdate(dto);
+        System.out.println(answeredBy.getEmail());
+        System.out.println(dto.getAnswererEmail());
+        if (answeredBy.getEmail().equals(dto.getAnswererEmail()))
+        {
+            qnA.QnAAUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
         qnARepository.save(qnA);
     }
 

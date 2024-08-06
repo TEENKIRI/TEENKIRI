@@ -31,7 +31,7 @@ public class QnADetailDto {
                 .questionText(qna.getQuestionText())
                 .answerText(qna.getAnswerText())
                 .questionUserNickname(qna.getUser().getNickname())
-                .answeredByNickname(qna.getAnsweredBy() != null ? qna.getAnsweredBy().getNickname() : null)
+                .answeredByNickname(qna.getAnswererEmail() != null ? qna.getAnswererEmail().getNickname() : null)
                 .createdTime(qna.getCreatedTime())
                 .updatedTime(qna.getUpdatedTime())
                 .answeredAt(qna.getAnsweredAt())

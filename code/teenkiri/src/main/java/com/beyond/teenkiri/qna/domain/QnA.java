@@ -37,8 +37,8 @@ public class QnA extends BaseTimeEntity {
     private com.beyond.teenkiri.user_board.domain.user user; // 작성자
 
     @ManyToOne
-    @JoinColumn(name = "answered_by")
-    private com.beyond.teenkiri.user_board.domain.user answeredBy;
+    @JoinColumn(name = "answererEmail")
+    private com.beyond.teenkiri.user_board.domain.user answererEmail;
 
     @Column
     private LocalDateTime answeredAt;

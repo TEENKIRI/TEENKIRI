@@ -11,6 +11,7 @@ import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.repository.ReportRepository;
 import com.beyond.teenkiri.user_board.domain.user;
+import com.beyond.teenkiri.user_board.repository.UserRepository;
 import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,14 +29,16 @@ public class ReportService {
     private final QnARepository qnARepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ReportService(ReportRepository repository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository) {
+    public ReportService(ReportRepository repository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
         this.reportRepository = repository;
         this.userService = userService;
         this.qnARepository = qnARepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
