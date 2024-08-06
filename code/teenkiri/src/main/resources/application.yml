@@ -58,12 +58,3 @@ logging:
     name: application.log
 
 # aws s3 설정
-cloud:
-  aws:
-    credentials:
-      access-key: AKIA2UC3DSYQ7GP4YAGK
-      secret-key: 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
-    region:
-      static: ap-southeast-2
-    s3:
-      bucket: teenkiri-file
