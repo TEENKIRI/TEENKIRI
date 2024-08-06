@@ -1,6 +1,5 @@
 package com.beyond.teenkiri.lecture.controller;
 
-import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.dto.*;
 import com.beyond.teenkiri.lecture.service.LectureService;
@@ -9,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

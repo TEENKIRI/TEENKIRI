@@ -1,8 +1,6 @@
 package com.beyond.teenkiri.user.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
-import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.dto.UserDetailDto;
 import com.beyond.teenkiri.user.dto.UserListResDto;
@@ -13,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Entity

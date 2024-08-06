@@ -1,6 +1,5 @@
 package com.beyond.teenkiri.course.controller;
 
-import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.dto.CourseDetResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
@@ -11,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

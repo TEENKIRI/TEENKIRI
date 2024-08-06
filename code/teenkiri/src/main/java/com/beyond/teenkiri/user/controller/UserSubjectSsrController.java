@@ -1,14 +1,9 @@
 package com.beyond.teenkiri.user.controller;
 
-import com.beyond.teenkiri.common.dto.CommonResDto;
-import com.beyond.teenkiri.subject.domain.Subject;
-import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.subject.service.SubjectService;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
 import com.beyond.teenkiri.user.service.UserSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

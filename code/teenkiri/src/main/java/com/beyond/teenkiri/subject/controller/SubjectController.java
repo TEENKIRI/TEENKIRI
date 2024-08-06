@@ -55,8 +55,9 @@ public class SubjectController {
 
 //    강좌 생성
     @PostMapping("/subject/create")
-    public ResponseEntity<?> subjectCreate(@RequestBody SubjectSaveReqDto dto){
-        Subject subject = subjectService.subjectCreate(dto);
+    public ResponseEntity<?> subjectCreate(@RequestPart SubjectSaveReqDto dto){
+        System.out.println("33333333333333333");
+        Subject subject = subjectService.subjectCreate(dto, null);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",subject.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }

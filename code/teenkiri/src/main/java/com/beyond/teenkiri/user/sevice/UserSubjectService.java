@@ -1,8 +1,6 @@
-package com.beyond.teenkiri.user.service;
+package com.beyond.teenkiri.user.sevice;
 
-import com.beyond.teenkiri.enrollment.dto.EnrollSaveReqDto;
 import com.beyond.teenkiri.enrollment.service.EnrollmentService;
-import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.service.SubjectService;
 import com.beyond.teenkiri.user.domain.User;
@@ -12,8 +10,6 @@ import com.beyond.teenkiri.user.repository.UserSubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)

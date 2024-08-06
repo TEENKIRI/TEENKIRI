@@ -4,9 +4,11 @@ import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.enrollment.dto.EnrollDetResDto;
 import com.beyond.teenkiri.enrollment.dto.EnrollListResDto;
-import com.beyond.teenkiri.enrollment.dto.EnrollUpdateReqDto;
+import com.beyond.teenkiri.enrollment.dto.EnrollUpdateCompletedReqDto;
+import com.beyond.teenkiri.enrollment.dto.EnrollUpdateUserDurationReqDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.domain.Subject;
+import com.beyond.teenkiri.user_board.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +30,7 @@ public class Enrollment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.beyond.teenkiri.user_board.domain.user user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
@@ -40,6 +42,9 @@ public class Enrollment extends BaseTimeEntity {
 
     @Builder.Default
     private Float progress = 0F;
+
+    @Builder.Default
+    private Integer userLectureDuration = 0;
 
     @Builder.Default
     private Boolean isCompleted = Boolean.FALSE;
@@ -62,16 +67,20 @@ public class Enrollment extends BaseTimeEntity {
                 .build();
     }
 
-    public void update(EnrollUpdateReqDto dto) {
-        if(!this.progress.equals(dto.getProgress())){
-            this.progress = dto.getProgress();
-        }
-        if(!this.isCompleted.equals(dto.getIsCompleted())){
-            this.isCompleted = dto.getIsCompleted();
+    public void updateDuration(EnrollUpdateUserDurationReqDto dto, Float progress) {
+        if(!this.userLectureDuration.equals(dto.getUserLectureDuration())){
+            this.userLectureDuration = dto.getUserLectureDuration();
+            this.progress = progress;
         }
     }
 
 
+    public void updateCompleted(EnrollUpdateCompletedReqDto dto, Float progress) {
+        if(!this.isCompleted.equals(dto.getIsCompleted())){
+            this.isCompleted = dto.getIsCompleted();
+            this.progress = progress;
+        }
+    }
 }
 
 /*

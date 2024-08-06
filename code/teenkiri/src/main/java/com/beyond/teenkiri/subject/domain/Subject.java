@@ -5,8 +5,9 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
-import com.beyond.teenkiri.user_board.domain.user;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.domain.UserSubject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class Subject extends BaseTimeEntity {
 //    유저 : 선생님
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private user userTeacher;
+    private User userTeacher;
 
 //    과목
     @ManyToOne
@@ -51,6 +52,9 @@ public class Subject extends BaseTimeEntity {
 //    연결된 강의
     @OneToMany(mappedBy = "subject", cascade = CascadeType.PERSIST)
     private List<Lecture> lectures;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.PERSIST)
+    private List<UserSubject> userSubjects;
 
 
     @Column(columnDefinition = "TEXT")
@@ -64,12 +68,17 @@ public class Subject extends BaseTimeEntity {
     private DelYN delYN = DelYN.N;
 
 
+    private String subjectThumUrl;
+
+
     public SubjectListResDto fromListEntity() {
         return SubjectListResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .teacherName(this.userTeacher.getName())
                 .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
@@ -84,7 +93,13 @@ public class Subject extends BaseTimeEntity {
                 .rating(this.rating)
                 .delYN(this.delYN)
                 .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
+    }
+
+    public void updateImagePath(String s3ImagePath) {
+        this.subjectThumUrl = s3ImagePath;
     }
 }
 
