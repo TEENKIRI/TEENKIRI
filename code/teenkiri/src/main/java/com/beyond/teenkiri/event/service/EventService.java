@@ -39,8 +39,8 @@ public class EventService {
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-        Event Event = dto.toEntity(user);
-        return eventRepository.save(Event);
+        Event event = dto.toEntity(user);
+        return eventRepository.save(event);
     }
 
     public Page<EventListResDto> eventList(Pageable pageable) {
@@ -56,10 +56,14 @@ public class EventService {
 
     @Transactional
     public void eventUpdate(Long id, EventUpdateDto dto){
-        Event Event = eventRepository.findById(id)
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
-        Event.toUpdate(dto);
-        eventRepository.save(Event);
+        if (event.getUser().getEmail().equals(dto.getUserEmail())){
+            event.toUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
+        eventRepository.save(event);
     }
 
     @Transactional
