@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -71,6 +72,7 @@ public class QnAController {
         return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/answer/{id}")
     public ResponseEntity<?> answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto) {
         try {
@@ -97,6 +99,7 @@ public class QnAController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/answer/{id}")
     public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto) {
         try {

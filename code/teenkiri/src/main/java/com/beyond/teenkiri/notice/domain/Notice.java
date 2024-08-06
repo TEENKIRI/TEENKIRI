@@ -5,6 +5,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notice.dto.NoticeDetailDto;
 import com.beyond.teenkiri.notice.dto.NoticeListResDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,9 +28,9 @@ public class Notice extends BaseTimeEntity {
     @Column(length = 3000, nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
     @Enumerated(EnumType.STRING)

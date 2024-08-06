@@ -110,8 +110,9 @@ public class UserService {
         if (!filteredNickname.equals(saveReqDto.getNickname())) {
             throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
         }
-        User user = saveReqDto.toEntity();
-        userRepository.save(user);
+
+//        User user = saveReqDto.toEntity();
+        User user = userRepository.save(saveReqDto.toEntity(passwordEncoder.encode(saveReqDto.getPassword())));
         System.out.println("사용자 저장 전: " + user);
         System.out.println("사용자 저장 완료: " + user);
 
