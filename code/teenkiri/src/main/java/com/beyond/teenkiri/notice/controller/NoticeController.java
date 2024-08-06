@@ -64,7 +64,7 @@ public class NoticeController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, @ModelAttribute NoticeUpdateDto dto) {
+    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, @RequestBody NoticeUpdateDto dto) {
         try {
             noticeService.noticeUpdate(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "공지사항이 성공적으로 업데이트되었습니다.", id);

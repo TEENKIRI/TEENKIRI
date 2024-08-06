@@ -2,6 +2,7 @@ package com.beyond.teenkiri.qna.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user_board.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class QnAAnswerReqDto {
-    private String answererEmail;
+//    private String answererEmail;
     private String answererNickname;
     private String answerText;
     private LocalDateTime answeredAt;
@@ -23,14 +24,14 @@ public class QnAAnswerReqDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public QnA toEntity(user answererEmail, QnA existingQnA) {
+    public QnA toEntity(User answererEmail, QnA existingQnA) {
         QnA qna = QnA.builder()
                 .id(existingQnA.getId())
                 .title(existingQnA.getTitle())
                 .questionText(existingQnA.getQuestionText())
                 .answerText(this.answerText)
                 .user(existingQnA.getUser())
-                .answererEmail(answererEmail)
+                .answerer(answererEmail)
                 .answeredAt(existingQnA.getAnsweredAt() != null ? existingQnA.getAnsweredAt() : LocalDateTime.now())
                 .delYN(existingQnA.getDelYN())
                 .comments(existingQnA.getComments())
