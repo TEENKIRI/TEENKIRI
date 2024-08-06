@@ -1,23 +1,25 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/login">로그인</router-link>
-      <router-link to="/register">회원가입</router-link>
-      <router-link to="/mypage">마이페이지</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app>
+    <HeaderComponent />
+    <v-main>
+      <router-view />
+    </v-main>
+    <FooterComponent />
+  </v-app>
 </template>
 
 <script>
+import HeaderComponent from './components/HeaderComponent.vue';
+import FooterComponent from './components/FooterComponent.vue';
+
 export default {
   name: 'App',
-};
+  components: {
+    HeaderComponent,
+    FooterComponent
+  }
+}
 </script>
 
 <style>
-nav {
-  display: flex;
-  gap: 10px;
-}
 </style>
