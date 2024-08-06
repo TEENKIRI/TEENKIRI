@@ -2,6 +2,8 @@ package com.beyond.teenkiri.user.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
+import com.beyond.teenkiri.qna.dto.QnAListResDto;
+import com.beyond.teenkiri.qna.service.QnAService;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.service.UserService;
@@ -22,6 +24,9 @@ public class UserController {
 
     @Autowired
     private WishService wishService;
+
+    @Autowired
+    private QnAService qnaService;
 
     @GetMapping("/edit-info")
     public ResponseEntity<?> getEditUserInfo(@RequestHeader("Authorization") String token) {
@@ -236,6 +241,23 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "찜 삭제 실패: " + e.getMessage(), null));
+        }
+    }
+
+
+    @GetMapping("/qna")
+    public ResponseEntity<?> getUserQnAList(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            String email = userService.getEmailFromToken(token);
+            List<QnAListResDto> qnaList = userService.getUserQnAList(email);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "질문 목록을 성공적으로 가져왔습니다", qnaList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
         }
     }
 }

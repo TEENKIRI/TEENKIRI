@@ -2,6 +2,9 @@ package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.chatting.service.ChatService;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.qna.dto.QnAListResDto;
+import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.user.config.JwtTokenProvider;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service("userService")
@@ -33,7 +38,10 @@ public class UserService {
     private RedisService redisService;
 
     @Autowired
-    private ChatService chatService; // ChatService 주입
+    private ChatService chatService;
+
+    @Autowired
+    private QnARepository qnaRepository;
 
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
@@ -198,5 +206,18 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public List<QnAListResDto> getUserQnAList(String userEmail) {
+        User user = findByEmail(userEmail);
+        List<QnA> qnaList = qnaRepository.findByUser(user);
+        List<QnAListResDto> qnaListResDtos = new ArrayList<>();
+
+        for (QnA qna : qnaList) {
+            qnaListResDtos.add(qna.listFromEntity());
+        }
+
+        return qnaListResDtos;
+    }
+
 
 }

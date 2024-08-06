@@ -4,6 +4,7 @@ import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Getter
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

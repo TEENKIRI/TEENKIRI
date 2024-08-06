@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="561545fe-1167-4604-bb18-4bdd10713161" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/wish/domain/Wish.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/wish/repository/WishRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/wish/service/WishService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/application.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/qna/repository/QnARepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/qna/repository/QnARepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/RedisService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/RedisService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/wish/domain/Wish.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/wish/domain/Wish.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/src/components/MyPage.vue" beforeDir="false" />
