@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class LectureController {
@@ -55,8 +56,10 @@ public class LectureController {
 
     //    강의 생성
     @PostMapping("/lecture/create")
-    public ResponseEntity<?> lectureCreate(@ModelAttribute LectureSaveReqDto dto){
-        Lecture lecture = lectureService.lectureCreate(dto, null, null);
+    public ResponseEntity<?> lectureCreate(LectureSaveReqDto dto,
+                                           @RequestPart(value="video", required = false) MultipartFile videoSsr,
+                                           @RequestPart(value="image", required = false) MultipartFile imageSsr){
+        Lecture lecture = lectureService.lectureCreate(dto, videoSsr, imageSsr);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "강의 생성 완료", lecture.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
