@@ -58,7 +58,11 @@ public class NoticeService {
     public void noticeUpdate(Long id, NoticeUpdateDto dto){
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
-        notice.toUpdate(dto);
+        if (notice.getUser().getEmail().equals(dto.getUserEmail())){
+            notice.toUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
         noticeRepository.save(notice);
     }
 

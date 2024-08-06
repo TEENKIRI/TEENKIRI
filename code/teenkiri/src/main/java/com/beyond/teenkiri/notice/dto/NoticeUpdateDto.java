@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NoticeUpdateDto {
+    private String userEmail;
     private String title;
     private String content;
 
