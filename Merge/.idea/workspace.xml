@@ -7,7 +7,20 @@
     <list default="true" id="7ad1d473-4166-4116-bdb8-b61c94f00760" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application.log" beforeDir="false" afterPath="$PROJECT_DIR$/../application.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/controller/NoticeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/controller/NoticeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/service/NoticeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/service/NoticeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/controller/NoticeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/controller/NoticeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/service/NoticeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../code/teenkiri/src/main/java/com/beyond/teenkiri/notice/service/NoticeService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
