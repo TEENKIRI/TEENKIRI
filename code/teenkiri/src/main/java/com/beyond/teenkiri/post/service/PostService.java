@@ -7,7 +7,9 @@ import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.post.dto.PostSaveReqDto;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
 import com.beyond.teenkiri.post.repository.PostRepository;
+import com.beyond.teenkiri.user_board.domain.Role;
 import com.beyond.teenkiri.user_board.domain.user;
+import com.beyond.teenkiri.user_board.repository.UserRepository;
 import com.beyond.teenkiri.user_board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,21 +20,26 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 @Service
+@Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserService userService) {
+    public PostService(PostRepository postRepository, UserService userService, UserRepository userRepository) {
         this.postRepository = postRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public Post postCreate(PostSaveReqDto dto) {
-        user user = userService.findByEmail(dto.getEmail());
+        //권한관리
+        user user = userRepository.findByEmail(dto.getUserEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (user.getRole() != Role.ADMIN){
+            throw new SecurityException("권한이 없습니다.");
+        }
         Post post = dto.toEntity(user);
-        Post savedPost = postRepository.save(post);
-        return savedPost;
+        return postRepository.save(post);
     }
 
     public Page<PostListResDto> postList(Pageable pageable) {
@@ -48,8 +55,13 @@ public class PostService {
     @Transactional
     public void postUpdate(Long id, PostUpdateDto dto) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("post is not found"));
-        post.toUpdate(dto);
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글 입니다."));
+        //게시글 작성자만 수정 가능할 수 있게함
+        if (post.getUser().getEmail().equals(dto.getUserEmail())){
+            post.toUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
         postRepository.save(post);
     }
 

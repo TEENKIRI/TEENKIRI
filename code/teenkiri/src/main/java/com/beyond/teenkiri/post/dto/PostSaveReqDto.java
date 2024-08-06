@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class PostSaveReqDto {
     private String title;
     private String contents;
-    private String email;
+    private String userEmail;
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
