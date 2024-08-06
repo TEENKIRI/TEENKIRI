@@ -56,7 +56,7 @@ public class LectureSsrController {
     //    유저별 강의 수강 상세 페이지
     @GetMapping("/user/lecture/detail/{id}/{userEmail}")
     public String lectureStudy(@PathVariable Long id, @PathVariable String userEmail, Model model){
-        LectureDetPerUserResDto lectureDetPerUserResDto = lectureService.lectureDetailPerUser(id,userEmail);
+        LectureDetPerUserResDto lectureDetPerUserResDto = lectureService.lectureDetailPerUser(id);
         model.addAttribute("lecture",lectureDetPerUserResDto);
         model.addAttribute("userEmail",userEmail);
         return "lecture/user_detail";

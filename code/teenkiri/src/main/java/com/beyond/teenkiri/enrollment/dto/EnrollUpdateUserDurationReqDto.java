@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnrollUpdateUserDurationReqDto {
-    private String userEmail;
+//    private String userEmail;
 
-    private Long id; // enrollmentId
+//    private Long id; // enrollmentId
     private Integer userLectureDuration;
 }

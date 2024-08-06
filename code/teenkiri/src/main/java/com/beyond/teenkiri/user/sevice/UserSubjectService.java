@@ -18,14 +18,12 @@ public class UserSubjectService {
     private final UserSubjectRepository userSubjectRepository;
     private final SubjectService subjectService;
     private final UserService userService;
-    private final EnrollmentService enrollmentService;
 
     @Autowired
-    public UserSubjectService(UserSubjectRepository userSubjectRepository, SubjectService subjectService, UserService userService, EnrollmentService enrollmentService) {
+    public UserSubjectService(UserSubjectRepository userSubjectRepository, SubjectService subjectService, UserService userService) {
         this.userSubjectRepository = userSubjectRepository;
         this.subjectService = subjectService;
         this.userService = userService;
-        this.enrollmentService = enrollmentService;
     }
 
     public UserSubject userSubjectSign(UserSubjectSaveReqDto reqDto){

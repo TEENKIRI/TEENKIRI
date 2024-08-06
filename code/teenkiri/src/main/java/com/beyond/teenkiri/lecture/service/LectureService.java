@@ -11,11 +11,15 @@ import com.beyond.teenkiri.lecture.dto.*;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.service.SubjectService;
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.domain.UserSubject;
+import com.beyond.teenkiri.user.repository.UserSubjectRepository;
 import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 
 
 @Service
@@ -35,15 +40,17 @@ public class LectureService {
     private final EnrollmentService enrollmentService;
 //    private final EnrollmentRepository enrollmentRepository;
     private final UserService userService;
+    private final UserSubjectRepository userSubjectRepository;
 
     @Autowired
-    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod, UploadAwsFileService uploadAwsFileService, EnrollmentService enrollmentService, UserService userService) {
+    public LectureService(LectureRepository lectureRepository, SubjectService subjectService, CommonMethod commonMethod, UploadAwsFileService uploadAwsFileService, EnrollmentService enrollmentService, UserService userService, UserSubjectRepository userSubjectRepository) {
         this.lectureRepository = lectureRepository;
         this.subjectService = subjectService;
         this.commonMethod = commonMethod;
         this.uploadAwsFileService = uploadAwsFileService;
         this.enrollmentService = enrollmentService;
         this.userService = userService;
+        this.userSubjectRepository = userSubjectRepository;
     }
 
     //    강의 리스트 페이지
@@ -69,10 +76,16 @@ public class LectureService {
     }
 
 //    유저별 강의 수강용 상세 페이지
-    public LectureDetPerUserResDto lectureDetailPerUser(Long id, String userEmail){
+    public LectureDetPerUserResDto lectureDetailPerUser(Long id){
         System.out.println(11111);
         Lecture lecture = lectureRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByEmail(userEmail);
+        Subject subject = lecture.getSubject();
+
+        UserSubject userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("수강신청하지 않은 강좌입니다."));
+
         System.out.println(2222);
         Enrollment enrollment = enrollmentService.findByLectureIdAndUserId(user,lecture);
         LectureDetPerUserResDto lectureDetPerUserResDto;
@@ -96,9 +109,14 @@ public class LectureService {
     public Lecture lectureCreate(LectureSaveReqDto dto, MultipartFile videoSsr, MultipartFile imageSsr){
 
         Subject subject = subjectService.findSubjectById(dto.getSubjectId());
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+        if(user != null && user.getRole() != Role.ADMIN){
+            if(user.getRole() == Role.TEACHER && !Objects.equals(subject.getUserTeacher().getId(), user.getId())){
+                throw new RuntimeException("연결되지 않은 선생님입니다. 강의를 업로드하실 수 없습니다.");
+            }
+        }
 
-//        MultipartFile image = dto.getImage();
-//        MultipartFile video = dto.getVideo();
         MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
         MultipartFile video = (videoSsr == null) ? dto.getVideo() : videoSsr;
 

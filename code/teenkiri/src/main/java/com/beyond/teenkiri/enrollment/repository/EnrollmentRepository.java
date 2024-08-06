@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
-    Page<Enrollment> findAllBySubjectId(Long subjectId, Pageable pageable);
+//    Page<Enrollment> findAllBySubjectId(Long subjectId, Pageable pageable);
 
     Optional<Enrollment> findByLectureIdAndUserId(Long userId, Long lectureId);
 }

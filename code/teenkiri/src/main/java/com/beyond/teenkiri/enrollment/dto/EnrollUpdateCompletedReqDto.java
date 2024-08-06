@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnrollUpdateCompletedReqDto {
-    private String userEmail;
-
-    private Long id; // enrollmentId
+//    private String userEmail;
+//    private Long id; // enrollmentId
     private Boolean isCompleted;
 
 }

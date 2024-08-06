@@ -72,7 +72,12 @@ public class SubjectService {
     public Subject subjectCreate(SubjectSaveReqDto dto,MultipartFile subjectThum){
 //        로그인 된 선생님 이메일 추가하기
         User user = userService.findByEmail(dto.getUserTeacherEmail());
-
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(user);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        if(user == null || user.getId().equals("") ){
+            throw new EntityNotFoundException("존재하지 않는 선생님 입니다."); // ?
+        }
         Course course = courseRepository.findById(dto.getCourseId()).orElseThrow(()-> new EntityNotFoundException("없는 과목 입니다."));
         Subject subject = dto.toEntity(user,course);
 

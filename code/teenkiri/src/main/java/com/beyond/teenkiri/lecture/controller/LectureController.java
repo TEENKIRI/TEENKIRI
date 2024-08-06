@@ -2,10 +2,7 @@ package com.beyond.teenkiri.lecture.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.lecture.domain.Lecture;
-import com.beyond.teenkiri.lecture.dto.LectureDetResDto;
-import com.beyond.teenkiri.lecture.dto.LectureListResDto;
-import com.beyond.teenkiri.lecture.dto.LectureSaveReqDto;
-import com.beyond.teenkiri.lecture.dto.LectureUpdateReqDto;
+import com.beyond.teenkiri.lecture.dto.*;
 import com.beyond.teenkiri.lecture.service.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +48,14 @@ public class LectureController {
     public ResponseEntity<?> lectureDetailView(@PathVariable Long id){
         LectureDetResDto lectureDetResDto = lectureService.lectureDetail(id);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return lecture detail", lectureDetResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    //    유저별 강의 수강 상세 페이지
+    @GetMapping("/user/lecture/detail/{id}")
+    public ResponseEntity<?> lectureStudy(@PathVariable Long id){
+        LectureDetPerUserResDto lectureDetPerUserResDto = lectureService.lectureDetailPerUser(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return lecture detail", lectureDetPerUserResDto);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 

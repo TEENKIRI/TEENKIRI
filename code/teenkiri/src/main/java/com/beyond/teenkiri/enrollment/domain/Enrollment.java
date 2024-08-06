@@ -33,10 +33,6 @@ public class Enrollment extends BaseTimeEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
-
-    @ManyToOne
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
@@ -79,6 +75,10 @@ public class Enrollment extends BaseTimeEntity {
         if(!this.isCompleted.equals(dto.getIsCompleted())){
             this.isCompleted = dto.getIsCompleted();
             this.progress = progress;
+        }
+
+        if(dto.getIsCompleted().equals(true)){ // 수강 완료 시, 유저의 duration 시간 video 전체 시간으로 update
+            this.userLectureDuration = this.lecture.getVideoDuration();
         }
     }
 }

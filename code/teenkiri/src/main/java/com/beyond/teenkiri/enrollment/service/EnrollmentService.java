@@ -11,6 +11,7 @@ import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,11 +38,11 @@ public class EnrollmentService {
         return enrollListResDto;
     }
 
-    public Page<EnrollListResDto> enrollListByGroup(Long subjectId, Pageable pageable){
-        Page<Enrollment> enrollments = enrollmentRepository.findAllBySubjectId(subjectId, pageable);
-        Page<EnrollListResDto> enrollListResDto = enrollments.map(a->a.fromListEntity());
-        return enrollListResDto;
-    }
+//    public Page<EnrollListResDto> enrollListByGroup(Long subjectId, Pageable pageable){
+//        Page<Enrollment> enrollments = enrollmentRepository.findAllBySubjectId(subjectId, pageable);
+//        Page<EnrollListResDto> enrollListResDto = enrollments.map(a->a.fromListEntity());
+//        return enrollListResDto;
+//    }
 
     public EnrollDetResDto enrollDetail(Long id){
         Enrollment enrollment = enrollmentRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("없는 진행률 입니다."));
@@ -67,18 +68,34 @@ public class EnrollmentService {
         return enrollment;
     }
 
-    public Enrollment enrollUserDurationUpdate(EnrollUpdateUserDurationReqDto dto){
-        Enrollment enrollment = enrollmentRepository.findById(dto.getId())
+    public Enrollment enrollUserDurationUpdate(Long id, EnrollUpdateUserDurationReqDto dto){
+        Enrollment enrollment = enrollmentRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("없는 진행률 입니다."));
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+
+        if(user != null && !enrollment.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("로그인 된 유저의 진행률이 아닙니다.");
+        }
+
         Float updatedProgress =  calcProgress(CalType.DURATION, dto.getUserLectureDuration(), null, enrollment);
         enrollment.updateDuration(dto, updatedProgress);
         enrollmentRepository.save(enrollment);
         return enrollment;
     }
 
-    public Enrollment enrollCompletedUpdate(EnrollUpdateCompletedReqDto dto){
-        Enrollment enrollment = enrollmentRepository.findById(dto.getId())
+    public Enrollment enrollCompletedUpdate(Long id, EnrollUpdateCompletedReqDto dto){
+        Enrollment enrollment = enrollmentRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("없는 진행률 입니다."));
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+
+        if(user != null && !enrollment.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("로그인 된 유저의 진행률이 아닙니다.");
+        }
+
         Float updatedProgress =  calcProgress(CalType.ISCOMPLETED, null, dto.getIsCompleted(), enrollment);
         enrollment.updateCompleted(dto,updatedProgress);
         enrollmentRepository.save(enrollment);

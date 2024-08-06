@@ -19,7 +19,6 @@ public class EnrollSaveReqDto {
 
     public Enrollment toEntity(Lecture lecture, User user) {
         return Enrollment.builder()
-                .subject(lecture.getSubject())
                 .lecture(lecture)
                 .user(user)
                 .build();
