@@ -72,6 +72,7 @@ public class QnAController {
         return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
     }
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/answer/{id}")
     public ResponseEntity<?> answerQuestion(@PathVariable Long id, @RequestBody QnAAnswerReqDto dto) {
@@ -113,6 +114,7 @@ public class QnAController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> qnaDelete(@PathVariable Long id) {
         try {
