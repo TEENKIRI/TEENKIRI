@@ -22,9 +22,9 @@ public class UserSaveReqDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public User toEntity(){
+    public User toEntity(String password){
         return User.builder()
-                .password(this.password)
+                .password(password)
                 .name(this.name)
                 .nickname(this.nickname)
                 .email(this.email)
