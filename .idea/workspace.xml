@@ -5,39 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2238f5d9-0360-4cec-a05d-10abee66064f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/application.log" afterDir="false" />
-<<<<<<< HEAD
-=======
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/controller/EventController.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/controller/EventController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/dto/EventUpdateDto$EventUpdateDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/dto/EventUpdateDto$EventUpdateDtoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/dto/EventUpdateDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/dto/EventUpdateDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/service/EventService.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/event/service/EventService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/controller/PostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/controller/PostController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostSaveReqDto$PostSaveReqDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostSaveReqDto$PostSaveReqDtoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostSaveReqDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostSaveReqDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostUpdateDto$PostUpdateDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostUpdateDto$PostUpdateDtoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostUpdateDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/dto/PostUpdateDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/service/PostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/post/service/PostService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/controller/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/dto/EventUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/dto/EventUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/event/service/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/controller/PostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/dto/PostSaveReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/dto/PostSaveReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/dto/PostUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/dto/PostUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/post/service/PostService.java" afterDir="false" />
->>>>>>> 2b8c38a33f16f9b5db08c9277824d1e2f9567d55
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +51,6 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
@@ -98,30 +71,6 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;spring.configuration.checksum&quot;: &quot;a73ec33ba6909016f1bafeaa625f0c03&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-=======
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.teenkiri [:TeenkiriApplication.main()].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelOrder2": "2",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RequestMappingsPanelWidth2": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "refactor/board",
-    "last_opened_file_path": "/Users/hannah/2024playdata/TEENKIRI",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "spring.configuration.checksum": "a73ec33ba6909016f1bafeaa625f0c03",
-    "vue.rearranger.settings.migration": "true"
->>>>>>> 2b8c38a33f16f9b5db08c9277824d1e2f9567d55
   }
 }</component>
   <component name="ReactorSettings">
@@ -136,33 +85,7 @@
       <recent name="com.beyond.teenkiri.user.domain" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TeenkiriApplication">
-    <configuration name="TeenkiriApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.beyond.teenkiri.TeenkiriApplication" />
-      <module name="com.beyond.teenkiri.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.beyond.teenkiri.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="teenkiri" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="teenkiri" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="TeenkiriApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="teenkiri.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.beyond.teenkiri.TeenkiriApplication" />
@@ -170,11 +93,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.TeenkiriApplication" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -186,14 +104,11 @@
       <updated>1722854410570</updated>
       <workItem from="1722854411987" duration="5678000" />
       <workItem from="1722870177244" duration="10301000" />
-      <workItem from="1722911601662" duration="4318000" />
+      <workItem from="1722911601662" duration="4670000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
