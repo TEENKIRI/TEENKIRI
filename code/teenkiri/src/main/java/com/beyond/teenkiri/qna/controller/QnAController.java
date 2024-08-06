@@ -2,21 +2,23 @@ package com.beyond.teenkiri.qna.controller;
 
 import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.service.CommentService;
+import com.beyond.teenkiri.common.dto.CommonErrorDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.service.QnAService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityNotFoundException;
 
-@Controller
+@RestController
 @RequestMapping("qna")
 public class QnAController {
 
@@ -29,93 +31,95 @@ public class QnAController {
         this.commentService = commentService;
     }
 
-    @GetMapping("create")
-    public String createQuestionForm() {
-        return "board/qna/create";
-    }
-
-    @PostMapping("create")
-    public String createQuestion(@ModelAttribute QnASaveReqDto dto, Model model) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createQuestion(@ModelAttribute QnASaveReqDto dto) {
         try {
-            qnAService.createQuestion(dto);
-            return "redirect:/qna/list";
+            QnA qna = qnAService.createQuestion(dto);
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "질문이 성공적으로 등록되었습니다.", qna.getId());
+            return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "board/qna/create";
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("list")
-    public String getAllQuestions(Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("qnaList", qnAService.qnaList(pageable));
-        return "board/qna/list";
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllQuestions(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<QnAListResDto> qnaList = qnAService.qnaList(pageable);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문 목록을 조회합니다.", qnaList);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
-    @GetMapping("detail/{id}")
-    public String getQuestionDetail(@PathVariable Long id, Model model) {
-        QnADetailDto question = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
-        model.addAttribute("question", question);
-        model.addAttribute("comments", commentService.getCommentsByQnaId(id));
-        return "board/qna/detail";
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getQuestionDetail(@PathVariable Long id) {
+        try {
+            QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문 상세 정보를 조회합니다.", questionDetail);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping("comment/create")
-    public String createQnaComment(@ModelAttribute CommentSaveReqDto dto, RedirectAttributes redirectAttributes) {
+    @PostMapping("/comment/create")
+    public ResponseEntity<?> createQnaComment(@ModelAttribute CommentSaveReqDto dto) {
         commentService.saveComment(dto);
-        redirectAttributes.addAttribute("id", dto.getQnaId());
-        return "redirect:/qna/detail/{id}";
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "댓글이 성공적으로 등록되었습니다.", dto.getQnaId());
+        return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("answer/{id}")
-    public String answerQuestionForm(@PathVariable Long id, Model model) {
-        QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
-        model.addAttribute("question", questionDetail);
-        return "board/qna/answer";
-    }
-
-    @PostMapping("answer/{id}")
-    public String answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto, Model model) {
+    @PostMapping("/answer/{id}")
+    public ResponseEntity<?> answerQuestion(@PathVariable Long id, @ModelAttribute QnAAnswerReqDto dto) {
         try {
             qnAService.answerQuestion(id, dto);
-            model.addAttribute("question", dto);
-            return "redirect:/qna/detail/" + id;
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문에 대한 답변이 성공적으로 등록되었습니다.", id);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (SecurityException | EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "board/qna/answer";
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping("update/question/{id}")
-    public String qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto, Model model) {
+    @PostMapping("/update/question/{id}")
+    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id, @ModelAttribute QnAQtoUpdateDto dto) {
         try {
             qnAService.QnAQUpdate(id, dto);
-            return "redirect:/qna/detail/" + id;
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문이 성공적으로 업데이트되었습니다.", id);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/detail/" + id;
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping("update/answer/{id}")
-    public String qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto, Model model) {
+    @PostMapping("/update/answer/{id}")
+    public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, @ModelAttribute QnAAtoUpdateDto dto) {
         try {
             qnAService.QnAAUpdate(id, dto);
-            return "redirect:/qna/detail/" + id;
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "답변이 성공적으로 업데이트되었습니다.", id);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/detail/" + id;
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("delete/{id}")
-    public String qnaDelete(@PathVariable Long id, Model model) {
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> qnaDelete(@PathVariable Long id) {
         try {
             qnAService.qnaDelete(id);
-            return "redirect:/qna/list";
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문이 성공적으로 삭제되었습니다.", id);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/qna/list";
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
-
 }
