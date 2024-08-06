@@ -16,16 +16,16 @@ import lombok.NoArgsConstructor;
 public class NoticeSaveReqDto {
     private String title;
     private String content;
-    private String userEmail;
     @Builder.Default
     private DelYN delYN = DelYN.N;
+    private User user;
 
-    public Notice toEntity(User user){
+    public Notice toEntity() {
         return Notice.builder()
                 .title(this.title)
                 .content(this.content)
-                .delYN(this.delYN)
-                .user(user)
+                .user(this.user)
                 .build();
     }
+
 }

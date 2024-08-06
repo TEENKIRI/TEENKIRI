@@ -6,22 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="2238f5d9-0360-4cec-a05d-10abee66064f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/application.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/8.8/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/common/service/CommonExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/common/service/CommonExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/controller/NoticeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/controller/NoticeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/dto/NoticeSaveReqDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/dto/NoticeSaveReqDto.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/service/NoticeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/notice/service/NoticeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/qna/controller/QnAController.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/qna/controller/QnAController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/sevice/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/sevice/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/classes/java/main/com/beyond/teenkiri/user/config/SecurityConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/domain/Notice.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/domain/Notice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/common/service/CommonExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/common/service/CommonExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/controller/NoticeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/controller/NoticeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeSaveReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/dto/NoticeSaveReqDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/service/NoticeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/notice/service/NoticeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/qna/controller/QnAController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/qna/controller/QnAController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/dto/UserSaveReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/dto/UserSaveReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/sevice/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri/user/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/teenkiri/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/code/teenkiri/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +94,7 @@
       <recent name="$PROJECT_DIR$/code/teenkiri/src/main/java/com/beyond/teenkiri" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.beyond.teenkiri.common.service" />
       <recent name="com.beyond.teenkiri.common.domain" />
       <recent name="com.beyond.teenkiri.user.domain" />
     </key>
@@ -114,7 +118,7 @@
       <updated>1722854410570</updated>
       <workItem from="1722854411987" duration="5678000" />
       <workItem from="1722870177244" duration="10301000" />
-      <workItem from="1722911601662" duration="9721000" />
+      <workItem from="1722911601662" duration="16677000" />
     </task>
     <servers />
   </component>
