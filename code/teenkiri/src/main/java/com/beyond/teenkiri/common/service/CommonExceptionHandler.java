@@ -22,10 +22,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<CommonErrorDto> illegalArgumentHandler(IllegalArgumentException e) {
-        e.printStackTrace();
-        System.out.println("heer1");
+        e.getStackTrace();
         CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
-        return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(commonErrorDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -37,6 +36,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonErrorDto> exceptionHandler(Exception e) {
+
         e.printStackTrace();
         System.out.println("heer2");
         CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "server");
