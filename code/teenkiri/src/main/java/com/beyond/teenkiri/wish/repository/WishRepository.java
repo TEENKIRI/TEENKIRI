@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByUser(User user);
-    Optional<Wish> findByUserAndCourseId(User user, Long subject_id);
+    Optional<Wish> findByUserAndSubject_id(User user, Long subject_id);
 }
