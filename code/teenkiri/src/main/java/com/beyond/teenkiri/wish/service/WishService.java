@@ -30,7 +30,7 @@ public class WishService {
 
 
     public void removeWish(User user, Long subjectId) {
-        Wish wish = wishRepository.findByUserAndCourseId(user, subjectId)
+        Wish wish = wishRepository.findByUserAndSubject_id(user, subjectId)
                 .orElseThrow(() -> new RuntimeException("찜 목록에서 해당 강좌를 찾을 수 없습니다."));
         wishRepository.delete(wish);
     }
