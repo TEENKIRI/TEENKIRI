@@ -7,13 +7,14 @@ import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.post.dto.PostSaveReqDto;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
 import com.beyond.teenkiri.post.repository.PostRepository;
-import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.user;
-import com.beyond.teenkiri.user_board.repository.UserRepository;
-import com.beyond.teenkiri.user_board.service.UserService;
+import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
+import com.beyond.teenkiri.user.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +32,16 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public Post postCreate(PostSaveReqDto dto) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         //권한관리
-        user user = userRepository.findByEmail(dto.getUserEmail())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(()->new EntityNotFoundException("User not fount"));
         if (user.getRole() != Role.ADMIN){
             throw new SecurityException("권한이 없습니다.");
         }
-        Post post = dto.toEntity(user);
+        Post post = dto.toEntity();
+        post.setUser(user);
         return postRepository.save(post);
     }
 
@@ -56,6 +59,7 @@ public class PostService {
     public void postUpdate(Long id, PostUpdateDto dto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글 입니다."));
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         //게시글 작성자만 수정 가능할 수 있게함
         if (post.getUser().getEmail().equals(dto.getUserEmail())){
             post.toUpdate(dto);

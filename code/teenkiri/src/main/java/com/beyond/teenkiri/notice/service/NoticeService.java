@@ -84,6 +84,12 @@ public class NoticeService {
     public Notice noticeDelete(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+
+        User user = notice.getUser();
+        if (user.getRole() != Role.ADMIN) {
+            throw new SecurityException("권한이 없습니다.");
+        }
+
         notice.updateDelYN(DelYN.Y);
         return notice;
     }

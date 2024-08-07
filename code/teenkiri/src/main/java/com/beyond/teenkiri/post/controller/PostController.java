@@ -17,7 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,7 +42,7 @@ public class PostController {
 
     // 게시물을 생성합니다.
     @PostMapping("create")
-    public ResponseEntity<?> postCreatePost(@ModelAttribute PostSaveReqDto dto) {
+    public ResponseEntity<?> postCreatePost(@RequestBody PostSaveReqDto dto) {
         try {
             Post post = postService.postCreate(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "게시글(자유게시판)이 성공적으로 등록되었습니다.",post.getId());

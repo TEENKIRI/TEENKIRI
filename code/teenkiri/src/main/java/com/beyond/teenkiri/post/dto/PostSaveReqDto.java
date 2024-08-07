@@ -4,7 +4,7 @@ package com.beyond.teenkiri.post.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.user_board.domain.user;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +20,14 @@ public class PostSaveReqDto {
     private String userEmail;
     @Builder.Default
     private DelYN delYN = DelYN.N;
+    private User user;
 
-    public Post toEntity(user user){
+    public Post toEntity(){
         return Post.builder()
                 .title(this.title)
                 .contents(this.contents)
                 .delYN(this.delYN)
-                .user(user)
+                .user(this.user)
                 .build();
     }
 }

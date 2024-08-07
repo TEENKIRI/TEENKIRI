@@ -6,6 +6,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.dto.PostDetailDto;
 import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user;
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

@@ -15,8 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,13 +32,8 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping("create")
-    public String createEventForm() {
-        return "/board/event/create";
-    }
-
     @PostMapping("create")
-    public ResponseEntity<?> createEvent(@ModelAttribute EventSaveReqDto dto) {
+    public ResponseEntity<?> createEvent(@RequestBody EventSaveReqDto dto) {
         try {
             Event event = eventService.createEvent(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "이벤트가 성공적으로 등록되었습니다.", event.getId());
@@ -71,7 +66,7 @@ public class EventController {
     }
 
     @PostMapping("update/{id}")
-    public ResponseEntity<?> EventUpdate(@PathVariable Long id, @ModelAttribute EventUpdateDto dto){
+    public ResponseEntity<?> EventUpdate(@PathVariable Long id, @RequestBody EventUpdateDto dto){
         try {
             eventService.eventUpdate(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"이벤트가 성공적으로 수정되었습니다.",id);
@@ -95,4 +90,5 @@ public class EventController {
          return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
+
 }

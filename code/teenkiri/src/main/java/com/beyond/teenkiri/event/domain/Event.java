@@ -5,6 +5,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.event.dto.EventDetailDto;
 import com.beyond.teenkiri.event.dto.EventListResDto;
 import com.beyond.teenkiri.event.dto.EventUpdateDto;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class Event extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user;
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
