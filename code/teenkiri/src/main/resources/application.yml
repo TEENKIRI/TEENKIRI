@@ -61,9 +61,9 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: AKIATCKAOYU77ABTNHMH
-      secret-key: UXMn69M7zmfMLNlFnAVXRQjPmzpgqzaOFKrkflHc
+      access-key: YOUR_ACCESS_KEY_HERE       # 여기에 AWS 액세스 키를 입력하세요
+      secret-key: YOUR_SECRET_KEY_HERE       # 여기에 AWS 시크릿 키를 입력하세요
     region:
-      static: ap-southeast-2
+      static: YOUR_REGION_HERE               # 여기에 AWS 리전을 입력하세요 (예: us-west-2)
     s3:
-      bucket: ynlee-file
+      bucket: YOUR_BUCKET_NAME_HERE          # 여기에 S3 버킷 이름을 입력하세요
