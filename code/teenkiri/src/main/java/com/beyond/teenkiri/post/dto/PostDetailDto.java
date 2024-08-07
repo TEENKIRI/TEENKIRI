@@ -15,7 +15,7 @@ public class PostDetailDto {
     private Long id;
     private String title;
     private String contents;
-    private String userEmail;
+    private String nickname;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }

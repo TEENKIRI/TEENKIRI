@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>게시판 서비스</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+</head>
+<body>
+<div th:replace="common/header :: headerFragment"></div>
+<!-- container : 부스트랩의 컨테이너 클래스는 페이지의 내용을
+ 중앙에 정렬하고 양쪽에 패딩을 추가하고 내용을 감싸는 역할 -->
+<div class="container">
+    <div class="page-header"><h3>자유 게시판</h3></div>
+    <!-- btn-primary, btn-secondary 등 여러 버튼 제공 -->
+    <div class="float-end">
+        <a href="/user/create" class="btn btn-primary">회원가입</a>
+        <a href="/post/create" class="btn btn-primary">글쓰기</a>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>작성자</th>
+            <th>title</th>
+            <th>email</th>
+            <th>작성시간</th>
+        </tr>
+        </thead>
+        <tbody id="bodyData">
+        <tr th:each=" post : ${postList}">
+            <td th:text="${post.id}"></td>
+            <td th:text="${post.title}"></td>
+            <td th:text="${post.user_email}"></td>
+            <td><a th:href="@{/post/detail/{id}(id=${post.id})}" class="btn btn-primary">상세보기</a></td>
+            <td th:text="${#temporals.format(event.updatedTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, postList.totalPages-1)}"
+            th:classappend="${pageNum == postList.pageable.pageNumber}? active">
+            <a class="page-link" th:href="@{/post/list/(page=${pageNum})}" th:text="${pageNum+1}"></a>
+        </li>
+    </ul>
+</div>
+
+
+</body>
+</html>

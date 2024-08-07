@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
   servlet:
@@ -61,9 +61,9 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
+      access-key: aaaaaax
+      secret-key: aaaaaaa
     region:
-      static:
+      static: aaaa
     s3:
-      bucket:
+      bucket: aaa
