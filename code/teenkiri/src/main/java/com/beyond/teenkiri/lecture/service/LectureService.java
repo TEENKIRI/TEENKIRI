@@ -15,7 +15,7 @@ import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
 import com.beyond.teenkiri.user.repository.UserSubjectRepository;
-import com.beyond.teenkiri.user.sevice.UserService;
+import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

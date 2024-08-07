@@ -82,6 +82,7 @@ public class UserController {
         return checkNickname(saveReqDto.toNicknameCheckDto());
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginDto) {
         try {

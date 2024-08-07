@@ -5,7 +5,7 @@ import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.user.domain.UserSubject;
 import com.beyond.teenkiri.user.dto.UserSubjectListResDto;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
-import com.beyond.teenkiri.user.sevice.UserSubjectService;
+import com.beyond.teenkiri.user.service.UserSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -29,6 +29,7 @@ public class UserSubject extends BaseTimeEntity {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
+
     public UserSubjectListResDto listFromEntity(List<String> subjectTitles, int subjectCount){
         return UserSubjectListResDto.builder()
                 .userEmail(this.user.getEmail())

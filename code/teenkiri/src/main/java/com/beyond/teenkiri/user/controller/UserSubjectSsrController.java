@@ -2,7 +2,7 @@ package com.beyond.teenkiri.user.controller;
 
 import com.beyond.teenkiri.subject.service.SubjectService;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
-import com.beyond.teenkiri.user.sevice.UserSubjectService;
+import com.beyond.teenkiri.user.service.UserSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

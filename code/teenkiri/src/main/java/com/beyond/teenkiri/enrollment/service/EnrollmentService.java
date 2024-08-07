@@ -7,7 +7,7 @@ import com.beyond.teenkiri.enrollment.repository.EnrollmentRepository;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.lecture.repository.LectureRepository;
 import com.beyond.teenkiri.user.domain.User;
-import com.beyond.teenkiri.user.sevice.UserService;
+import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

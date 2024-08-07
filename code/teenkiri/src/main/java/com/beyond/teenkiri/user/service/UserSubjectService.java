@@ -43,6 +43,7 @@ public class UserSubjectService {
     }
 
 
+    // 타이틀, 선생님 이름, 강좌 썸네일, (찜 여부)
     public UserSubjectListResDto getUserSubjects() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<UserSubject> userSubjects = userSubjectRepository.findByUserEmail(userEmail);

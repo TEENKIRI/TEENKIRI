@@ -12,7 +12,7 @@ import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectSaveReqDto;
 import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.subject.repository.SubjectRepository;
-import com.beyond.teenkiri.user.sevice.UserService;
+import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

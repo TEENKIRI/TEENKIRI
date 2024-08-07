@@ -1,9 +1,9 @@
 package com.beyond.teenkiri.common.service;
 
-import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.dto.UserSaveReqDto;
-import com.beyond.teenkiri.user_board.repository.UserRepository;
-import com.beyond.teenkiri.user_board.service.UserService;
+import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user.dto.UserSaveReqDto;
+import com.beyond.teenkiri.user.repository.UserRepository;
+import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class InitialDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.findByEmail("admin@test.com").isEmpty()) {
-            userService.userCreate(UserSaveReqDto.builder()
+            userService.register(UserSaveReqDto.builder()
                     .name("admin")
                     .nickname("adminNick")
                     .email("admin@test.com")

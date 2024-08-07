@@ -21,7 +21,7 @@ public class WishService {
         List<CourseListResDto> courseList = new ArrayList<>();
 
         for (Wish wish : wishes) {
-            courseList.add(wish.getCourse().fromEntity());
+            courseList.add(wish.getCourse().fromListEntity());
         }
 
         return courseList;

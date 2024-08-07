@@ -34,4 +34,7 @@ public class UserSaveReqDto {
                 .phone(this.phone)
                 .build();
     }
+    public NicknameCheckDto toNicknameCheckDto() {
+        return new NicknameCheckDto(this.nickname);
+    }
 }
