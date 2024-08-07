@@ -47,9 +47,10 @@ public class User extends BaseTimeEntity {
     private Role role = Role.STUDENT;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean isVerified = false;
 
-    private int reportCount = 0;
+    private int reportCount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

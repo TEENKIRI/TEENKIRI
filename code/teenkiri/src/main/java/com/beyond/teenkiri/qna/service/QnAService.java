@@ -26,6 +26,7 @@ public class QnAService {
     private final UserService userService;
     private final CommentRepository commentRepository;
 
+    //rtrt
     @Autowired
     public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository) {
         this.qnARepository = qnARepository;
