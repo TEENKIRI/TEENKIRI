@@ -1,20 +1,86 @@
 package com.beyond.teenkiri.user.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
+import com.beyond.teenkiri.course.dto.CourseListResDto;
+import com.beyond.teenkiri.qna.dto.QnAListResDto;
+import com.beyond.teenkiri.qna.service.QnAService;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
-import com.beyond.teenkiri.user.sevice.UserService;
+import com.beyond.teenkiri.user.service.UserService;
+import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private WishService wishService;
+
+    @Autowired
+    private QnAService qnaService;
+
+    @GetMapping("/edit-info")
+    public ResponseEntity<?> getEditUserInfo(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            User user = userService.getUserFromToken(token);
+            UserEditInfoDto userEditInfoDto = UserEditInfoDto.fromEntity(user);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 정보 수정 조회 성공", userEditInfoDto));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
+        }
+    }
+
+    @PostMapping("/edit-info")
+    public ResponseEntity<?> editUserInfo(@RequestHeader("Authorization") String token, @RequestBody UserEditReqDto editReqDto) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            userService.updateUserInfo(token, editReqDto);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 정보 수정 성공", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, "회원 정보 수정 실패: " + e.getMessage(), null));
+        }
+    }
+
+
+    @PostMapping("/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestBody NicknameCheckDto nicknameCheckDto) {
+        try {
+            boolean isAvailable = userService.checkNickname(nicknameCheckDto.getNickname());
+            if (isAvailable) {
+                return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "닉네임 사용 가능", null));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new CommonResDto(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.", null));
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+        }
+    }
+
+    @PostMapping("/check-nickname-from-save")
+    public ResponseEntity<?> checkNicknameFromSave(@RequestBody UserSaveReqDto saveReqDto) {
+        return checkNickname(saveReqDto.toNicknameCheckDto());
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginDto) {
@@ -64,22 +130,22 @@ public class UserController {
         }
     }
 
-    @PostMapping("/check-nickname")
-    public ResponseEntity<?> checkNickname(@RequestBody UserSaveReqDto saveReqDto) {
-        try {
-            boolean isAvailable = userService.checkNickname(saveReqDto.getNickname());
-            if (isAvailable) {
-                return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "닉네임 사용 가능", null));
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new CommonResDto(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.", null));
-            }
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null));
-        }
-    }
+//    @PostMapping("/check-nickname")
+//    public ResponseEntity<?> checkNickname(@RequestBody UserSaveReqDto saveReqDto) {
+//        try {
+//            boolean isAvailable = userService.checkNickname(saveReqDto.getNickname());
+//            if (isAvailable) {
+//                return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "닉네임 사용 가능", null));
+//            } else {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                        .body(new CommonResDto(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.", null));
+//            }
+//        } catch (RuntimeException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+//        }
+//    }
 
     @PostMapping("/find-id")
     public ResponseEntity<?> findId(@RequestBody UserFindIdDto findIdDto) {
@@ -138,7 +204,56 @@ public class UserController {
         try {
             String email = userService.getEmailFromToken(token);
             User user = userService.findByEmail(email);
-            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "User info retrieved successfully", user));
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 정보 조회 성공", user));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
+        }
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<?> getUserWishlist(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            User user = userService.getUserFromToken(token);
+            List<CourseListResDto> wishlist = wishService.getUserWishList(user);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 목록 조회 성공", wishlist));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
+        }
+    }
+
+    @DeleteMapping("/wishlist/{courseId}")
+    public ResponseEntity<?> removeWish(@RequestHeader("Authorization") String token, @PathVariable Long courseId) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            User user = userService.getUserFromToken(token);
+            wishService.removeWish(user, courseId);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 삭제 성공", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, "찜 삭제 실패: " + e.getMessage(), null));
+        }
+    }
+
+
+    @GetMapping("/qna")
+    public ResponseEntity<?> getUserQnAList(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            String email = userService.getEmailFromToken(token);
+            List<QnAListResDto> qnaList = userService.getUserQnAList(email);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "질문 목록을 성공적으로 가져왔습니다", qnaList));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
