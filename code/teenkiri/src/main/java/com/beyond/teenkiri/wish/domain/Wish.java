@@ -24,6 +24,6 @@ public class Wish {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 }
