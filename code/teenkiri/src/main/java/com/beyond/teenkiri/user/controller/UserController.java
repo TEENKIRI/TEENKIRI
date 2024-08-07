@@ -220,7 +220,7 @@ public class UserController {
         }
         try {
             User user = userService.getUserFromToken(token);
-            List<CourseListResDto> wishlist = wishService.getUserWishList(user);
+            List<SubjectListResDto> wishlist = wishService.getUserWishList(user);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 목록 조회 성공", wishlist));
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,14 +229,14 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/wishlist/{courseId}")
-    public ResponseEntity<?> removeWish(@RequestHeader("Authorization") String token, @PathVariable Long courseId) {
+    @DeleteMapping("/wishlist/{subjectId}")
+    public ResponseEntity<?> removeWish(@RequestHeader("Authorization") String token, @PathVariable Long subjectId) {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
         try {
             User user = userService.getUserFromToken(token);
-            wishService.removeWish(user, courseId);
+            wishService.removeWish(user, subjectId);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 삭제 성공", null));
         } catch (Exception e) {
             e.printStackTrace();
