@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.wish.domain;
 
 import com.beyond.teenkiri.course.domain.Course;
+import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

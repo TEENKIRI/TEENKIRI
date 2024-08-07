@@ -4,6 +4,7 @@ import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.service.QnAService;
+import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.service.UserService;
