@@ -1,3 +1,4 @@
+// QnA.java
 package com.beyond.teenkiri.qna.domain;
 
 import com.beyond.teenkiri.comment.domain.Comment;
@@ -6,6 +7,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.dto.QnAAtoUpdateDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.dto.QnAQtoUpdateDto;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,11 +36,11 @@ public class QnA extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user; // 작성자
+    private User user; // 작성자
 
     @ManyToOne
-    @JoinColumn(name = "answererEmail")
-    private com.beyond.teenkiri.user_board.domain.user answererEmail;
+    @JoinColumn(name = "answerer_id")
+    private User answerer;
 
     @Column
     private LocalDateTime answeredAt;
@@ -50,10 +52,6 @@ public class QnA extends BaseTimeEntity {
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-//    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Report> reports;
-
-    // 수정
     public QnAListResDto listFromEntity() {
         return QnAListResDto.builder()
                 .id(this.id)

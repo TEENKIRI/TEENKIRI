@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.report.controller;
+package com.beyond.teenkiri.report.cotroller;
 
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -39,7 +40,7 @@ public class ReportController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> reportCreatePost(@ModelAttribute ReportSaveReqDto dto) {
+    public ResponseEntity<?> reportCreatePost(@RequestBody ReportSaveReqDto dto) {
         try {
             reportService.reportCreate(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "신고가 성공적으로 등록되었습니다.", dto.getReportEmail());
@@ -51,6 +52,7 @@ public class ReportController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<?> reportList(@RequestParam(value = "type", required = false) String type,
                                         @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -59,7 +61,8 @@ public class ReportController {
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
-    @GetMapping("/details")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/detail")
     public ResponseEntity<?> reportDetails(@RequestParam(value = "qnaId", required = false) Long qnaId,
                                            @RequestParam(value = "postId", required = false) Long postId,
                                            @RequestParam(value = "commentId", required = false) Long commentId) {

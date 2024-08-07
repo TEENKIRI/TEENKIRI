@@ -6,7 +6,7 @@ import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.report.domain.Reason;
 import com.beyond.teenkiri.report.domain.Report;
-import com.beyond.teenkiri.user_board.domain.user;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class ReportSaveReqDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public Report toEntity(user user, QnA qna, Post post, Comment comment) {
+    public Report toEntity(User user, QnA qna, Post post, Comment comment) {
         return Report.builder()
                 .user(user)
                 .reason(this.reason)

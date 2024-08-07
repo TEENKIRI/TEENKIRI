@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,6 +31,7 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createNotice(@RequestBody NoticeSaveReqDto dto) {
         try {
@@ -50,6 +52,7 @@ public class NoticeController {
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getNoticeDetail(@PathVariable Long id) {
         try {
@@ -62,9 +65,9 @@ public class NoticeController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, @ModelAttribute NoticeUpdateDto dto) {
+    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, @RequestBody NoticeUpdateDto dto) {
         try {
             noticeService.noticeUpdate(id, dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "공지사항이 성공적으로 업데이트되었습니다.", id);
@@ -76,6 +79,7 @@ public class NoticeController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> noticeDelete(@PathVariable Long id) {
         try {
