@@ -7,12 +7,15 @@ import com.beyond.teenkiri.event.dto.EventListResDto;
 import com.beyond.teenkiri.event.dto.EventSaveReqDto;
 import com.beyond.teenkiri.event.dto.EventUpdateDto;
 import com.beyond.teenkiri.event.repository.EventRepository;
-import com.beyond.teenkiri.user_board.domain.Role;
-import com.beyond.teenkiri.user_board.domain.user;
-import com.beyond.teenkiri.user_board.repository.UserRepository;
+
+
+import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +36,16 @@ public class EventService {
 
     @Transactional
     public Event createEvent(EventSaveReqDto dto) {
-        user user = userRepository.findByEmail(dto.getUserEmail())
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-        Event Event = dto.toEntity(user);
-        return eventRepository.save(Event);
+        Event event = dto.toEntity();
+        event.setUser(user);
+        return eventRepository.save(event);
     }
 
     public Page<EventListResDto> eventList(Pageable pageable) {
@@ -50,22 +55,32 @@ public class EventService {
 
     public EventDetailDto getEventDetail(Long id) {
         Event Event = eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 이벤트입니다."));
         return Event.fromDetailEntity();
     }
 
+    // 이벤트 업데이트입니다.
     @Transactional
     public void eventUpdate(Long id, EventUpdateDto dto){
-        Event Event = eventRepository.findById(id)
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
-        Event.toUpdate(dto);
-        eventRepository.save(Event);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (event.getUser().getEmail().equals(userEmail)){
+            event.toUpdate(dto);
+        }else {
+            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+        }
+        eventRepository.save(event);
     }
 
     @Transactional
     public Event eventDelete(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        User user = event.getUser();
+        if (user.getRole() != Role.ADMIN) {
+            throw new SecurityException("권한이 없습니다.");
+        }
         event.updateDelYN(DelYN.Y);
         return event;
     }

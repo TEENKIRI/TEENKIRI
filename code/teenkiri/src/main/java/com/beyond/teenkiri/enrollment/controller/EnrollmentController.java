@@ -2,10 +2,7 @@ package com.beyond.teenkiri.enrollment.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.enrollment.domain.Enrollment;
-import com.beyond.teenkiri.enrollment.dto.EnrollDetResDto;
-import com.beyond.teenkiri.enrollment.dto.EnrollListResDto;
-import com.beyond.teenkiri.enrollment.dto.EnrollSaveReqDto;
-import com.beyond.teenkiri.enrollment.dto.EnrollUpdateReqDto;
+import com.beyond.teenkiri.enrollment.dto.*;
 import com.beyond.teenkiri.enrollment.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +24,7 @@ public class EnrollmentController {
 
 //    진행률 리스트
     @GetMapping("/enroll/list")
-    public ResponseEntity<?> subjectListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
+    public ResponseEntity<?> enrollmentListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
             direction = Sort.Direction.DESC ) Pageable pageable){
         Page<EnrollListResDto> enrollListResDto = enrollmentService.enrollList(pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return enrollment list",enrollListResDto);
@@ -35,16 +32,16 @@ public class EnrollmentController {
     }
 
 //    진행률 (((강좌별))) 리스트
-    @GetMapping("/enroll/{subjectId}/list")
-    public ResponseEntity<?> subjectListViewByGroup(@PathVariable Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
-            direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<EnrollListResDto> enrollListResDto = enrollmentService.enrollListByGroup(subjectId, pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return enrollment list by subject",enrollListResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
-    }
+//    @GetMapping("/enroll/{subjectId}/list")
+//    public ResponseEntity<?> enrollmentListViewByGroup(@PathVariable Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
+//            direction = Sort.Direction.DESC ) Pageable pageable){
+//        Page<EnrollListResDto> enrollListResDto = enrollmentService.enrollListByGroup(subjectId, pageable);
+//        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return enrollment list by subject",enrollListResDto);
+//        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+//    }
 
     @GetMapping("/enroll/detail/{id}")
-    public ResponseEntity<?> subjectListViewByGroup(@PathVariable Long id){
+    public ResponseEntity<?> enrollmentDetailView(@PathVariable Long id){
         EnrollDetResDto enrollDetResDto = enrollmentService.enrollDetail(id);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return enrollment detail",enrollDetResDto);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
@@ -52,16 +49,23 @@ public class EnrollmentController {
 
 //    진행률 생성
     @PostMapping("/enroll/create")
-    public ResponseEntity<?> subjectCreate(@RequestBody EnrollSaveReqDto dto){
+    public ResponseEntity<?> enrollmentCreate(@RequestBody EnrollSaveReqDto dto){
         Enrollment enrollment = enrollmentService.enrollCreate(dto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "진행률 생성 완료",enrollment.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
 
-    @PatchMapping("/enroll/update")
-    public ResponseEntity<?> subjectUpdate(EnrollUpdateReqDto dto){
-        Enrollment enrollment = enrollmentService.enrollUpdate(dto);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "진행률 업데이트 완료",enrollment.getId());
+    @PatchMapping("/enroll/update/duration/{id}")
+    public ResponseEntity<?> enrollmentUserDurationUpdate(@PathVariable Long id, @RequestBody EnrollUpdateUserDurationReqDto dto){
+        Enrollment enrollment = enrollmentService.enrollUserDurationUpdate(id, dto);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "진행률 업데이트 완료 : 수강시간",enrollment.getId());
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    @PatchMapping("/enroll/update/complete/{id}")
+    public ResponseEntity<?> enrollmentCompletedUpdate(@PathVariable Long id, @RequestBody EnrollUpdateCompletedReqDto dto){
+        Enrollment enrollment = enrollmentService.enrollCompletedUpdate(id, dto);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "진행률 업데이트 완료 : 수강여부",enrollment.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 

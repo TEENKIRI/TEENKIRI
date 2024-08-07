@@ -4,6 +4,7 @@ import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,8 +27,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private com.beyond.teenkiri.user_board.domain.user user;
-
+    private User user;
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;

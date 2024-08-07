@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: software.amazon.awssdk:metrics-spi:2.17.58">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk/metrics-spi/2.17.58/c8b381fa24433afc877667c98a1b3625c058fb2b/metrics-spi-2.17.58.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk/metrics-spi/2.17.58/4121924d5f650134b878241a12e695f256194afd/metrics-spi-2.17.58-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

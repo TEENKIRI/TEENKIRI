@@ -1,11 +1,15 @@
 package com.beyond.teenkiri.user.domain;
 
+import com.beyond.teenkiri.common.domain.Address;
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.post.domain.Post;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,14 +17,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 50)
-    private String username;
+    private String name;
 
     @Column(nullable = false)
     private String password;
@@ -29,7 +33,7 @@ public class User {
     private String phone;
 
     @Column(length = 255)
-    private String address;
+    private Address address;
 
     @Column(nullable = false, length = 100, unique = true)
     private String email;
@@ -40,44 +44,31 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private UserType userType = UserType.STUDENT;
+    private Role role = Role.STUDENT;
 
     @Column(nullable = false)
     private boolean isVerified = false;
 
     private int reportCount = 0;
 
-    @Column(nullable = false)
-    @UpdateTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    private LocalDateTime deletedAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public User(String username, String password, String phone, String address, String email, String nickname, UserType userType, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DelYN delYn) {
-        this.username = username;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
+
+    public User(String name, String password, String phone, Address address, String email, String nickname, Role role, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DelYN delYn) {
+        this.name = name;
         this.password = password;
         this.phone = phone;
         this.address = address;
         this.email = email;
         this.nickname = nickname;
-        this.userType = userType;
+        this.role = role;
         this.isVerified = isVerified;
         this.reportCount = reportCount;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-        this.delYN = delYN;
+        this.delYN = DelYN.N;
     }
-
-    public enum UserType {
-        STUDENT, TEACHER, ADMIN
-    }
-
 }

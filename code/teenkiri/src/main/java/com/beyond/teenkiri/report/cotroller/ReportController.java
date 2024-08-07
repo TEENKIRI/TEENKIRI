@@ -2,6 +2,8 @@ package com.beyond.teenkiri.report.cotroller;
 
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
+import com.beyond.teenkiri.common.dto.CommonErrorDto;
+import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.post.domain.Post;
@@ -9,16 +11,19 @@ import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-@Controller
-@RequestMapping("report")
+
+@RestController
+@RequestMapping("/report")
 public class ReportController {
 
     private final ReportService reportService;
@@ -34,53 +39,57 @@ public class ReportController {
         this.commentRepository = commentRepository;
     }
 
-    @GetMapping("create")
-    public String reportCreateScreen(@RequestParam(value = "qnaId", required = false) Long qnaId,
-                                     @RequestParam(value = "postId", required = false) Long postId,
-                                     @RequestParam(value = "commentId", required = false) Long commentId,
-                                     Model model) {
-        if (commentId != null) {
-            Comment comment = commentRepository.findById(commentId)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
-            model.addAttribute("suspectEmail", comment.getUser().getEmail());
-            model.addAttribute("commentId", commentId);
-            if (comment.getPost() != null) {
-                model.addAttribute("postId", comment.getPost().getId());
-            }
-            if (comment.getQna() != null) {
-                model.addAttribute("qnaId", comment.getQna().getId());
-            }
-        } else if (postId != null) {
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
-            model.addAttribute("suspectEmail", post.getUser().getEmail());
-            model.addAttribute("postId", postId);
-        } else if (qnaId != null) {
-            QnA qna = qnaRepository.findById(qnaId)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-            model.addAttribute("suspectEmail", qna.getUser().getEmail());
-            model.addAttribute("qnaId", qnaId);
-        } else {
-            throw new IllegalArgumentException("QnA ID, Post ID 또는 Comment ID가 필요합니다.");
-        }
-        return "/board/report/create";
-    }
-
-    @PostMapping("create")
-    public String reportCreatePost(@ModelAttribute ReportSaveReqDto dto, Model model) {
+    @PostMapping("/create")
+    public ResponseEntity<?> reportCreatePost(@RequestBody ReportSaveReqDto dto) {
         try {
             reportService.reportCreate(dto);
-            return "redirect:/report/list";
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "신고가 성공적으로 등록되었습니다.", dto.getReportEmail());
+            return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (IllegalArgumentException | EntityNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/report/list";
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("list")
-    public String reportList(@RequestParam(value = "type", required = false) String type, Model model, @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("reportList", reportService.reportList(pageable, type));
-        model.addAttribute("filterType", type != null ? type : "all");
-        return "board/report/list";
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/list")
+    public ResponseEntity<?> reportList(@RequestParam(value = "type", required = false) String type,
+                                        @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<?> reportList = reportService.reportList(pageable, type);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "신고 목록을 조회합니다.", reportList);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/detail")
+    public ResponseEntity<?> reportDetails(@RequestParam(value = "qnaId", required = false) Long qnaId,
+                                           @RequestParam(value = "postId", required = false) Long postId,
+                                           @RequestParam(value = "commentId", required = false) Long commentId) {
+        try {
+            String suspectEmail = null;
+            if (commentId != null) {
+                Comment comment = commentRepository.findById(commentId)
+                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
+                suspectEmail = comment.getUser().getEmail();
+            } else if (postId != null) {
+                Post post = postRepository.findById(postId)
+                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
+                suspectEmail = post.getUser().getEmail();
+            } else if (qnaId != null) {
+                QnA qna = qnaRepository.findById(qnaId)
+                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+                suspectEmail = qna.getUser().getEmail();
+            } else {
+                throw new IllegalArgumentException("QnA ID, Post ID 또는 Comment ID가 필요합니다.");
+            }
+
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "신고 세부 정보를 조회합니다.", suspectEmail);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            e.printStackTrace();
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
+        }
     }
 }

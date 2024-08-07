@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class PostListResDto {
     private Long id;
     private String title;
-    private String user_email;
+    private String nickname;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }

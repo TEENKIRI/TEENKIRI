@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TEENKIRI.iml" filepath="$PROJECT_DIR$/.idea/TEENKIRI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/teenkiri.iml" filepath="$PROJECT_DIR$/.idea/modules/teenkiri.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/teenkiri.main.iml" filepath="$PROJECT_DIR$/.idea/modules/teenkiri.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/teenkiri.test.iml" filepath="$PROJECT_DIR$/.idea/modules/teenkiri.test.iml" />
     </modules>
   </component>
 </project>

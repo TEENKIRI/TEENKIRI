@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUpdateDto {
+    private String userEmail;
     private String title;
     private String contents;
 }
