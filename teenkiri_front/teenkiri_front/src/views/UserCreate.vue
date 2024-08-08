@@ -74,7 +74,7 @@
               </v-text-field>
               <v-text-field
                 label="핸드폰번호"
-                v-model="phoneNumber"
+                v-model="phone"
                 prepend-icon="mdi-phone"
                 required
               ></v-text-field>
@@ -86,12 +86,17 @@
               ></v-text-field>
               <v-text-field
                 label="주소"
-                v-model="address"
+                v-model="city"
                 prepend-icon="mdi-home"
               ></v-text-field>
               <v-text-field
                 label="상세주소"
-                v-model="detailAddress"
+                v-model="street"
+                prepend-icon="mdi-home-outline"
+              ></v-text-field>
+              <v-text-field
+                label="우편번호"
+                v-model="zipcode"
                 prepend-icon="mdi-home-outline"
               ></v-text-field>
               <v-checkbox
@@ -126,10 +131,11 @@ export default {
       passwordConfirm: "",
       name: "",
       nickname: "",
-      phoneNumber: "",
+      phone: "",
       birthDate: "",
-      address: "",
-      detailAddress: "",
+      city: "",
+      street: "",
+      zipcode: "",
       agree1: false,
       agree2: false,
       showPassword: false,
@@ -141,6 +147,7 @@ export default {
   },
   methods: {
     async sendVerificationCode() {
+      console.log("sendVerificationCode 호출")
       try {
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/send-verification-code`, { email: this.email });
         this.verificationSent = true;
@@ -152,6 +159,7 @@ export default {
       }
     },
     async verifyEmailCode() {
+      console.log("verifyEmailCode 호출")
       try {
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/verify-email`, { email: this.email, code: this.verificationCode });
         this.emailVerified = true;
@@ -163,6 +171,7 @@ export default {
       }
     },
     async checkNickname() {
+      console.log("checkNickname 호출")
       try {
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/check-nickname`, { nickname: this.nickname });
         this.nicknameChecked = true;
@@ -173,38 +182,42 @@ export default {
         alert(error_message);
       }
     },
-    async register() {
-      if (!this.nicknameChecked) {
-        alert("닉네임 중복 확인을 해주세요.");
-        return;
-      }
-      if (this.password !== this.passwordConfirm) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-      }
-
-      try {
-        const registerData = {
-          email: this.email,
-          password: this.password,
-          name: this.name,
-          nickname: this.nickname,
-          phoneNumber: this.phoneNumber,
-          birthDate: this.birthDate,
-          address: this.address,
-          detailAddress: this.detailAddress,
-          agree1: this.agree1,
-          agree2: this.agree2,
-        };
-        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/register`, registerData);
-        alert("회원가입이 완료되었습니다.");
-        this.$router.push("/login");
-      } catch (e) {
-        const error_message = e.response.data.error_message;
-        console.log(error_message);
-        alert(error_message);
-      }
+      async register() {
+    console.log("register 호출")
+    if (!this.nicknameChecked) {
+      alert("닉네임 중복 확인을 해주세요.");
+      return;
     }
+    if (this.password !== this.passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const registerData = {
+        email: this.email,
+        password: this.password,
+        name: this.name,
+        nickname: this.nickname,
+        phone: this.phone,
+        address: {
+          city: this.city,
+          street: this.street,
+          zipcode: this.zipcode
+        },
+        role: "STUDENT", // 필요한 경우 기본값 설정
+        delYN: "N" // 필요한 경우 기본값 설정
+      };
+      await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/register`, registerData);
+      alert("회원가입이 완료되었습니다.");
+      this.$router.push("/login");
+    } catch (e) {
+      const error_message = e.response.data.error_message || e.message;
+      console.log(error_message);
+      alert(error_message);
+    }
+  }
+
   }
 };
 </script>
