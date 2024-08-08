@@ -37,6 +37,10 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Column(columnDefinition = "TEXT")
+    @Builder.Default
+    private String imageUrl = "";
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
@@ -46,6 +50,7 @@ public class Post extends BaseTimeEntity {
                 .title(this.title)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
+                .imageUrl(this.imageUrl)
                 .nickname(this.user.getNickname())
                 .build();
     }
@@ -61,9 +66,14 @@ public class Post extends BaseTimeEntity {
                 .build();
     }
 
-    public void toUpdate(PostUpdateDto dto) {
+    public void toUpdate(PostUpdateDto dto,  String imageUrl) {
         this.title = dto.getTitle();
         this.contents = dto.getContents();
+        this.imageUrl = imageUrl;
+
+    }
+    public void updateImagePath(String imagePath){
+        this.imageUrl = imagePath;
     }
 
     public void updateDelYN(DelYN delYN){

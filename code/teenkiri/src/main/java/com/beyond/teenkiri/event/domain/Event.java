@@ -36,12 +36,18 @@ public class Event extends BaseTimeEntity {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Column(columnDefinition = "TEXT")
+    @Builder.Default
+    private String imageUrl = "";
+
+
     public EventDetailDto fromDetailEntity() {
         return EventDetailDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
                 .content(this.getContent())
                 .nickname(this.getUser().getNickname())
+                .imageUrl(this.imageUrl)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
@@ -52,15 +58,20 @@ public class Event extends BaseTimeEntity {
                 .id(this.getId())
                 .title(this.getTitle())
                 .nickname(this.getUser().getNickname())
+                .imageUrl(this.imageUrl)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
-    public void toUpdate(EventUpdateDto dto){
+    public void toUpdate(EventUpdateDto dto, String imageUrl){
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.imageUrl = imageUrl;
 
+    }
+    public void updateImagePath(String imagePath){
+        this.imageUrl = imagePath;
     }
 
     public void updateDelYN(DelYN delYN){

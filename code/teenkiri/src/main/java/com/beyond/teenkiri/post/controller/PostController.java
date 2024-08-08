@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -42,9 +43,10 @@ public class PostController {
 
     // 게시물을 생성합니다.
     @PostMapping("create")
-    public ResponseEntity<?> postCreatePost(@RequestBody PostSaveReqDto dto) {
+    public ResponseEntity<?> postCreatePost(PostSaveReqDto dto,
+                                            @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            Post post = postService.postCreate(dto);
+            Post post = postService.postCreate(dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "게시글(자유게시판)이 성공적으로 등록되었습니다.",post.getId());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (SecurityException | EntityNotFoundException e) {
@@ -78,9 +80,10 @@ public class PostController {
 
     // 게시물을 업데이트합니다.
     @PostMapping("update/{id}")
-    public ResponseEntity<?> postUpdate(@PathVariable Long id, @RequestBody PostUpdateDto dto) {
+    public ResponseEntity<?> postUpdate(@PathVariable Long id, PostUpdateDto dto,
+                                        @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try{
-            postService.postUpdate(id, dto);
+            postService.postUpdate(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"자유게시판에 작성하신 글이 성공적으로 업데이트 되었습니다.",id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         }catch (EntityNotFoundException e){

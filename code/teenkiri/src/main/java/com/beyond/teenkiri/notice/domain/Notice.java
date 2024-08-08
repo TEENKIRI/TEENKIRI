@@ -37,12 +37,17 @@ public class Notice extends BaseTimeEntity {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Column(columnDefinition = "TEXT")
+    @Builder.Default
+    private String imageUrl = "";
+
     public NoticeDetailDto fromDetailEntity() {
         return NoticeDetailDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
                 .content(this.getContent())
                 .nickname(this.getUser().getNickname())
+                .imageUrl(this.imageUrl)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
@@ -53,15 +58,20 @@ public class Notice extends BaseTimeEntity {
                 .id(this.getId())
                 .title(this.getTitle())
                 .nickname(this.getUser().getNickname())
+                .imageUrl(this.imageUrl)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
     }
 
-    public void toUpdate(NoticeUpdateDto dto){
+    public void toUpdate(NoticeUpdateDto dto, String imageUrl){
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.imageUrl = imageUrl;
 
+    }
+    public void updateImagePath(String imagePath){
+        this.imageUrl = imagePath;
     }
 
     public void updateDelYN(DelYN delYN){

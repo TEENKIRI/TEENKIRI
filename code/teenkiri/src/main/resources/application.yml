@@ -61,9 +61,9 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: YOUR_ACCESS_KEY_HERE       # 여기에 AWS 액세스 키를 입력하세요
-      secret-key: YOUR_SECRET_KEY_HERE       # 여기에 AWS 시크릿 키를 입력하세요
+      access-key : AKIA3FLD44523CSQ44FO
+      secret-key : +iCOGUdiQVY3P7xXt2I7AQzn4y5Fy8oiLoj+lME/
     region:
-      static: YOUR_REGION_HERE               # 여기에 AWS 리전을 입력하세요 (예: us-west-2)
+      static: ap-northeast-2
     s3:
-      bucket: YOUR_BUCKET_NAME_HERE          # 여기에 S3 버킷 이름을 입력하세요
+      bucket: hannahbucket21
