@@ -29,6 +29,8 @@ public class UserController {
     @Autowired
     private QnAService qnaService;
 
+    
+
     @GetMapping("/edit-info")
     public ResponseEntity<?> getEditUserInfo(@RequestHeader("Authorization") String token) {
         if (token.startsWith("Bearer ")) {
