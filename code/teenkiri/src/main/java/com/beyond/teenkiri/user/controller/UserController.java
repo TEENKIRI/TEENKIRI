@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.user.controller;
 
+import com.beyond.teenkiri.common.dto.CommonErrorDto;
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
@@ -91,12 +92,19 @@ public class UserController {
         try {
             String token = userService.login(loginDto);
             System.out.println("Generated JWT Token: " + token);
-            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "로그인 성공", token));
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"로그인성공",token);
+            return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "잘못된 이메일/비밀번호 입니다.", null));
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED,"잘못된 이메일/비밀번호 입니다.");
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<?> sendVerificationCode(@RequestBody EmailVerificationDto verificationDto) {
+        userService.sendVerificationEmail(verificationDto.getEmail());
+        return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "인증 코드 전송 성공", null));
     }
 
     @PostMapping("/register")
@@ -109,12 +117,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다: " + e.getMessage(), null));
         }
-    }
-
-    @PostMapping("/send-verification-code")
-    public ResponseEntity<?> sendVerificationCode(@RequestBody EmailVerificationDto verificationDto) {
-        userService.sendVerificationEmail(verificationDto.getEmail());
-        return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "인증 코드 전송 성공", null));
     }
 
     @PostMapping("/verify-email")

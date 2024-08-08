@@ -4,12 +4,13 @@ import com.beyond.teenkiri.common.domain.Address;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSaveReqDto {
     private String name;
     private String email;

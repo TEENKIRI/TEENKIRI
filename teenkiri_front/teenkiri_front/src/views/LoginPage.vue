@@ -53,7 +53,7 @@
   
   <script>
   import axios from 'axios';
-  
+  import { jwtDecode } from 'jwt-decode';
   export default {
     name: "LoginPage",
     data() {
@@ -74,14 +74,21 @@
             autoLogin: this.autoLogin,
           };
           const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/user/login`, loginData);
-          const token = response.data.result.token;
+          console.log('로그인 성공');
+          console.log(response);
+          const token = response.data.result;
+          console.log("$$$$Q#E@Q#E",token);
         //   const refreshToken = response.data.result.refreshToken;
-  
+          console.log(jwtDecode(token));
+          const role = jwtDecode(token).role;
           localStorage.setItem('token', token);
         //   localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('role',role);
           window.location.href = "/";
         } catch (e) {
-          const error_message = e.response.data.error_message;
+          alert('로그인 실패');
+          console.log(e);
+          const error_message = e.response.data.status_message;
           console.log(error_message);
           alert(error_message);
         }
