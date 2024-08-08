@@ -137,7 +137,7 @@ public class LectureService {
 
             MultipartFile videoFile = video;
             if(!videoFile.isEmpty()){
-                String bgImagePathFileName = lecture.getId() + "_"  + videoFile.getOriginalFilename();
+                String bgImagePathFileName = lecture.getId() + "_lecture_"  + videoFile.getOriginalFilename();
                 byte[] bgImagePathByte =  videoFile.getBytes();
                 String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
                 lecture.updateVideoPath(s3ImagePath);
