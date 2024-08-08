@@ -1,6 +1,5 @@
 package com.beyond.teenkiri.wish.domain;
 
-import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -27,4 +26,9 @@ public class Wish {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
+
+    public Wish(User user, Subject subject) {
+        this.user = user;
+        this.subject = subject;
+    }
 }
