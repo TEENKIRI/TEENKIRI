@@ -23,7 +23,8 @@ public class QnADetailDto {
     private LocalDateTime updatedTime;
     private LocalDateTime answeredAt;
     private String userEmail;
-
+    private String qImageUrl;
+    private String aImageUrl;
     public static QnADetailDto fromEntity(QnA qna) {
         return QnADetailDto.builder()
                 .id(qna.getId())
@@ -36,6 +37,8 @@ public class QnADetailDto {
                 .updatedTime(qna.getUpdatedTime())
                 .answeredAt(qna.getAnsweredAt())
                 .userEmail(qna.getUser().getEmail())
+                .qImageUrl(qna.getQImageUrl())
+                .aImageUrl(qna.getAImageUrl())
                 .build();
     }
 }
