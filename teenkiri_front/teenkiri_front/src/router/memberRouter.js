@@ -1,7 +1,7 @@
 
 import UserCreate from "@/views/UserCreate.vue";
 import LoginPage from "@/views/LoginPage.vue";
-
+import FindIdPage from "@/views/FindIdPage.vue";
 export const memberRouter = [
     {
         path: '/user/create',
@@ -12,6 +12,11 @@ export const memberRouter = [
         path: '/login',
         name: 'LoginPage',
         component: LoginPage
+    },
+    {
+        path: '/find-id',
+        name: 'FindIdPage',
+        component: FindIdPage
     },
 
 ]
