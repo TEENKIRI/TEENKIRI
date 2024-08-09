@@ -1,7 +1,5 @@
-package com.beyond.teenkiri.common;
+package com.beyond.teenkiri.common.service;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,19 +14,29 @@ public class CommonMethod {
 
     public Boolean fileSizeCheck(MultipartFile file){
         String filename = file.getOriginalFilename();
-//        if (filename != null) {
-            String extension = filename.substring(filename.lastIndexOf('.') + 1);
-            long maxSize = getMaxFileSizeForExtension(extension);
+        String extension = filename.substring(filename.lastIndexOf('.') + 1);
+        long maxSize = getMaxFileSizeForExtension(extension);
 
-            if(maxSize == -1) {
-                throw new IllegalArgumentException("허용되지 않은 확장자 입니다.");
-            }else if(file.getSize() > maxSize) {
-                return false;
-            }else{
-                return true;
-            }
-//        }
-//        return null;
+        if(maxSize == -1) {
+            throw new IllegalArgumentException("허용되지 않은 확장자 입니다.");
+        }else if(file.getSize() > maxSize) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public Boolean fileSizeCheckFromByte(String fileName, byte[] file){
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        long maxSize = getMaxFileSizeForExtension(extension);
+
+        if(maxSize == -1) {
+            throw new IllegalArgumentException("허용되지 않은 확장자 입니다.");
+        }else if(file.length > maxSize) { //byte는 array의 길이로 파일크기 측정
+            return false;
+        }else{
+            return true;
+        }
     }
 
     public long getMaxFileSizeForExtension(String extension) {

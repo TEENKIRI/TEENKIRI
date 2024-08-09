@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -33,9 +34,10 @@ public class NoticeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> createNotice(@RequestBody NoticeSaveReqDto dto) {
+    public ResponseEntity<?> createNotice(NoticeSaveReqDto dto,
+                                          @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            Notice notice = noticeService.createNotice(dto);
+            Notice notice = noticeService.createNotice(dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "공지사항이 성공적으로 등록되었습니다.", notice.getId());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (SecurityException | EntityNotFoundException e) {
@@ -67,9 +69,10 @@ public class NoticeController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, @RequestBody NoticeUpdateDto dto) {
+    public ResponseEntity<?> noticeUpdate(@PathVariable Long id, NoticeUpdateDto dto,
+                                          @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            noticeService.noticeUpdate(id, dto);
+            noticeService.noticeUpdate(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "공지사항이 성공적으로 업데이트되었습니다.", id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {

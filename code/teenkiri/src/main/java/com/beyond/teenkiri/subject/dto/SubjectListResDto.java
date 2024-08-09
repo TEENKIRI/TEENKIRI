@@ -19,4 +19,11 @@ public class SubjectListResDto {
 
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
+
+    public SubjectListResDto(Long id, String title, String teacherName, boolean isSubscribe) {
+        this.id = id;
+        this.title = title;
+        this.teacherName = teacherName;
+        this.isSubscribe = isSubscribe;
+    }
 }

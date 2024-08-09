@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -33,9 +34,10 @@ public class EventController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createEvent(@RequestBody EventSaveReqDto dto) {
+    public ResponseEntity<?> createEvent(EventSaveReqDto dto,
+                                         @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            Event event = eventService.createEvent(dto);
+            Event event = eventService.createEvent(dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "이벤트가 성공적으로 등록되었습니다.", event.getId());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (SecurityException | EntityNotFoundException e) {
@@ -66,9 +68,10 @@ public class EventController {
     }
 
     @PostMapping("update/{id}")
-    public ResponseEntity<?> EventUpdate(@PathVariable Long id, @RequestBody EventUpdateDto dto){
+    public ResponseEntity<?> EventUpdate(@PathVariable Long id, EventUpdateDto dto,
+                                         @RequestPart(value="image", required = false) MultipartFile imageSsr){
         try {
-            eventService.eventUpdate(id, dto);
+            eventService.eventUpdate(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"이벤트가 성공적으로 수정되었습니다.",id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         }catch (EntityNotFoundException e){

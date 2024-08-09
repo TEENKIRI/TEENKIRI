@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -33,9 +34,10 @@ public class QnAController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuestion(@RequestBody QnASaveReqDto dto) {
+    public ResponseEntity<?> createQuestion(QnASaveReqDto dto,
+                                            @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            QnA qna = qnAService.createQuestion(dto);
+            QnA qna = qnAService.createQuestion(dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "질문이 성공적으로 등록되었습니다.", qna.getId());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -75,9 +77,10 @@ public class QnAController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/answer/{id}")
-    public ResponseEntity<?> answerQuestion(@PathVariable Long id, @RequestBody QnAAnswerReqDto dto) {
+    public ResponseEntity<?> answerQuestion(@PathVariable Long id, QnAAnswerReqDto dto,
+                                            @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            qnAService.answerQuestion(id, dto);
+            qnAService.answerQuestion(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문에 대한 답변이 성공적으로 등록되었습니다.", id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (SecurityException | EntityNotFoundException e) {
@@ -88,9 +91,10 @@ public class QnAController {
     }
 
     @PostMapping("/update/question/{id}")
-    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id, @RequestBody QnAQtoUpdateDto dto) {
+    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id,QnAQtoUpdateDto dto,
+                                        @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            qnAService.QnAQUpdate(id, dto);
+            qnAService.QnAQUpdate(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문이 성공적으로 업데이트되었습니다.", id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
@@ -102,9 +106,10 @@ public class QnAController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/answer/{id}")
-    public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, @RequestBody QnAAtoUpdateDto dto) {
+    public ResponseEntity<?> qnaAUpdate(@PathVariable Long id, QnAAtoUpdateDto dto,
+                                        @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
-            qnAService.QnAAUpdate(id, dto);
+            qnAService.QnAAUpdate(id, dto, imageSsr);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "답변이 성공적으로 업데이트되었습니다.", id);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
