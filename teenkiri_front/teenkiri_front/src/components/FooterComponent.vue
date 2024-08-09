@@ -1,5 +1,5 @@
 <template>
-    <v-footer app>
+    <v-footer app absolute="false">
       <v-container>
         <v-row>
           <v-col>
@@ -31,12 +31,16 @@
               <dl>
                 <dt>강좌상담</dt>
                 <dd>02.1234.5678 </dd>
+              </dl>
+              <dl>
                 <dt>운영시간</dt>
                 <dd>09:00 ~ 18:00</dd>
               </dl>
               <dl>
                 <dt>시스템 이용 문의</dt>
                 <dd>02.1234.5678 </dd>
+              </dl>
+              <dl>
                 <dt>운영시간</dt>
                 <dd>09:00 ~ 18:00</dd>
               </dl>
@@ -103,5 +107,6 @@
   .tel dd {
     margin: 0 0 10px 0;
   }
+
   </style>
   

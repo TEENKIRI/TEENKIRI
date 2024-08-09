@@ -1,9 +1,10 @@
 package com.beyond.teenkiri.user.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserLoginDto {
     private String email;
