@@ -178,23 +178,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    public void updateUserInfo(String email, UserEditReqDto editReqDto) {
-        User user = findByEmail(email);
-
-        if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
-            if (!editReqDto.getPassword().equals(editReqDto.getConfirmPassword())) {
-                throw new RuntimeException("동일하지 않은 비밀번호 입니다.");
-            }
-            user.setPassword(passwordEncoder.encode(editReqDto.getPassword()));
-        }
-        if (editReqDto.getNickname() != null && !editReqDto.getNickname().isEmpty()) {
-            user.setNickname(editReqDto.getNickname());
-        }
-        if (editReqDto.getAddress() != null) {
-            user.setAddress(editReqDto.getAddress());
-        }
-        userRepository.save(user);
-    }
 
     private void updateUserDetails(User user, UserEditReqDto editReqDto) {
         if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
@@ -229,4 +212,14 @@ public class UserService {
 
         return qnaListResDtos;
     }
+
+
+    public void updateUserInfo(String username, UserEditReqDto editReqDto) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        updateUserDetails(user, editReqDto);
+        userRepository.save(user);
+    }
+
 }

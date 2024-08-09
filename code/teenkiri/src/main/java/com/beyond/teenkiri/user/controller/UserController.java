@@ -57,6 +57,8 @@ public class UserController {
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "회원 정보 수정 실패: " + e.getMessage(), null));
         }
     }
+
+
     @PostMapping("/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestBody NicknameCheckDto nicknameCheckDto) {
         try {
@@ -201,7 +203,8 @@ public class UserController {
     public ResponseEntity<?> removeWish(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long subjectId) {
         try {
             User user = userService.findByEmail(userDetails.getUsername());
-            wishService.removeWish(user, subjectId);
+            // 아 이거 아닌디; <일단 보류 뭔 타입 에러여;;>
+            wishService.removeWish(String.valueOf(user), subjectId);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 삭제 성공", null));
         } catch (Exception e) {
             e.printStackTrace();
