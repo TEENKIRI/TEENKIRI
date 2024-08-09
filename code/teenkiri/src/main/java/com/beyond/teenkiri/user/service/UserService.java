@@ -178,27 +178,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    private void updateUserDetails(User user, UserEditReqDto editReqDto) {
-        if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
-            validatePassword(editReqDto.getPassword(), editReqDto.getConfirmPassword(), user.getPassword());
-            user.setPassword(passwordEncoder.encode(editReqDto.getPassword()));
-        }
-
-        if (editReqDto.getNickname() != null && !editReqDto.getNickname().isEmpty()) {
-            String filteredNickname = chatService.filterMessage(editReqDto.getNickname());
-            if (!filteredNickname.equals(editReqDto.getNickname())) {
-                throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
-            }
-            if (userRepository.existsByNickname(editReqDto.getNickname())) {
-                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
-            }
-            user.setNickname(editReqDto.getNickname());
-        }
-
-        if (editReqDto.getAddress() != null) {
-            user.setAddress(editReqDto.getAddress());
-        }
-    }
 
     private void updateUserDetails(User user, UserEditReqDto editReqDto) {
         if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
@@ -233,4 +212,14 @@ public class UserService {
 
         return qnaListResDtos;
     }
+
+
+    public void updateUserInfo(String username, UserEditReqDto editReqDto) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        updateUserDetails(user, editReqDto);
+        userRepository.save(user);
+    }
+
 }
