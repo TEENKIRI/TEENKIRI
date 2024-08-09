@@ -16,6 +16,7 @@ public class PostListResDto {
     private Long id;
     private String title;
     private String nickname;
+    private String imageUrl;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }

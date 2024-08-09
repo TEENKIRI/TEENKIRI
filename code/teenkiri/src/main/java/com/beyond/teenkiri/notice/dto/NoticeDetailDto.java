@@ -16,6 +16,7 @@ public class NoticeDetailDto {
     private String title;
     private String content;
     private String nickname;
+    private String imageUrl;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 

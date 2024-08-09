@@ -16,6 +16,7 @@ public class PostDetailDto {
     private String title;
     private String contents;
     private String nickname;
+    private String imageUrl;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }

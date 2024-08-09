@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Data
@@ -20,6 +21,8 @@ public class EventSaveReqDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
     private User user;
+    private MultipartFile image;
+
 
     public Event toEntity(){
         return Event.builder()
