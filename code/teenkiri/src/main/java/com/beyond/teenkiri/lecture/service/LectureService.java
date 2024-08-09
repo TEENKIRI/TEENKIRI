@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.lecture.service;
 
-import com.beyond.teenkiri.common.CommonMethod;
+import com.beyond.teenkiri.common.service.CommonMethod;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.enrollment.domain.Enrollment;

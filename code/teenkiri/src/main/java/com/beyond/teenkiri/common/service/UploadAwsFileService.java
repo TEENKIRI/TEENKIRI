@@ -14,14 +14,23 @@ public class UploadAwsFileService {
     private String bucket;
 
     private final S3Client s3Client;
+    private final CommonMethod commonMethod;
 
     @Autowired
-    public UploadAwsFileService(S3Client s3Client) {
+    public UploadAwsFileService(S3Client s3Client, CommonMethod commonMethod) {
         this.s3Client = s3Client;
+        this.commonMethod = commonMethod;
     }
 
     public String UploadAwsFileAndReturnPath(String fileName, byte[] fileData){
 
+//        파일 확장자를 통한 업로드 여부 체크
+        Boolean isUpload = commonMethod.fileSizeCheckFromByte(fileName,fileData);
+        
+        if (isUpload.equals(false)) {
+            throw new IllegalArgumentException("파일의 크기가 너무 큽니다.");
+        }
+        
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(fileName)
