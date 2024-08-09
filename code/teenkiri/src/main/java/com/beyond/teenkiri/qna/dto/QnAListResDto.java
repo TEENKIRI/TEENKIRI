@@ -40,4 +40,5 @@ public class QnAListResDto {
     private LocalDateTime updatedTime;
     private LocalDateTime answeredAt;
     private String answerText; // 수정
+    private String qImageUrl;
 }

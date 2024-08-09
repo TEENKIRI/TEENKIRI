@@ -49,6 +49,14 @@ public class QnA extends BaseTimeEntity {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Column(columnDefinition = "TEXT")
+    @Builder.Default
+    private String qImageUrl = "";
+
+    @Column(columnDefinition = "TEXT")
+    @Builder.Default
+    private String aImageUrl = "";
+
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
@@ -61,20 +69,36 @@ public class QnA extends BaseTimeEntity {
                 .updatedTime(this.getUpdatedTime())
                 .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
+                .qImageUrl(this.qImageUrl)
                 .build();
     }
 
-    public void QnAQUpdate(QnAQtoUpdateDto dto) {
+    // 질문
+    public void QnAQUpdate(QnAQtoUpdateDto dto, String qImageUrl) {
         this.questionText = dto.getQuestionText();
         this.title = dto.getTitle();
         this.getUpdatedTime();
+        this.qImageUrl = qImageUrl;
     }
 
-    public void QnAAUpdate(QnAAtoUpdateDto dto) {
+    //  답변 업데이트 사용하는거고
+    public void QnAAUpdate(QnAAtoUpdateDto dto, String aImageUrl) {
         this.answerText = dto.getAnswerText();
         this.answeredAt = LocalDateTime.now();
+        this.aImageUrl = aImageUrl;
+    }
+    public void answerQuestion(String answerText, User answerer) {
+        this.answerText = answerText;
+        this.answerer = answerer;
     }
 
+    // 답변을 생성할때 사용
+    public void aUpdateImagePath(String imagePath){
+        this.aImageUrl = imagePath;
+    }
+    public void qUpdateImagePath(String imagePath){
+        this.qImageUrl = imagePath;
+    }
     public void updateDelYN(DelYN delYN){
         this.delYN = delYN;
     }
