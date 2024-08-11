@@ -13,6 +13,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class LectureUpdateReqDto {
     private Long id;
     private String title;
-    private MultipartFile video;
-    private MultipartFile image;
+    private Integer videoDuration;
 }

@@ -137,4 +137,9 @@ public class EnrollmentService {
 
         return returnProgress;
     }
+
+    public Integer findCountByLectureId(Long lectureId){
+        Integer enrollmentCount = enrollmentRepository.countByLectureId(lectureId);
+        return enrollmentCount;
+    }
 }

@@ -73,8 +73,10 @@ public class LectureController {
 
     //    강의 업데이트
     @PatchMapping("/lecture/update/{id}")
-    public ResponseEntity<?> lectureUpdate(LectureUpdateReqDto dto){
-        Lecture lecture = lectureService.lectureUpdate(dto);
+    public ResponseEntity<?> lectureUpdate(LectureUpdateReqDto dto,
+                                           @RequestPart(value="video", required = false) MultipartFile videoSsr,
+                                           @RequestPart(value="image", required = false) MultipartFile imageSsr){
+        Lecture lecture = lectureService.lectureUpdate(dto, videoSsr, imageSsr);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "강의 업데이트 완료", lecture.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }

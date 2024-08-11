@@ -6,6 +6,7 @@ import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
+import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
 import lombok.AllArgsConstructor;
@@ -100,6 +101,18 @@ public class Subject extends BaseTimeEntity {
 
     public void updateImagePath(String s3ImagePath) {
         this.subjectThumUrl = s3ImagePath;
+    }
+
+    public void updateDelYn(DelYN delYN) {
+        this.delYN = delYN;
+    }
+
+    public void toUpdate(SubjectUpdateReqDto dto, User userTeacher, Course course) {
+        this.userTeacher = userTeacher;
+        this.title = dto.getTitle();
+        this.grade = dto.getGrade();
+        this.course = course;
+        this.description = dto.getDescription();
     }
 }
 

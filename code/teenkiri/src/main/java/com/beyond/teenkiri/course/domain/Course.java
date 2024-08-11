@@ -3,8 +3,10 @@ package com.beyond.teenkiri.course.domain;
 // 과목 Table
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.dto.CourseDetResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
+import com.beyond.teenkiri.course.dto.CourseUpdateReqDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,10 @@ public class Course extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
+
 
     public CourseListResDto fromListEntity(){
         return CourseListResDto.builder()
@@ -52,6 +58,15 @@ public class Course extends BaseTimeEntity {
                 .createdTime(this.getCreatedTime())
                 .build();
     }
+
+    public void updateTitle(CourseUpdateReqDto dto) {
+        this.title = dto.getTitle();
+    }
+
+    public void updateDelYn(DelYN delYN) {
+        this.delYN = delYN;
+    }
+
 }
 
 /*
