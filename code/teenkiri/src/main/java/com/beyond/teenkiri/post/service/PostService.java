@@ -1,8 +1,6 @@
 package com.beyond.teenkiri.post.service;
 
-
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.common.service.CommonMethod;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.dto.PostDetailDto;
@@ -10,7 +8,6 @@ import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.post.dto.PostSaveReqDto;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
 import com.beyond.teenkiri.post.repository.PostRepository;
-import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.service.UserService;
@@ -24,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,20 +40,16 @@ public class PostService {
     public Post postCreate(PostSaveReqDto dto, MultipartFile imageSsr) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 사용자를 이메일로 조회, 없을 경우 예외 발생
+        // 사용자 조회, 없을 경우 예외 발생
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
-
-        // 사용자가 관리자인지 확인
-        if (user.getRole() != Role.ADMIN) {
-            throw new SecurityException("권한이 없습니다.");
-        }
 
         // 이미지가 전달되지 않았으면 DTO에서 가져옴
         MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
 
         // Post 엔티티 생성
         Post post = dto.toEntity();
+        post.setUser(user); // 작성자 설정
 
         // 이미지가 존재하고 비어있지 않을 경우 처리
         if (image != null && !image.isEmpty()) {
@@ -79,14 +71,12 @@ public class PostService {
         }
 
         // 작성자 설정 후 저장
-        post.setUser(user);
         return postRepository.save(post);
     }
 
-
     public Page<PostListResDto> postList(Pageable pageable) {
         Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
-        return posts.map(a -> a.listFromEntity());
+        return posts.map(Post::listFromEntity);
     }
 
     public PostDetailDto postDetail(Long id) {
@@ -129,7 +119,6 @@ public class PostService {
         // 변경된 게시글 저장
         postRepository.save(post);
     }
-
 
     @Transactional
     public void postDeleteDeep(Long id) {

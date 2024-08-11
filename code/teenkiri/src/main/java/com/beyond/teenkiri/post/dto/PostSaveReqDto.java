@@ -16,10 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostSaveReqDto {
+    private Long user_id;
     private String title;
     private String content;
     private String userEmail;
     private String nickname;
+
     @Builder.Default
     private DelYN delYN = DelYN.N;
     private User user;

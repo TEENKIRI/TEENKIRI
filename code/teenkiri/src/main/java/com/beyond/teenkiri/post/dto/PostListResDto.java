@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Data
 public class PostListResDto {
     private Long id;
+    private Long user_id;
     private String title;
     private String nickname;
     private String imageUrl;

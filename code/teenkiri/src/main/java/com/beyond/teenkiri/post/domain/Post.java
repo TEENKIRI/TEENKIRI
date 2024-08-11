@@ -52,6 +52,7 @@ public class Post extends BaseTimeEntity {
                 .updatedTime(this.getUpdatedTime())
                 .imageUrl(this.imageUrl)
                 .nickname(this.user.getNickname())
+                .user_id(this.user.getId())
                 .build();
     }
 
@@ -63,6 +64,7 @@ public class Post extends BaseTimeEntity {
                 .nickname(this.user.getNickname())
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
+                .user_id(this.user.getId())
                 .build();
     }
 
