@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.review.domain;
 
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.post.dto.PostUpdateDto;
@@ -7,6 +8,7 @@ import com.beyond.teenkiri.review.dto.ReviewListResDto;
 import com.beyond.teenkiri.review.dto.ReviewUpdateReqDto;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.domain.UserSubject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +25,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Review {
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,12 +34,13 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // userSubject.getSubject.getId를 사용하였음
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id", nullable = false)
-    private Lecture lecture;
+    @JoinColumn(name = "subject_id", nullable = false)
+    private UserSubject userSubject;
 
-    @Column(name = "rating", nullable = false)
-    private int rating;
+
+    private float rating;
 
     private String reviewText;
 
@@ -47,16 +50,17 @@ public class Review {
 
     public ReviewListResDto listFromEntity() {
         return ReviewListResDto.builder()
+                .id(this.id)
                 .userName(this.user.getName())
-                .lectureTitle(this.lecture.getTitle())
-                .lectureId(this.lecture.getId())
-                .rating(this.rating)
+                .subjectTitle(this.userSubject.getSubject().getTitle())
+                .subjectId(this.userSubject.getSubject().getId())
+                .rating(Math.round(this.rating))
                 .reviewText(this.reviewText)
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
                 .build();
     }
-
     public void toUpdate(ReviewUpdateReqDto dto) {
-        this.rating = dto.getRating();
         this.reviewText = dto.getReviewText();
     }
 

@@ -48,22 +48,38 @@ public class EventService {
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
-        MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
+
+
         Event event = dto.toEntity();
-        try {
-            MultipartFile imageFile = image;
-            if (!imageFile.isEmpty()) {
-                String bgImagePathFileName = event.getId() + "_" + imageFile.getOriginalFilename();
-                byte[] bgImagePathByte = imageFile.getBytes();
-                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                event.updateImagePath(s3ImagePath);
+
+        MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
+
+        if (image != null && !image.isEmpty()) {
+            try {
+
+                String originalFilename = image.getOriginalFilename();
+                if (originalFilename != null && !originalFilename.isEmpty()) {
+                    String bgImagePathFileName = event.getId() + "_" + originalFilename;
+                    byte[] bgImagePathByte = image.getBytes();
+
+
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                    event.updateImagePath(s3ImagePath);
+                } else {
+
+                    throw new IllegalArgumentException("이미지 파일 이름이 유효하지 않습니다.");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("파일 저장에 실패했습니다.", e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("파일 저장에 실패했습니다.");
         }
+
+
+
         event.setUser(user);
         return eventRepository.save(event);
     }
+
 
     public Page<EventListResDto> eventList(Pageable pageable) {
         Page<Event> Events = eventRepository.findByDelYN(DelYN.N, pageable);
@@ -76,32 +92,42 @@ public class EventService {
         return Event.fromDetailEntity();
     }
 
-    // 이벤트 업데이트입니다.
     @Transactional
     public void eventUpdate(Long id, EventUpdateDto dto, MultipartFile imageSsr) {
+        // 기존 이벤트를 조회합니다.
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
+
+        // 현재 로그인된 사용자의 이메일을 가져옵니다.
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        MultipartFile image = (imageSsr != null) ? dto.getImage() : imageSsr;
-        if (event.getUser().getEmail().equals(userEmail)) {
-            try {
-                MultipartFile imageFile = image;
-                if (!imageFile.isEmpty()) {
-                    String bgImagePathFileName = event.getId() + "_" + imageFile.getOriginalFilename();
-                    byte[] bgImagePathByte = imageFile.getBytes();
-                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                    event.toUpdate(dto, s3ImagePath);
-//                post.updateImagePath(s3ImagePath);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("게시글 수정에 실패했습니다.");
-            }
-        } else {
+        // 로그인된 사용자가 게시글의 작성자인지 확인합니다.
+        if (!event.getUser().getEmail().equals(userEmail)) {
             throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
         }
+
+        // 새로 받은 이미지가 없으면, DTO의 이미지를 사용합니다. DTO의 이미지도 없으면 이미지를 건너뜁니다.
+        MultipartFile image = (imageSsr != null) ? imageSsr : dto.getImage();
+
+        try {
+            if (image != null && !image.isEmpty()) {
+                // 이미지가 비어있지 않다면, S3에 이미지를 업로드하고 경로를 업데이트합니다.
+                String bgImagePathFileName = event.getId() + "_" + image.getOriginalFilename();
+                byte[] bgImagePathByte = image.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                event.toUpdate(dto, s3ImagePath); // 이미지를 포함하여 업데이트합니다.
+            } else {
+                // 이미지 없이 제목과 내용만 업데이트합니다.
+                event.toUpdate(dto, event.getImageUrl());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("게시글 수정에 실패했습니다.");
+        }
+
+        // 변경된 이벤트 정보를 저장합니다.
         eventRepository.save(event);
     }
+
 
     @Transactional
     public Event eventDelete(Long id) {
