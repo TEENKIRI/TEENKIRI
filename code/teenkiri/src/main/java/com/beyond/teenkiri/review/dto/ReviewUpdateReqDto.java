@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ReviewUpdateReqDto {
-    private int rating;
     private String reviewText;
 }
