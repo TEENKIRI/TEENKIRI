@@ -10,10 +10,12 @@ import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.service.UserService;
 import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -157,6 +159,19 @@ public class UserController {
         }
     }
 
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<?> showResetPasswordPage(@RequestParam("token") String token) {
+        // 토큰 유효성 검사 등 추가 로직 수행 가능
+
+        // 이 단계에서 Vue.js로의 페이지 렌더링을 의도
+        // ResponseEntity는 JSON 응답을 반환하는 대신 Vue.js 페이지로 리디렉션합니다.
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/reset-password?token=" + token);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    }
+
+    // POST 요청: 비밀번호를 실제로 재설정
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetDto passwordResetDto) {
         try {
