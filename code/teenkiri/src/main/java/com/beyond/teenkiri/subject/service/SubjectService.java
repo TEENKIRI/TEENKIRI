@@ -4,6 +4,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.repository.CourseRepository;
+import com.beyond.teenkiri.course.service.CourseService;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.subject.domain.Subject;
@@ -27,16 +28,16 @@ import java.io.IOException;
 @Transactional
 public class SubjectService {
     private final UserService userService;
-    private final CourseRepository courseRepository;
+    private final CourseService courseService;
     private final SubjectRepository subjectRepository;
     private final UploadAwsFileService uploadAwsFileService;
 
     @Autowired
     public SubjectService(SubjectRepository subjectRepository, UserService userService
-            , CourseRepository courseRepository, UploadAwsFileService uploadAwsFileService) {
+            , CourseService courseService, UploadAwsFileService uploadAwsFileService) {
         this.subjectRepository = subjectRepository;
         this.userService = userService;
-        this.courseRepository = courseRepository;
+        this.courseService = courseService;
         this.uploadAwsFileService = uploadAwsFileService;
     }
 
@@ -72,13 +73,9 @@ public class SubjectService {
     public Subject subjectCreate(SubjectSaveReqDto dto,MultipartFile subjectThum){
 //        로그인 된 선생님 이메일 추가하기
         User user = userService.findByEmail(dto.getUserTeacherEmail());
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println(user);
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        if(user == null || user.getId().equals("") ){
-            throw new EntityNotFoundException("존재하지 않는 선생님 입니다."); // ?
-        }
-        Course course = courseRepository.findById(dto.getCourseId()).orElseThrow(()-> new EntityNotFoundException("없는 과목 입니다."));
+//        연결된 과목 찾기
+        Course course = courseService.findByIdRequired(dto.getCourseId());
+
         Subject subject = dto.toEntity(user,course);
 
         subjectRepository.save(subject);
@@ -99,13 +96,15 @@ public class SubjectService {
 
     //    강좌 업데이트 및 DB 저장
     public Long subjectUpdate(SubjectUpdateReqDto dto){
-
-
         return null;
     }
 
     //    강좌 삭제 및 DB 저장
     public Long subjectDelete(Long id){
+        return null;
+    }
+
+    public Long subjectDeleteDeep(Long id){
         return null;
     }
 

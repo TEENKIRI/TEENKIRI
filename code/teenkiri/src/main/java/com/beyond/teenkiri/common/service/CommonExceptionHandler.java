@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -31,6 +32,13 @@ public class CommonExceptionHandler {
     public ResponseEntity<CommonErrorDto> validHandler(MethodArgumentNotValidException e) {
         e.printStackTrace();
         CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getFieldError().getDefaultMessage());
+        return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<CommonErrorDto> runtimeExceptionHandler(RuntimeException e) {
+        e.printStackTrace();
+        CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
     }
 

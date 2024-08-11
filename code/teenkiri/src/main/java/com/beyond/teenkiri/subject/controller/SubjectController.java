@@ -59,7 +59,6 @@ public class SubjectController {
     @PostMapping("/subject/create")
     public ResponseEntity<?> subjectCreate(@ModelAttribute SubjectSaveReqDto dto,
                                            @RequestPart(value = "subjectThum", required = false) MultipartFile subjectThum){
-        System.out.println("22222222222222222222222222222222222222");
         Subject subject = subjectService.subjectCreate(dto,subjectThum);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",subject.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
@@ -80,6 +79,14 @@ public class SubjectController {
     public ResponseEntity<?> subjectDelete(@PathVariable(value = "id") Long id){
         Long subjectId = subjectService.subjectDelete(id);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "complete subject delete",subjectId);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    //    강좌 실제 DB상 삭제
+    @DeleteMapping("/subject/delete/deep/{id}")
+    public ResponseEntity<?> subjectDeleteDeep(@PathVariable(value = "id") Long id){
+        Long subjectId = subjectService.subjectDeleteDeep(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "complete subject deep delete",subjectId);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
