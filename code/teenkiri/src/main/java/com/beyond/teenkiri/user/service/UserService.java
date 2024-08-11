@@ -5,6 +5,7 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
+
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
@@ -27,7 +28,8 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtTokenprovider jwtTokenProvider;
+    //private JwtTokenProvider jwtTokenProvider;
+    private JwtTokenprovider jwtTokenprovider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -52,11 +54,11 @@ public class UserService {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        return jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
+        return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
     }
 
     public String getEmailFromToken(String token) {
-        return jwtTokenProvider.getEmailFromToken(token);
+        return jwtTokenprovider.getEmailFromToken(token);
     }
 
     public User findByEmail(String email) {
@@ -71,6 +73,7 @@ public class UserService {
         return maskEmail(user.getEmail());
     }
 
+
     private String maskEmail(String email) {
         return email.substring(0, 4) + "******" + email.substring(email.indexOf("@"));
     }
@@ -79,7 +82,7 @@ public class UserService {
         User user = userRepository.findByNameAndPhoneAndEmail(findPasswordDto.getName(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
-        String resetToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
+        String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
         String resetLink = "http://localhost:8088/user/reset-password?token=" + resetToken;
@@ -87,8 +90,7 @@ public class UserService {
     }
 
     public void resetPassword(PasswordResetDto passwordResetDto) {
-        String email = jwtTokenProvider.getEmailFromToken(passwordResetDto.getToken());
-
+        String email = jwtTokenprovider.getEmailFromToken(passwordResetDto.getToken());
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
@@ -164,7 +166,7 @@ public class UserService {
     }
 
     public void deleteAccount(String token) {
-        String email = jwtTokenProvider.getEmailFromToken(token);
+        String email = jwtTokenprovider.getEmailFromToken(token);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인할 수 없습니다: " + email));
 
@@ -174,7 +176,7 @@ public class UserService {
     }
 
     public User getUserFromToken(String token) {
-        String email = jwtTokenProvider.getEmailFromToken(token);
+        String email = jwtTokenprovider.getEmailFromToken(token);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }

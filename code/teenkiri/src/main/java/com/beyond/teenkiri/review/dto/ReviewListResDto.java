@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,8 +14,10 @@ import lombok.NoArgsConstructor;
 public class ReviewListResDto {
     private Long id;
     private String userName;
-    private String lectureTitle;
-    private Long lectureId;
+    private String subjectTitle;
+    private Long subjectId;
     private int rating;
     private String reviewText;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }

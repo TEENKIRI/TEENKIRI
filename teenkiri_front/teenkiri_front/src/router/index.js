@@ -4,6 +4,8 @@ import {createRouter, createWebHistory} from 'vue-router';
 // import 하는 요소가 여러개 있을 때에도 {}를 붙인다.
 // import TestComponent from '@/components/TestComponent.vue';
 import { memberRouter } from './memberRouter';
+import { boardRouter } from './boardRouter';
+
 
 const routes = [
     // {
@@ -20,6 +22,7 @@ const routes = [
     //     component: TestComponent
     // }
     ...memberRouter,
+    ...boardRouter
 ]
 
 

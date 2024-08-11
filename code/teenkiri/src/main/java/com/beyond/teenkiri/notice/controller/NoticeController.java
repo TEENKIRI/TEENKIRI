@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("notice")
+@RequestMapping("board/notice")
 public class NoticeController {
 
     private final NoticeService noticeService;

@@ -34,6 +34,15 @@ public class CommonExceptionHandler {
         CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getFieldError().getDefaultMessage());
         return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
     }
+//    IllegalStateException
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<CommonErrorDto> illegalStateException(IllegalStateException e) {
+        e.getStackTrace();
+        CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ResponseEntity(commonErrorDto, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonErrorDto> runtimeExceptionHandler(RuntimeException e) {

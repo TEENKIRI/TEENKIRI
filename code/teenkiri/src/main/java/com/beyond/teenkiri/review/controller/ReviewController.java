@@ -36,22 +36,21 @@ public class ReviewController {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
-
     @GetMapping("/list")
-    public ResponseEntity<?> getReviews(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<?> reviews = reviewService.getReviews(pageable);
+    public ResponseEntity<?> getReviews(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<?> reviews = reviewService.reviewListResDtos(pageable);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "리뷰 목록입니다.", reviews), HttpStatus.OK);
     }
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<?> getReviewDetail(@PathVariable Long id) {
-        try {
-            Review review = reviewService.getReviewDetail(id);
-            return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "리뷰 상세 조회입니다.", review), HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/detail/{id}")
+//    public ResponseEntity<?> getReviewDetail(@PathVariable Long id) {
+//        try {
+//            Review review = reviewService.getReviewDetail(id);
+//            return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "리뷰 상세 조회입니다.", review), HttpStatus.OK);
+//        } catch (EntityNotFoundException e) {
+//            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateReview(@PathVariable Long id, @RequestBody ReviewUpdateReqDto dto) {

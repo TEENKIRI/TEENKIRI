@@ -2,7 +2,9 @@ package com.beyond.teenkiri.user.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.subject.domain.Subject;
+import com.beyond.teenkiri.user.dto.SubjectInfoDto;
 import com.beyond.teenkiri.user.dto.UserSubjectListResDto;
+import com.beyond.teenkiri.wish.domain.Wish;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,11 +32,14 @@ public class UserSubject extends BaseTimeEntity {
     private Subject subject;
 
 
-    public UserSubjectListResDto listFromEntity(List<String> subjectTitles, int subjectCount){
+//    private List<Subject> subjects;
+
+
+    public UserSubjectListResDto listFromEntity(List<SubjectInfoDto> subjects, int subjectCount) {
         return UserSubjectListResDto.builder()
-                .userEmail(this.user.getEmail())
-                .subjectTitles(subjectTitles)
+                .subjects(subjects)
                 .subjectCount(subjectCount)
                 .build();
     }
+
 }

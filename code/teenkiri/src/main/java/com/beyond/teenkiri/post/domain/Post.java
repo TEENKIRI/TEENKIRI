@@ -27,7 +27,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    private String contents;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -59,7 +59,7 @@ public class Post extends BaseTimeEntity {
         return PostDetailDto.builder()
                 .id(this.getId())
                 .title(this.getTitle())
-                .contents(this.getContents())
+                .content(this.getContent())
                 .nickname(this.user.getNickname())
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
@@ -68,7 +68,7 @@ public class Post extends BaseTimeEntity {
 
     public void toUpdate(PostUpdateDto dto,  String imageUrl) {
         this.title = dto.getTitle();
-        this.contents = dto.getContents();
+        this.content = dto.getContent();
         this.imageUrl = imageUrl;
 
     }
