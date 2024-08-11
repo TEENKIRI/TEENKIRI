@@ -58,8 +58,9 @@ public class Lecture extends BaseTimeEntity {
         this.imageUrl = imagePath;
     }
 
-    public void updateVideoPath(String videoPath){
+    public void updateVideoPath(String videoPath,Integer videoDuration ){
         this.videoUrl = videoPath;
+        this.videoDuration = videoDuration;
     }
 
     public LectureListResDto fromListEntity() {
@@ -101,15 +102,9 @@ public class Lecture extends BaseTimeEntity {
                 .build();
     }
 
-    public void toUpdate(LectureUpdateReqDto dto, String videoUrl, String imageUrl) {
+    public void toUpdate(LectureUpdateReqDto dto) {
         if(!this.title.equals(dto.getTitle())){
             this.title = dto.getTitle();
-        }
-        if(!this.videoUrl.equals(videoUrl)){
-            this.videoUrl = videoUrl;
-        }
-        if(!this.imageUrl.equals(imageUrl)){
-            this.imageUrl = imageUrl;
         }
     }
 
