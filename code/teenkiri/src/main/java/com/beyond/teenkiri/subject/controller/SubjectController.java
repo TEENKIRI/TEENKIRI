@@ -66,9 +66,10 @@ public class SubjectController {
 
 
     //    강좌 업데이트
-    @PatchMapping("/subject/update")
-    public ResponseEntity<?> subjectUpdate(SubjectUpdateReqDto dto){
-        Long subjectId = subjectService.subjectUpdate(dto);
+    @PatchMapping("/subject/update/{id}")
+    public ResponseEntity<?> subjectUpdate(@PathVariable(value = "id") Long id, SubjectUpdateReqDto dto,
+                                           @RequestPart(value = "subjectThum", required = false) MultipartFile subjectThum){
+        Long subjectId = subjectService.subjectUpdate(id, dto, subjectThum);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "complete subject update",subjectId);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }

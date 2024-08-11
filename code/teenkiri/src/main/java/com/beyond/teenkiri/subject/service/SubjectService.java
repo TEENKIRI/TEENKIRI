@@ -95,17 +95,49 @@ public class SubjectService {
     }
 
     //    강좌 업데이트 및 DB 저장
-    public Long subjectUpdate(SubjectUpdateReqDto dto){
-        return null;
+    public Long subjectUpdate(Long id, SubjectUpdateReqDto dto, MultipartFile subjectThum){
+        Subject subject = findSubjectById(id); // 강좌찾기
+
+//        연결 할 정보들 유무 검색
+        User user = userService.findByEmail(dto.getUserTeacherEmail());
+        Course course = courseService.findByIdRequired(dto.getCourseId());
+
+        try {
+            MultipartFile imageFile = subjectThum;
+            if(!imageFile.isEmpty()){
+                String bgImagePathFileName = subject.getId() + "_"  + imageFile.getOriginalFilename();
+                byte[] bgImagePathByte =  imageFile.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                subject.updateImagePath(s3ImagePath);
+            }
+        }catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패");
+        }
+
+        subject.toUpdate(dto, user, course);
+        return subject.getId();
+    }
+
+
+    public Long subjectDelete(Long id){
+        Subject subject = subjectRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("존재하지 않는 강좌입니다."));
+        subject.updateDelYn(DelYN.Y);
+        return subject.getId();
     }
 
     //    강좌 삭제 및 DB 저장
-    public Long subjectDelete(Long id){
-        return null;
-    }
-
     public Long subjectDeleteDeep(Long id){
-        return null;
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 강의입니다."));
+
+
+        if (subject.getLectures().isEmpty()) { // 연결되어있는 강의가 없는 경우
+            subjectRepository.deleteById(subject.getId());
+            return id;
+        } else { // 연결되어있는 강의가 존재하는 경우
+            throw new RuntimeException("연결되어있는 강의가 존재하여 삭제하실 수 없습니다.");
+        }
     }
 
 

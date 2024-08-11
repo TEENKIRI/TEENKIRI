@@ -127,7 +127,6 @@ public class LectureService {
 
         try {
             MultipartFile imageFile = image;
-
             if(!imageFile.isEmpty()){
                 String bgImagePathFileName = lecture.getId() + "_"  + imageFile.getOriginalFilename();
                 byte[] bgImagePathByte =  imageFile.getBytes();
@@ -140,40 +139,49 @@ public class LectureService {
                 String bgImagePathFileName = lecture.getId() + "_"  + videoFile.getOriginalFilename();
                 byte[] bgImagePathByte =  videoFile.getBytes();
                 String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
-                lecture.updateVideoPath(s3ImagePath);
+                lecture.updateVideoPath(s3ImagePath, dto.getVideoDuration());
             }
         }catch (IOException e) {
             throw new RuntimeException("파일 저장 실패");
         }
         return lecture;
-//        Path imagePath = commonMethod.fileSave(image, lecture.getId());
-//        Path videoPath = commonMethod.fileSave(video, lecture.getId());
-//        if(imagePath != null){
-//            lecture.updateImagePath(imagePath.toString());
-//        }
-//        if(videoPath != null){
-//            lecture.updateVideoPath(videoPath.toString());
-//        }
     }
 
     //    강의 업데이트
-    public Lecture lectureUpdate(LectureUpdateReqDto dto){
+    public Lecture lectureUpdate(LectureUpdateReqDto dto, MultipartFile video, MultipartFile image){
         Lecture lecture = lectureRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
 
-        MultipartFile image = dto.getImage();
-        MultipartFile video = dto.getVideo();
-        Path imagePath = commonMethod.fileSave(image, lecture.getId());
-        Path videoPath = commonMethod.fileSave(video, lecture.getId());
-        String imageUrl = "", videoUrl = "";
-        if(imagePath != null){
-            imageUrl = imagePath.toString();
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+
+        Subject subject = subjectService.findSubjectById(lecture.getSubject().getId());
+
+        if(user.getRole() == Role.TEACHER && !Objects.equals(subject.getUserTeacher().getId(), user.getId())){
+            throw new RuntimeException("연결되지 않은 선생님입니다. 강의를 업로드하실 수 없습니다.");
         }
-        if(videoPath != null){
-            videoUrl = videoPath.toString();
+
+        try {
+            MultipartFile imageFile = image;
+            if(!imageFile.isEmpty()){
+                String bgImagePathFileName = lecture.getId() + "_lectureImage_"  + imageFile.getOriginalFilename();
+                byte[] bgImagePathByte =  imageFile.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                lecture.updateImagePath(s3ImagePath);
+            }
+
+            MultipartFile videoFile = video;
+            if(!videoFile.isEmpty()){
+                String bgImagePathFileName = lecture.getId() + "_lectureVideo_"  + videoFile.getOriginalFilename();
+                byte[] bgImagePathByte =  videoFile.getBytes();
+                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                lecture.updateVideoPath(s3ImagePath, dto.getVideoDuration());
+            }
+        }catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패");
         }
-        lecture.toUpdate(dto, videoUrl ,imageUrl);
-        lectureRepository.save(lecture);
+
+        lecture.toUpdate(dto);
         return lecture;
     }
 

@@ -85,11 +85,11 @@ public class LectureSsrController {
 
 
     //    강의 업데이트
-    @PatchMapping("/lecture/update/{id}")
-    public String lectureUpdate(LectureUpdateReqDto dto){
-        Lecture lecture = lectureService.lectureUpdate(dto);
-        return "lecture/detail/" + lecture.getId();
-    }
+//    @PatchMapping("/lecture/update/{id}")
+//    public String lectureUpdate(LectureUpdateReqDto dto){
+//        Lecture lecture = lectureService.lectureUpdate(dto);
+//        return "lecture/detail/" + lecture.getId();
+//    }
 
 
     //    강의 삭제
