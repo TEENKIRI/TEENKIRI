@@ -12,9 +12,13 @@ import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -223,4 +227,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public Page<UserListDto> userList(Pageable pageable){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+        if (!user.getRole().toString().equals("ADMIN")){
+            System.out.println("접근권한없음");
+            throw new SecurityException("접근권한이 없습니다.");
+        }
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(a-> a.listFromEntity());
+    }
 }
