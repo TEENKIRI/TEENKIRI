@@ -6,6 +6,7 @@ import router from '@/router/index.js'
 import vuetify from './plugins/vuetify';
 import '@mdi/font/css/materialdesignicons.css'
 import axios from 'axios';
+import "@/assets/css/font.css";
 
 // createApp(App).mount('#app')
 const app = createApp(App);
