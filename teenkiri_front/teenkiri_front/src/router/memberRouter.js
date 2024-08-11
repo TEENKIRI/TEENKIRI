@@ -31,10 +31,10 @@ export const memberRouter = [
         name: 'UserList',
         component: UserList
     },
-]
-        path: '/user/reset-password',
-        name: 'ResetPasswordPage',
-        component: ResetPasswordPage,
-        props: route => ({ token: route.query.token }) // URL에서 token 쿼리 파라미터를 가져와 props로 전달
-    },
+    {
+    path: '/user/reset-password',
+    name: 'ResetPasswordPage',
+    component: ResetPasswordPage,
+    props: route => ({ token: route.query.token }) // URL에서 token 쿼리 파라미터를 가져와 props로 전달
+    }
 ]
