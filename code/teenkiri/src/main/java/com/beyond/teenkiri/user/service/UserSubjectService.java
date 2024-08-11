@@ -5,6 +5,7 @@ import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.service.SubjectService;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
+import com.beyond.teenkiri.user.dto.SubjectInfoDto;
 import com.beyond.teenkiri.user.dto.UserSubjectListResDto;
 import com.beyond.teenkiri.user.dto.UserSubjectSaveReqDto;
 import com.beyond.teenkiri.user.repository.UserSubjectRepository;
@@ -43,22 +44,26 @@ public class UserSubjectService {
     }
 
 
-    // 타이틀, 선생님 이름, 강좌 썸네일, (찜 여부)
+    // 타이틀, 선생님 이름, 강좌 썸네일,
     public UserSubjectListResDto getUserSubjects() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<UserSubject> userSubjects = userSubjectRepository.findByUserEmail(userEmail);
 
-        List<String> subjectTitles = userSubjects.stream()
-                .map(us -> us.getSubject().getTitle())
+        List<SubjectInfoDto> subjects = userSubjects.stream()
+                .map(us -> SubjectInfoDto.builder()
+                        .title(us.getSubject().getTitle())
+                        .teacherName(us.getSubject().getUserTeacher().getName())
+                        .subjectThumUrl(us.getSubject().getSubjectThumUrl())
+                        .build())
                 .collect(Collectors.toList());
+
+        int subjectCount = userSubjects.size();
+        return userSubjects.isEmpty() ? null : userSubjects.get(0).listFromEntity(subjects, subjectCount);
+    }
         // 위 코드는 아래 코드를 스트림으로 쓴 것입니다.
 //        List<String> subjectTitles = new ArrayList<>();
 //        for (UserSubject userSubject : userSubjects) {
 //            String title = userSubject.getSubject().getTitle();
 //            subjectTitles.add(title);
 //        }
-
-        int subjectCount = userSubjects.size();
-        return userSubjects.isEmpty() ? null : userSubjects.get(0).listFromEntity(subjectTitles, subjectCount);
-    }
 }

@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSubjectListResDto {
-    private List<SubjectInfoDto> subjects;
-    private int subjectCount;
+public class SubjectInfoDto {
+    private String title;
+    private String teacherName;
+    private String subjectThumUrl;
 }
