@@ -10,15 +10,19 @@ import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.service.UserService;
 import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -244,5 +248,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/list")
+    public ResponseEntity<Object> userList(Pageable pageable){
+        Page<UserListDto> userListDtos = userService.userList(pageable);
+        CommonResDto dto = new CommonResDto(HttpStatus.OK,"회원목록을 조회합니다.", userListDtos);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

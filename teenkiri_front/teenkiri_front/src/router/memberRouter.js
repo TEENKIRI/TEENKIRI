@@ -2,6 +2,7 @@ import UserCreate from "@/views/UserCreate.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import FindIdPage from "@/views/FindIdPage.vue";
 import FindPasswordPage from "@/views/FindPasswordPage.vue";
+import UserList from "@/views/UserList.vue";
 import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
 
 export const memberRouter = [
@@ -26,6 +27,11 @@ export const memberRouter = [
         component: FindPasswordPage
     },
     {
+        path: '/user/list',
+        name: 'UserList',
+        component: UserList
+    },
+]
         path: '/user/reset-password',
         name: 'ResetPasswordPage',
         component: ResetPasswordPage,

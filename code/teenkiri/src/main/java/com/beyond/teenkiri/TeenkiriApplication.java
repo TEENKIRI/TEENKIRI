@@ -1,4 +1,3 @@
-
 package com.beyond.teenkiri;
 
 import org.springframework.boot.SpringApplication;
