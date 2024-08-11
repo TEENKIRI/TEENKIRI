@@ -64,7 +64,7 @@ export default {
     goToMember() {
       if (this.isLogin) {
         // 로그인된 상태에서 사용자가 클릭할 때
-        this.$router.push('/member-profile'); // 로그인 후 이동할 페이지
+        this.$router.push('/user/edit-info'); // 로그인 후 이동할 페이지
       } else {
         // 로그인되지 않은 상태에서 사용자가 클릭할 때
         this.$router.push('/login'); // 로그인 페이지로 이동

@@ -103,7 +103,7 @@ export default {
           this.$router.push("/find-password");
       },
       signUp() {
-          this.$router.push("/register");
+          this.$router.push("/user/create");
       },
   },
 };

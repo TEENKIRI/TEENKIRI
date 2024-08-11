@@ -4,6 +4,7 @@ import FindIdPage from "@/views/FindIdPage.vue";
 import FindPasswordPage from "@/views/FindPasswordPage.vue";
 import UserList from "@/views/UserList.vue";
 import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
+import UpdateUserInfo from "@/views/UpdateUserInfo.vue";
 
 export const memberRouter = [
     {
@@ -36,5 +37,10 @@ export const memberRouter = [
     name: 'ResetPasswordPage',
     component: ResetPasswordPage,
     props: route => ({ token: route.query.token }) // URL에서 token 쿼리 파라미터를 가져와 props로 전달
-    }
+    },
+    {
+        path: '/user/edit-info',
+        name: 'UpdateUserInfo',
+        component: UpdateUserInfo
+    },
 ]
