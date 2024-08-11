@@ -26,7 +26,7 @@ public class LectureSaveReqDto {
         return Lecture.builder()
                 .title(this.title)
                 .subject(subject)
-                .videoDuration(this.videoDuration)
+//                .videoDuration(this.videoDuration) // video 업데이트 영역에서 한번에 진행
                 .build();
     }
 }

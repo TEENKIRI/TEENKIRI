@@ -57,8 +57,10 @@ public class UserService {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
+        // userId를 추가 인자로 전달하여 토큰 생성
+        return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
     }
+
 
     public String getEmailFromToken(String token) {
         return jwtTokenprovider.getEmailFromToken(token);
@@ -66,12 +68,13 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
     }
 
     public String findId(UserFindIdDto findIdDto) {
         User user = userRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone())
-                .orElseThrow(() -> new RuntimeException("없는 사용자 입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("없는 사용자 입니다."));
+
         return maskEmail(user.getEmail());
     }
 
@@ -84,12 +87,17 @@ public class UserService {
         User user = userRepository.findByNameAndPhoneAndEmail(findPasswordDto.getName(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
-        String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
+        // userId를 추가 인자로 전달하여 토큰 생성
+        String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
+
+        // Redis에 저장 (필요한 경우)
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
-        String resetLink = "http://localhost:8088/user/reset-password?token=" + resetToken;
+        // 이메일 전송
+        String resetLink = "http://localhost:8082/user/reset-password?token=" + resetToken;
         emailService.sendSimpleMessage(findPasswordDto.getEmail(), "비밀번호 재설정", "비밀번호 재설정 링크: " + resetLink);
     }
+
 
     public void resetPassword(PasswordResetDto passwordResetDto) {
         String email = jwtTokenprovider.getEmailFromToken(passwordResetDto.getToken());

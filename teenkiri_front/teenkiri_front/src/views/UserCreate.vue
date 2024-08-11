@@ -197,9 +197,11 @@ export default {
           nickname: this.nickname,
           phone: this.phone,
           birthDate: this.birthDate,
-          city: this.city,             // 주소 필드
-          street: this.street,         // 상세주소 필드
-          zipcode: this.zipcode,       // 우편번호 필드 추가
+          address: {
+            city: this.city,
+            street: this.street,
+            zipcode: this.zipcode
+          },      
           agree1: this.agree1,
           agree2: this.agree2,
         };
