@@ -74,7 +74,7 @@
               </v-text-field>
               <v-text-field
                 label="핸드폰번호"
-                v-model="phoneNumber"
+                v-model="phone"
                 prepend-icon="mdi-phone"
                 required
               ></v-text-field>
@@ -86,12 +86,17 @@
               ></v-text-field>
               <v-text-field
                 label="주소"
-                v-model="address"
+                v-model="city"
                 prepend-icon="mdi-home"
               ></v-text-field>
               <v-text-field
                 label="상세주소"
-                v-model="detailAddress"
+                v-model="street"
+                prepend-icon="mdi-home-outline"
+              ></v-text-field>
+              <v-text-field
+                label="우편번호"
+                v-model="zipcode"
                 prepend-icon="mdi-home-outline"
               ></v-text-field>
               <v-checkbox
@@ -126,10 +131,11 @@ export default {
       passwordConfirm: "",
       name: "",
       nickname: "",
-      phoneNumber: "",
+      phone: "",
       birthDate: "",
-      address: "",
-      detailAddress: "",
+      city: "",
+      street: "",
+      zipcode: "",        // 추가된 우편번호 필드
       agree1: false,
       agree2: false,
       showPassword: false,
@@ -189,10 +195,11 @@ export default {
           password: this.password,
           name: this.name,
           nickname: this.nickname,
-          phoneNumber: this.phoneNumber,
+          phone: this.phone,
           birthDate: this.birthDate,
-          address: this.address,
-          detailAddress: this.detailAddress,
+          city: this.city,             // 주소 필드
+          street: this.street,         // 상세주소 필드
+          zipcode: this.zipcode,       // 우편번호 필드 추가
           agree1: this.agree1,
           agree2: this.agree2,
         };

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("post")
+@RequestMapping("board/post")
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
