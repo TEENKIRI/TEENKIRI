@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     Optional<Wish> findByUserAndSubject(User user, Subject subject);
     List<Wish> findByUser(User user);
+
 }

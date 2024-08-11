@@ -4,6 +4,7 @@ import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.dto.SubjectInfoDto;
 import com.beyond.teenkiri.user.dto.UserSubjectListResDto;
+import com.beyond.teenkiri.wish.domain.Wish;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class UserSubject extends BaseTimeEntity {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
+
 //    private List<Subject> subjects;
 
 
@@ -39,4 +41,5 @@ public class UserSubject extends BaseTimeEntity {
                 .subjectCount(subjectCount)
                 .build();
     }
+
 }

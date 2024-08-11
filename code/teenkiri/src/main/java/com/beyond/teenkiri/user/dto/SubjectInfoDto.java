@@ -13,4 +13,7 @@ public class SubjectInfoDto {
     private String title;
     private String teacherName;
     private String subjectThumUrl;
+
+    @Builder.Default
+    private boolean isFavorite = true;
 }
