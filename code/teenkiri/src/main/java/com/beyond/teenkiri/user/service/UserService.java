@@ -85,7 +85,7 @@ public class UserService {
         String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
-        String resetLink = "http://localhost:8088/user/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:8082/user/reset-password?token=" + resetToken;
         emailService.sendSimpleMessage(findPasswordDto.getEmail(), "비밀번호 재설정", "비밀번호 재설정 링크: " + resetLink);
     }
 
