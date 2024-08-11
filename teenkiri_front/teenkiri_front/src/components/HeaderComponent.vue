@@ -41,7 +41,9 @@ export default {
   },
   methods: {
     navigate(section) {
-      if (section === '이벤트') {
+      if (section === '강좌') {
+        this.$router.push({ name: 'SubjectList', params: { category: 'subject' } });
+      } else if (section === '이벤트') {
         this.$router.push({ name: 'BoardList', params: { category: 'event' } });
       } else if (section === '공지사항') {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
