@@ -1,4 +1,4 @@
-import SubjectList from "@/views/SubjectList.vue";
+import SubjectList from "@/views/subject/SubjectList.vue";
 
 export const subjectRouter = [
     {
