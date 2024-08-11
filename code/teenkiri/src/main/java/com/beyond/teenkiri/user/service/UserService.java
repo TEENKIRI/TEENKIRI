@@ -203,10 +203,13 @@ public class UserService {
             if (!filteredNickname.equals(editReqDto.getNickname())) {
                 throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
             }
-            if (userRepository.existsByNickname(editReqDto.getNickname())) {
-                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+            // 닉네임이 변경된 경우에만 중복 검사를 수행
+            if (!user.getNickname().equals(editReqDto.getNickname())) {
+                if (userRepository.existsByNickname(editReqDto.getNickname())) {
+                    throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+                }
+                user.setNickname(editReqDto.getNickname());
             }
-            user.setNickname(editReqDto.getNickname());
         }
 
         if (editReqDto.getAddress() != null) {
@@ -228,7 +231,8 @@ public class UserService {
 
 
     public void updateUserInfo(String username, UserEditReqDto editReqDto) {
-        User user = userRepository.findByEmail(username)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         updateUserDetails(user, editReqDto);
