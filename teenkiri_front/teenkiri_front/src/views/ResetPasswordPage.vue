@@ -48,14 +48,12 @@ export default {
   methods: {
     async resetPassword() {
       if (this.newPassword.length <= 7) {
-        this.errorMessage = '비밀번호는 8자 이상이어야 합니다.';
-        this.successMessage = '';
+        window.alert('비밀번호는 8자 이상이어야 합니다.');
         return;
       }
 
       if (this.newPassword !== this.confirmPassword) {
-        this.errorMessage = '비밀번호가 일치하지 않습니다.';
-        this.successMessage = '';
+        window.alert('비밀번호가 일치하지 않습니다.');
         return;
       }
 
@@ -70,20 +68,18 @@ export default {
         );
 
         if (response.status === 200) {
-          this.successMessage = '비밀번호가 재설정되었습니다.';
-          this.errorMessage = '';
+          window.alert('비밀번호가 재설정되었습니다.');
         } else {
-          this.errorMessage = `비밀번호 재설정에 실패했습니다: ${response.data?.message || 'Unknown error occurred'}`;
-          this.successMessage = '';
+          window.alert(`비밀번호 재설정에 실패했습니다: ${response.data?.message || 'Unknown error occurred'}`);
         }
       } catch (e) {
-        this.errorMessage = `비밀번호 재설정에 실패했습니다: ${e.response?.data?.message || 'Unknown error occurred'}`;
-        this.successMessage = '';
+        window.alert(`비밀번호 재설정에 실패했습니다: ${e.response?.data?.message || 'Unknown error occurred'}`);
       }
     }
   }
 };
 </script>
+
 
 <style scoped>
 body {

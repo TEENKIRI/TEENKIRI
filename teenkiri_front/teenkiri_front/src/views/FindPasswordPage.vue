@@ -35,8 +35,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
-    <v-alert v-if="successMessage" type="success">{{ successMessage }}</v-alert>
   </v-container>
 </template>
 
@@ -71,13 +69,12 @@ export default {
           }
         );
 
-        this.successMessage = '비밀번호 재설정 링크가 이메일로 발송되었습니다.';
+        alert('비밀번호 재설정 링크가 이메일로 발송되었습니다.');
         this.errorMessage = "";
         console.log(response);
       } catch (e) {
-        console.log(e.response);
-        this.errorMessage = e.response?.data?.status_message || '알 수 없는 오류가 발생했습니다.';
-        console.log(this.errorMessage);
+        const errorMessage = e.response?.data?.status_message || '알 수 없는 오류가 발생했습니다.';
+        alert(errorMessage);
         this.successMessage = "";
       }
     }
