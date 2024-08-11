@@ -195,6 +195,11 @@ public class LectureService {
     public Long lectureDeleteDeep(Long id){
         Lecture lecture = lectureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("없는 강의입니다."));
+        Integer enrollmentCount = enrollmentService.findCountByLectureId(lecture.getId());
+        if(enrollmentCount > 0){
+            throw new RuntimeException("이미 수강한 학생이 존재하여 삭제하실 수 없습니다.");
+        }
+
         lectureRepository.deleteById(lecture.getId());
         return id;
     }
