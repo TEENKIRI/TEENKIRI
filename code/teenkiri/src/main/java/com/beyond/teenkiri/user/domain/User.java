@@ -29,8 +29,6 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-
-
     @Column(nullable = false, length = 20, unique = true)
     private String phone;
 
@@ -72,6 +70,5 @@ public class User extends BaseTimeEntity {
         this.isVerified = isVerified;
         this.reportCount = reportCount;
         this.delYN = DelYN.N;
-
     }
 }

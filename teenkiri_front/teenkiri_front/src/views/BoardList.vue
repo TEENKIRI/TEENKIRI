@@ -1,7 +1,7 @@
 <template>
   <div class="board-container">
     <h1 class="board-title">{{ boardTitle }}</h1>
-    <h2 v-if="isAdmin || category === 'post'">
+    <h2 v-if="isAdmin">
       <button class="create-button" @click="createNewPost">게시글 작성</button>
     </h2>
     <table class="board-table">
@@ -11,7 +11,7 @@
           <th>제목</th>
           <th>작성자</th>
           <th>작성일</th>
-          <th>관리</th>
+          <th v-if="isAdmin">관리</th>
         </tr>
       </thead>
       <tbody>
@@ -20,7 +20,7 @@
           <td @click="goToDetail(item.id, category)" class="clickable">{{ item.title }}</td>
           <td>{{ item.nickname }}</td>
           <td>{{ formatDate(item.createdTime) }}</td>
-          <td v-if="canEditOrDelete(item)" class="control">
+          <td v-if="isAdmin" class="control">
             <button @click="updateItem(item.id, category)">수정</button>
             <button @click="deleteItem(item.id, category)">삭제</button>
           </td>
@@ -46,7 +46,6 @@ export default {
       totalPages: 1, // 총 페이지 수
       itemsPerPage: 10, // 페이지당 항목 수
       isAdmin: false, // 관리자인지 여부
-      userId: null, // 현재 로그인된 사용자의 ID
       category: '', // 현재 게시판 종류
       boardTitle: '', // 게시판 제목
     };
@@ -57,7 +56,6 @@ export default {
   created() {
     this.checkAdminRole();
     this.fetchBoardItems(); // 컴포넌트 생성 시 게시글 목록을 가져옴
-    this.userId = localStorage.getItem('userId'); // 로컬스토리지에서 userId 가져오기
   },
   methods: {
     checkAdminRole() {
@@ -129,16 +127,18 @@ export default {
       this.fetchBoardItems();
     },
     createNewPost() {
-      if (this.category !== 'post' && !this.isAdmin) {
-        alert('관리자만 이 게시판에 글을 작성할 수 있습니다.');
+      if (!this.isAdmin) {
+        alert('관리자만 글을 작성할 수 있습니다.');
         return;
       }
       this.$router.push({ name: 'BoardCreate', params: { category: this.category } });
     },
     goToDetail(id, category) {
+      // 카테고리와 ID에 맞게 상세 페이지로 이동
       this.$router.push({ name: 'BoardDetail', params: { category, id } });
     },
     updateItem(id, category) {
+      // 카테고리와 ID에 맞게 수정 페이지로 이동
       this.$router.push({ name: 'BoardUpdate', params: { category, id } });
     },
     async deleteItem(id, category) {
@@ -164,11 +164,6 @@ export default {
         console.error('게시글을 삭제하는 데 실패했습니다:', error);
         alert('게시글 삭제에 실패했습니다.');
       }
-    },
-    canEditOrDelete(item) {
-      console.log(item)
-      // Admin이거나, 게시글 작성자가 현재 로그인한 사용자와 동일한 경우에만 true
-      return this.isAdmin || (item.user_id === parseInt(this.userId, 10) && this.category === 'post');
     },
   },
 };

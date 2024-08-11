@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostDetailDto {
     private Long id;
-    private Long user_id;
     private String title;
     private String content;
     private String nickname;
