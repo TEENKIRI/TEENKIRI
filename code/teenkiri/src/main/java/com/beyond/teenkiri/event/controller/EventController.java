@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("event")
+@RequestMapping("board/event")
 public class EventController {
 
     private final EventService eventService;

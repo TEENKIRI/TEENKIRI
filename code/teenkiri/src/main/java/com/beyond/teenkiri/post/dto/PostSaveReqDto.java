@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class PostSaveReqDto {
     private String title;
-    private String contents;
+    private String content;
     private String userEmail;
     private String nickname;
     @Builder.Default
@@ -28,7 +28,7 @@ public class PostSaveReqDto {
     public Post toEntity(){
         return Post.builder()
                 .title(this.title)
-                .contents(this.contents)
+                .content(this.content)
                 .delYN(this.delYN)
                 .user(this.user)
                 .build();

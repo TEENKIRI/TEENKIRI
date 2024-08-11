@@ -1,6 +1,6 @@
 <template>
   <div class="board-container">
-    <h1 class="board-title">이벤트</h1>
+    <h1 class="board-title">{{ boardTitle }}</h1>
     <h2 v-if="isAdmin">
       <button class="create-button" @click="createNewPost">게시글 작성</button>
     </h2>
@@ -17,12 +17,12 @@
       <tbody>
         <tr v-for="(item, index) in boardItems" :key="item.id">
           <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
-          <td @click="goToDetail(item.id)" class="clickable">{{ item.title }}</td>
+          <td @click="goToDetail(item.id, category)" class="clickable">{{ item.title }}</td>
           <td>{{ item.nickname }}</td>
           <td>{{ formatDate(item.createdTime) }}</td>
           <td v-if="isAdmin" class="control">
-            <button @click="editItem(item.id)">수정</button>
-            <button @click="deleteItem(item.id)">삭제</button>
+            <button @click="updateItem(item.id, category)">수정</button>
+            <button @click="deleteItem(item.id, category)">삭제</button>
           </td>
         </tr>
       </tbody>
@@ -41,16 +41,21 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      boardItems: [], // 이벤트 공지 리스트
+      boardItems: [], // 게시글 목록 데이터
       currentPage: 1, // 현재 페이지 번호
       totalPages: 1, // 총 페이지 수
-      itemsPerPage: 10, // 페이지당 항목 수 (백엔드의 @PageableDefault와 일치시켜야 함)
+      itemsPerPage: 10, // 페이지당 항목 수
       isAdmin: false, // 관리자인지 여부
+      category: '', // 현재 게시판 종류
+      boardTitle: '', // 게시판 제목
     };
+  },
+  watch: {
+    '$route.params.category': 'fetchBoardItems', // category가 변경될 때마다 fetchBoardItems 호출
   },
   created() {
     this.checkAdminRole();
-    this.fetchEvents(); // 컴포넌트 생성 시 이벤트 목록을 가져옴
+    this.fetchBoardItems(); // 컴포넌트 생성 시 게시글 목록을 가져옴
   },
   methods: {
     checkAdminRole() {
@@ -59,9 +64,24 @@ export default {
         this.isAdmin = true;
       }
     },
-    async fetchEvents() {
+    async fetchBoardItems() {
+      this.category = this.$route.params.category;
+      this.setBoardTitle();
+
+      let apiUrl = '';
+      if (this.category === 'event') {
+        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/list`;
+      } else if (this.category === 'notice') {
+        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/list`;
+      } else if (this.category === 'post') {
+        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/list`;
+      } else {
+        console.error('잘못된 카테고리입니다.');
+        return;
+      }
+
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/event/list`, {
+        const response = await axios.get(apiUrl, {
           params: {
             page: this.currentPage - 1, // 페이지 번호 (0부터 시작)
             size: this.itemsPerPage, // 페이지당 항목 수
@@ -71,8 +91,19 @@ export default {
         this.boardItems = data.content;
         this.totalPages = data.totalPages;
       } catch (error) {
-        console.error('이벤트 목록을 가져오는 데 실패했습니다:', error);
-        alert('이벤트 목록을 가져오는 데 실패했습니다.');
+        console.error('목록을 가져오는 데 실패했습니다:', error);
+        alert('목록을 가져오는 데 실패했습니다.');
+      }
+    },
+    setBoardTitle() {
+      if (this.category === 'event') {
+        this.boardTitle = '이벤트 게시판';
+      } else if (this.category === 'notice') {
+        this.boardTitle = '공지사항 게시판';
+      } else if (this.category === 'post') {
+        this.boardTitle = '자유게시판';
+      } else {
+        this.boardTitle = '게시판';
       }
     },
     formatDate(date) {
@@ -82,42 +113,56 @@ export default {
     goToPreviousPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
-        this.fetchEvents();
+        this.fetchBoardItems();
       }
     },
     goToNextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
-        this.fetchEvents();
+        this.fetchBoardItems();
       }
     },
     goToPage(page) {
       this.currentPage = page;
-      this.fetchEvents();
+      this.fetchBoardItems();
     },
     createNewPost() {
       if (!this.isAdmin) {
         alert('관리자만 글을 작성할 수 있습니다.');
         return;
       }
-      this.$router.push({ name: 'BoardCreate' });
+      this.$router.push({ name: 'BoardCreate', params: { category: this.category } });
     },
-    goToDetail(id) {
-      this.$router.push({ name: 'BoardDetail', params: { id } });
+    goToDetail(id, category) {
+      // 카테고리와 ID에 맞게 상세 페이지로 이동
+      this.$router.push({ name: 'BoardDetail', params: { category, id } });
     },
-    editItem(id) {
-      this.$router.push({ name: 'BoardUpdate', params: { id } });
+    updateItem(id, category) {
+      // 카테고리와 ID에 맞게 수정 페이지로 이동
+      this.$router.push({ name: 'BoardUpdate', params: { category, id } });
     },
-    async deleteItem(id) {
-      if (confirm('정말 삭제하시겠습니까?')) {
-        try {
-          await axios.get(`${process.env.VUE_APP_API_BASE_URL}/event/delete/${id}`);
-          alert('게시글이 성공적으로 삭제되었습니다.');
-          this.fetchEvents(); // 목록을 새로 고침하여 삭제된 항목을 반영합니다.
-        } catch (error) {
-          console.error('게시글 삭제에 실패했습니다:', error);
-          alert('게시글 삭제에 실패했습니다.');
+    async deleteItem(id, category) {
+      try {
+        const confirmed = confirm('이 게시글을 삭제하시겠습니까?');
+        if (confirmed) {
+          let apiUrl;
+          if (category === 'event') {
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/delete/${id}`;
+          } else if (category === 'notice') {
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/delete/${id}`;
+          } else if (category === 'post') {
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/delete/${id}`;
+          } else {
+            throw new Error('잘못된 카테고리입니다.');
+          }
+
+          await axios.get(apiUrl);
+          alert('게시글이 삭제되었습니다.');
+          this.fetchBoardItems(); // 삭제 후 목록을 다시 로드
         }
+      } catch (error) {
+        console.error('게시글을 삭제하는 데 실패했습니다:', error);
+        alert('게시글 삭제에 실패했습니다.');
       }
     },
   },
@@ -142,7 +187,8 @@ export default {
   margin-bottom: 20px;
 }
 
-.board-table th, .board-table td {
+.board-table th,
+.board-table td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: left;

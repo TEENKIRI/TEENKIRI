@@ -1,14 +1,14 @@
 
-import EventBoard from "@/views/EventBoard.vue";
+import BoardList from "@/views/BoardList.vue";
 import BoardCreate from "@/views/BoardCreate.vue";
 import BoardUpdate from "@/views/BoardUpdate.vue";
 import BoardDetail from "@/views/BoardDetail.vue";
 
 export const boardRouter = [
     {
-        path: '/board/event',
-        name: 'EventBoard',
-        component: EventBoard
+        path: '/board/:category/list',
+        name: 'BoardList',
+        component: BoardList
     },
     {
         path: '/board/create',
@@ -16,12 +16,13 @@ export const boardRouter = [
         component: BoardCreate,
     },
     {
-        path: '/board/Update/:id',
+        path: '/board/update/:category/:id',
         name: 'BoardUpdate',
-        component: BoardUpdate,
+        component: BoardUpdate
     },
+      
     {
-        path: '/board/Detail/:id',
+        path: '/board/Detail/:category/:id',
         name: 'BoardDetail',
         component: BoardDetail,
     },

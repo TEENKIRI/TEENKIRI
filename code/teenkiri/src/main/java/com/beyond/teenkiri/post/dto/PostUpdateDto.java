@@ -16,6 +16,6 @@ import java.time.LocalDateTime;
 public class PostUpdateDto {
     private String userEmail;
     private String title;
-    private String contents;
+    private String content;
     private MultipartFile image;
 }

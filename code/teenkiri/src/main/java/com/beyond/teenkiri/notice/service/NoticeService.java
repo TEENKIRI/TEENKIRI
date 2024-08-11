@@ -51,24 +51,39 @@ public class NoticeService {
         if (user.getRole() != Role.ADMIN) {
             throw new SecurityException("권한이 없습니다.");
         }
+
+        // 이미지가 전달되지 않았으면 DTO에서 가져옴
         MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
+
+        // Notice 엔티티 생성
         Notice notice = dto.toEntity();
-        try {
-            MultipartFile imageFile = image;
-            if (!imageFile.isEmpty()) {
-                String bgImagePathFileName = notice.getId() + "_" + imageFile.getOriginalFilename();
-                byte[] bgImagePathByte = imageFile.getBytes();
-                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                notice.updateImagePath(s3ImagePath);
+
+        // 이미지가 존재하고 비어있지 않을 경우 처리
+        if (image != null && !image.isEmpty()) {
+            try {
+                String originalFilename = image.getOriginalFilename();
+                if (originalFilename != null && !originalFilename.isEmpty()) {
+                    String bgImagePathFileName = notice.getId() + "_" + originalFilename;
+                    byte[] bgImagePathByte = image.getBytes();
+
+                    // S3에 파일 업로드 후 경로 설정
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                    notice.updateImagePath(s3ImagePath);
+                } else {
+                    throw new IllegalArgumentException("이미지 파일 이름이 유효하지 않습니다.");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("파일 저장에 실패했습니다.", e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("파일 저장에 실패했습니다.");
         }
-        // Notice 엔티티 생성 및 User 설정
+
+        // Notice 엔티티에 작성자 설정
         notice.setUser(user);
+
         // Notice 엔티티를 데이터베이스에 저장
         return noticeRepository.save(notice);
     }
+
 
 
 
@@ -84,29 +99,40 @@ public class NoticeService {
     }
 
     @Transactional
-    public void noticeUpdate(Long id, NoticeUpdateDto dto, MultipartFile imageSsr){
+    public void noticeUpdate(Long id, NoticeUpdateDto dto, MultipartFile imageSsr) {
+        // 공지사항 조회
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공지사항입니다."));
+
+        // 현재 로그인된 사용자의 이메일을 가져옴
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        MultipartFile image = (imageSsr != null) ? dto.getImage() : imageSsr;
+
+        // 이미지 처리: imageSsr이 null이 아니면 imageSsr 사용, 그렇지 않으면 dto의 image 사용
+        MultipartFile image = (imageSsr != null) ? imageSsr : dto.getImage();
+
+        // 로그인된 사용자가 작성자인지 확인
         if (notice.getUser().getEmail().equals(userEmail)) {
             try {
-                MultipartFile imageFile = image;
-                if (!imageFile.isEmpty()) {
-                    String bgImagePathFileName = notice.getId() + "_" + imageFile.getOriginalFilename();
-                    byte[] bgImagePathByte = imageFile.getBytes();
+                if (image != null && !image.isEmpty()) {  // 이미지가 null이 아니고 비어있지 않을 때만 처리
+                    String bgImagePathFileName = notice.getId() + "_" + image.getOriginalFilename();
+                    byte[] bgImagePathByte = image.getBytes();
                     String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
                     notice.toUpdate(dto, s3ImagePath);
-//                post.updateImagePath(s3ImagePath);
+                } else {
+                    // 이미지가 없으면 기존 이미지를 유지한 채로 제목과 내용만 업데이트
+                    notice.toUpdate(dto, notice.getImageUrl());
                 }
             } catch (IOException e) {
-                throw new RuntimeException("게시글 수정에 실패했습니다.");
+                throw new RuntimeException("게시글 수정에 실패했습니다.", e);
             }
         } else {
             throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
         }
+
+        // 변경된 공지사항 저장
         noticeRepository.save(notice);
     }
+
 
     @Transactional
     public Notice noticeDelete(Long id) {
