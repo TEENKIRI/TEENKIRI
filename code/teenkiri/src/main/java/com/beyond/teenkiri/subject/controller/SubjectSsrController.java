@@ -81,20 +81,20 @@ public class SubjectSsrController {
     }
 
 
-//    강좌 업데이트
-    @PatchMapping("/subject/update")
-    public String subjectUpdate(SubjectUpdateReqDto dto, Model model){
-        Long subjectId = subjectService.subjectUpdate(dto);
-        return "redirect:/subject/detail/" + subjectId;
-    }
+////    강좌 업데이트
+//    @PatchMapping("/subject/update")
+//    public String subjectUpdate(SubjectUpdateReqDto dto, Model model){
+//        Long subjectId = subjectService.subjectUpdate(dto);
+//        return "redirect:/subject/detail/" + subjectId;
+//    }
 
 
 //    강좌 삭제
-    @DeleteMapping("/subject/delete/{id}")
-    public String subjectDelete(@PathVariable(value = "id") Long id, Model model){
-        Long subjectId = subjectService.subjectDelete(id);
-        return "redirect:/ssr/subject/list";
-    }
+//    @DeleteMapping("/subject/delete/{id}")
+//    public String subjectDelete(@PathVariable(value = "id") Long id, Model model){
+//        Long subjectId = subjectService.subjectDelete(id);
+//        return "redirect:/ssr/subject/list";
+//    }
 
 
 

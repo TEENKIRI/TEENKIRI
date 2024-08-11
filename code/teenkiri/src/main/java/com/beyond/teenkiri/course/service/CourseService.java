@@ -1,10 +1,13 @@
 package com.beyond.teenkiri.course.service;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.dto.CourseDetResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.course.dto.CourseSaveReqDto;
+import com.beyond.teenkiri.course.dto.CourseUpdateReqDto;
 import com.beyond.teenkiri.course.repository.CourseRepository;
+import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.service.UserService;
@@ -56,6 +59,47 @@ public class CourseService {
         courseRepository.save(course);
 
         return course; // save된 subject return;
+    }
+
+//    과목 업데이트
+    public Course courseUpdate(Long id, CourseUpdateReqDto dto){
+        Course course = courseRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("존재하지 않는 과목입니다."));
+        course.updateTitle(dto);
+        return course;
+    }
+
+//    과목 삭제
+    public Course courseDelete(Long id){
+        Course course = courseRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("존재하지 않는 과목입니다."));
+        course.updateDelYn(DelYN.Y);
+        return course;
+    }
+
+//    과목 DB상 삭제
+    public Long courseDeleteDeep(Long id){
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 과목입니다."));
+
+
+        if (course.getSubjects().isEmpty()) { // 연결되어있는 강좌가 없는 경우
+            courseRepository.deleteById(course.getId());
+            return id;
+        } else { // 연결되어있는 강좌가 존재하는 경우
+            throw new RuntimeException("연결되어있는 강좌가 존재하여 삭제하실 수 없습니다.");
+        }
+    }
+
+
+//    ==============
+    public Course findByIdRequired(Long id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 과목입니다."));
+    }
+
+    public Course findByIdReturnNull(Long id) {
+        return courseRepository.findById(id).orElse(null);
     }
 
 }

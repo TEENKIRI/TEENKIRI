@@ -3,8 +3,10 @@ import {createRouter, createWebHistory} from 'vue-router';
 // 파일 내부에 export default있는 경우에는 {}가 필요없고, 그렇지 않으면 {}필요
 // import 하는 요소가 여러개 있을 때에도 {}를 붙인다.
 // import TestComponent from '@/components/TestComponent.vue';
+import HomePage from '@/views/HomePage.vue';
 import { memberRouter } from './memberRouter';
 import { boardRouter } from './boardRouter';
+import { subjectRouter } from './subjectRouter';
 
 
 const routes = [
@@ -21,8 +23,16 @@ const routes = [
     //     name: 'TEST',
     //     component: TestComponent
     // }
+    {
+        // path로도 라우팅이 가능하고, name으로도 라우팅이 가능
+        // name으로 라우팅하는 경우는 js코드내에서 라우팅하는 경우
+        path: '/',
+        name: 'HOME',
+        component: HomePage
+    },
     ...memberRouter,
-    ...boardRouter
+    ...boardRouter,
+    ...subjectRouter
 ]
 
 

@@ -22,6 +22,7 @@
           <v-btn icon @click="goToMember">
             <v-icon>mdi-account</v-icon>
           </v-btn>
+          <v-btn v-if="isLogin" @click="doLogout">로그아웃</v-btn>
           <v-btn icon @click="goToMenu">
             <v-icon>mdi-menu</v-icon>
           </v-btn>
@@ -36,12 +37,20 @@ export default {
   name: 'HeaderComponent',
   data() {
     return {
-      logo: require('@/assets/images/ico_logo.png')
+      logo: require('@/assets/images/ico_logo.png'),
+      isLogin: false // 초기값 설정
     };
+  },
+  mounted() {
+    // 로컬 스토리지에서 토큰을 읽어 로그인 상태를 설정
+    const token = localStorage.getItem('token');
+    this.isLogin = !!token;
   },
   methods: {
     navigate(section) {
-      if (section === '이벤트') {
+      if (section === '강좌') {
+        this.$router.push({ name: 'SubjectList', params: { category: 'subject' } });
+      } else if (section === '이벤트') {
         this.$router.push({ name: 'BoardList', params: { category: 'event' } });
       } else if (section === '공지사항') {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
@@ -53,10 +62,23 @@ export default {
       }
     },
     goToMember() {
-      console.log('Go to member');
+      if (this.isLogin) {
+        // 로그인된 상태에서 사용자가 클릭할 때
+        this.$router.push('/member-profile'); // 로그인 후 이동할 페이지
+      } else {
+        // 로그인되지 않은 상태에서 사용자가 클릭할 때
+        this.$router.push('/login'); // 로그인 페이지로 이동
+      }
     },
     goToMenu() {
       console.log('Go to menu');
+    },
+    doLogout() {
+      localStorage.removeItem('role');
+      localStorage.removeItem('token'); // 로컬 스토리지에서 토큰 삭제
+      this.isLogin = false; // 로그인 상태 업데이트
+      console.log('Logged out');
+      window.location.reload(); // 페이지 새로고침
     }
   }
 }

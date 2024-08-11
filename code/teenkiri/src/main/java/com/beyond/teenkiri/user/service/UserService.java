@@ -12,9 +12,13 @@ import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -64,12 +68,13 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
     }
 
     public String findId(UserFindIdDto findIdDto) {
         User user = userRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone())
-                .orElseThrow(() -> new RuntimeException("없는 사용자 입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("없는 사용자 입니다."));
+
         return maskEmail(user.getEmail());
     }
 
@@ -88,10 +93,8 @@ public class UserService {
         // Redis에 저장 (필요한 경우)
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
-        // 비밀번호 재설정 링크 생성
-        String resetLink = "http://localhost:8088/user/reset-password?token=" + resetToken;
-
         // 이메일 전송
+        String resetLink = "http://localhost:8082/user/reset-password?token=" + resetToken;
         emailService.sendSimpleMessage(findPasswordDto.getEmail(), "비밀번호 재설정", "비밀번호 재설정 링크: " + resetLink);
     }
 
@@ -232,4 +235,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public Page<UserListDto> userList(Pageable pageable){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+        if (!user.getRole().toString().equals("ADMIN")){
+            System.out.println("접근권한없음");
+            throw new SecurityException("접근권한이 없습니다.");
+        }
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(a-> a.listFromEntity());
+    }
 }

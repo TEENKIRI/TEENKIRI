@@ -51,23 +51,4 @@ public class CommonMethod {
                 return -1; // 허용되지 않은 확장자
         }
     }
-
-    public Path fileSave(MultipartFile file, Long id){
-        try{
-            if(file.isEmpty()){ // 비어있는 파일
-                return null;
-            }
-            Boolean fileBoolean = fileSizeCheck(file);
-            if (Boolean.FALSE.equals(fileBoolean)) {
-                throw new IllegalArgumentException("파일의 크기가 너무 큽니다.");
-            }
-
-            byte[] fileBytes = file.getBytes();
-            Path filePath = Paths.get("C:/Users/rro06/OneDrive/Desktop/tmp/", id + "_" + file.getOriginalFilename());
-            Files.write(filePath,fileBytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            return filePath;
-        } catch (IOException e) {
-            throw new RuntimeException("파일 저장 실패");
-        }
-    }
 }

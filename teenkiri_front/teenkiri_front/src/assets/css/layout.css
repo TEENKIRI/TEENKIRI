@@ -10,7 +10,7 @@
 .header .menu .btn_menu { width:30px; height:30px; background:url("../../assets/images/ico_menu.png") 50% 50% no-repeat; background-size:contain; }
 
 .container { padding-top:90px;  min-height:600px; }
-.mainVisual { height:536px; background:url("../../assets/images/visual_bg.png") 50% 50% no-repeat; background-size:cover; }
+/* .mainVisual { height:536px; background:url("../../assets/images/visual_bg.png") 50% 50% no-repeat; background-size:cover; }
 .mainVisual .inner { width:1280px; height:100%; margin:0 auto; position:relative; }
 .mainVisual .inner .txtWrap { position:absolute; top:150px; left:0; }
 .mainVisual .inner .txtWrap .description { font-size:26px; font-weight:500; color:#3370b6; }
@@ -56,7 +56,7 @@
 .mainStudy .inner .eventWrap .event .evList li span { margin-left:auto; font-size:18px; font-weight:400; color:#757575; }
 .mainStudy .inner .eventWrap .event .evList li + li { margin:15px 0 0; }
 
-.mainLectureBest { padding:100px 0; }
+.mainLectureBest { padding:100px 0; margin-bottom: 20vh;}
 .mainLectureBest .inner { width:1280px; width:1280px; margin:0 auto; position:relative; }
 .mainLectureBest .inner h2 { font-size:36px; font-weight:700; }
 .mainLectureBest .swiperLectureBest { margin:35px 0 0; border-right:1px solid #ccc; }
@@ -81,7 +81,7 @@
 .mainNews .newsList li a { font-size:16px; font-weight:400; }
 .mainNews .newsList li span { margin-left:auto; font-size:16px; font-weight:400; color:#757575; }
 
-.mainBanner { width:1280px; margin:0 auto; }
+.mainBanner { width:1280px; margin:0 auto; } */
 
 .footer { margin:100px 0 0; border-top:1px solid #afafaf; }
 .footer .inner { width:1280px; margin:0 auto; display:flex;  padding:45px 0; }
