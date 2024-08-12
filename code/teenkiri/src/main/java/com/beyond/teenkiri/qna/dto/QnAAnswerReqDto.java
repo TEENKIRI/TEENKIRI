@@ -20,7 +20,7 @@ public class QnAAnswerReqDto {
     private String answererNickname;
     private String answerText;
     private LocalDateTime answeredAt;
-    private LocalDateTime createdTime;
+//    private LocalDateTime createdTime;
     @Builder.Default
     private DelYN delYN = DelYN.N;
     private MultipartFile aImage;

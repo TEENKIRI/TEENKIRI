@@ -7,6 +7,7 @@ import HomePage from '@/views/HomePage.vue';
 import { memberRouter } from './memberRouter';
 import { boardRouter } from './boardRouter';
 import { subjectRouter } from './subjectRouter';
+import { qnaRouter } from './qnaRouter';
 
 
 const routes = [
@@ -32,7 +33,9 @@ const routes = [
     },
     ...memberRouter,
     ...boardRouter,
-    ...subjectRouter
+    ...subjectRouter,
+    ...qnaRouter,
+
 ]
 
 

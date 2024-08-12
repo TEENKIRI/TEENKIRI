@@ -90,6 +90,7 @@ public class QnA extends BaseTimeEntity {
     public void answerQuestion(String answerText, User answerer) {
         this.answerText = answerText;
         this.answerer = answerer;
+        this.answeredAt = getCreatedTime();
     }
 
     // 답변을 생성할때 사용
