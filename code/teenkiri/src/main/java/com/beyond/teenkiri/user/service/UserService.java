@@ -12,6 +12,9 @@ import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +57,10 @@ public class UserService {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
+        // userId를 추가 인자로 전달하여 토큰 생성
+        return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
     }
+
 
     public String getEmailFromToken(String token) {
         return jwtTokenprovider.getEmailFromToken(token);
@@ -82,12 +87,17 @@ public class UserService {
         User user = userRepository.findByNameAndPhoneAndEmail(findPasswordDto.getName(), findPasswordDto.getPhone(), findPasswordDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인해주세요."));
 
-        String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name());
+        // userId를 추가 인자로 전달하여 토큰 생성
+        String resetToken = jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
+
+        // Redis에 저장 (필요한 경우)
         redisService.saveVerificationCode(findPasswordDto.getEmail(), resetToken);
 
-        String resetLink = "http://localhost:8088/user/reset-password?token=" + resetToken;
+        // 이메일 전송
+        String resetLink = "http://localhost:8082/user/reset-password?token=" + resetToken;
         emailService.sendSimpleMessage(findPasswordDto.getEmail(), "비밀번호 재설정", "비밀번호 재설정 링크: " + resetLink);
     }
+
 
     public void resetPassword(PasswordResetDto passwordResetDto) {
         String email = jwtTokenprovider.getEmailFromToken(passwordResetDto.getToken());
@@ -193,10 +203,13 @@ public class UserService {
             if (!filteredNickname.equals(editReqDto.getNickname())) {
                 throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
             }
-            if (userRepository.existsByNickname(editReqDto.getNickname())) {
-                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+            // 닉네임이 변경된 경우에만 중복 검사를 수행
+            if (!user.getNickname().equals(editReqDto.getNickname())) {
+                if (userRepository.existsByNickname(editReqDto.getNickname())) {
+                    throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+                }
+                user.setNickname(editReqDto.getNickname());
             }
-            user.setNickname(editReqDto.getNickname());
         }
 
         if (editReqDto.getAddress() != null) {
@@ -218,11 +231,23 @@ public class UserService {
 
 
     public void updateUserInfo(String username, UserEditReqDto editReqDto) {
-        User user = userRepository.findByEmail(username)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         updateUserDetails(user, editReqDto);
         userRepository.save(user);
     }
 
+    public Page<UserListDto> userList(Pageable pageable){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+        if (!user.getRole().toString().equals("ADMIN")){
+            System.out.println("접근권한없음");
+            throw new SecurityException("접근권한이 없습니다.");
+        }
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(a-> a.listFromEntity());
+    }
 }

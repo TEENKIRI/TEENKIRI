@@ -4,6 +4,7 @@ import com.beyond.teenkiri.common.domain.Address;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.user.dto.UserListDto;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -59,16 +60,18 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    public User(String name, String password, String phone, Address address, String email, String nickname, Role role, boolean isVerified, int reportCount, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, DelYN delYn) {
-        this.name = name;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-        this.email = email;
-        this.nickname = nickname;
-        this.role = role;
-        this.isVerified = isVerified;
-        this.reportCount = reportCount;
-        this.delYN = DelYN.N;
+
+    public UserListDto listFromEntity(){
+        return UserListDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .phone(this.phone)
+                .address(this.address)
+                .email(this.email)
+                .nickname(this.nickname)
+                .role(this.getRole())
+                .reportCount(this.reportCount)
+                .delYN(this.delYN)
+                .build();
     }
 }
