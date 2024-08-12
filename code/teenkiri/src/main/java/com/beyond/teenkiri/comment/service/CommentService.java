@@ -11,7 +11,6 @@ import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +35,19 @@ public class CommentService {
 
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(userEmail)
+        Long userId = dto.getUserId();  // DTO에서 사용자 ID를 가져옵니다.
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+        String nickname = user.getNickname();  // 사용자 ID로 가져온 User 객체에서 닉네임을 가져옵니다.
+
         if (dto.getPostId() != null) {
             Post post = postRepository.findById(dto.getPostId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-            return commentRepository.save(dto.PostToEntity(user, post));
+            return commentRepository.save(dto.PostToEntity(user, post, nickname));
         } else if (dto.getQnaId() != null) {
             QnA qna = qnaRepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-            return commentRepository.save(dto.QnAToEntity(user, qna));
+            return commentRepository.save(dto.QnAToEntity(user, qna, nickname));
         } else {
             throw new IllegalArgumentException("댓글이 달릴 게시글 또는 QnA ID가 필요합니다.");
         }
@@ -59,6 +60,7 @@ public class CommentService {
                         .id(comment.getId())
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
+                        .nickname(comment.getNickname())  // 닉네임도 함께 반환
                         .createdTime(comment.getCreatedTime())
                         .updatedTime(comment.getUpdatedTime())
                         .build())
@@ -72,10 +74,10 @@ public class CommentService {
                         .id(comment.getId())
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
+                        .nickname(comment.getNickname())  // 닉네임도 함께 반환
                         .createdTime(comment.getCreatedTime())
                         .updatedTime(comment.getUpdatedTime())
                         .build())
                 .collect(Collectors.toList());
     }
 }
-
