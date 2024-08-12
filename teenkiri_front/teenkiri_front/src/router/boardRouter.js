@@ -1,8 +1,8 @@
 
-import BoardList from "@/views/BoardList.vue";
-import BoardCreate from "@/views/BoardCreate.vue";
-import BoardUpdate from "@/views/BoardUpdate.vue";
-import BoardDetail from "@/views/BoardDetail.vue";
+import BoardList from "@/views/board/BoardList.vue";
+import BoardCreate from "@/views/board/BoardCreate.vue";
+import BoardUpdate from "@/views/board/BoardUpdate.vue";
+import BoardDetail from "@/views/board/BoardDetail.vue";
 
 export const boardRouter = [
     {

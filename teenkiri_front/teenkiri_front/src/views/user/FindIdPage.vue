@@ -29,7 +29,7 @@
                 class="mt-4"
                 border="left"
               >
-                찾으신 이메일 주소는: {{ userEmail }}
+                찾으신 이메일 주소는: {{ userEmail.result }}
               </v-alert>
             </v-card-text>
           </v-card>
@@ -66,14 +66,7 @@
         } catch (e) {
           // 오류 메시지 처리
           let error_message = '오류가 발생했습니다.';
-  
-          // 오류 객체 구조를 안전하게 확인
-          if (e.response && e.response.data) {
-            error_message = e.response.data.status_message || '서버에서 오류가 발생했습니다.';
-          } else if (e.message) {
-            error_message = e.message;
-          }
-  
+
           alert('이메일 찾기 실패: ' + error_message);
           console.error('Error details:', e);
         }

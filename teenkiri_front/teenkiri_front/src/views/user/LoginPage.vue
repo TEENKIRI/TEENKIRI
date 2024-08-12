@@ -97,10 +97,10 @@ export default {
           console.log("카카오 로그인");
       },
       findId() {
-          this.$router.push("/find-id");
+          this.$router.push("/user/find-id");
       },
       findPassword() {
-          this.$router.push("/find-password");
+          this.$router.push("/user/find-password");
       },
       signUp() {
           this.$router.push("/user/create");
