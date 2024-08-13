@@ -11,8 +11,8 @@
               <p><strong>작성자:</strong> {{ questionDetail.questionUserNickname }}</p>
               <p><strong>작성 시간:</strong> {{ formatDate(questionDetail.createdTime) }}</p>
               <v-img
-                v-if="questionDetail.qImageUrl"
-                :src="questionDetail.qImageUrl"
+                v-if="questionDetail.qimageUrl"
+                :src="questionDetail.qimageUrl"
                 alt="질문 이미지"
                 max-width="400"
                 class="my-3"
@@ -26,8 +26,8 @@
               <p><strong>답변자:</strong> {{ questionDetail.answeredByNickname }}</p>
               <p><strong>답변 시간:</strong> {{ formatDate(questionDetail.answeredAt) }}</p>
               <v-img
-                v-if="questionDetail.aImageUrl"
-                :src="questionDetail.aImageUrl"
+                v-if="questionDetail.aimageUrl"
+                :src="questionDetail.aimageUrl"
                 alt="답변 이미지"
                 max-width="400"
                 class="my-3"
