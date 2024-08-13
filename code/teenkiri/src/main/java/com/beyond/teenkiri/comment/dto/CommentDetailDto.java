@@ -17,6 +17,7 @@ public class CommentDetailDto {
     private String content;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
+    private String nickname;
     private Long QnAId;
     private Long postId;
 

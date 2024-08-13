@@ -250,4 +250,8 @@ public class UserService {
         Page<User> users = userRepository.findAll(pageable);
         return users.map(a-> a.listFromEntity());
     }
+
+    public String getNicknameByUserId(Long userId) {
+        return userRepository.findNicknameById(userId);
+    }
 }
