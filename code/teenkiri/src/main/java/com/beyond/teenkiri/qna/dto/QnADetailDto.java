@@ -1,12 +1,14 @@
 package com.beyond.teenkiri.qna.dto;
 
 import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.comment.dto.CommentDetailDto; // 댓글 DTO 임포트
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List; // 댓글 리스트를 위한 임포트
 
 @Data
 @AllArgsConstructor
@@ -25,7 +27,9 @@ public class QnADetailDto {
     private String userEmail;
     private String qImageUrl;
     private String aImageUrl;
-    public static QnADetailDto fromEntity(QnA qna) {
+    private List<CommentDetailDto> comments; // 댓글 리스트 추가
+
+    public static QnADetailDto fromEntity(QnA qna, List<CommentDetailDto> comments) { // 댓글 리스트를 인자로 추가
         return QnADetailDto.builder()
                 .id(qna.getId())
                 .title(qna.getTitle())
@@ -39,6 +43,7 @@ public class QnADetailDto {
                 .userEmail(qna.getUser().getEmail())
                 .qImageUrl(qna.getQImageUrl())
                 .aImageUrl(qna.getAImageUrl())
+                .comments(comments) // 댓글 리스트 설정
                 .build();
     }
 }

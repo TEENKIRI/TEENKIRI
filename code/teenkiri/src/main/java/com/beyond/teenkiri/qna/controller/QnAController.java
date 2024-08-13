@@ -57,7 +57,8 @@ public class QnAController {
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getQuestionDetail(@PathVariable Long id) {
         try {
-            QnADetailDto questionDetail = QnADetailDto.fromEntity(qnAService.getQuestionDetail(id));
+            // QnADetailDto를 반환하는 서비스 메서드 호출
+            QnADetailDto questionDetail = qnAService.getQuestionDetail(id);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문 상세 정보를 조회합니다.", questionDetail);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
@@ -66,6 +67,7 @@ public class QnAController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
+
 
     @PostMapping("/comment/create")
     public ResponseEntity<?> createQnaComment(@RequestBody CommentSaveReqDto dto) {

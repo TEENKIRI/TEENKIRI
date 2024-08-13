@@ -2,9 +2,11 @@
 package com.beyond.teenkiri.qna.domain;
 
 import com.beyond.teenkiri.comment.domain.Comment;
+import com.beyond.teenkiri.comment.dto.CommentDetailDto;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.dto.QnAAtoUpdateDto;
+import com.beyond.teenkiri.qna.dto.QnADetailDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.dto.QnAQtoUpdateDto;
 import com.beyond.teenkiri.user.domain.User;
@@ -103,4 +105,23 @@ public class QnA extends BaseTimeEntity {
     public void updateDelYN(DelYN delYN){
         this.delYN = delYN;
     }
+
+
+//    public QnADetailDto fromEntity(QnA qna, List<CommentDetailDto> comments) { // 댓글 리스트를 인자로 추가
+//        return QnADetailDto.builder()
+//                .id(this.getId())
+//                .title(this.getTitle())
+//                .questionText(this.getQuestionText())
+//                .answerText(this.getAnswerText())
+//                .questionUserNickname(this.getUser().getNickname())
+//                .answeredByNickname(this.getAnswerer() != null ? this.getAnswerer().getNickname() : null)
+//                .createdTime(this.getCreatedTime())
+//                .updatedTime(this.getUpdatedTime())
+//                .answeredAt(this.getAnsweredAt())
+//                .userEmail(this.getUser().getEmail())
+//                .qImageUrl(this.getQImageUrl())
+//                .aImageUrl(this.getAImageUrl())
+//                .comments(comments) // 댓글 리스트 설정
+//                .build();
+//    }
 }

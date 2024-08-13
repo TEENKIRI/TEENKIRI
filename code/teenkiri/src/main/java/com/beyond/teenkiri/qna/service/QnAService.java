@@ -1,7 +1,9 @@
 // QnAService.java
 package com.beyond.teenkiri.qna.service;
 
+import com.beyond.teenkiri.comment.dto.CommentDetailDto;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
+import com.beyond.teenkiri.comment.service.CommentService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.qna.domain.QnA;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,13 +32,15 @@ public class QnAService {
     private final UserService userService;
     private final CommentRepository commentRepository;
     private final UploadAwsFileService uploadAwsFileService;
+    private final CommentService commentService;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService) {
+    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService) {
         this.qnARepository = qnARepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
         this.uploadAwsFileService = uploadAwsFileService;
+        this.commentService = commentService;
     }
 
     @Transactional
@@ -65,11 +70,17 @@ public class QnAService {
         return qnAS.map(QnA::listFromEntity);
     }
 
-    public QnA getQuestionDetail(Long id) {
-        return qnARepository.findById(id)
+    public QnADetailDto getQuestionDetail(Long id) {
+        QnA qna = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-    }
 
+        // 댓글 목록 가져오기
+        List<CommentDetailDto> comments = commentService.getCommentsByQnaId(id);
+
+        // QnA와 댓글을 사용해 QnADetailDto 생성
+        QnADetailDto qnADetailDto = QnADetailDto.fromEntity(qna, comments);
+        return qnADetailDto;
+    }
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto, MultipartFile imageSsr) {
         User answeredBy = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
