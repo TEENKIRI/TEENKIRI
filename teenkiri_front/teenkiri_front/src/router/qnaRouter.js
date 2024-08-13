@@ -1,6 +1,7 @@
 import CreateQuestion from "@/views/qna/CreateQuestion.vue";
 import QnaList from "@/views/qna/QnaList.vue";
 import CreateAnswer from "@/views/qna/CreateAnswer.vue"
+import QnaDetail from "@/views/qna/QnaDetail.vue";
 
 
 export const qnaRouter = [
@@ -18,6 +19,11 @@ export const qnaRouter = [
         path: '/qna/answer/:id',
         name: 'CreateAnswer',
         component: CreateAnswer
+    },
+    {
+        path: '/qna/detail/:id',
+        name: 'QnaDetail',
+        component: QnaDetail 
     },
     
 ]

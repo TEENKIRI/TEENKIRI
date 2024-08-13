@@ -16,6 +16,7 @@
             <v-btn text @click="navigate('이벤트')">이벤트</v-btn>
             <v-btn text @click="navigate('공지사항')">공지사항</v-btn>
             <v-btn text @click="navigate('자유게시판')">자유게시판</v-btn>
+            <v-btn text @click="navigate('QnA')">질문게시판</v-btn>
           </v-row>
         </v-col>
         <v-col cols="3" class="text-right">
@@ -56,6 +57,8 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
       } else if (section === '자유게시판') {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
+      } else if (section === 'QnA')  {
+        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
       } else {
         console.log(section);
         // 다른 섹션에 대한 처리 추가 가능

@@ -18,7 +18,8 @@
                     <th>제목</th>
                     <th>생성 시간</th>
                     <th>수정 시간</th>
-                    <th>답변하기</th>
+                    <th
+                    v-if="userRole === 'ADMIN'" >답변하기</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -29,7 +30,7 @@
                     <td>{{ formatDate(question.createdTime) }}</td>
                     <td>{{ formatDate(question.updatedTime) }}</td>
                     <td>
-                      <v-btn v-if="!question.answerText" small @click="answerQuestion(question.id)" color="primary">답변하기</v-btn>
+                      <v-btn v-if="canAnswerQuestion && !question.answerText" small @click="answerQuestion(question.id)" color="primary">답변하기</v-btn>
                     </td>
                   </tr>
                 </tbody>
@@ -66,10 +67,13 @@
         currentPage: 1,
         totalPages: 1,
         itemsPerPage: 10,
+        userRole: '',
       };
     },
     created() {
       this.fetchQuestions();
+      this.userRole = localStorage.getItem('role');
+
     },
     methods: {
       async fetchQuestions() {
@@ -123,6 +127,11 @@
           this.fetchQuestions();
         }
       },
+    },
+    computed: {
+      canAnswerQuestion() {
+        return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
+      }
     }
   };
   </script>
