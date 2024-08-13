@@ -75,7 +75,6 @@
         answerText: '',
         answerImage: null,
         previewImageSrc: null,
-        answerAt: ''
       };
     },
     created() {
