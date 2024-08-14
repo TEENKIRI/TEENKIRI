@@ -14,11 +14,11 @@ module.exports = {
       }
     }
   },
-  configureWebpack: {
-    // Feature flags 설정
-    define: {
-      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
-    }
-  }
+  // configureWebpack: {
+  //   // Feature flags 설정
+  //   define: {
+  //     __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+  //     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
+  //   }
+  // }
 };

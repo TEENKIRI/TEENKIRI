@@ -37,7 +37,7 @@
                 @click="toggle"
               >
                 <div
-                  class="swiper-slide d-flex flex-sm-column fill-height align-center justify-center"
+                  class="swiper-slide d-flex flex-sm-column fill-height align-center justify-center w-100"
                 >
                   <div class="thumb">
                     <a href="javascript:void(0)"
@@ -133,7 +133,7 @@
                 @click="toggle"
               >
                 <div
-                  class="swiper-slide d-flex flex-sm-column fill-height align-center justify-center"
+                  class="swiper-slide d-flex flex-sm-column fill-height align-center justify-center w-100"
                 >
                   <div class="thumb">
                     <a href="javascript:void(0)"
