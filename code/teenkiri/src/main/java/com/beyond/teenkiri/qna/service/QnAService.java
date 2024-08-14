@@ -84,7 +84,7 @@ public class QnAService {
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto, MultipartFile imageSsr) {
         User answeredBy = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
+        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN || answeredBy.getRole() != Role.TEACHER) {
             throw new SecurityException("권한이 없습니다.");
         }
         QnA qnA = qnARepository.findById(id)
@@ -144,7 +144,7 @@ public class QnAService {
         }
         MultipartFile image = (imageSsr != null) ? imageSsr : dto.getAImage();
 
-        if (qnA.getAnswerer().getEmail().equals(userEmail)) {
+        if (qnA.getAnswerer().getRole().equals("ADMIIN") || qnA.getAnswerer().getRole().equals("TEACHER")) {
             try {
                 MultipartFile imageFile = image;
                 if (!imageFile.isEmpty()) {
@@ -158,7 +158,7 @@ public class QnAService {
                 throw new RuntimeException("게시글 수정에 실패했습니다.");
             }
         } else {
-            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
         qnARepository.save(qnA);
     }
