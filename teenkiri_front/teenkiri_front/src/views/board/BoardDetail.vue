@@ -82,6 +82,9 @@
       :postContent="reportData.postContent" 
       :authorEmail="reportData.authorEmail" 
       :postCategory="reportData.postCategory" 
+      :commentId="reportData.commentId" 
+      :commentContent="reportData.commentContent" 
+      :commentAuthor="reportData.commentAuthor" 
       @close="closeReportModal" 
     />
   </v-container>
@@ -293,10 +296,10 @@ export default {
     },
     openCommentReportModal(comment) {
       this.reportData = {
-        postId: comment.id,
+        commentId: comment.id,
+        commentContent: comment.content,
+        commentAuthor: comment.nickname,
         postTitle: this.post.title,
-        postContent: comment.content,
-        authorEmail: comment.nickname,
         postCategory: this.$route.params.category
       };
       this.showReportModal = true;
