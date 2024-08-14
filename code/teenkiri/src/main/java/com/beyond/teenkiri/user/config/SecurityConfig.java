@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/user/**","/course/**","/subject/**/list","/favicon.ico").permitAll()
+                .antMatchers("/user/**","/course/**","/subject/**/list","/subject/detail/**","/favicon.ico").permitAll()
 //                .antMatchers("/api/login", "/api/register").permitAll() // adjust this according to your endpoints
                 .anyRequest().authenticated()
                 .and()
