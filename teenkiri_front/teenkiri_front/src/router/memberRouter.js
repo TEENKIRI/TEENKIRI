@@ -5,6 +5,7 @@ import FindPasswordPage from "@/views/user/FindPasswordPage.vue";
 import UserList from "@/views/user/UserList.vue";
 import ResetPasswordPage from "@/views/user/ResetPasswordPage.vue";
 import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
+import ReportCreate from "@/views/report/ReportCreate.vue";
 
 export const memberRouter = [
     {
@@ -43,4 +44,22 @@ export const memberRouter = [
         name: 'UpdateUserInfo',
         component: UpdateUserInfo,
     },
+    {
+        path: '/report',
+        name: 'ReportCreate',
+        component: ReportCreate,
+        props: route => ({
+          postId: route.query.postId,
+          postTitle: route.query.postTitle,
+          postContent: route.query.postContent,
+          authorEmail: route.query.authorEmail,
+          postCategory: route.query.postCategory,
+          // 댓글 정보를 추가로 전달
+          commentId: route.query.commentId, 
+          commentContent: route.query.commentContent,
+          commentAuthor: route.query.commentAuthor
+        })
+    }
+    
+      
 ]

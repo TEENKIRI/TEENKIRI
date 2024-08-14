@@ -12,7 +12,6 @@
           <th>작성자</th>
           <th>작성일</th>
           <th>관리</th>
-          <th v-if="category === 'post'">신고</th> <!-- 신고 열 추가 -->
         </tr>
       </thead>
       <tbody>
@@ -25,9 +24,6 @@
             <button @click="updateItem(item.id, category)">수정</button>
             <button @click="deleteItem(item.id, category)">삭제</button>
           </td>
-          <td v-if="canReport()" class="control"> 자유게시판일 때만 신고 버튼 추가
-            <button @click="reportItem(item.id)">신고</button>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -38,7 +34,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -171,10 +166,10 @@ export default {
       }
     },
     canEditOrDelete(item) {
-      // console.log(item.user_id)
       // Admin이거나, 게시글 작성자가 현재 로그인한 사용자와 동일한 경우에만 true
       return this.isAdmin || (item.user_id === parseInt(this.userId, 10) && this.category === 'post');
     },
+
   },
 };
 </script>
