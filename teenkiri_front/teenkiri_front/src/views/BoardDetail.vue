@@ -197,15 +197,17 @@ export default {
     },
     openReportModal() {
       // 신고 모달 창을 여는 대신, 신고 생성 페이지로 이동하면서 데이터를 전달
+    
       this.$router.push({
         name: 'ReportCreate',
         params: {
           postId: this.post.id,
           postTitle: this.post.title,
           postContent: this.post.content,
-          authorEmail: this.post.authorEmail || this.post.nickname, // 예시로 작성자 이메일 또는 닉네임을 전달
+          authorEmail:  this.post.nickname, // 예시로 작성자 이메일 또는 닉네임을 전달
           postCategory: this.$route.params.category // 카테고리 정보도 함께 전달
         }
+        
       });
     },
     closeReportModal() {
