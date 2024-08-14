@@ -24,6 +24,8 @@ public class SubjectDetResDto {
     private DelYN delYN;
     private Boolean isSubscribe;
 
+    private String subjectThumUrl;
+
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
 }
