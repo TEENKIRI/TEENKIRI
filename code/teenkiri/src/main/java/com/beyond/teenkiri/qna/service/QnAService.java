@@ -120,21 +120,26 @@ public class QnAService {
 
         if (qnA.getUser().getEmail().equals(userEmail)) {
             try {
-                MultipartFile imageFile = image;
-                if (!imageFile.isEmpty()) {
-                    String bgImagePathFileName = qnA.getId() + "_question_" + imageFile.getOriginalFilename();
-                    byte[] bgImagePathByte = imageFile.getBytes();
+                if (image != null && !image.isEmpty()) {
+                    // 이미지가 존재할 때만 이미지 처리
+                    String bgImagePathFileName = qnA.getId() + "_question_" + image.getOriginalFilename();
+                    byte[] bgImagePathByte = image.getBytes();
                     String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
                     qnA.QnAQUpdate(dto, s3ImagePath);
+                } else {
+                    // 이미지가 비어 있거나 null이면 이미지 경로 없이 다른 정보만 업데이트
+                    qnA.QnAQUpdate(dto, null);
                 }
             } catch (IOException e) {
-                throw new RuntimeException("게시글 수정에 실패했습니다.");
+                throw new RuntimeException("게시글 수정에 실패했습니다.", e);
             }
         } else {
             throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
         }
+
         qnARepository.save(qnA);
     }
+
 
     @Transactional
     public void QnAAUpdate(Long id, QnAAtoUpdateDto dto, MultipartFile imageSsr) {
@@ -145,27 +150,27 @@ public class QnAService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 선생님 또는 관리자입니다. 고객센터에 문의하세요"));
         MultipartFile image = (imageSsr != null) ? imageSsr : dto.getAImage();
 
-        System.out.println(answeredBy.getEmail()+ answeredBy.getRole());
-        if (answeredBy.getRole() == Role.ADMIN || answeredBy.getRole() == Role.TEACHER) {{
-                try {
-                    MultipartFile imageFile = image;
-                    if (!imageFile.isEmpty()) {
-                        String bgImagePathFileName = qnA.getId() + "_answer_" + imageFile.getOriginalFilename();
-                        byte[] bgImagePathByte = imageFile.getBytes();
-                        String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                        qnA.QnAAUpdate(dto, s3ImagePath);
-                        qnARepository.save(qnA);
-//                post.updateImagePath(s3ImagePath);
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException("게시글 수정에 실패했습니다.");
+        System.out.println(answeredBy.getEmail() + answeredBy.getRole());
+        if (answeredBy.getRole() == Role.ADMIN || answeredBy.getRole() == Role.TEACHER) {
+            try {
+                if (image != null && !image.isEmpty()) {
+                    String bgImagePathFileName = qnA.getId() + "_answer_" + image.getOriginalFilename();
+                    byte[] bgImagePathByte = image.getBytes();
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                    qnA.QnAAUpdate(dto, s3ImagePath);
+                } else {
+                    // 이미지가 비어 있거나 null이면 이미지 경로 없이 다른 정보만 업데이트
+                    qnA.QnAAUpdate(dto, null);
                 }
+                qnARepository.save(qnA);
+            } catch (IOException e) {
+                throw new RuntimeException("게시글 수정에 실패했습니다.", e);
             }
         } else {
             throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
-        qnARepository.save(qnA);
     }
+
 
     @Transactional
     public QnA qnaDelete(Long id) {
