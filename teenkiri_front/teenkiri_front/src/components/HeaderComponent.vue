@@ -27,6 +27,33 @@
           <v-btn icon @click="goToMenu">
             <v-icon>mdi-menu</v-icon>
           </v-btn>
+
+          <!-- 알림 아이콘 및 알림 목록 -->
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-badge
+                  color="red"
+                  :content="notifications.length"
+                  overlap
+                  v-if="notifications.length > 0"
+                >
+                  <v-icon>mdi-bell</v-icon>
+                </v-badge>
+                <v-icon v-else>mdi-bell</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(notification, index) in notifications"
+                :key="index"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>{{ notification.message }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-col>
       </v-row>
     </v-container>
@@ -34,18 +61,50 @@
 </template>
 
 <script>
+import { EventSourcePolyfill } from 'event-source-polyfill';
+
 export default {
   name: 'HeaderComponent',
   data() {
     return {
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false // 초기값 설정
+      isLogin: false,
+      notifications: [],
     };
   },
   mounted() {
-    // 로컬 스토리지에서 토큰을 읽어 로그인 상태를 설정
     const token = localStorage.getItem('token');
     this.isLogin = !!token;
+
+    if (this.isLogin) {
+      const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      eventSource.addEventListener('connect', (event) => {
+        console.log(event)
+        })
+
+        eventSource.addEventListener('notification', (event) => {
+          console.log(event);
+          const notification = JSON.parse(event.data);
+          this.notifications.push(notification);
+          console.log('새 알림:', notification.message);
+        })
+
+
+      // eventSource.onmessage = (event) => {
+      //   const notification = JSON.parse(event.data);
+      //   this.notifications.push(notification);
+      //   console.log('새 알림:', notification.message);
+      // };
+
+      eventSource.onerror = (error) => {
+        console.error('SSE 연결 오류:', error);
+      };
+    }
   },
   methods: {
     navigate(section) {
@@ -57,20 +116,17 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
       } else if (section === '자유게시판') {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
-      } else if (section === 'QnA')  {
-        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
+      } else if (section === 'QnA') {
+        this.$router.push({ name: 'QnaList', params: { category: 'qna' } });
       } else {
         console.log(section);
-        // 다른 섹션에 대한 처리 추가 가능
       }
     },
     goToMember() {
       if (this.isLogin) {
-        // 로그인된 상태에서 사용자가 클릭할 때
-        this.$router.push('/user/edit-info'); // 로그인 후 이동할 페이지
+        this.$router.push('/user/edit-info');
       } else {
-        // 로그인되지 않은 상태에서 사용자가 클릭할 때
-        this.$router.push('/login'); // 로그인 페이지로 이동
+        this.$router.push('/login');
       }
     },
     goToMenu() {
@@ -78,13 +134,13 @@ export default {
     },
     doLogout() {
       localStorage.removeItem('role');
-      localStorage.removeItem('token'); // 로컬 스토리지에서 토큰 삭제
-      this.isLogin = false; // 로그인 상태 업데이트
+      localStorage.removeItem('token');
+      this.isLogin = false;
       console.log('Logged out');
-      window.location.reload(); // 페이지 새로고침
+      window.location.reload();
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -95,6 +151,6 @@ export default {
 }
 
 .logo-image {
-  height: 10%; 
+  height: 10%;
 }
 </style>
