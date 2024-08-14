@@ -55,7 +55,7 @@ public class Post extends BaseTimeEntity {
                 .nickname(this.user.getNickname())
                 .build();
     }
-
+//
     public PostDetailDto detailFromEntity() {
         return PostDetailDto.builder()
                 .id(this.getId())
