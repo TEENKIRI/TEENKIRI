@@ -166,10 +166,12 @@
         try {
           const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/detail/${questionId}`);
           this.questionDetail = response.data.result;
+          console.log(response)
         } catch (error) {
           this.error = error.response ? error.response.data.message : '질문 정보를 불러오는 중 오류가 발생했습니다.';
         }
       },
+      // 댓글 달기
       async submitComment() {
         const questionId = this.$route.params.id;
         try {
@@ -208,7 +210,9 @@
         this.$router.push(`/qna/update/question/${this.$route.params.id}`); // 질문 수정 페이지로 이동
       },
       editAnswer() {
-        this.$router.push(`/qna/edit/answer/${this.$route.params.id}`); // 답변 수정 페이지로 이동
+        // const answerId = 
+        console.log(`${this.$route.params.id}`)
+        this.$router.push(`/qna/update/answer/${this.$route.params.id}`); // 답변 수정 페이지로 이동
       },
       formatDate(date) {
         if (!date) return '';

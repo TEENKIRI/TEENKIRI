@@ -40,9 +40,10 @@
     },
     methods: {
       async fetchAnswerDetail() {
-        const answerId = this.$route.params.id;
+        // const answerId = this.$route.params.id;
+        const questionId = this.$route.params.id;
         try {
-          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/answer/detail/${answerId}`);
+          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/detail/${questionId}`);
           this.answer = response.data.result;
           if (this.answer.aImage) {
             this.previewImageSrc = `${process.env.VUE_APP_API_BASE_URL}/${this.answer.aImage}`;
