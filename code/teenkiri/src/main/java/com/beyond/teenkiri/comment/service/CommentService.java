@@ -4,12 +4,16 @@ import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.dto.CommentDetailDto;
 import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
+import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +58,7 @@ public class CommentService {
     }
 
     public List<CommentDetailDto> getCommentsByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findByPostId(postId);
+        List<Comment> comments = commentRepository.findByPostIdAndDelYN(postId, DelYN.N);
         return comments.stream()
                 .map(comment -> CommentDetailDto.builder()
                         .id(comment.getId())
@@ -68,7 +72,7 @@ public class CommentService {
     }
 
     public List<CommentDetailDto> getCommentsByQnaId(Long qnaId) {
-        List<Comment> comments = commentRepository.findByQnaId(qnaId);
+        List<Comment> comments = commentRepository.findByQnaIdAndDelYN(qnaId, DelYN.N);
         return comments.stream()
                 .map(comment -> CommentDetailDto.builder()
                         .id(comment.getId())
@@ -79,5 +83,17 @@ public class CommentService {
                         .updatedTime(comment.getUpdatedTime())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Comment commentDelete(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+        User user = comment.getUser();
+        if (user.getRole() != Role.ADMIN) {
+            throw new SecurityException("권한이 없습니다.");
+        }
+        comment.updateDelYN(DelYN.Y);
+        return comment;
     }
 }
