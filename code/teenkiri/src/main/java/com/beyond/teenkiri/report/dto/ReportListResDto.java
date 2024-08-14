@@ -17,6 +17,7 @@ public class ReportListResDto {
     private String reportEmail;
     private String suspectEmail;
     private Reason reason;
+    private String details;
     private Long qnaId;
     private Long postId;
     private Long commentId;

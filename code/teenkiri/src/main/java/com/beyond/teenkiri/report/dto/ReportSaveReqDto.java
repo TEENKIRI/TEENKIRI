@@ -23,6 +23,7 @@ public class ReportSaveReqDto {
     private Long qnaId;
     private Long postId;
     private Long commentId;
+    private String details;  // 상세 내용 추가
 
     @Builder.Default
     private DelYN delYN = DelYN.N;
@@ -35,6 +36,7 @@ public class ReportSaveReqDto {
                 .post(post)
                 .delYN(this.delYN)
                 .comment(comment)
+                .details(this.details)  // 상세 내용 저장
                 .build();
     }
 }

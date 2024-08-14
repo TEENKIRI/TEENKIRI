@@ -70,7 +70,6 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
-import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -97,6 +96,9 @@ public class Report extends BaseTimeEntity {
     @Column(nullable = false)
     private Reason reason;
 
+    @Column(columnDefinition = "TEXT")
+    private String details;  // 상세 내용 필드 추가
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -119,6 +121,7 @@ public class Report extends BaseTimeEntity {
                 .reportEmail(this.user.getEmail())
                 .suspectEmail(determineSuspectEmail())
                 .reason(this.reason)
+                .details(this.details)  // 상세 내용 추가
                 .qnaId(this.qna != null ? this.qna.getId() : null)
                 .postId(this.post != null ? this.post.getId() : null)
                 .commentId(this.comment != null ? this.comment.getId() : null)
@@ -139,6 +142,8 @@ public class Report extends BaseTimeEntity {
             return null;
         }
     }
+}
+
 
 //    public ReportSaveReqDto toEntity(User user, QnA qna, Post post, Comment comment) {
 //        return ReportSaveReqDto.builder()
@@ -150,4 +155,4 @@ public class Report extends BaseTimeEntity {
 //                .reason(this.reason)
 //                .build();
 //    }
-}
+
