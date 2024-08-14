@@ -9,12 +9,14 @@ import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -71,6 +73,13 @@ public class Subject extends BaseTimeEntity {
 
     private String subjectThumUrl;
 
+    //    메인페이지, 강좌 상단에 놓는 용도의 boolean값
+    @Builder.Default
+    private Boolean isMainSubject = false;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime mainSubjectUpdatedDate;
+
 
     public SubjectListResDto fromListEntity() {
         return SubjectListResDto.builder()
@@ -113,6 +122,14 @@ public class Subject extends BaseTimeEntity {
         this.grade = dto.getGrade();
         this.course = course;
         this.description = dto.getDescription();
+    }
+
+    public void toUpdateIsMainSubject(Boolean isMainSubject){
+        this.isMainSubject = isMainSubject;
+        if (isMainSubject.equals(true)){ // 상단에 고정하기로 함
+            LocalDateTime currentTime = LocalDateTime.now();
+            this.mainSubjectUpdatedDate = currentTime; // 고정하기로 한 날짜 기입
+        }
     }
 }
 

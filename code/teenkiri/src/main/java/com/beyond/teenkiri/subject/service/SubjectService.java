@@ -50,10 +50,26 @@ public class SubjectService {
         return subjectListResDtos;
     }
 
+    //    강좌 과목별 list
+    public Page<SubjectListResDto> subjectPerCourseList(Pageable pageable, Long courseId){
+        Course course = courseService.findByIdRequired(courseId);
+        Page<Subject> subject = subjectRepository.findByCourseIdAndDelYN(course.getId(), DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
 
     //    강좌 순위별 list
     public Page<SubjectListResDto> subjectRatingList(Pageable pageable){
         Page<Subject> subject = subjectRepository.findAllBydelYNOrderByRatingDesc(DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
+    //    강좌 상단 노출용 표시된 list
+    public Page<SubjectListResDto> subjectMainList(Pageable pageable){
+        Boolean isMainsubject = true; // 상단 표시된 강좌 리스트만
+        Page<Subject> subject = subjectRepository.findByIsMainSubjectAndDelYN(isMainsubject, DelYN.N, pageable);
         Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
         return subjectListResDtos;
     }
@@ -91,6 +107,8 @@ public class SubjectService {
             throw new RuntimeException("파일 저장 실패");
         }
 
+        subject.toUpdateIsMainSubject(dto.getIsMainSubject());
+
         return subject; // save된 subject return;
     }
 
@@ -113,6 +131,8 @@ public class SubjectService {
         }catch (IOException e) {
             throw new RuntimeException("파일 저장 실패");
         }
+
+        subject.toUpdateIsMainSubject(dto.getIsMainSubject());
 
         subject.toUpdate(dto, user, course);
         return subject.getId();
