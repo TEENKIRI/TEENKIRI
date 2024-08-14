@@ -1,40 +1,78 @@
 <template>
-  <div class="board-detail-container">
-    <h1 class="board-detail-title">{{ post.title }}</h1>
-    <div class="board-detail-info">
-      <span>작성자: {{ post.nickname }}</span>
-      <span>작성일: {{ formatDate(post.createdTime) }}</span>
-    </div>
-    <div v-if="post.imageUrl" class="board-detail-image">
-      <img :src="post.imageUrl" alt="Post Image" />
-    </div>
-    <div class="board-detail-content">
-      <p>{{ post.content }}</p>
-    </div>
-    <div class="board-detail-actions">
-      <button @click="goBack">목록으로 돌아가기</button>
-      <button v-if="isAdmin" @click="editPost">수정</button>
-      <button v-if="isAdmin" @click="deletePost">삭제</button>
-      <button @click="openPostReportModal">신고하기</button> <!-- 게시글 신고하기 버튼 -->
-    </div>
+  <v-container class="mt-5">
+    <v-card v-if="post">
+      <v-card-title>
+        <h3>{{ post.title }}</h3>
+        <v-spacer></v-spacer>
+        <!-- 수정 및 삭제 버튼 -->
+        <v-btn v-if="canEditPost" color="warning" @click="editPost">수정</v-btn>
+        <v-btn v-if="canDeletePost" color="error" @click="confirmDeletePost">삭제</v-btn>
+        <v-btn color="secondary" @click="openPostReportModal">신고하기</v-btn>
+      </v-card-title>
 
-    <!-- 자유게시판일 때만 댓글 섹션을 표시 -->
-    <div v-if="isFreeBoard" class="comments-section">
-      <h2>댓글</h2>
-      <ul>
-        <li v-for="comment in comments" :key="comment.id">
-          <p><strong>{{ comment.nickname }}</strong>: {{ comment.content }}</p>
-          <small>{{ formatDate(comment.createdTime) }}</small>
-          <button v-if="isAdmin || comment.user_id === parseInt(userId, 10)" @click="deleteComment(comment.id)">삭제</button> <!-- 관리자 또는 댓글 작성자만 삭제 가능 -->
-          <button @click="openCommentReportModal(comment)">신고</button> <!-- 댓글 신고하기 버튼 -->
-        </li>
-      </ul>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <p><strong>작성자:</strong> {{ post.nickname }}</p>
+            <p><strong>작성일:</strong> {{ formatDate(post.createdTime) }}</p>
+            <v-img v-if="post.imageUrl" :src="post.imageUrl" alt="Post Image" max-width="400" class="my-3"/>
+            <p><strong>내용:</strong></p>
+            <p>{{ post.content }}</p>
+          </v-col>
+        </v-row>
 
-      <div v-if="isLoggedIn">
-        <textarea v-model="newCommentContent" placeholder="댓글을 작성하세요"></textarea>
-        <button @click="submitComment">댓글 작성</button>
-      </div>
-    </div>
+        <!-- 자유게시판일 때만 댓글 섹션을 표시 -->
+        <v-row v-if="isFreeBoard">
+          <v-col cols="12">
+            <v-divider class="my-3"></v-divider>
+            <h4>댓글</h4>
+            <v-list>
+              <v-list-item v-for="comment in comments" :key="comment.id">
+                <v-list-item-content>
+                  <v-list-item-title>{{ comment.nickname }} ({{ formatDate(comment.createdTime) }})</v-list-item-title>
+                  <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action v-if="isAdmin || comment.user_id === parseInt(userId, 10)">
+                  <v-btn icon @click="deleteComment(comment.id)">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+                <v-list-item-action>
+                  <v-btn icon @click="openCommentReportModal(comment)">
+                    <v-icon>mdi-alert-circle-outline</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+
+            <v-form v-if="isLoggedIn" @submit.prevent="submitComment">
+              <v-textarea label="댓글 작성" v-model="newCommentContent" required />
+              <v-btn type="submit" color="primary">댓글 등록</v-btn>
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn color="primary" @click="goBack">목록으로 돌아가기</v-btn>
+      </v-card-actions>
+    </v-card>
+
+    <v-alert type="error" v-else-if="error">{{ error }}</v-alert>
+    <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
+
+    <!-- 게시글 삭제 확인 다이얼로그 -->
+    <v-dialog v-model="deleteDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="headline">게시글 삭제</v-card-title>
+        <v-card-text>게시글을 정말 삭제하시겠습니까?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="deleteDialog = false">취소</v-btn>
+          <v-btn color="error" text @click="deletePost">삭제</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- 신고 모달 창 -->
     <ReportCreate 
@@ -46,7 +84,7 @@
       :postCategory="reportData.postCategory" 
       @close="closeReportModal" 
     />
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -59,50 +97,86 @@ export default {
   },
   data() {
     return {
-      post: {}, // 게시글 데이터를 저장할 객체
+      post: null, // 게시글 데이터를 저장할 객체
       isAdmin: false, // 관리자인지 여부
       comments: [], // 댓글 목록
       newCommentContent: '', // 새로운 댓글 내용
       isLoggedIn: false, // 로그인 여부
-      nickname: '', // 현재 사용자 닉네임
       isFreeBoard: false, // 자유게시판 여부
       showReportModal: false, // 신고 모달 창 표시 여부
       reportData: {}, // 신고 모달에 전달할 데이터
-      userId: localStorage.getItem('userId') // 로그인된 사용자의 ID
+      userId: localStorage.getItem('userId'), // 로그인된 사용자의 ID
+      deleteDialog: false, // 삭제 확인 다이얼로그 표시 여부
+      error: null, // 에러 메시지
+      userEmail: '', // 현재 로그인한 사용자의 이메일
     };
   },
+  computed: {
+    canEditPost() {
+      // 관리자는 모든 게시글을 수정 가능, 'post' 카테고리는 작성자도 수정 가능
+      return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
+    },
+    canDeletePost() {
+      // 관리자는 모든 게시글을 삭제 가능, 'post' 카테고리는 작성자도 삭제 가능
+      return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
+    }
+  },
   created() {
+    this.decodeToken();
     this.checkAdminRole();
     this.checkLoginStatus();
     this.checkIfFreeBoard();
-    this.fetchPostDetail(); // 컴포넌트가 생성될 때 게시글 상세 정보를 가져옴
+    this.fetchPostDetail();
 
     if (this.isFreeBoard) {
-      this.fetchComments(); // 자유게시판일 때만 댓글 목록 가져오기
+      this.fetchComments();
     }
   },
   methods: {
+    decodeToken() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = this.parseJwt(token);
+        this.userEmail = decoded.sub;
+      } else {
+        this.$router.push('/login'); // 토큰이 없으면 로그인 페이지로 이동
+      }
+    },
+    parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        return JSON.parse(jsonPayload);
+      } catch (error) {
+        return null;
+      }
+    },
     checkAdminRole() {
       const role = localStorage.getItem('role');
-      if (role === 'ADMIN') {
-        this.isAdmin = true;
-      }
+      this.isAdmin = role === 'ADMIN';
     },
     checkLoginStatus() {
       const token = localStorage.getItem('token');
       this.isLoggedIn = !!token;
-      this.userEmail = localStorage.getItem('email'); // 로그인된 사용자의 이메일
     },
     checkIfFreeBoard() {
       const category = this.$route.params.category;
-      this.isFreeBoard = category === 'post'; // 'post'를 자유게시판 카테고리로 간주
+      this.isFreeBoard = category === 'post';
     },
     async fetchPostDetail() {
       try {
-        const postId = this.$route.params.id; // URL에서 게시글 ID를 가져옴
+        const postId = this.$route.params.id;
         const category = this.$route.params.category;
-
         let apiUrl;
+
         if (category === 'event') {
           apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/detail/${postId}`;
         } else if (category === 'notice') {
@@ -114,7 +188,7 @@ export default {
         }
 
         const response = await axios.get(apiUrl);
-        this.post = response.data.result; // 서버에서 받아온 데이터를 post 객체에 저장
+        this.post = response.data.result;
       } catch (error) {
         console.error('게시글을 불러오는 데 실패했습니다:', error);
         alert('게시글을 불러오는 데 실패했습니다.');
@@ -122,9 +196,9 @@ export default {
     },
     async fetchComments() {
       try {
-        const postId = this.$route.params.id; // URL에서 게시글 ID를 가져옴
+        const postId = this.$route.params.id;
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/comment/post/${postId}`);
-        this.comments = response.data.result; // 서버에서 받아온 댓글 목록을 comments 배열에 저장
+        this.comments = response.data.result;
       } catch (error) {
         console.error('댓글을 불러오는 데 실패했습니다:', error);
       }
@@ -177,6 +251,9 @@ export default {
     editPost() {
       const category = this.$route.params.category;
       this.$router.push({ name: 'BoardUpdate', params: { id: this.post.id, category } });
+    },
+    confirmDeletePost() {
+      this.deleteDialog = true;
     },
     async deletePost() {
       try {
@@ -232,91 +309,12 @@ export default {
 </script>
 
 <style scoped>
-.board-detail-container {
-  width: 80%;
+.v-container {
+  max-width: 800px;
   margin: 0 auto;
 }
-
-.board-detail-title {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.board-detail-info {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 20px;
-}
-
-.board-detail-image {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.board-detail-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.board-detail-content {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 40px;
-}
-
-.board-detail-actions {
-  text-align: right;
-}
-
-.board-detail-actions button {
-  padding: 10px 20px;
-  margin-left: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.board-detail-actions button:hover {
-  background-color: #0056b3;
-}
-
-.comments-section {
-  margin-top: 40px;
-}
-
-.comments-section h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.comments-section ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.comments-section li {
-  margin-bottom: 20px;
-}
-
-.comments-section textarea {
-  width: 100%;
-  height: 100px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.comments-section button {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.comments-section button:hover {
-  background-color: #218838;
+.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>
