@@ -6,7 +6,7 @@
       <span>작성일: {{ formatDate(post.createdTime) }}</span>
     </div>
     <div v-if="post.imageUrl" class="board-detail-image">
-      <img :src="post.imageUrl" alt="Post Image" v-if="post.imageUrl" />
+      <img :src="post.imageUrl" alt="Post Image" />
     </div>
     <div class="board-detail-content">
       <p>{{ post.content }}</p>
@@ -15,8 +15,12 @@
       <button @click="goBack">목록으로 돌아가기</button>
       <button v-if="isAdmin" @click="editPost">수정</button>
       <button v-if="isAdmin" @click="deletePost">삭제</button>
+      <button @click="openReportModal">신고하기</button> <!-- 신고하기 버튼 추가 -->
     </div>
     
+    <!-- 신고 모달 창 -->
+    <ReportCreate v-if="showReportModal" :postId="post.id" @close="closeReportModal" />
+
     <!-- 자유게시판일 때만 댓글 섹션을 표시 -->
     <div v-if="isFreeBoard" class="comments-section">
       <h2>댓글</h2>
@@ -38,8 +42,12 @@
 
 <script>
 import axios from 'axios';
+import ReportCreate from './ReportCreate.vue'; // 신고 모달 컴포넌트 가져오기
 
 export default {
+  components: {
+    ReportCreate
+  },
   data() {
     return {
       post: {}, // 게시글 데이터를 저장할 객체
@@ -49,6 +57,7 @@ export default {
       isLoggedIn: false, // 로그인 여부
       nickname: '', // 현재 사용자 닉네임
       isFreeBoard: false, // 자유게시판 여부
+      showReportModal: false, // 신고 모달 창 표시 여부
     };
   },
   created() {
@@ -111,22 +120,29 @@ export default {
       }
     },
     async submitComment() {
-    try {
+      try {
+        // 댓글 내용이 비어있는지 확인
+        if (!this.newCommentContent.trim()) {
+          alert('댓글 내용을 입력하세요.');
+          return;
+        }
+
         const postId = this.$route.params.id;
         const userId = localStorage.getItem('userId');  // 로컬 스토리지에서 userId를 가져옵니다.
         const newComment = {
-            content: this.newCommentContent,
-            postId: postId,
-            userId: userId  // userId를 포함시킵니다.
+          content: this.newCommentContent,
+          postId: postId,
+          userId: userId  // userId를 포함시킵니다.
         };
+
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/comment/create`, newComment);
         this.newCommentContent = ''; // 입력 필드 초기화
         this.fetchComments(); // 댓글 목록 새로고침
-    } catch (error) {
+      } catch (error) {
         console.error('댓글 작성에 실패했습니다:', error);
         alert('댓글 작성에 실패했습니다.');
-    }
-},
+      }
+    },
     async deleteComment(commentId) {
       try {
         const confirmed = confirm("이 댓글을 삭제하시겠습니까?");
@@ -178,6 +194,22 @@ export default {
         console.error('게시글을 삭제하는 데 실패했습니다:', error);
         alert('게시글 삭제에 실패했습니다.');
       }
+    },
+    openReportModal() {
+      // 신고 모달 창을 여는 대신, 신고 생성 페이지로 이동하면서 데이터를 전달
+      this.$router.push({
+        name: 'ReportCreate',
+        params: {
+          postId: this.post.id,
+          postTitle: this.post.title,
+          postContent: this.post.content,
+          authorEmail: this.post.authorEmail || this.post.nickname, // 예시로 작성자 이메일 또는 닉네임을 전달
+          postCategory: this.$route.params.category // 카테고리 정보도 함께 전달
+        }
+      });
+    },
+    closeReportModal() {
+      this.showReportModal = false; // 신고 모달 창 닫기
     },
   },
 };
