@@ -139,7 +139,7 @@
           const decoded = this.parseJwt(token);
           this.userEmail = decoded.sub;
           this.userRole = decoded.role;
-          console.log('이메일?', this.userEmail)
+        //   console.log('이메일?', this.userEmail)
         } else {
           this.$router.push('/login'); // 토큰이 없으면 로그인 페이지로 이동
         }
@@ -205,7 +205,7 @@
         }
       },
       editQuestion() {
-        this.$router.push(`/qna/edit/${this.$route.params.id}`); // 질문 수정 페이지로 이동
+        this.$router.push(`/qna/update/question/${this.$route.params.id}`); // 질문 수정 페이지로 이동
       },
       editAnswer() {
         this.$router.push(`/qna/edit/answer/${this.$route.params.id}`); // 답변 수정 페이지로 이동

@@ -84,7 +84,7 @@ public class QnAService {
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto, MultipartFile imageSsr) {
         User answeredBy = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN || answeredBy.getRole() != Role.TEACHER) {
+        if (answeredBy == null || answeredBy.getRole().equals("ADMIN") || answeredBy.getRole().equals("TEACHER")) {
             throw new SecurityException("권한이 없습니다.");
         }
         QnA qnA = qnARepository.findById(id)
