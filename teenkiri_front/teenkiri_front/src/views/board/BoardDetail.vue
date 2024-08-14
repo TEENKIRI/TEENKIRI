@@ -6,7 +6,7 @@
       <span>작성일: {{ formatDate(post.createdTime) }}</span>
     </div>
     <div v-if="post.imageUrl" class="board-detail-image">
-      <img :src="post.imageUrl" alt="Post Image" v-if="post.imageUrl" />
+      <img :src="post.imageUrl" alt="Post Image" />
     </div>
     <div class="board-detail-content">
       <p>{{ post.content }}</p>
@@ -15,8 +15,9 @@
       <button @click="goBack">목록으로 돌아가기</button>
       <button v-if="isAdmin" @click="editPost">수정</button>
       <button v-if="isAdmin" @click="deletePost">삭제</button>
+      <button @click="openPostReportModal">신고하기</button> <!-- 게시글 신고하기 버튼 -->
     </div>
-    
+
     <!-- 자유게시판일 때만 댓글 섹션을 표시 -->
     <div v-if="isFreeBoard" class="comments-section">
       <h2>댓글</h2>
@@ -24,7 +25,8 @@
         <li v-for="comment in comments" :key="comment.id">
           <p><strong>{{ comment.nickname }}</strong>: {{ comment.content }}</p>
           <small>{{ formatDate(comment.createdTime) }}</small>
-          <button v-if="isAdmin" @click="deleteComment(comment.id)">삭제</button> <!-- 관리자만 삭제 가능 -->
+          <button v-if="isAdmin || comment.user_id === parseInt(userId, 10)" @click="deleteComment(comment.id)">삭제</button> <!-- 관리자 또는 댓글 작성자만 삭제 가능 -->
+          <button @click="openCommentReportModal(comment)">신고</button> <!-- 댓글 신고하기 버튼 -->
         </li>
       </ul>
 
@@ -33,13 +35,28 @@
         <button @click="submitComment">댓글 작성</button>
       </div>
     </div>
+
+    <!-- 신고 모달 창 -->
+    <ReportCreate 
+      v-if="showReportModal" 
+      :postId="reportData.postId" 
+      :postTitle="reportData.postTitle" 
+      :postContent="reportData.postContent" 
+      :authorEmail="reportData.authorEmail" 
+      :postCategory="reportData.postCategory" 
+      @close="closeReportModal" 
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import ReportCreate from '../report/ReportCreate.vue';
 
 export default {
+  components: {
+    ReportCreate
+  },
   data() {
     return {
       post: {}, // 게시글 데이터를 저장할 객체
@@ -49,6 +66,9 @@ export default {
       isLoggedIn: false, // 로그인 여부
       nickname: '', // 현재 사용자 닉네임
       isFreeBoard: false, // 자유게시판 여부
+      showReportModal: false, // 신고 모달 창 표시 여부
+      reportData: {}, // 신고 모달에 전달할 데이터
+      userId: localStorage.getItem('userId') // 로그인된 사용자의 ID
     };
   },
   created() {
@@ -69,7 +89,6 @@ export default {
       }
     },
     checkLoginStatus() {
-      // 로그인 상태와 현재 사용자 이메일을 확인하는 로직
       const token = localStorage.getItem('token');
       this.isLoggedIn = !!token;
       this.userEmail = localStorage.getItem('email'); // 로그인된 사용자의 이메일
@@ -111,28 +130,34 @@ export default {
       }
     },
     async submitComment() {
-    try {
+      try {
+        if (!this.newCommentContent.trim()) {
+          alert('댓글 내용을 입력하세요.');
+          return;
+        }
+
         const postId = this.$route.params.id;
-        const userId = localStorage.getItem('userId');  // 로컬 스토리지에서 userId를 가져옵니다.
+        const userId = localStorage.getItem('userId');
         const newComment = {
-            content: this.newCommentContent,
-            postId: postId,
-            userId: userId  // userId를 포함시킵니다.
+          content: this.newCommentContent,
+          postId: postId,
+          userId: userId
         };
+
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/comment/create`, newComment);
-        this.newCommentContent = ''; // 입력 필드 초기화
-        this.fetchComments(); // 댓글 목록 새로고침
-    } catch (error) {
+        this.newCommentContent = '';
+        this.fetchComments();
+      } catch (error) {
         console.error('댓글 작성에 실패했습니다:', error);
         alert('댓글 작성에 실패했습니다.');
-    }
-},
+      }
+    },
     async deleteComment(commentId) {
       try {
         const confirmed = confirm("이 댓글을 삭제하시겠습니까?");
         if (confirmed) {
           await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/comment/delete/${commentId}`);
-          this.fetchComments(); // 댓글 목록 새로고침
+          this.fetchComments();
         }
       } catch (error) {
         console.error('댓글 삭제에 실패했습니다:', error);
@@ -172,12 +197,35 @@ export default {
 
           await axios.get(apiUrl);
           alert('게시글이 삭제되었습니다.');
-          this.goBack(); // 삭제 후 목록으로 돌아가기
+          this.goBack();
         }
       } catch (error) {
         console.error('게시글을 삭제하는 데 실패했습니다:', error);
         alert('게시글 삭제에 실패했습니다.');
       }
+    },
+    openPostReportModal() {
+      this.reportData = {
+        postId: this.post.id,
+        postTitle: this.post.title,
+        postContent: this.post.content,
+        authorEmail: this.post.nickname,
+        postCategory: this.$route.params.category
+      };
+      this.showReportModal = true;
+    },
+    openCommentReportModal(comment) {
+      this.reportData = {
+        postId: comment.id,
+        postTitle: this.post.title,
+        postContent: comment.content,
+        authorEmail: comment.nickname,
+        postCategory: this.$route.params.category
+      };
+      this.showReportModal = true;
+    },
+    closeReportModal() {
+      this.showReportModal = false;
     },
   },
 };
