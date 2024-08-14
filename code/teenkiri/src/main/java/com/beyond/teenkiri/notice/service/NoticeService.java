@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 
@@ -110,8 +111,10 @@ public class NoticeService {
         // 이미지 처리: imageSsr이 null이 아니면 imageSsr 사용, 그렇지 않으면 dto의 image 사용
         MultipartFile image = (imageSsr != null) ? imageSsr : dto.getImage();
 
+        User loginUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 관리자입니다."));
         // 로그인된 사용자가 작성자인지 확인
-        if (notice.getUser().getEmail().equals(userEmail)) {
+        if (loginUser.getRole() == Role.ADMIN) {
             try {
                 if (image != null && !image.isEmpty()) {  // 이미지가 null이 아니고 비어있지 않을 때만 처리
                     String bgImagePathFileName = notice.getId() + "_" + image.getOriginalFilename();
@@ -126,7 +129,7 @@ public class NoticeService {
                 throw new RuntimeException("게시글 수정에 실패했습니다.", e);
             }
         } else {
-            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
 
         // 변경된 공지사항 저장

@@ -101,29 +101,28 @@ public class EventService {
         // 현재 로그인된 사용자의 이메일을 가져옵니다.
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 로그인된 사용자가 게시글의 작성자인지 확인합니다.
-        if (!event.getUser().getEmail().equals(userEmail)) {
-            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
-        }
-
+        User loginUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
         // 새로 받은 이미지가 없으면, DTO의 이미지를 사용합니다. DTO의 이미지도 없으면 이미지를 건너뜁니다.
         MultipartFile image = (imageSsr != null) ? imageSsr : dto.getImage();
-
-        try {
-            if (image != null && !image.isEmpty()) {
-                // 이미지가 비어있지 않다면, S3에 이미지를 업로드하고 경로를 업데이트합니다.
-                String bgImagePathFileName = event.getId() + "_" + image.getOriginalFilename();
-                byte[] bgImagePathByte = image.getBytes();
-                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                event.toUpdate(dto, s3ImagePath); // 이미지를 포함하여 업데이트합니다.
-            } else {
-                // 이미지 없이 제목과 내용만 업데이트합니다.
-                event.toUpdate(dto, event.getImageUrl());
+        if (loginUser.getRole() == Role.ADMIN){
+            try {
+                if (image != null && !image.isEmpty()) {
+                    // 이미지가 비어있지 않다면, S3에 이미지를 업로드하고 경로를 업데이트합니다.
+                    String bgImagePathFileName = event.getId() + "_" + image.getOriginalFilename();
+                    byte[] bgImagePathByte = image.getBytes();
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                    event.toUpdate(dto, s3ImagePath); // 이미지를 포함하여 업데이트합니다.
+                } else {
+                    // 이미지 없이 제목과 내용만 업데이트합니다.
+                    event.toUpdate(dto, event.getImageUrl());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("게시글 수정에 실패했습니다.");
             }
-        } catch (IOException e) {
-            throw new RuntimeException("게시글 수정에 실패했습니다.");
+        }else {
+            throw new SecurityException("접근권한이 없습니다");
         }
-
         // 변경된 이벤트 정보를 저장합니다.
         eventRepository.save(event);
     }
