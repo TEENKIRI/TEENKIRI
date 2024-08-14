@@ -1,9 +1,10 @@
-import UserCreate from "@/views/UserCreate.vue";
-import LoginPage from "@/views/LoginPage.vue";
-import FindIdPage from "@/views/FindIdPage.vue";
-import FindPasswordPage from "@/views/FindPasswordPage.vue";
-import UserList from "@/views/UserList.vue";
-import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
+import UserCreate from "@/views/user/UserCreate.vue";
+import LoginPage from "@/views/user/LoginPage.vue";
+import FindIdPage from "@/views/user/FindIdPage.vue";
+import FindPasswordPage from "@/views/user/FindPasswordPage.vue";
+import UserList from "@/views/user/UserList.vue";
+import ResetPasswordPage from "@/views/user/ResetPasswordPage.vue";
+import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 
 export const memberRouter = [
     {
@@ -17,12 +18,12 @@ export const memberRouter = [
         component: LoginPage
     },
     {
-        path: '/find-id',
+        path: '/user/find-id',
         name: 'FindIdPage',
         component: FindIdPage
     },
     {
-        path: '/find-password',
+        path: '/user/find-password',
         name: 'FindPasswordPage',
         component: FindPasswordPage
     },
@@ -32,9 +33,14 @@ export const memberRouter = [
         component: UserList
     },
     {
-    path: '/user/reset-password',
-    name: 'ResetPasswordPage',
-    component: ResetPasswordPage,
-    props: route => ({ token: route.query.token }) // URL에서 token 쿼리 파라미터를 가져와 props로 전달
-    }
+        path: '/user/reset-password',
+        name: 'ResetPasswordPage',
+        component: ResetPasswordPage,
+        props: route => ({ token: route.query.token })
+    },
+    {
+        path: '/user/edit-info',
+        name: 'UpdateUserInfo',
+        component: UpdateUserInfo,
+    },
 ]

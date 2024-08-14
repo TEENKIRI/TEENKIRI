@@ -49,5 +49,9 @@ public class Comment extends BaseTimeEntity {
         createdTime = LocalDateTime.now();
     }
 
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
+
 
 }
