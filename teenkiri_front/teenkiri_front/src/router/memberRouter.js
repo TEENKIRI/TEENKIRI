@@ -4,6 +4,7 @@ import FindIdPage from "@/views/user/FindIdPage.vue";
 import FindPasswordPage from "@/views/user/FindPasswordPage.vue";
 import UserList from "@/views/user/UserList.vue";
 import ResetPasswordPage from "@/views/user/ResetPasswordPage.vue";
+import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 
 export const memberRouter = [
     {
@@ -36,5 +37,10 @@ export const memberRouter = [
         name: 'ResetPasswordPage',
         component: ResetPasswordPage,
         props: route => ({ token: route.query.token })
-    }
+    },
+    {
+        path: '/user/edit-info',
+        name: 'UpdateUserInfo',
+        component: UpdateUserInfo,
+    },
 ]

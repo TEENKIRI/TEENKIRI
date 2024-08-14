@@ -32,6 +32,9 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(nullable = false, length = 50)
+    private String nickname;
+
     @ManyToOne
     @JoinColumn(name = "qna_id")
     private QnA qna;
@@ -44,6 +47,10 @@ public class Comment extends BaseTimeEntity {
     @PrePersist
     protected void onCreate() {
         createdTime = LocalDateTime.now();
+    }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
     }
 
 

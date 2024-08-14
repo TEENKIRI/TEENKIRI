@@ -47,6 +47,7 @@ public class Post extends BaseTimeEntity {
     public PostListResDto listFromEntity() {
         return PostListResDto.builder()
                 .id(this.id)
+                .user_id(this.user.getId())
                 .title(this.title)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
@@ -58,6 +59,7 @@ public class Post extends BaseTimeEntity {
     public PostDetailDto detailFromEntity() {
         return PostDetailDto.builder()
                 .id(this.getId())
+                .user_id(this.user.getId())
                 .title(this.getTitle())
                 .content(this.getContent())
                 .nickname(this.user.getNickname())
