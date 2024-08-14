@@ -107,7 +107,7 @@ export default {
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/edit-info`);
         if (response.status === 200 && response.data.result) {
           this.userEditInfo = response.data.result;
-          this.originalUserEditInfo = { ...response.data.result }; // 원래 정보를 저장
+          this.originalUserEditInfo = { ...response.data.result }; // 원래 정보를 저장하는 코드(없으면 null로 바뀜)
         } else {
           alert('회원 정보 조회에 실패했습니다.');
         }
@@ -122,6 +122,7 @@ export default {
       }
 
       try {
+        // 백엔드에서 처리하지 않고 프론트에서 해결
         const updatedInfo = {
           nickname: this.userEditInfo.nickname || this.originalUserEditInfo.nickname,
           name: this.userEditInfo.name || this.originalUserEditInfo.name,

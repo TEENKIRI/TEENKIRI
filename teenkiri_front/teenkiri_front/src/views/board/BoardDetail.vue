@@ -6,7 +6,7 @@
         <v-spacer></v-spacer>
         <v-btn v-if="canEditPost" color="warning" @click="editPost">수정</v-btn>
         <v-btn v-if="canDeletePost" color="error" @click="confirmDeletePost">삭제</v-btn>
-        <v-btn color="secondary" @click="openPostReportModal">신고하기</v-btn>
+        <v-btn v-if="isFreeBoard" color="secondary" @click="openPostReportModal">신고하기</v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -116,13 +116,10 @@ export default {
   computed: {
     canEditPost() {
       // 관리자는 모든 게시글을 수정 가능, 'post' 카테고리는 작성자도 수정 가능
-      return this.isAdmin 
-      
-      || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
+      return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
     },
     canDeletePost() {
       // 관리자는 모든 게시글을 삭제 가능, 'post' 카테고리는 작성자도 삭제 가능
-      console.log(this.post.userEmail);
       return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
     }
   },
@@ -143,7 +140,6 @@ export default {
       if (token) {
         const decoded = this.parseJwt(token);
         this.userEmail = decoded.sub;
-        // console.log(this.userEmail)
       } else {
         this.$router.push('/login'); // 토큰이 없으면 로그인 페이지로 이동
       }
