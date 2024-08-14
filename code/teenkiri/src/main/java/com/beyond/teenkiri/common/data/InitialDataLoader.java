@@ -1,4 +1,4 @@
-package com.beyond.teenkiri.common.service;
+package com.beyond.teenkiri.common.data;
 
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.dto.UserSaveReqDto;
