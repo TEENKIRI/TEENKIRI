@@ -11,6 +11,7 @@ import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,14 +34,16 @@ public class QnAService {
     private final CommentRepository commentRepository;
     private final UploadAwsFileService uploadAwsFileService;
     private final CommentService commentService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService) {
+    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository) {
         this.qnARepository = qnARepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
         this.uploadAwsFileService = uploadAwsFileService;
         this.commentService = commentService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -84,7 +87,7 @@ public class QnAService {
     @Transactional
     public QnA answerQuestion(Long id, QnAAnswerReqDto dto, MultipartFile imageSsr) {
         User answeredBy = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
+        if (answeredBy == null || answeredBy.getRole().equals("ADMIN") || answeredBy.getRole().equals("TEACHER")) {
             throw new SecurityException("권한이 없습니다.");
         }
         QnA qnA = qnARepository.findById(id)
@@ -138,27 +141,28 @@ public class QnAService {
         QnA qnA = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User answeredBy = userService.findByEmail(userEmail);
-        if (answeredBy == null || answeredBy.getRole() != Role.ADMIN) {
-            throw new SecurityException("권한이 없습니다.");
-        }
+        User answeredBy = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 선생님 또는 관리자입니다. 고객센터에 문의하세요"));
         MultipartFile image = (imageSsr != null) ? imageSsr : dto.getAImage();
 
-        if (qnA.getAnswerer().getEmail().equals(userEmail)) {
-            try {
-                MultipartFile imageFile = image;
-                if (!imageFile.isEmpty()) {
-                    String bgImagePathFileName = qnA.getId() + "_answer_" + imageFile.getOriginalFilename();
-                    byte[] bgImagePathByte = imageFile.getBytes();
-                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
-                    qnA.QnAAUpdate(dto, s3ImagePath);
+        System.out.println(answeredBy.getEmail()+ answeredBy.getRole());
+        if (answeredBy.getRole() == Role.ADMIN || answeredBy.getRole() == Role.TEACHER) {{
+                try {
+                    MultipartFile imageFile = image;
+                    if (!imageFile.isEmpty()) {
+                        String bgImagePathFileName = qnA.getId() + "_answer_" + imageFile.getOriginalFilename();
+                        byte[] bgImagePathByte = imageFile.getBytes();
+                        String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                        qnA.QnAAUpdate(dto, s3ImagePath);
+                        qnARepository.save(qnA);
 //                post.updateImagePath(s3ImagePath);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("게시글 수정에 실패했습니다.");
                 }
-            } catch (IOException e) {
-                throw new RuntimeException("게시글 수정에 실패했습니다.");
             }
         } else {
-            throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
         qnARepository.save(qnA);
     }

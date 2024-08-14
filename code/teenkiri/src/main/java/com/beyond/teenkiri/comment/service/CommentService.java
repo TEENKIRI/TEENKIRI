@@ -90,7 +90,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
         User user = comment.getUser();
-        if (user.getRole() != Role.ADMIN) {
+        if (user.getRole().equals("ADMIN")) {
             throw new SecurityException("권한이 없습니다.");
         }
         comment.updateDelYN(DelYN.Y);

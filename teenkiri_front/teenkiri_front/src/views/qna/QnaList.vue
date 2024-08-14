@@ -19,7 +19,7 @@
                     <th>생성 시간</th>
                     <th>수정 시간</th>
                     <th
-                    v-if="userRole === 'ADMIN'" >답변하기</th>
+                    v-if="userRole === 'ADMIN' || 'TEACHER'" >답변하기</th>
                   </tr>
                 </thead>
                 <tbody>

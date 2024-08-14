@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QnAQtoUpdateDto {
+    private String userEmail;
     private String questionText;
     private String title;
     private LocalDateTime updatedTime;
