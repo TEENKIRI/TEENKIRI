@@ -1,9 +1,10 @@
 package com.beyond.teenkiri.common.data;
 
-import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.common.domain.Address;
+import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.event.repository.EventRepository;
 import com.beyond.teenkiri.user.domain.Role;
+import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.UserSaveReqDto;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.service.UserService;
@@ -11,41 +12,68 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class InitialDataLoader implements CommandLineRunner {
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private EventRepository eventRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        // Admin 유저 추가
-        if (userRepository.findByEmail("admin@teenkiri.com").isEmpty()) {
+        initUserData();
+        initEventData();
+    }
+
+    private void initUserData() {
+        registerUserIfNotExists("admin@teenkiri.com", "ADMIN", "ADMIN", "12341234", "07012345678", Role.ADMIN,
+                new Address("서울", "동작구", "보라매로 87"));
+
+        registerUserIfNotExists("jekim@gmail.com", "김정은", "쩡운이신중행", "testtest", "01035427568", Role.STUDENT,
+                new Address("서울", "마포구", "서강동 84"));
+
+        registerUserIfNotExists("chkim@gmail.com", "김창현", "창효니창핑행", "testtest", "01084156845", Role.STUDENT,
+                new Address("서울", "노원구", "상계동 35"));
+
+        registerUserIfNotExists("halee@gmail.com", "이한아", "눈누나나핑", "testtest", "01097265482", Role.ADMIN,
+                new Address("서울", "용산구", "한강로동 99"));
+
+        registerUserIfNotExists("yohan@teenkiri.com", "황요한", "[T]황요한", "testtest", "01012345678", Role.TEACHER,
+                null);
+
+        registerUserIfNotExists("yena@teenkiri.com", "이예나", "[T]이예나", "testtest", "01098765432", Role.TEACHER,
+                null);
+    }
+
+    private void registerUserIfNotExists(String email, String name, String nickname, String password, String phone, Role role, Address address) {
+        if (userRepository.findByEmail(email).isEmpty()) {
             userService.register(UserSaveReqDto.builder()
-                    .name("ADMIN")
-                    .nickname("ADMIN")
-                    .email("admin@teenkiri.com")
-                    .password("12341234")
-                    .phone("07012345678")
-                    .role(Role.ADMIN)
-                    .address(Address.builder()
-                            .city("서울")
-                            .street("동작구")
-                            .zipcode("보라매로 87")
-                            .build())
+                    .name(name)
+                    .nickname(nickname)
+                    .email(email)
+                    .password(password)
+                    .phone(phone)
+                    .role(role)
+                    .address(address)
                     .build());
         }
+    }
 
+    private void initEventData() {
         if (eventRepository.count() == 0) {
+            User adminUser = userRepository.findByEmail("admin@teenkiri.com").orElseThrow(
+                    () -> new IllegalStateException("ADMIN 유저를 찾을 수 없습니다.")
+            );
+
             Event event1 = Event.builder()
                     .title("이달의 그린히어로 SNS 인증 이벤트!")
                     .content("개인 SNS (인스타, 페이스북, 블로그)에 리그라운드 제품을 사용하며 환경을 지키는 그린히어로 인증 후기를 남겨주세요~!!"
-                            + "<br />기간: 2024. 3. 1 ~ 이벤트 종료 공지 시까지"
+                            + "<br />기간: 2024. 07. 21 ~ 이벤트 종료 공지 시까지"
                             + "<br />사은품: 스타벅스 아메리카노 Tall Size 쿠폰"
                             + "<br />당첨자 발표: 매월 5일 매월 3명 선정!!"
                             + "<br /><br />이벤트에 선정 된 분들께 개별 DM & 비밀댓글로 연락드리며, 해당 이벤트의 당첨자 공지 게시물에 업로드 됩니다."
@@ -67,6 +95,7 @@ public class InitialDataLoader implements CommandLineRunner {
                             + "<br />- 본 프로모션은 당사 및 제휴사 사정으로 변경 또는 중단될 수 있습니다."
                             + "<br />- 할인 미적용 문의: 카카오페이 고객센터 1644-7405, 카카오톡 [카카오페이 고객센터] 상담 채널")
                     .imageUrl("https://example.com/image1.jpg")
+                    .user(adminUser)
                     .build();
 
             eventRepository.save(event1);
