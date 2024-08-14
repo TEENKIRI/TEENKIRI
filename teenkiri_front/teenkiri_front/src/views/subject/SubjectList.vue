@@ -20,17 +20,17 @@
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
-          <div class="swiper-slide">
+          <div class="swiper-slide" v-for="sm in subject.subjectIsMainList" :key="sm.id">
             <div class="thumb">
               <a href="javascript:void(0)"
                 ><img
-                  v-bind:src="require(`@/assets/images/thumb_1.png`)"
-                  alt=""
+                  v-bind:src="sm.subjectThumUrl"
+                  alt="강좌 썸네일"
               /></a>
             </div>
             <div class="txt">
-              <p class="subject">함께하는 슬기로운 생활</p>
-              <p class="name">한핑핑즈 선생님</p>
+              <p class="subject">{{ sm.title }}</p>
+              <p class="name">{{ sm.teacherName }}</p>
             </div>
             <button type="button" class="btn_like"></button>
           </div>
@@ -40,18 +40,18 @@
     <v-row class="mt-5">
       <v-col cols="12" class="py-2">
         <v-btn-toggle
-          v-model="text"
+          v-model="course.selectedMenu"
           color="primary"
           rounded="0"
           group
           class="d-flex flex-row"
         >
-          <v-btn value="left" class="flex-grow-1"> 국어 </v-btn>
-          <v-btn value="center" class="flex-grow-1 v-item--active">
-            국어
+          <v-btn class="flex-grow-1" value="all">
+            all
           </v-btn>
-          <v-btn value="right" class="flex-grow-1"> 국어 </v-btn>
-          <v-btn value="justify" class="flex-grow-1"> Justify </v-btn>
+          <v-btn class="flex-grow-1" v-for="c in course.courseList" :key="c.id" :value="c.id">
+            {{ c.title }}
+          </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -61,11 +61,18 @@
           selected-class="bg-purple"
           multiple
           class="d-flex justify-start"
+          v-model="grade.selectedGrades"
+          @update:modelValue="onSelectionGradeChange"
         >
           <div class="mr-5">학년</div>
-          <v-item v-for="n in 6" :key="n" v-slot="{ selectedClass, toggle }">
-            <v-chip class="mr-2" :class="selectedClass" @click="toggle">
-              학년 {{ n }}
+          <v-item v-for="n in grade.gradeList" :key="n.value" v-slot="{ selectedClass, toggle }" :value="n.value">
+            <v-chip
+              class="mr-2"
+              :class="selectedClass"
+              @click="toggle"
+              :value="n.value"
+            >
+              {{ n.text }} <!-- 1학년, 2학년 등 -->
             </v-chip>
           </v-item>
         </v-item-group>
@@ -94,17 +101,17 @@
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest">
-            <div class="swiper-slide">
+            <div class="swiper-slide" v-for="s in subject.subjectList" :key="s.id">
               <div class="thumb">
                 <a href="javascript:void(0)"
                   ><img
-                    v-bind:src="require(`@/assets/images/thumb_1.png`)"
-                    alt=""
+                    v-bind:src="s.subjectThumUrl"
+                    alt="강좌 썸네일"
                 /></a>
               </div>
               <div class="txt">
-                <p class="subject">함께하는 슬기로운 생활</p>
-                <p class="name">한핑핑즈 선생님</p>
+                <p class="subject">{{ s.title }}</p>
+                <p class="name">{{ s.teacherName }}</p>
               </div>
               <button type="button" class="btn_like"></button>
             </div>
@@ -116,6 +123,8 @@
 </template>
   
   <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -132,16 +141,112 @@ export default {
         { text: "평점순", value: "like" },
       ],
       searchValue: "",
-      text: "center",
-      icon: "justify",
+      course:{
+        courseList:[],
+        selectedMenu:"all",
+        page:{
+          pageSize: 5,
+          currentPage:0,
+        }
+      },
+      subject:{
+        subjectIsMainList:[],
+        subjectList:[],
+        page:{
+          pageSize: 5,
+          currentPage:0,
+        }
+      },
+      grade:{
+        gradeList:[ // DB에 있는 GRADE 붙여넣음!
+          {value:"GRADE_1", text:"1학년"}, 
+          {value:"GRADE_2", text:"2학년"}, 
+          {value:"GRADE_3", text:"3학년"}, 
+          {value:"GRADE_4", text:"4학년"}, 
+          {value:"GRADE_5", text:"5학년"}, 
+          {value:"GRADE_6", text:"6학년"},
+        ],
+        selectedGrades: []
+      },
       toggle_none: null,
       toggle_one: 0,
       toggle_exclusive: 2,
       toggle_multiple: [0, 1, 2],
+      
     };
   },
-  created() {},
-  method: {},
+  created(){
+    this.getCourseList();
+    this.getSubjectMainList();
+    this.getSubjectList();
+  },
+  watch:{
+      'course.selectedMenu': function(newValue, oldValue) { // 2depth여서 문자열로 작성해야 작동함
+      console.log("선택한 메뉴 변수 값이 변경되었다!");
+      console.log('변경 전:', oldValue, '변경 후:', newValue);
+
+      this.resetSubjectVariables(); // subject와 관련된 값 초기화
+
+      this.getSubjectList();
+    }
+  },
+  methods: {
+    async getCourseList(){
+      const params = {
+          size: this.course.page.pageSize,
+          page: this.course.page.currentPage
+      }
+      
+      const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, {params});
+      const addtionalData = response.data.result.content;
+      console.log(response)
+      this.course.courseList = [...this.course.courseList, ...addtionalData]
+    },
+    async getSubjectMainList(){
+      const params = {
+          size: 10, //10개만 보이도록 작업~
+          page: 0
+      }
+      
+      const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, {params});
+      const addtionalData = response.data.result.content;
+      console.log(response)
+      this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...addtionalData]
+    },
+    async getSubjectList(){
+      const params = {
+          size: this.subject.page.pageSize,
+          page: this.subject.page.currentPage
+      }
+      let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`
+      if(this.course.selectedMenu === "all"){
+        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`
+      }else{
+        // course id가 있는 경우
+        if(this.grade.selectedGrades.length >= 1){ //선택된 학년이 있는 경우
+          const selectedGradeStr = this.grade.selectedGrades.join("&");
+          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`
+        }
+      }
+      
+      const response = await axios.get(api_url, {params});
+      const addtionalData = response.data.result.content;
+      console.log(response)
+      this.subject.subjectList = [...this.subject.subjectList, ...addtionalData]
+    },
+    resetSubjectVariables(){
+      this.subject.page.currentPage = 0;
+      this.subject.subjectList = [];
+
+      this.grade.selectedGrades = [];
+    },
+    onSelectionGradeChange(newValue) {
+      console.log("선택된 학년이 변경되었습니다:", newValue);
+      this.subject.page.currentPage = 0;
+      this.subject.subjectList = [];
+      this.getSubjectList();
+    }
+  },
 };
 </script>
   

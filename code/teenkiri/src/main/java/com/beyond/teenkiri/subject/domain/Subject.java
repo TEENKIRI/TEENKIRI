@@ -86,6 +86,7 @@ public class Subject extends BaseTimeEntity {
                 .id(this.id)
                 .title(this.title)
                 .teacherName(this.userTeacher.getName())
+                .subjectThumUrl(this.subjectThumUrl)
                 .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
@@ -98,6 +99,7 @@ public class Subject extends BaseTimeEntity {
                 .title(this.title)
                 .grade(this.grade)
                 .userTeacherName(this.userTeacher.getName())
+                .subjectThumUrl(this.subjectThumUrl)
                 .courseTitle(this.course.getTitle())
                 .description(this.description)
                 .rating(this.rating)
