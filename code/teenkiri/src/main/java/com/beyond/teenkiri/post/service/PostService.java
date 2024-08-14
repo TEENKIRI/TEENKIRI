@@ -47,11 +47,6 @@ public class PostService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 
-        // 사용자가 관리자인지 확인
-        if (user.getRole() != Role.ADMIN) {
-            throw new SecurityException("권한이 없습니다.");
-        }
-
         // 이미지가 전달되지 않았으면 DTO에서 가져옴
         MultipartFile image = (imageSsr == null) ? dto.getImage() : imageSsr;
 
