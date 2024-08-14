@@ -20,7 +20,10 @@
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
-          <div class="swiper-slide" v-for="sm in subject.subjectIsMainList" :key="sm.id">
+          <div class="swiper-slide" 
+            v-for="sm in subject.subjectIsMainList" :key="sm.id"
+            @click="goToDetail(sm.id)"
+          >
             <div class="thumb">
               <a href="javascript:void(0)"
                 ><img
@@ -101,7 +104,10 @@
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest">
-            <div class="swiper-slide" v-for="s in subject.subjectList" :key="s.id">
+            <div class="swiper-slide" 
+              v-for="s in subject.subjectList" :key="s.id"
+              @click="goToDetail(s.id)"
+            >
               <div class="thumb">
                 <a href="javascript:void(0)"
                   ><img
@@ -245,7 +251,11 @@ export default {
       this.subject.page.currentPage = 0;
       this.subject.subjectList = [];
       this.getSubjectList();
-    }
+    },
+
+    goToDetail(id) {
+      this.$router.push({ name: 'SubjectDetail', params: { id } });
+    },
   },
 };
 </script>
