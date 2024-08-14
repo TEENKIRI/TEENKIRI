@@ -142,10 +142,10 @@ export default {
   },
   computed: {
     top5() {
-      return this.event.slice(0, 5);
+      return this.event.slice(0, 4);
     },
     topNews() {
-      return this.news.slice(0, 5);
+      return this.news.slice(0, 4);
     },
   },
   created() {
