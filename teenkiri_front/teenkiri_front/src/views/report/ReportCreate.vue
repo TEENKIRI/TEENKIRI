@@ -1,13 +1,16 @@
 <template>
   <div class="modal-overlay" @click.self="cancelReport">
     <div class="modal-container">
-      <h1>게시글 신고하기</h1>
-      <p>신고할 게시글: {{ postTitle }}</p>
+      <h1>신고하기</h1>
+      <p>신고할 대상: 
+        <span v-if="commentContent">{{ commentContent }}</span> <!-- 댓글 신고 시 댓글 내용 표시 -->
+        <span v-else>{{ postTitle }}</span> <!-- 게시글 신고 시 게시글 제목 표시 -->
+      </p>
       <div>
         <label>신고 사유:</label>
         <select v-model="selectedReason">
           <option value="ABUSIVE">욕설</option>
-          <option value="SPAM">도배</option>
+          <option value="WALLPAPERS">도배</option>
           <option value="ADVERTISING">광고</option>
           <option value="OTHER">기타</option>
         </select>
@@ -27,11 +30,35 @@ export default {
   props: {
     postId: {
       type: Number,
-      required: true
+      required: false // 게시글 신고가 아닐 수 있으므로 false로 설정
     },
     postTitle: {
       type: String,
-      required: true
+      required: false // 게시글 신고가 아닐 수 있으므로 false로 설정
+    },
+    postContent: {
+      type: String,
+      required: false // 게시글 신고가 아닐 수 있으므로 false로 설정
+    },
+    authorEmail: {
+      type: String,
+      required: false // 게시글 신고가 아닐 수 있으므로 false로 설정
+    },
+    postCategory: {
+      type: String,
+      required: false // 게시글 신고가 아닐 수 있으므로 false로 설정
+    },
+    commentId: {
+      type: Number,
+      required: false // 댓글 신고가 아닐 수 있으므로 false로 설정
+    },
+    commentContent: {
+      type: String,
+      required: false // 댓글 신고가 아닐 수 있으므로 false로 설정
+    },
+    commentAuthor: {
+      type: String,
+      required: false // 댓글 신고가 아닐 수 있으므로 false로 설정
     }
   },
   data() {
@@ -39,11 +66,24 @@ export default {
       selectedReason: 'ABUSIVE', // 기본 선택 사유
     };
   },
+  created() {
+    // 전달된 props 데이터를 콘솔에 출력
+    console.log('Received props:');
+    console.log('Post ID:', this.postId);
+    console.log('Post Title:', this.postTitle);
+    console.log('Post Content:', this.postContent);
+    console.log('Author Email:', this.authorEmail);
+    console.log('Post Category:', this.postCategory);
+    console.log('Comment ID:', this.commentId);
+    console.log('Comment Content:', this.commentContent);
+    console.log('Comment Author:', this.commentAuthor);
+  },
   methods: {
     async submitReport() {
       try {
         const reportData = {
           postId: this.postId,
+          commentId: this.commentId, // 댓글 ID 추가
           reason: this.selectedReason,
         };
 
@@ -69,11 +109,11 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 배경을 어둡게 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* 다른 요소보다 앞에 위치 */
+  z-index: 1000;
 }
 
 .modal-container {

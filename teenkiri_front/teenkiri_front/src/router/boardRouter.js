@@ -1,8 +1,8 @@
-import BoardList from "@/views/BoardList.vue";
-import BoardCreate from "@/views/BoardCreate.vue";
-import BoardUpdate from "@/views/BoardUpdate.vue";
-import BoardDetail from "@/views/BoardDetail.vue";
-import ReportCreate from "@/views/ReportCreate.vue";
+import BoardList from "@/views/board/BoardList.vue";
+import BoardCreate from "@/views/board/BoardCreate.vue";
+import BoardUpdate from "@/views/board/BoardUpdate.vue";
+import BoardDetail from "@/views/board/BoardDetail.vue";
+
 
 export const boardRouter = [
     {
@@ -25,16 +25,5 @@ export const boardRouter = [
         name: 'BoardDetail',
         component: BoardDetail,
     },
-    {
-        path: '/report',
-        name: 'ReportCreate',
-        component: ReportCreate,
-        props: route => ({
-            postId: route.params.postId,
-            postTitle: route.params.postTitle,
-            postContent: route.params.postContent,
-            authorEmail: route.params.authorEmail,
-            postCategory: route.params.postCategory
-        })
-    },
+    
 ]
