@@ -83,6 +83,11 @@ export default {
         const post = response.data.result;
         this.title = post.title;
         this.content = post.content;
+
+        // 기존 이미지가 있는 경우 미리보기 이미지로 설정
+        if (post.imageUrl) {
+          this.previewImageSrc = post.imageUrl;
+        }
       } catch (error) {
         console.error('게시글을 불러오는 데 실패했습니다:', error);
         alert('게시글을 불러오는 데 실패했습니다.');
@@ -92,22 +97,18 @@ export default {
       const files = event?.target?.files || event?.dataTransfer?.files;
       if (files && files.length > 0) {
         this.image = files[0];
-        this.previewImage();
+        this.previewImage(files[0]);
       } else {
         this.image = null;
         this.previewImageSrc = null;
       }
     },
-    previewImage() {
-      if (this.image) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.previewImageSrc = e.target.result;
-        };
-        reader.readAsDataURL(this.image);
-      } else {
-        this.previewImageSrc = null;
-      }
+    previewImage(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImageSrc = e.target.result;
+      };
+      reader.readAsDataURL(file);
     },
     async submitForm() {
       try {

@@ -11,7 +11,6 @@
           <th>제목</th>
           <th>작성자</th>
           <th>작성일</th>
-          <th>관리</th>
         </tr>
       </thead>
       <tbody>
@@ -20,10 +19,6 @@
           <td @click="goToDetail(item.id, category)" class="clickable">{{ item.title }}</td>
           <td>{{ item.nickname }}</td>
           <td>{{ formatDate(item.createdTime) }}</td>
-          <td v-if="canEditOrDelete(item)" class="control">
-            <button @click="updateItem(item.id, category)">수정</button>
-            <button @click="deleteItem(item.id, category)">삭제</button>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -62,9 +57,7 @@ export default {
   methods: {
     checkAdminRole() {
       const role = localStorage.getItem('role');
-      if (role === 'ADMIN') {
-        this.isAdmin = true;
-      }
+      this.isAdmin = role === 'ADMIN';
     },
     async fetchBoardItems() {
       this.category = this.$route.params.category;
@@ -138,38 +131,6 @@ export default {
     goToDetail(id, category) {
       this.$router.push({ name: 'BoardDetail', params: { category, id } });
     },
-    updateItem(id, category) {
-      this.$router.push({ name: 'BoardUpdate', params: { category, id } });
-    },
-    async deleteItem(id, category) {
-      try {
-        const confirmed = confirm('이 게시글을 삭제하시겠습니까?');
-        if (confirmed) {
-          let apiUrl;
-          if (category === 'event') {
-            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/delete/${id}`;
-          } else if (category === 'notice') {
-            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/delete/${id}`;
-          } else if (category === 'post') {
-            apiUrl =`${process.env.VUE_APP_API_BASE_URL}/board/post/delete/${id}`;
-          } else {
-            throw new Error('잘못된 카테고리입니다.');
-          }
-
-          await axios.get(apiUrl);
-          alert('게시글이 삭제되었습니다.');
-          this.fetchBoardItems(); // 삭제 후 목록을 다시 로드
-        }
-      } catch (error) {
-        console.error('게시글을 삭제하는 데 실패했습니다:', error);
-        alert('게시글 삭제에 실패했습니다.');
-      }
-    },
-    canEditOrDelete(item) {
-      // Admin이거나, 게시글 작성자가 현재 로그인한 사용자와 동일한 경우에만 true
-      return this.isAdmin || (item.user_id === parseInt(this.userId, 10) && this.category === 'post');
-    },
-
   },
 };
 </script>
@@ -207,10 +168,6 @@ export default {
   cursor: pointer;
   color: blue;
   text-decoration: underline;
-}
-
-.control button {
-  margin-right: 5px;
 }
 
 .pagination {

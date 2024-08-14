@@ -120,15 +120,16 @@ public class QnAService {
 
         if (qnA.getUser().getEmail().equals(userEmail)) {
             try {
+                String s3ImagePath = qnA.getAImageUrl(); // 기존 이미지 경로
+
                 if (image != null && !image.isEmpty()) {
-                    // 이미지가 존재할 때만 이미지 처리
+                    // 이미지가 존재할 때만 새로운 이미지 처리
                     String bgImagePathFileName = qnA.getId() + "_question_" + image.getOriginalFilename();
                     byte[] bgImagePathByte = image.getBytes();
-                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
+                    s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName, bgImagePathByte);
                     qnA.QnAQUpdate(dto, s3ImagePath);
-                } else {
-                    // 이미지가 비어 있거나 null이면 이미지 경로 없이 다른 정보만 업데이트
-                    qnA.QnAQUpdate(dto, null);
+                }else {
+                    qnA.QnAQUpdate(dto, qnA.getQImageUrl());
                 }
             } catch (IOException e) {
                 throw new RuntimeException("게시글 수정에 실패했습니다.", e);
@@ -139,6 +140,7 @@ public class QnAService {
 
         qnARepository.save(qnA);
     }
+
 
 
     @Transactional
@@ -160,7 +162,7 @@ public class QnAService {
                     qnA.QnAAUpdate(dto, s3ImagePath);
                 } else {
                     // 이미지가 비어 있거나 null이면 이미지 경로 없이 다른 정보만 업데이트
-                    qnA.QnAAUpdate(dto, null);
+                    qnA.QnAAUpdate(dto, qnA.getAImageUrl());
                 }
                 qnARepository.save(qnA);
             } catch (IOException e) {

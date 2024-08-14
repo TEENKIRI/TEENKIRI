@@ -52,7 +52,8 @@ export default {
           this.previewImageSrc = this.answer.aimageUrl;
         }
       } catch (error) {
-        this.$router.push('/qna/list');
+        const questionId = this.$route.params.id;
+        this.$router.push(`/qna/detail/${questionId}`);
       }
     },
     onFileChange(event) {

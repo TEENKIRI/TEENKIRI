@@ -90,9 +90,11 @@
         formData.append('title', this.question.title);
         formData.append('questionText', this.question.questionText);
   
-        // 새 이미지가 선택된 경우에만 FormData에 추가
+        // 새 이미지가 선택된 경우에만 FormData에 추가하고, 기존 이미지는 URL을 전송
         if (this.question.qImage) {
           formData.append('qImage', this.question.qImage);
+        } else if (this.question.qimageUrl) {
+          formData.append('qimageUrl', this.question.qimageUrl);
         }
   
         try {

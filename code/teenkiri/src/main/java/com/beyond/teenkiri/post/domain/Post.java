@@ -60,6 +60,7 @@ public class Post extends BaseTimeEntity {
         return PostDetailDto.builder()
                 .id(this.getId())
                 .user_id(this.user.getId())
+                .userEmail(this.user.getEmail())
                 .title(this.getTitle())
                 .content(this.getContent())
                 .imageUrl(this.imageUrl)
