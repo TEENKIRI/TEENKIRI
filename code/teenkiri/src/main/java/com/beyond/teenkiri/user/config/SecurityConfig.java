@@ -32,24 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:8082"); // Vue.js가 실행되는 도메인
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
+
                 .antMatchers("/user/**","/course/**","/subject/**/list","/favicon.ico").permitAll()
 //                .antMatchers("/api/login", "/api/register").permitAll() // adjust this according to your endpoints
                 .anyRequest().authenticated()

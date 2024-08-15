@@ -40,7 +40,6 @@ public class Event extends BaseTimeEntity {
     @Builder.Default
     private String imageUrl = "";
 
-
     public EventDetailDto fromDetailEntity() {
         return EventDetailDto.builder()
                 .id(this.getId())

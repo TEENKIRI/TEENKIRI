@@ -33,7 +33,7 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<?> createEvent(EventSaveReqDto dto,
                                          @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
@@ -47,14 +47,14 @@ public class EventController {
         }
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResponseEntity<?> getAllEvents(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<EventListResDto> eventList = eventService.eventList(pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"이벤트 목록을 조회합니다.", eventList);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
-    @GetMapping("detail/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?> getEventDetail(@PathVariable Long id) {
         try {
             EventDetailDto eventDetail = eventService.getEventDetail(id);
@@ -67,7 +67,7 @@ public class EventController {
         }
     }
 
-    @PostMapping("update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<?> EventUpdate(@PathVariable Long id, EventUpdateDto dto,
                                          @RequestPart(value="image", required = false) MultipartFile imageSsr){
         try {
@@ -81,7 +81,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("delete/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<?> EventDelete(@PathVariable Long id){
         try {
             eventService.eventDelete(id);
