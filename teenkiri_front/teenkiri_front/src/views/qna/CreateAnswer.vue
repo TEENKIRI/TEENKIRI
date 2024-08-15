@@ -139,7 +139,8 @@
           );
           console.log(response);
           alert('답변이 성공적으로 제출되었습니다!');
-          this.$router.push({ name: 'QnaList' });
+          const questionId = this.$route.params.id;
+          this.$router.push(`/qna/detail/${questionId}`);
         } catch (error) {
           const errorMessage =
             error.response && error.response.data

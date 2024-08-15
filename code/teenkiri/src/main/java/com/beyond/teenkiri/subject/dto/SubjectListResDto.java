@@ -17,6 +17,8 @@ public class SubjectListResDto {
     private String teacherName;
     private Boolean isSubscribe;
 
+    private String subjectThumUrl;
+
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
 

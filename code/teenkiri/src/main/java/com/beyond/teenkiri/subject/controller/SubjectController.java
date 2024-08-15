@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.subject.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
+import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
@@ -37,10 +38,39 @@ public class SubjectController {
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
+    //    강좌 과목별 리스트 페이지
+    @GetMapping("/subject/{courseId}/list")
+    public ResponseEntity<?> subjectCourseListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
+            direction = Sort.Direction.DESC ) Pageable pageable,
+                                                   @PathVariable(value = "courseId") Long courseId){
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectPerCourseList(pageable, courseId);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    //    강좌 과목별, 학년별 리스트 페이지
+    @GetMapping("/subject/{courseId}/{grade_enum}/list")
+    public ResponseEntity<?> subjectCourseAndGradeListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
+            direction = Sort.Direction.DESC ) Pageable pageable,
+                                                   @PathVariable(value = "courseId") Long courseId,
+                                                   @PathVariable(value = "grade_enum") String grades){
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectPerCourseAndGradeList(pageable, courseId, grades);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
     //    강좌 순위별 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/rating/list")
     public ResponseEntity<?> subjectRatingListView(@PageableDefault(page = 0, size=4 ) Pageable pageable){
         Page<SubjectListResDto> subjectListResDto = subjectService.subjectRatingList(pageable);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    //    강좌 상단 노출용 리스트 페이지
+    @GetMapping("/subject/main/list")
+    public ResponseEntity<?> subjectMainListView(@PageableDefault(page = 0, size=10 ) Pageable pageable){
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectMainList(pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }

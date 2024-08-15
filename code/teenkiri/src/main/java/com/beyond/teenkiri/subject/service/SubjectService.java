@@ -5,6 +5,7 @@ import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.course.domain.Course;
 import com.beyond.teenkiri.course.repository.CourseRepository;
 import com.beyond.teenkiri.course.service.CourseService;
+import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.subject.domain.Subject;
@@ -23,6 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -50,10 +56,35 @@ public class SubjectService {
         return subjectListResDtos;
     }
 
+    //    강좌 과목별 list
+    public Page<SubjectListResDto> subjectPerCourseList(Pageable pageable, Long courseId){
+        Course course = courseService.findByIdRequired(courseId);
+        Page<Subject> subject = subjectRepository.findByCourseIdAndDelYN(course.getId(), DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
+    //    강좌 과목 및 학년별 list
+    public Page<SubjectListResDto> subjectPerCourseAndGradeList(Pageable pageable, Long courseId, String grades){
+        Course course = courseService.findByIdRequired(courseId);
+        List<Grade> gradesArr = Arrays.stream(grades.split("&")).map(Grade::valueOf).collect(Collectors.toList());
+        Page<Subject> subject = subjectRepository.findByCourseIdAndGradeInAndDelYN(course.getId(), gradesArr, DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
 
     //    강좌 순위별 list
     public Page<SubjectListResDto> subjectRatingList(Pageable pageable){
         Page<Subject> subject = subjectRepository.findAllBydelYNOrderByRatingDesc(DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        return subjectListResDtos;
+    }
+
+    //    강좌 상단 노출용 표시된 list
+    public Page<SubjectListResDto> subjectMainList(Pageable pageable){
+        Boolean isMainsubject = true; // 상단 표시된 강좌 리스트만
+        Page<Subject> subject = subjectRepository.findByIsMainSubjectAndDelYN(isMainsubject, DelYN.N, pageable);
         Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
         return subjectListResDtos;
     }
@@ -91,6 +122,8 @@ public class SubjectService {
             throw new RuntimeException("파일 저장 실패");
         }
 
+        subject.toUpdateIsMainSubject(dto.getIsMainSubject());
+
         return subject; // save된 subject return;
     }
 
@@ -113,6 +146,8 @@ public class SubjectService {
         }catch (IOException e) {
             throw new RuntimeException("파일 저장 실패");
         }
+
+        subject.toUpdateIsMainSubject(dto.getIsMainSubject());
 
         subject.toUpdate(dto, user, course);
         return subject.getId();
