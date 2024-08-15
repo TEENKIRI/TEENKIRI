@@ -1,4 +1,4 @@
-<template>
+   <template>
     <v-container>
       <v-row class="qna-header">
         <v-col>
@@ -22,7 +22,7 @@
               답변일: {{ formatDate(item.answeredAt) }}
             </v-card-subtitle>
             <v-card-actions>
-              <v-btn @click="viewDetails(item.id)" color="primary">상세보기</v-btn>
+              <v-btn @click="viewDetails(item.id)" color="primary">내 질문 보러가기</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -46,14 +46,10 @@
     methods: {
       async fetchQnAList() {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/list`, {
-            headers: {
-              'Authorization': `Bearer ${token}` // 토큰을 인증 헤더에 포함
-            }
-          });
+          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/qna`);
+          console.log(response.data);
           if (response.status === 200) {
-            this.qnaList = response.data.data; // 응답 데이터에서 Q&A 리스트를 추출
+            this.qnaList = response.data.result; // 응답 데이터에서 Q&A 리스트를 추출
           } else {
             console.error('Q&A 리스트 가져오기 실패:', response.data.message || response.statusText);
           }
@@ -65,7 +61,7 @@
         return new Date(dateString).toLocaleString();
       },
       viewDetails(id) {
-        this.$router.push({ name: 'QnADetail', params: { id } });
+        this.$router.push(`/qna/detail/${id}`); // ID를 포함한 상세 페이지 URL로 이동
       }
     }
   };
