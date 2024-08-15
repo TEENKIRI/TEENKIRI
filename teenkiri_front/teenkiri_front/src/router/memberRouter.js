@@ -6,7 +6,7 @@ import UserList from "@/views/user/UserList.vue";
 import ResetPasswordPage from "@/views/user/ResetPasswordPage.vue";
 import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 import ReportCreate from "@/views/report/ReportCreate.vue";
-
+import SubscribePage from "@/views/user/SubscribePage.vue";
 export const memberRouter = [
     {
         path: '/user/create',
@@ -59,6 +59,11 @@ export const memberRouter = [
           commentContent: route.query.commentContent,
           commentAuthor: route.query.commentAuthor
         })
+    },
+    {
+        path: '/my/subject/:id',
+        name: 'SubscribePage',
+        component: SubscribePage
     }
     
       
