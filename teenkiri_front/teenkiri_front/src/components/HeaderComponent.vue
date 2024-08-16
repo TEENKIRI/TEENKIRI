@@ -27,6 +27,34 @@
           <v-btn icon @click="goToMenu">
             <v-icon>mdi-menu</v-icon>
           </v-btn>
+
+          <!-- 알림 아이콘 및 알림 목록 -->
+          <v-btn icon color="primary">
+            <v-badge
+              color="red"
+              :content="unreadNotificationsCount"
+              overlap
+              v-if="unreadNotificationsCount > 0"
+            >
+              <v-icon>mdi-bell</v-icon>
+            </v-badge>
+            <v-icon v-else>mdi-bell</v-icon>
+
+            <v-menu activator="parent" offset-y>
+              <v-list max-width="300" max-height="400" style="overflow-y: auto;">
+                <v-list-item
+                  v-for="(notification, index) in unreadNotifications"
+                  :key="index"
+                  :class="{'unread-notification': notification.delYN === 'N'}"
+                  @click="markAsReadAndNavigate(notification, index)"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>{{ notification.message }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -34,20 +62,83 @@
 </template>
 
 <script>
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import axios from 'axios';
+
 export default {
   name: 'HeaderComponent',
   data() {
     return {
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false // 초기값 설정
+      isLogin: false,
+      notifications: [],
     };
   },
+  computed: {
+    unreadNotificationsCount() {
+      return this.notifications.filter(notification => notification.delYN === 'N').length;
+    },
+    unreadNotifications() {
+      return this.notifications.filter(notification => notification.delYN === 'N');
+    }
+  },
   mounted() {
-    // 로컬 스토리지에서 토큰을 읽어 로그인 상태를 설정
     const token = localStorage.getItem('token');
     this.isLogin = !!token;
+
+    if (this.isLogin) {
+      this.fetchNotifications();
+
+      const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      eventSource.addEventListener('notification', (event) => {
+        const notification = JSON.parse(event.data);
+        this.notifications.push(notification);
+      });
+
+      eventSource.onerror = (error) => {
+        console.error('SSE 연결 오류:', error);
+      };
+    }
   },
   methods: {
+    async fetchNotifications() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        this.notifications = response.data;
+      } catch (error) {
+        console.error('알림 목록을 가져오는 중 오류 발생:', error);
+      }
+    },
+    async markAsReadAndNavigate(notification, index) {
+      if (notification.delYN === 'N') {
+        try {
+          const id = notification.id;
+          await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/update/${id}`, null, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          this.notifications[index].delYN = 'Y';
+
+          if (notification.postId) {
+            this.$router.push({ name: 'PostDetail', params: { id: notification.postId } });
+          } else if (notification.qnaId) {
+            this.$router.push({ name: 'QnaDetail', params: { id: notification.qnaId } });
+          }
+        } catch (error) {
+          console.error('알림을 읽음으로 표시하는 중 오류 발생:', error);
+        }
+      }
+    },
     navigate(section) {
       if (section === '강좌') {
         this.$router.push({ name: 'SubjectList', params: { category: 'subject' } });
@@ -57,20 +148,17 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
       } else if (section === '자유게시판') {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
-      } else if (section === 'QnA')  {
-        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
+      } else if (section === 'QnA') {
+        this.$router.push({ name: 'QnaList', params: { category: 'qna' } });
       } else {
         console.log(section);
-        // 다른 섹션에 대한 처리 추가 가능
       }
     },
     goToMember() {
       if (this.isLogin) {
-        // 로그인된 상태에서 사용자가 클릭할 때
-        this.$router.push('/user/edit-info'); // 로그인 후 이동할 페이지
+        this.$router.push('/user/edit-info');
       } else {
-        // 로그인되지 않은 상태에서 사용자가 클릭할 때
-        this.$router.push('/login'); // 로그인 페이지로 이동
+        this.$router.push('/login');
       }
     },
     goToMenu() {
@@ -78,13 +166,13 @@ export default {
     },
     doLogout() {
       localStorage.removeItem('role');
-      localStorage.removeItem('token'); // 로컬 스토리지에서 토큰 삭제
-      this.isLogin = false; // 로그인 상태 업데이트
+      localStorage.removeItem('token');
+      this.isLogin = false;
       console.log('Logged out');
-      window.location.reload(); // 페이지 새로고침
+      window.location.reload();
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -95,6 +183,14 @@ export default {
 }
 
 .logo-image {
-  height: 10%; 
+  height: 10%;
+}
+
+.unread-notification {
+  background-color: white;
+}
+
+.v-list-item {
+  background-color: white;
 }
 </style>
