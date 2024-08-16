@@ -133,6 +133,9 @@ public class Subject extends BaseTimeEntity {
             this.mainSubjectUpdatedDate = currentTime; // 고정하기로 한 날짜 기입
         }
     }
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 }
 
 

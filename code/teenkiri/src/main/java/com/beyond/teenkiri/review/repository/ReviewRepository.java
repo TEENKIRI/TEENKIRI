@@ -9,9 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByDelYn(DelYN delYN, Pageable pageable);
     boolean existsByUserSubject(UserSubject userSubject);
     Page<Review> findByUserSubject_Subject_Id(Long subjectId, Pageable pageable);
+    List<Review> findByUserSubject_Subject_Id(Long subjectId);
 }
