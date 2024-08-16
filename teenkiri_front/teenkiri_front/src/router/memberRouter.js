@@ -6,6 +6,10 @@ import UserList from "@/views/user/UserList.vue";
 import ResetPasswordPage from "@/views/user/ResetPasswordPage.vue";
 import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 import ReportCreate from "@/views/report/ReportCreate.vue";
+import SubscribePage from "@/views/user/SubscribePage.vue";
+import WishListPage from "@/views/user/WishListPage.vue";
+import myQnAListPage from "@/views/user/myQnAListPage.vue";
+
 
 export const memberRouter = [
     {
@@ -58,6 +62,11 @@ export const memberRouter = [
           // QnA 관련 추가 정보
           qnaId: route.query.qnaId, // 질문글 ID
         })
+    },
+    {
+        path: '/my/subject/:id',
+        name: 'SubscribePage',
+        component: SubscribePage
     },
     {
         path: '/user/wishlist',

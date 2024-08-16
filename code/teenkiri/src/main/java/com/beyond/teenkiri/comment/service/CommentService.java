@@ -5,15 +5,15 @@ import com.beyond.teenkiri.comment.dto.CommentDetailDto;
 import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.event.domain.Event;
+import com.beyond.teenkiri.notification.controller.SseController;
+import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,34 +28,62 @@ public class CommentService {
     private final PostRepository postRepository;
     private final QnARepository qnaRepository;
     private final UserRepository userRepository;
+    private final SseController sseController;
+    private final NotificationRepository notificationRepository;
+
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, QnARepository qnaRepository, UserRepository userRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository, QnARepository qnaRepository, UserRepository userRepository, SseController sseController, NotificationRepository notificationRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.qnaRepository = qnaRepository;
         this.userRepository = userRepository;
+        this.sseController = sseController;
+        this.notificationRepository = notificationRepository;
     }
+
 
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
-        Long userId = dto.getUserId();  // DTO에서 사용자 ID를 가져옵니다.
+        Long userId = dto.getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
-        String nickname = user.getNickname();  // 사용자 ID로 가져온 User 객체에서 닉네임을 가져옵니다.
+        String nickname = user.getNickname();
+        String userEmail = user.getEmail();
 
+        Comment savedComment;
         if (dto.getPostId() != null) {
             Post post = postRepository.findById(dto.getPostId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-            return commentRepository.save(dto.PostToEntity(user, post, nickname));
+            savedComment = commentRepository.save(dto.PostToEntity(user, post, nickname));
+
+            // 댓글 저장 후 게시글 작성자에게 알림 전송
+//            NotificationDto notificationDto = new NotificationDto(null, post.getId(), post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
+
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto = notificationDto.saveDto(null, post.getId(), post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
+            notificationRepository.save(notificationDto);
+            sseController.publishMessage(notificationDto);
+
         } else if (dto.getQnaId() != null) {
             QnA qna = qnaRepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-            return commentRepository.save(dto.QnAToEntity(user, qna, nickname));
+            savedComment = commentRepository.save(dto.QnAToEntity(user, qna, nickname));
+
+            // 댓글 저장 후 QnA 작성자에게 알림 전송
+//            NotificationDto notificationDto = new NotificationDto(qna.getId(), null, qna.getUser().getEmail(), qna.getTitle()+" QnA에 새로운 댓글이 달렸습니다.");
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto = notificationDto.saveDto(qna.getId(), null, qna.getUser().getEmail(), qna.getTitle() + " QnA에 새로운 댓글이 달렸습니다.");
+            notificationRepository.save(notificationDto);
+            sseController.publishMessage(notificationDto);
+
         } else {
             throw new IllegalArgumentException("댓글이 달릴 게시글 또는 QnA ID가 필요합니다.");
         }
+
+        return savedComment;
     }
+
 
     public List<CommentDetailDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostIdAndDelYN(postId, DelYN.N);
@@ -64,7 +92,7 @@ public class CommentService {
                         .id(comment.getId())
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
-                        .nickname(comment.getNickname())  // 닉네임도 함께 반환
+                        .nickname(comment.getNickname())
                         .createdTime(comment.getCreatedTime())
                         .updatedTime(comment.getUpdatedTime())
                         .build())
@@ -78,7 +106,7 @@ public class CommentService {
                         .id(comment.getId())
                         .content(comment.getContent())
                         .userEmail(comment.getUser().getEmail())
-                        .nickname(comment.getNickname())  // 닉네임도 함께 반환
+                        .nickname(comment.getNickname())
                         .createdTime(comment.getCreatedTime())
                         .updatedTime(comment.getUpdatedTime())
                         .build())
@@ -89,10 +117,6 @@ public class CommentService {
     public Comment commentDelete(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
-        User user = comment.getUser();
-        if (user.getRole().equals("ADMIN")) {
-            throw new SecurityException("권한이 없습니다.");
-        }
         comment.updateDelYN(DelYN.Y);
         return comment;
     }
