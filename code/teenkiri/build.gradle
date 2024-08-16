@@ -1,0 +1,88 @@
+// java 빌드에 필요한 플러그인 설정
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.11'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.beyond'
+// 빌드된 jar 파일의 버전명, snapshot : 실험용 버전
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+repositories {
+	// 의존성을 가져오는 대상 저장소(repository)
+	// 내부망에서 인터넷을 사용하기 불가한 경우에는 nexus(설치형)와 같은 repository를 사용하기도 함
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Boot Starters
+	// Core
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+	// Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Data
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// Mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Logging
+	implementation 'org.slf4j:slf4j-api'
+	implementation 'ch.qos.logback:logback-classic'
+	implementation 'ch.qos.logback:logback-core'
+
+	// JSON Web Token (JWT)
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Database
+	// JDBC
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	// Redis
+	implementation 'redis.clients:jedis'
+	implementation 'org.springframework.data:spring-data-redis'
+
+	// Testing
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	//	파일처리를 위한 aws 의존성 추가
+	implementation 'software.amazon.awssdk:s3:2.17.58'
+	// jwt 토큰 관련 의존성 충가
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

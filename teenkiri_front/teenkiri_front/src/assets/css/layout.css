@@ -1,0 +1,165 @@
+@charset "UTF-8";
+
+.header { position:fixed; top:0; left:0; width:100%; background:#fff; height:90px; z-index:99; border-bottom:1px solid #c1c1c1; }
+.header .inner { width:1280px; height:90px; margin:0 auto; position:relative; }
+.header .logo { position:absolute; top:26px; left:0; width:192px; height:34px; background:url("../../assets/images/ico_logo.png") 50% 50% no-repeat; background-size:contain; }
+.header .gnb { height:100%; display:flex; justify-content:center; align-items:center; gap:50px; }
+.header .gnb li a { font-size:20px; font-weight:400; }
+.header .menu { position:absolute; top:26px; right:0; display:flex; justify-content:center; align-items:center; gap:18px; }
+.header .menu .btn_member { width:30px; height:30px; background:url("../../assets/images/ico_member.png") 50% 50% no-repeat; background-size:contain; }
+.header .menu .btn_menu { width:30px; height:30px; background:url("../../assets/images/ico_menu.png") 50% 50% no-repeat; background-size:contain; }
+
+.container { padding-top:90px;  min-height:600px; }
+/* .mainVisual { height:536px; background:url("../../assets/images/visual_bg.png") 50% 50% no-repeat; background-size:cover; }
+.mainVisual .inner { width:1280px; height:100%; margin:0 auto; position:relative; }
+.mainVisual .inner .txtWrap { position:absolute; top:150px; left:0; }
+.mainVisual .inner .txtWrap .description { font-size:26px; font-weight:500; color:#3370b6; }
+.mainVisual .inner .txtWrap h1 { font-size:50px; font-weight:500; }
+.mainVisual .inner .txtWrap .more { display:block; width:170px; height:40px; line-height:40px; text-align:center; margin:30px 0 0; font-size:16px; font-weight:400; color:#fff; border-radius:10px; background:#f27885; }
+
+.mainLecture { padding:10px 0 100px; }
+.mainLecture .inner { width:1280px; width:1280px; margin:0 auto; position:relative; }
+.mainLecture .inner h2 { font-size:24px; font-weight:700; }
+.mainLecture .swiperLecture { margin:35px 0 0; border-right:1px solid #ccc; }
+.mainLecture .swiper-button-prev:after,
+.mainLecture .swiper-button-next:after { display:none; }
+.mainLecture .swiper-button-prev { left:-60px; width:30px; height:51px; background:url("../../assets/images/ico_sw_prev.png") 50% 50% no-repeat; background-size:contain; }
+.mainLecture .swiper-button-next { right:-60px; width:30px; height:51px; background:url("../../assets/images/ico_sw_next.png") 50% 50% no-repeat; background-size:contain; }
+.mainLecture .swiper-slide { position:relative; height:390px; border:1px solid #ccc; border-right:0; padding:20px 27px; }
+.mainLecture .swiper-slide .thumb { width:100%; height:220px; overflow:hidden; }
+.mainLecture .swiper-slide .thumb img { width:100%; height:100%; object-fit:cover; }
+.mainLecture .swiper-slide .txt { margin:20px 0 0; }
+.mainLecture .swiper-slide .txt .subject { font-size:18px; font-weight:400; } 
+.mainLecture .swiper-slide .txt .name { margin:15px 0 0; font-size:14px; font-weight:400; color:#5b5b5b; } 
+.mainLecture .swiper-slide .btn_like { position:absolute; bottom:20px; right:27px; width:24px; height:24px; background:url("../../assets/images/ico_like.png") 50% 50% no-repeat; background-size:contain;  }
+
+.mainStudy { height:600px; background:url("../../assets/images/study_bg.png") 50% 50% no-repeat; background-size:cover;  }
+.mainStudy .inner { width:1280px; margin:0 auto; position:relative; display:flex; gap:30px; }
+.mainStudy .inner .movieWrap { margin:40px 0 0; width:800px; height:540px; padding:25px; background:#fff; border-radius:10px; box-shadow:3px 3px 8px 3px rgba(0,0,0,.1); }
+.mainStudy .inner .movieWrap .movie { width:750px; height:420px; overflow:hidden; }
+.mainStudy .inner .movieWrap .movie img { width:100%; height:100%; object-fit:cover; }
+.mainStudy .inner .movieWrap .txt { position:relative; margin:20px 0 0; }
+.mainStudy .inner .movieWrap .txt .subject { font-size:18px; font-weight:400;  }
+.mainStudy .inner .movieWrap .txt .subject span { margin-left:15px; color:#747474; }
+.mainStudy .inner .movieWrap .txt .name { margin:10px 0 0; font-size:14px; color:#5b5b5b; font-weight:400; }
+.mainStudy .inner .movieWrap .txt .btn_like { position:absolute; top:0; right:0; width:24px; height:24px; background:url("../../assets/images/ico_like.png") 50% 50% no-repeat; background-size:contain;  }
+
+.mainStudy .inner .eventWrap { margin:57px 0 0; }
+.mainStudy .inner .eventWrap .titimg { position:relative; left:-15px; bottom:-10px; z-index:2; }
+.mainStudy .inner .eventWrap .event { position:relative; top:0; z-index:1;  }
+.mainStudy .inner .eventWrap .event .evTit { display:flex; gap:20px; align-items:center; height:60px; background:#fff; border-radius:0 0 10px 10px; border-bottom:2px dotted #ccc; padding:0 20px; box-shadow:3px 3px 8px 3px rgba(0,0,0,.1);}
+.mainStudy .inner .eventWrap .event .evTit h3 { font-size:36px; font-weight:700; color:#f27885; }
+.mainStudy .inner .eventWrap .event .evTit p { margin:10px 0 0; font-size:18px; font-weight:400; }
+.mainStudy .inner .eventWrap .event .evList { padding:30px 20px; background:#fff; border-radius:10px; box-shadow:3px 3px 8px 3px rgba(0,0,0,.1); }
+.mainStudy .inner .eventWrap .event .evList li { display:flex; }
+.mainStudy .inner .eventWrap .event .evList li a { font-size:18px; font-weight:400; }
+.mainStudy .inner .eventWrap .event .evList li span { margin-left:auto; font-size:18px; font-weight:400; color:#757575; }
+.mainStudy .inner .eventWrap .event .evList li + li { margin:15px 0 0; }
+
+.mainLectureBest { padding:100px 0; margin-bottom: 20vh;}
+.mainLectureBest .inner { width:1280px; width:1280px; margin:0 auto; position:relative; }
+.mainLectureBest .inner h2 { font-size:36px; font-weight:700; }
+.mainLectureBest .swiperLectureBest { margin:35px 0 0; border-right:1px solid #ccc; }
+.mainLectureBest .swiper-button-prev:after,
+.mainLectureBest .swiper-button-next:after { display:none; }
+.mainLectureBest .swiper-button-prev { left:-60px; width:30px; height:51px; background:url("../../assets/images/ico_sw_prev.png") 50% 50% no-repeat; background-size:contain; }
+.mainLectureBest .swiper-button-next { right:-60px; width:30px; height:51px; background:url("../../assets/images/ico_sw_next.png") 50% 50% no-repeat; background-size:contain; }
+.mainLectureBest .swiper-slide { position:relative; height:390px; border:1px solid #ccc; border-right:0; padding:20px 27px; }
+.mainLectureBest .swiper-slide .thumb { width:100%; height:220px; overflow:hidden; }
+.mainLectureBest .swiper-slide .thumb img { width:100%; height:100%; object-fit:cover; }
+.mainLectureBest .swiper-slide .txt { margin:20px 0 0; }
+.mainLectureBest .swiper-slide .txt .subject { font-size:18px; font-weight:400; } 
+.mainLectureBest .swiper-slide .txt .name { margin:15px 0 0; font-size:14px; font-weight:400; color:#5b5b5b; } 
+.mainLectureBest .swiper-slide .btn_like { position:absolute; bottom:20px; right:27px; width:24px; height:24px; background:url("../../assets/images/ico_like.png") 50% 50% no-repeat; background-size:contain;  }
+
+.mainNews { padding:0 0 90px; }
+.mainNews .inner { width:1280px; margin:0 auto; position:relative; display:flex; }
+.mainNews .tit h2 { font-size:36px; font-weight:700; }
+.mainNews .tit a { display:inline-block; margin:25px 0 0; font-size:18px; font-weight:400; padding-right:40px; background:url("../../assets/images/ico_arrow.png") 100% 8px no-repeat; }
+.mainNews .newsList { margin-left:auto; width:755px; border-top:1px solid #bdbdbd; }
+.mainNews .newsList li { display:flex; align-items:center; height:55px; border-bottom:1px solid #bdbdbd; padding:0 20px; }
+.mainNews .newsList li a { font-size:16px; font-weight:400; }
+.mainNews .newsList li span { margin-left:auto; font-size:16px; font-weight:400; color:#757575; }
+
+.mainBanner { width:1280px; margin:0 auto; } */
+
+.footer { margin:100px 0 0; border-top:1px solid #afafaf; }
+.footer .inner { width:1280px; margin:0 auto; display:flex;  padding:45px 0; }
+.footer .inner .copyright .logo { width:192px; height:34px; background:url("../../assets/images/ico_logo.png") 50% 50% no-repeat; background-size:contain; }
+.footer .inner .copyright .addr { margin:35px 0 0; font-size:14px; font-weight:400; }
+.footer .inner .copyright .addr .gray { color:#777; display:block; margin:0 0 5px; }
+.footer .inner .copyright .addr .gap { margin:0 10px; }
+.footer .inner .copyright .copy { color:#777; display:block; margin:20px 0 0; font-size:14px; font-weight:400; }
+.footer .inner .info { margin-left:auto; }
+.footer .inner .info .link { display:flex; gap:20px; }
+.footer .inner .info .link li a { font-size:14px; font-weight:400; color:#777; }
+.footer .inner .info .link li a.active { color:#000; }
+.footer .inner .info .tel { margin:50px 0 0; }
+.footer .inner .info .tel dl { display:flex; justify-content:flex-end; margin:0 0 5px; }
+.footer .inner .info .tel dl dt { margin-right:20px; font-size:14px; font-weight:400; color:#777; }
+.footer .inner .info .tel dl dd { margin-right:20px; font-size:14px; font-weight:400; color:#222; }
+.footer .inner .info .tel dl dd:last-child { margin:0; }
+
+/*** 회원정보 ***/
+.chkBox input { display: none; }
+.chkBox label { cursor:pointer; display:flex; align-items:center; font-size:16px; font-weight:400; color:#333; }
+.chkBox label span { margin-right:15px; width:25px; height:25px; border:1px solid #333; position:relative; }
+.chkBox input:checked + label span {  width:25px; height:25px; border:1px solid #333; position:relative; display:flex; align-items:center; justify-content:center; }
+.chkBox input:checked + label span:before { content:""; width:15px; height:15px; background:#008cb3; z-index:2; }
+
+.chkBoxIco { }
+.chkBoxIco.absolute { position:absolute; bottom:15px; right:0; }
+.chkBoxIco input { display: none; }
+.chkBoxIco label { cursor:pointer; display:flex; align-items:center; font-size:14px; font-weight:400; color:#333; }
+.chkBoxIco label span { margin-right:10px; width:24px; height:24px; background:url("../../assets/images/ico_chk_off.png") 50% 50% no-repeat; background-size:contain; }
+.chkBoxIco input:checked + label span {  background:url("../../assets/images/ico_chk_on.png") 50% 50% no-repeat; background-size:contain; }
+.chkBoxIco input:checked + label span:before { content:""; width:15px; height:15px; background:#008cb3; z-index:2; }
+
+.mt10 { margin-top:10px !important; }
+.mt20 { margin-top:20px !important; }
+.mt30 { margin-top:30px !important; }
+.mt40 { margin-top:40px !important; }
+
+.memberForm { margin:90px auto 0; width:540px;  }	
+.memberForm h1 { font-size:36px; font-weight:700; text-align:center; margin:0 0 60px; }
+.memberForm .info { text-align:right; font-size:14px; font-weight:500; color:#333; }
+.memberForm .description { font-size:16px; font-weight:400; color:#333; margin:0 0 40px; text-align:center; letter-spacing:-0.7px; }
+.memberForm .required { color:#ff0000; }
+.memberForm .col { position:relative; }
+.memberForm .col + .col { margin-top:25px; }
+.memberForm .d-flex { display:flex; align-items:center; }
+.memberForm .label { display:block; font-size:16px; font-weight:500; }
+.memberForm .frm_input { transition:all 0.3s ease-out; width:100%; font-size:16px; font-weight:500; height:50px; border-bottom:1px solid #b6b6b6; }
+.memberForm .frm_input::placeholder { font-size:16px; font-weight:500; color:#adadad; }
+.memberForm .frm_input:focus { border-bottom:1px solid #000; }
+.memberForm .btn_value_view { position:absolute; right:10px; bottom:15px; width:21px; height:21px; background:url("../../assets/images/ico_eye.png") 50% 50% no-repeat; background-size:contain; }
+.memberForm .zip { width:200px; }
+.memberForm .btn_zip { margin-left:10px; background:#333; padding:0 18px; height:50px; line-height:50px; text-align:center; font-size:16px; font-weight:500; color:#fff; }
+.memberForm .agree ul { margin-top:45px; }
+.memberForm .agree ul li { display:flex; align-items:center; }
+.memberForm .agree ul li + li { margin-top:20px; }
+.memberForm .agree .btn_view { margin-left:auto; background:#333; padding:0 18px; height:35px; line-height:35px; text-align:center; font-size:14px; font-weight:500; color:#fff; }
+.memberForm .btnWrap { margin:65px 0 0; text-align:center; }
+.memberForm .btnWrap .btn_submit_primary { margin:0 auto; border-radius:30px; width:350px; height:60px; display:flex; align-items:center; justify-content:center; background:#f27885; font-size:18px; font-weight:500; color:#fff; }
+
+.memberForm .btnWrap .btn_submit_login { margin:0 auto; border-radius:30px; width:100%; height:60px; display:flex; align-items:center; justify-content:center; background:#5187c5; font-size:18px; font-weight:500; color:#fff; }
+
+.memberForm .btnWrap .btn_submit_login.kakao { margin:0 auto; border-radius:30px; width:100%; height:60px; display:flex; align-items:center; justify-content:center; background:#f9df32 url("../../assets/images/ico_kakao.png") 30px 50% no-repeat; font-size:18px; font-weight:500; color:#171600; }
+
+.memberForm .btnWrap .btn_submit_ok { margin:0 auto; border-radius:30px; width:100%; height:60px; display:flex; align-items:center; justify-content:center; background:#000; font-size:18px; font-weight:500; color:#fff; }
+
+.memberForm .or { text-align:center; width:405px; margin:50px auto; border-bottom:1px solid #b6b6b6; }
+.memberForm .or span { font-size:12px; color:#898989; display:inline-block; padding:0 10px; background:#fff; position:relative; bottom:-10px; }
+
+.memberForm .infoLink { margin:45px 0 0; display:flex; align-items:center; justify-content:center; }
+.memberForm .infoLink li { display:flex; align-items:center; }
+.memberForm .infoLink li:after { content:""; height:13px; width:1px; background:#a3a3a3; margin:0 18px; }
+.memberForm .infoLink li:last-child:after { display:none; }
+.memberForm .infoLink li a { font-size:16px; color:#777; font-weight:500; }
+
+.memberForm .findResultBox { padding:30px 70px; background:#efefef; }
+.memberForm .findResultBox .basicTxt { font-size:16px; color:#3b3b3b; font-weight:400; line-height:30px; text-align:center; }
+.memberForm .findResultBox .emailValue { margin:30px 0 0; height:65px; line-height:65px; text-align:center; background:#fff; border-radius:10px; font-size:20px; font-weight:400; } 
+
+#top_btn { display:none; position:fixed; right:15px; bottom:15px; z-index:9; width:48px; height:48px; background:url("../../assets/images/top_btn.png") 50% 50% no-repeat;}
+
