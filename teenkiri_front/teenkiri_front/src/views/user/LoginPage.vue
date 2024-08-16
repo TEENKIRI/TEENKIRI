@@ -84,6 +84,7 @@ export default {
               localStorage.setItem('token', token);
               localStorage.setItem('role', role);
               localStorage.setItem('userId', userId);  // user.id 저장
+              localStorage.setItem('email', this.email);  // email 저장
 
               window.location.href = "/";
           } catch (e) {
