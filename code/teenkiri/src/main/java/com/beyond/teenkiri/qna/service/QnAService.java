@@ -6,6 +6,9 @@ import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.comment.service.CommentService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
+import com.beyond.teenkiri.notification.controller.SseController;
+import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
@@ -35,15 +38,19 @@ public class QnAService {
     private final UploadAwsFileService uploadAwsFileService;
     private final CommentService commentService;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
+    private final SseController sseController;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository) {
+    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository, NotificationRepository notificationRepository, SseController sseController) {
         this.qnARepository = qnARepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
         this.uploadAwsFileService = uploadAwsFileService;
         this.commentService = commentService;
         this.userRepository = userRepository;
+        this.notificationRepository = notificationRepository;
+        this.sseController = sseController;
     }
 
     @Transactional
@@ -107,6 +114,12 @@ public class QnAService {
         } catch (IOException e) {
             throw new RuntimeException("파일 저장에 실패했습니다.", e);
         }
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 댓글 저장 후 게시글 작성자에게 알림 전송
+        NotificationDto notificationDto = new NotificationDto(null, null, qnA.getId(), userEmail, "질문에 대한 답변이 달렸습니다.");
+        notificationRepository.save(notificationDto);
+        sseController.publishMessage(notificationDto, qnA.getUser().getEmail());
         return qnARepository.save(qnA);
     }
 

@@ -1,6 +1,8 @@
 package com.beyond.teenkiri.notification.dto;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,11 +24,20 @@ public class NotificationDto implements Serializable {
     private Long postId;
     private Long answerId;
     private String message;
+    private String userEmail;
+    private DelYN delYN;
 
-    public NotificationDto(Long qnaId, Long postId, Long answerId, String message) {
+    public NotificationDto(Long qnaId, Long postId, Long answerId, String userEmail, String message) {
         this.qnaId = qnaId;
         this.postId = postId;
         this.answerId = answerId;
         this.message = message;
+        this.userEmail= userEmail;
+        this.delYN = DelYN.N;
     }
+
+    public void updateDelYN(DelYN delYN){
+        this.delYN = delYN;
+    }
+
 }

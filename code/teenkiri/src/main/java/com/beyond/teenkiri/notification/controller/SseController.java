@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.notification.controller;
 
 import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.service.NotificationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,12 +30,34 @@ public class SseController implements MessageListener {
     private final Set<String> subscribeList = ConcurrentHashMap.newKeySet();
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisTemplate<String, Object> sseRedisTemplate;
+    private final NotificationService notificationService;
 
     public SseController(@Qualifier("sseRedisTemplate") RedisTemplate<String, Object> sseRedisTemplate,
-                         @Qualifier("sseRedisContainer") RedisMessageListenerContainer redisMessageListenerContainer) {
+                         @Qualifier("sseRedisContainer") RedisMessageListenerContainer redisMessageListenerContainer, NotificationService notificationService) {
         this.sseRedisTemplate = sseRedisTemplate;
         this.redisMessageListenerContainer = redisMessageListenerContainer;
+        this.notificationService = notificationService;
     }
+
+//    @GetMapping("/subscribe")
+//    public SseEmitter subscribe() {
+//        SseEmitter emitter = new SseEmitter(14400 * 60 * 1000L); // 4시간 동안 연결 유지
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//        emitters.put(email, emitter);
+//
+//        emitter.onCompletion(() -> emitters.remove(email));
+//        emitter.onTimeout(() -> emitters.remove(email));
+//
+//        try {
+//            emitter.send(SseEmitter.event().name("connect").data("Connected"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        subscribeChannel(email);
+//        return emitter;
+//    }
 
     @GetMapping("/subscribe")
     public SseEmitter subscribe() {
@@ -45,8 +69,13 @@ public class SseController implements MessageListener {
         emitter.onCompletion(() -> emitters.remove(email));
         emitter.onTimeout(() -> emitters.remove(email));
 
+        // 구독할 때 기존 알림 전송
+//        NotificationService notificationService;
+        List<NotificationDto> notifications = notificationService.getNotificationsByEmail();
         try {
-            emitter.send(SseEmitter.event().name("connect").data("Connected"));
+            for (NotificationDto notification : notifications) {
+                emitter.send(SseEmitter.event().name("notification").data(notification));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,6 +94,7 @@ public class SseController implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        System.out.println("연결 개수 : " + emitters.size());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
