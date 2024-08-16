@@ -25,4 +25,6 @@ public class SubjectUpdateReqDto {
     private String description;
 //    private MultipartFile subjectThum; // Controller 상에서 작업
 
+    private Boolean isMainSubject;
+
 }
