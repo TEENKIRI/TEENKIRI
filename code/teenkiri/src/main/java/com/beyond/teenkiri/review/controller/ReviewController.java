@@ -34,8 +34,13 @@ public class ReviewController {
             return new ResponseEntity<>(new CommonResDto(HttpStatus.CREATED, "리뷰가 작성되었습니다.", review.getId()), HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.CONFLICT, e.getMessage()), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/list")
     public ResponseEntity<?> getReviews(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<?> reviews = reviewService.reviewListResDtos(pageable);

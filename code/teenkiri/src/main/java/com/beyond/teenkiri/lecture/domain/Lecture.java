@@ -70,6 +70,7 @@ public class Lecture extends BaseTimeEntity {
                 .imageUrl(this.imageUrl)
                 .videoUrl(this.videoUrl)
                 .progress(null) // 🚨 유저별 진행률
+                .videoDuration(this.videoDuration)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
