@@ -8,6 +8,8 @@ import '@mdi/font/css/materialdesignicons.css'
 import axios from 'axios';
 import "@/assets/css/font.css";
 import store from './store/index.js';
+// import VueVideoPlayer from '@videojs-player/vue'
+import 'video.js/dist/video-js.css'
 
 
 // createApp(App).mount('#app')
@@ -47,10 +49,11 @@ axios.interceptors.response.use(
                 window.location.href='/login';
             }
         }
+        return Promise.reject(error);
     }
 )
 
-
+// app.use(VueVideoPlayer)
 app.use(store);
 app.use(router);
 app.use(vuetify);

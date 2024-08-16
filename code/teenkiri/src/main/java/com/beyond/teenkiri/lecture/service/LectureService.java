@@ -86,7 +86,6 @@ public class LectureService {
         UserSubject userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("수강신청하지 않은 강좌입니다."));
 
-        System.out.println(2222);
         Enrollment enrollment = enrollmentService.findByLectureIdAndUserId(user,lecture);
         LectureDetPerUserResDto lectureDetPerUserResDto;
         if(enrollment == null){
