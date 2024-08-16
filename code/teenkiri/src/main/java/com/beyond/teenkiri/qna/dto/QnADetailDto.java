@@ -27,6 +27,8 @@ public class QnADetailDto {
     private String userEmail;
     private String qImageUrl;
     private String aImageUrl;
+    private String subjectTitle;
+    private Long subjectId;
     private List<CommentDetailDto> comments; // 댓글 리스트 추가
 
     public static QnADetailDto fromEntity(QnA qna, List<CommentDetailDto> comments) { // 댓글 리스트를 인자로 추가
@@ -43,6 +45,8 @@ public class QnADetailDto {
                 .userEmail(qna.getUser().getEmail())
                 .qImageUrl(qna.getQImageUrl())
                 .aImageUrl(qna.getAImageUrl())
+                .subjectTitle(qna.getSubject().getTitle())
+                .subjectId(qna.getSubject().getId())
                 .comments(comments) // 댓글 리스트 설정
                 .build();
     }

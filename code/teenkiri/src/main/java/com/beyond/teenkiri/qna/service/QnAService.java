@@ -12,6 +12,8 @@ import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
+import com.beyond.teenkiri.subject.domain.Subject;
+import com.beyond.teenkiri.subject.repository.SubjectRepository;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -40,9 +42,10 @@ public class QnAService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final SseController sseController;
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository, NotificationRepository notificationRepository, SseController sseController) {
+    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository, NotificationRepository notificationRepository, SseController sseController, SubjectRepository subjectRepository) {
         this.qnARepository = qnARepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
@@ -51,15 +54,19 @@ public class QnAService {
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
+        this.subjectRepository = subjectRepository;
     }
 
     @Transactional
     public QnA createQuestion(QnASaveReqDto dto, MultipartFile imageSsr) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByEmail(userEmail);
+        // subjectId를 통해 Subject를 조회
+        Subject subject = subjectRepository.findById(dto.getSubjectId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 강좌가 존재하지 않습니다."));
 
         MultipartFile image = (imageSsr == null) ? dto.getQImage() : imageSsr;
-        QnA qnA = dto.toEntity(user);
+        QnA qnA = dto.toEntity(user, subject);  // Subject를 설정하여 QnA 생성
 
         qnA = qnARepository.save(qnA);
         try {

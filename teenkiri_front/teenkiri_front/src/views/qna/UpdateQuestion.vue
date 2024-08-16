@@ -8,6 +8,8 @@
           outlined
           dense
         ></v-text-field>
+        <p><strong>강좌명:</strong></p>
+        <p>{{ question.subjectTitle }}</p>
   
         <v-textarea
           label="질문 내용"

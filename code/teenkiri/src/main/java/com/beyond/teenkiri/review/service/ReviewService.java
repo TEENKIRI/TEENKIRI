@@ -27,15 +27,13 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final UserSubjectRepository userSubjectRepository;
-    private final UserSubjectRepository subjectRepository;
 //    private final
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, UserSubjectRepository userSubjectRepository, UserSubjectRepository subjectRepository) {
+    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, UserSubjectRepository userSubjectRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.userSubjectRepository = userSubjectRepository;
-        this.subjectRepository = subjectRepository;
     }
 
 
