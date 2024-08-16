@@ -34,7 +34,7 @@ public class LectureController {
     }
 
     //    강의 ((((강좌 그룹별)))) 리스트 페이지
-    @GetMapping("/subject/lecture/list/{subjectId}")
+    @GetMapping("/subject/{subjectId}/lecture/list")
     public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable("subjectId") Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
             direction = Sort.Direction.DESC ) Pageable pageable){
         Page<LectureListResDto> lectureListResDtos = lectureService.lectureListByGroup(subjectId, pageable);

@@ -4,9 +4,10 @@
         <v-row>
           <v-col>
             <div class="footer-content">
-              <div class="logo">로고</div>
+              <!-- <div class="logo">로고</div> -->
+                <img :src="logo" alt="로고" class="logo-image" />
               <p class="addr">
-                <span class="gray">(03045) 서울 종로구 효자로 12 (세종로 1-57)</span>
+                <span class="gray">(07060) 서울특별시 동작구 보라매로 87 (신대방동 344-4)</span>
                 대표전화 02.1234.5678<span class="gap"></span>대표팩스 02.5678.1234<span class="gap"></span>이메일 teenkiri@teenkiri.co.kr
               </p>
               <p class="copy">
@@ -53,7 +54,13 @@
   
   <script>
   export default {
-    name: 'FooterComponent'
+    name: 'FooterComponent',
+    data() {
+    return {
+      logo: require('@/assets/images/ico_logo.png'),
+      isLogin: false // 초기값 설정
+    };
+  },
   }
   </script>
   
@@ -65,7 +72,7 @@
   
   .logo {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   
   .addr {
@@ -108,5 +115,8 @@
     margin: 0 0 10px 0;
   }
 
+  .logo-image {
+    height: 3%; 
+  }
   </style>
   
