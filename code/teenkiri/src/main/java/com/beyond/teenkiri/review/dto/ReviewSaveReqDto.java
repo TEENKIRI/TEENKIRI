@@ -23,7 +23,7 @@ public class ReviewSaveReqDto {
     private String subjectTitle;
     private String reviewText;
 
-    private float rating;
+    private int rating;
 
     @Builder.Default
     private DelYN delYN = DelYN.N;

@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByDelYn(DelYN delYN, Pageable pageable);
     boolean existsByUserSubject(UserSubject userSubject);
+    Page<Review> findByUserSubject_Subject_Id(Long subjectId, Pageable pageable);
 }

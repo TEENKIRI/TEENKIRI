@@ -66,9 +66,8 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-
-    public Page<ReviewListResDto> reviewListResDtos(Pageable pageable) {
-        Page<Review> reviews = reviewRepository.findAll(pageable);
+    public Page<ReviewListResDto> reviewListResDtos(Long subjectId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findByUserSubject_Subject_Id(subjectId, pageable);
         return reviews.map(review -> review.listFromEntity());
     }
 
