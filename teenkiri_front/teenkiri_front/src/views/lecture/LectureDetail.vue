@@ -77,7 +77,12 @@ export default {
         this.videoOptions.sources[0].src = this.lectureData.videoUrl;
         console.log(this.videoOptions)
       } catch (e) {
-        console.log(e)
+        if(e.response.data.status_code === 404){
+          alert("수강신청이 되지 않았습니다.");
+          history.go(-1);
+        }else{
+          console.error(e)
+        }
       }
     },
     setLectureDetail() {
