@@ -54,9 +54,20 @@ export const memberRouter = [
 
           // 댓글 정보
           commentId: route.query.commentId, 
-          
+
           // QnA 관련 추가 정보
           qnaId: route.query.qnaId, // 질문글 ID
         })
-    }
+    },
+    {
+        path: '/user/wishlist',
+        name: 'WishListPage',
+        component: WishListPage,
+    },
+    {
+        path: '/user/qna/list',
+        name: 'myQnAListPage',
+        component: myQnAListPage
+      }
+
 ]

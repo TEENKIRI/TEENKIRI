@@ -18,6 +18,8 @@ public class LectureListResDto {
     private String videoUrl;
     private Float progress;
 
+    private Integer videoDuration;
+
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
 }

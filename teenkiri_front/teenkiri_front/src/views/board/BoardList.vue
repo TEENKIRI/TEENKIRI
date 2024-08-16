@@ -1,31 +1,60 @@
 <template>
   <div class="board-container">
-    <h1 class="board-title">{{ boardTitle }}</h1>
-    <h2 v-if="isAdmin || category === 'post'">
-      <button class="create-button" @click="createNewPost">게시글 작성</button>
-    </h2>
-    <table class="board-table">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>작성일</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in boardItems" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
-          <td @click="goToDetail(item.id, category)" class="clickable">{{ item.title }}</td>
-          <td>{{ item.nickname }}</td>
-          <td>{{ formatDate(item.createdTime) }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button @click="goToPreviousPage">Previous</button>
-      <span v-for="page in totalPages" :key="page" @click="goToPage(page)" :class="{ active: currentPage === page }">{{ page }}</span>
-      <button @click="goToNextPage">Next</button>
+    <div class="inner">
+      <h1 class="board-title">{{ boardTitle }}</h1>
+      <table class="tbl_list">
+        <caption></caption>
+        <colgroup>
+          <col width="80" />
+          <col width="" />
+          <col width="140" />
+          <col width="140" />
+          <col width="140" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+            <th scope="col">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in boardItems" :key="item.id">
+            <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
+            <td @click="goToDetail(item.id, category)" class="text_left subject">{{ item.title }}</td>
+            <td>{{ item.nickname }}</td>
+            <td>{{ formatDate(item.createdTime) }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn_adm_control"
+                v-if="canEditOrDelete(item)"
+                @click="toggleConLayer(item.id)"
+              >•••</button>
+              <div class="conLayer" v-if="activeItem === item.id">
+                <a href="javascript:void(0)" class="btn_board_modify" @click="modifyPost(item.id)">수정</a>
+                <a href="javascript:void(0)" class="btn_board_del btn_del" @click="deletePost(item.id)">삭제</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btnWrap">
+        <button @click="createNewPost" class="btn_write">작성하기</button>
+      </div>
+      <div class="pagingWrap">
+        <ul>
+          <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
+          <li><a href="javascript:void(0)" @click="goToPreviousPage" class="btn_paging_prev"></a></li>
+          <li v-for="page in totalPages" :key="page">
+            <a href="javascript:void(0)" @click="goToPage(page)" :class="{ btn_paging: true, active: currentPage === page }">{{ page }}</a>
+          </li>
+          <li><a href="javascript:void(0)" @click="goToNextPage" class="btn_paging_next"></a></li>
+          <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -42,22 +71,25 @@ export default {
       itemsPerPage: 10, // 페이지당 항목 수
       isAdmin: false, // 관리자인지 여부
       userId: null, // 현재 로그인된 사용자의 ID
+      role: null, // 현재 로그인된 사용자의 역할
       category: '', // 현재 게시판 종류
       boardTitle: '', // 게시판 제목
+      activeItem: null, // 현재 열려있는 conLayer의 아이템 ID
     };
   },
   watch: {
     '$route.params.category': 'fetchBoardItems', // category가 변경될 때마다 fetchBoardItems 호출
   },
   created() {
-    this.checkAdminRole();
+    this.checkUserRole();
     this.fetchBoardItems(); // 컴포넌트 생성 시 게시글 목록을 가져옴
     this.userId = localStorage.getItem('userId'); // 로컬스토리지에서 userId 가져오기
   },
   methods: {
-    checkAdminRole() {
+    checkUserRole() {
       const role = localStorage.getItem('role');
       this.isAdmin = role === 'ADMIN';
+      this.role = role;
     },
     async fetchBoardItems() {
       this.category = this.$route.params.category;
@@ -82,21 +114,22 @@ export default {
             size: this.itemsPerPage, // 페이지당 항목 수
           },
         });
-        const data = response.data.result;
-        this.boardItems = data.content;
-        this.totalPages = data.totalPages;
-      } catch (error) {
-        console.error('목록을 가져오는 데 실패했습니다:', error);
-        alert('목록을 가져오는 데 실패했습니다.');
-      }
+        console.log(response.data); // 응답 데이터를 콘솔에 출력
+    const data = response.data.result || response.data; // result 안에 데이터가 없다면 데이터 자체 사용
+    this.boardItems = data.content || data; // content가 없다면 데이터 자체 사용
+    this.totalPages = data.totalPages || 1; // totalPages가 없다면 1로 기본값 설정
+  } catch (error) {
+    console.error('목록을 가져오는 데 실패했습니다:', error);
+    alert('목록을 가져오는 데 실패했습니다.');
+  }
     },
     setBoardTitle() {
       if (this.category === 'event') {
         this.boardTitle = '이벤트 게시판';
-      } else if (this.category === 'notice') {
-        this.boardTitle = '공지사항 게시판';
       } else if (this.category === 'post') {
         this.boardTitle = '자유게시판';
+      } else if (this.category === 'notice') {
+        this.boardTitle = '공지사항';
       } else {
         this.boardTitle = '게시판';
       }
@@ -131,14 +164,63 @@ export default {
     goToDetail(id, category) {
       this.$router.push({ name: 'BoardDetail', params: { category, id } });
     },
+    canEditOrDelete(item) {
+      if (this.category === 'post') {
+        return this.isAdmin || item.userId === this.userId;
+      } else {
+        return this.isAdmin;
+      }
+    },
+    toggleConLayer(itemId) {
+      if (this.activeItem === itemId) {
+        this.activeItem = null;
+      } else {
+        this.activeItem = itemId;
+      }
+    },
+    modifyPost(id) {
+      this.$router.push({ name: 'BoardUpdate', params: { id, category: this.category } });
+    },
+    async deletePost(id) {
+      if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+        let apiUrl = '';
+        if (this.category === 'event') {
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/delete/${id}`;
+        } else if (this.category === 'notice') {
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/delete/${id}`;
+        } else if (this.category === 'post') {
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/delete/${id}`;
+        } else {
+          console.error('잘못된 카테고리입니다.');
+          return;
+        }
+
+        try {
+          await axios.delete(apiUrl);
+          this.fetchBoardItems();
+          alert('게시글이 삭제되었습니다.');
+        } catch (error) {
+          console.error('게시글을 삭제하는 데 실패했습니다:', error);
+          alert('게시글 삭제에 실패했습니다.');
+        }
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+/* (CSS 스타일은 그대로 유지) */
 .board-container {
   width: 80%;
   margin: 0 auto;
+  padding-top: 50px;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .board-title {
@@ -147,59 +229,106 @@ export default {
   margin-bottom: 20px;
 }
 
-.board-table {
+.tbl_list {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.board-table th,
-.board-table td {
+.tbl_list th,
+.tbl_list td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: left;
 }
 
-.board-table th {
+.tbl_list th {
   background-color: #f4f4f4;
 }
 
-.board-table td.clickable {
+.text_left {
+  text-align: left;
+}
+
+.subject {
   cursor: pointer;
-  color: blue;
+  color: #333;
+  text-decoration: none;
+}
+
+.subject:hover {
   text-decoration: underline;
 }
 
-.pagination {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.pagination button {
-  margin: 0 5px;
-}
-
-.pagination span {
-  margin: 0 5px;
+.btn_adm_control {
+  background: none;
+  border: none;
   cursor: pointer;
+  font-size: 20px;
 }
 
-.pagination .active {
-  font-weight: bold;
-  color: blue;
+.conLayer {
+  display: inline-block;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  position: absolute;
+  z-index: 1;
 }
 
-.create-button {
-  display: block;
-  margin: 0 auto;
+.btnWrap {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.btn_write {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #333;
+  color: #fff;
   border: none;
   cursor: pointer;
 }
 
-.create-button:hover {
-  background-color: #0056b3;
+.btn_write:hover {
+  background-color: #555;
+}
+
+.pagingWrap ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagingWrap li {
+  display: inline-block;
+}
+
+.pagingWrap li a {
+  margin: 0 5px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.pagingWrap li a.active {
+  font-weight: bold;
+  color: blue;
+}
+
+.pagingWrap .btn_paging_start:before {
+  content: "<<";
+}
+
+.pagingWrap .btn_paging_prev:before {
+  content: "<";
+}
+
+.pagingWrap .btn_paging_next:before {
+  content: ">";
+}
+
+.pagingWrap .btn_paging_end:before {
+  content: ">>";
 }
 </style>
