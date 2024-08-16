@@ -87,6 +87,7 @@ export default {
     },
     goToDetail(lectureId){
       console.log("강의페이지로 이동~",lectureId)
+      this.$router.push({ name: 'LectureDetail', params: { id: lectureId } });
     }
   }
 };

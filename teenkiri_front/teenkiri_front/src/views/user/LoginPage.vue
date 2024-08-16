@@ -88,9 +88,10 @@ export default {
                 const role = decodedToken.role;
                 const userId = decodedToken.userId;
 
-                localStorage.setItem('token', token);
-                localStorage.setItem('role', role);
-                localStorage.setItem('userId', userId);  // user.id 저장
+              localStorage.setItem('token', token);
+              localStorage.setItem('role', role);
+              localStorage.setItem('userId', userId);  // user.id 저장
+              localStorage.setItem('email', this.email);  // email 저장
 
                 if (this.rememberEmail) {
                     localStorage.setItem('savedEmail', this.email);  // 이메일 저장
@@ -120,5 +121,4 @@ export default {
         },
     },
 };
-
 </script>
