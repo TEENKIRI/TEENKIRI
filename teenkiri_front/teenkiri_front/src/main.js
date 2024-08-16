@@ -4,12 +4,14 @@ import App from './App.vue'
 // src/router/index.js 파일의 router를 사용하겠다 선언
 import router from '@/router/index.js'
 import vuetify from './plugins/vuetify';
-import '@mdi/font/css/materialdesignicons.css'
+import '@mdi/font/css/materialdesignicons.css';
 import axios from 'axios';
 import "@/assets/css/font.css";
 import store from './store/index.js';
 // import VueVideoPlayer from '@videojs-player/vue'
 import 'video.js/dist/video-js.css'
+
+import '@mdi/font/css/materialdesignicons.css';
 
 
 // createApp(App).mount('#app')

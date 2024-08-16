@@ -40,7 +40,7 @@ public class Review extends BaseTimeEntity {
     private UserSubject userSubject;
 
 
-    private float rating;
+    private int rating;
 
     private String reviewText;
 
@@ -51,15 +51,16 @@ public class Review extends BaseTimeEntity {
     public ReviewListResDto listFromEntity() {
         return ReviewListResDto.builder()
                 .id(this.id)
-                .userName(this.user.getName())
+                .nickname(this.user.getNickname())
                 .subjectTitle(this.userSubject.getSubject().getTitle())
                 .subjectId(this.userSubject.getSubject().getId())
-                .rating(Math.round(this.rating))
+                .rating(this.rating)
                 .reviewText(this.reviewText)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
     }
+
     public void toUpdate(ReviewUpdateReqDto dto) {
         this.reviewText = dto.getReviewText();
     }
