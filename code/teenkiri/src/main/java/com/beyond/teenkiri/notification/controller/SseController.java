@@ -1,7 +1,10 @@
 package com.beyond.teenkiri.notification.controller;
 
+import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.service.NotificationService;
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.qna.domain.QnA;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
@@ -69,18 +72,8 @@ public class SseController implements MessageListener {
         emitter.onCompletion(() -> emitters.remove(email));
         emitter.onTimeout(() -> emitters.remove(email));
 
-        // 구독할 때 기존 알림 전송
-//        NotificationService notificationService;
-        List<NotificationDto> notifications = notificationService.getNotificationsByEmail();
-        try {
-            for (NotificationDto notification : notifications) {
-                emitter.send(SseEmitter.event().name("notification").data(notification));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         subscribeChannel(email);
+
         return emitter;
     }
 
@@ -95,6 +88,7 @@ public class SseController implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         System.out.println("연결 개수 : " + emitters.size());
+        System.out.println("이름 : " + emitters.toString());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
@@ -112,7 +106,22 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage(NotificationDto dto, String email) {
-        sseRedisTemplate.convertAndSend(email, dto);
+    public void publishMessage( Long qnaId, Long postId, String userEmail) {
+        NotificationDto dto = new NotificationDto();
+        dto.setQnaId(qnaId);
+        dto.setPostId(postId);
+        dto.setUserEmail(userEmail);
+        SseEmitter emitter = emitters.get(userEmail);
+
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("notification").data(dto));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            sseRedisTemplate.convertAndSend(userEmail, dto);
+        }
     }
+
 }

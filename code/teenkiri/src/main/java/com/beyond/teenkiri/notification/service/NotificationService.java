@@ -1,23 +1,17 @@
 package com.beyond.teenkiri.notification.service;
 
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.event.domain.Event;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
-import com.beyond.teenkiri.user.domain.Role;
-import com.beyond.teenkiri.user.domain.User;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
-@Transactional
+//@Transactional
 public class NotificationService{
     private final NotificationRepository notificationRepository;
 

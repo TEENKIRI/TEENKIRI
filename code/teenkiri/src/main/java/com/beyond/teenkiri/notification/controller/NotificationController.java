@@ -28,7 +28,7 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<NotificationDto> getNotifications() {
         return notificationService.getNotificationsByEmail();
     }
@@ -45,4 +45,6 @@ public class NotificationController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

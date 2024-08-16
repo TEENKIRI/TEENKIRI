@@ -58,9 +58,10 @@ public class CommentService {
             savedComment = commentRepository.save(dto.PostToEntity(user, post, nickname));
 
             // 댓글 저장 후 게시글 작성자에게 알림 전송
-            NotificationDto notificationDto = new NotificationDto(null, post.getId(), null, userEmail,"게시글에 새로운 댓글이 달렸습니다.");
+            NotificationDto notificationDto = new NotificationDto(null, post.getId(), post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
             notificationRepository.save(notificationDto);
-            sseController.publishMessage(notificationDto, post.getUser().getEmail());
+
+            sseController.publishMessage(null, post.getId(), post.getUser().getEmail());
 
         } else if (dto.getQnaId() != null) {
             QnA qna = qnaRepository.findById(dto.getQnaId())
@@ -68,9 +69,10 @@ public class CommentService {
             savedComment = commentRepository.save(dto.QnAToEntity(user, qna, nickname));
 
             // 댓글 저장 후 QnA 작성자에게 알림 전송
-            NotificationDto notificationDto = new NotificationDto(qna.getId(), null, null, userEmail, "QnA에 새로운 댓글이 달렸습니다.");
+            NotificationDto notificationDto = new NotificationDto(qna.getId(), null, qna.getUser().getEmail(), qna.getTitle()+" QnA에 새로운 댓글이 달렸습니다.");
             notificationRepository.save(notificationDto);
-            sseController.publishMessage(notificationDto, qna.getUser().getEmail());
+            sseController.publishMessage(qna.getId(), null, qna.getUser().getEmail());
+
         } else {
             throw new IllegalArgumentException("댓글이 달릴 게시글 또는 QnA ID가 필요합니다.");
         }
