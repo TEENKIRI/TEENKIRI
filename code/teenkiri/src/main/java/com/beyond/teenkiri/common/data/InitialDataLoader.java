@@ -94,7 +94,7 @@ public class InitialDataLoader implements CommandLineRunner {
                             + "<br />- 본 프로모션은 예산 소진 시 프로모션 배너 게시 여부와 상관없이 별도 공지하지 않고 조기 종료될 수 있습니다."
                             + "<br />- 본 프로모션은 당사 및 제휴사 사정으로 변경 또는 중단될 수 있습니다."
                             + "<br />- 할인 미적용 문의: 카카오페이 고객센터 1644-7405, 카카오톡 [카카오페이 고객센터] 상담 채널")
-                    .imageUrl("https://example.com/image1.jpg")
+                    .imageUrl("https:///image1.jpg")
                     .user(adminUser)
                     .build();
 

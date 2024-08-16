@@ -15,5 +15,4 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
     Page<Subject> findByCourseIdAndDelYN(Long courseId, DelYN delYN, Pageable pageable);
     Page<Subject> findByCourseIdAndGradeInAndDelYN(Long courseId, List<Grade> grade, DelYN delYN, Pageable pageable);
     Page<Subject> findByIsMainSubjectAndDelYN(Boolean isMainSubject, DelYN delYN, Pageable pageable);
-
 }
