@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.notification.controller;
 
 import com.beyond.teenkiri.comment.domain.Comment;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.service.NotificationService;
 import com.beyond.teenkiri.post.domain.Post;
@@ -106,11 +107,16 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage( Long qnaId, Long postId, String userEmail) {
-        NotificationDto dto = new NotificationDto();
-        dto.setQnaId(qnaId);
-        dto.setPostId(postId);
-        dto.setUserEmail(userEmail);
+    public void publishMessage(NotificationDto dto) {
+//        NotificationDto dto = new NotificationDto();
+//        dto.setQnaId(qnaId);
+//        dto.setPostId(postId);
+//        dto.setUserEmail(userEmail);
+//        dto.setMessage(message);
+//        dto.setDelYN(DelYN.N);
+//        dto.saveDto(qnaId, postId, userEmail, message);
+
+        String userEmail = dto.getUserEmail();
         SseEmitter emitter = emitters.get(userEmail);
 
         if (emitter != null) {

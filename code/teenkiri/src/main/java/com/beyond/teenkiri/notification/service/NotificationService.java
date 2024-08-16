@@ -8,10 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-//@Transactional
+@Transactional
 public class NotificationService{
     private final NotificationRepository notificationRepository;
 
@@ -25,10 +26,9 @@ public class NotificationService{
         return notificationRepository.findByUserEmail(userEmail);
     }
 
-    public NotificationDto updateDelYN(Long id) {
+    public void updateDelYN(Long id) {
         NotificationDto dto = notificationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
         dto.updateDelYN(DelYN.Y);
-        return dto;
     }
 }

@@ -117,9 +117,13 @@ public class QnAService {
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         // 댓글 저장 후 게시글 작성자에게 알림 전송
-        NotificationDto notificationDto = new NotificationDto(qnA.getId(), null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
+
+
+//        NotificationDto notificationDto = new NotificationDto(qnA.getId(), null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto = notificationDto.saveDto(qnA.getId(), null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
         notificationRepository.save(notificationDto);
-        sseController.publishMessage(qnA.getId(), null, qnA.getUser().getEmail());
+        sseController.publishMessage(notificationDto);
         return qnARepository.save(qnA);
     }
 
