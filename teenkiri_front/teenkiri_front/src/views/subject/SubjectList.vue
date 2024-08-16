@@ -198,47 +198,60 @@ export default {
   },
   methods: {
     async getCourseList(){
-      const params = {
+      try {
+        const params = {
           size: this.course.page.pageSize,
           page: this.course.page.currentPage
+        }
+        
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, {params});
+        const addtionalData = response.data.result.content;
+        console.log(response)
+        this.course.courseList = [...this.course.courseList, ...addtionalData]
+      }catch (e) {
+        console.error(e)
       }
-      
-      const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, {params});
-      const addtionalData = response.data.result.content;
-      console.log(response)
-      this.course.courseList = [...this.course.courseList, ...addtionalData]
     },
     async getSubjectMainList(){
-      const params = {
+      try {
+        const params = {
           size: 10, //10개만 보이도록 작업~
           page: 0
+        }
+        
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, {params});
+        const addtionalData = response.data.result.content;
+        console.log(response)
+        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...addtionalData]
+      }catch (e) {
+        console.error(e)
       }
-      
-      const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, {params});
-      const addtionalData = response.data.result.content;
-      console.log(response)
-      this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...addtionalData]
     },
     async getSubjectList(){
-      const params = {
+      try {
+        const params = {
           size: this.subject.page.pageSize,
           page: this.subject.page.currentPage
-      }
-      let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`
-      if(this.course.selectedMenu === "all"){
-        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`
-      }else{
-        // course id가 있는 경우
-        if(this.grade.selectedGrades.length >= 1){ //선택된 학년이 있는 경우
-          const selectedGradeStr = this.grade.selectedGrades.join("&");
-          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`
         }
+        let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`
+        if(this.course.selectedMenu === "all"){
+          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`
+        }else{
+          // course id가 있는 경우
+          if(this.grade.selectedGrades.length >= 1){ //선택된 학년이 있는 경우
+            const selectedGradeStr = this.grade.selectedGrades.join("&");
+            api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`
+          }
+        }
+        
+        const response = await axios.get(api_url, {params});
+        const addtionalData = response.data.result.content;
+        console.log(response)
+        this.subject.subjectList = [...this.subject.subjectList, ...addtionalData]
+      }catch (e) {
+        console.error(e)
       }
       
-      const response = await axios.get(api_url, {params});
-      const addtionalData = response.data.result.content;
-      console.log(response)
-      this.subject.subjectList = [...this.subject.subjectList, ...addtionalData]
     },
     resetSubjectVariables(){
       this.subject.page.currentPage = 0;
