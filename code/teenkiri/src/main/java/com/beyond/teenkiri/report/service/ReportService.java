@@ -33,8 +33,8 @@ public class ReportService {
     private final UserRepository userRepository;
 
     @Autowired
-    public ReportService(ReportRepository repository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
-        this.reportRepository = repository;
+    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
+        this.reportRepository = reportRepository;
         this.userService = userService;
         this.qnARepository = qnARepository;
         this.postRepository = postRepository;
@@ -62,7 +62,11 @@ public class ReportService {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         }
+
+        // Report 엔티티 생성
         Report report = dto.toEntity(user, qnA, post, comment);
+
+        // Report 엔티티를 저장
         return reportRepository.save(report);
     }
 
@@ -79,5 +83,4 @@ public class ReportService {
         }
         return reports.map(Report::listFromEntity);
     }
-
 }

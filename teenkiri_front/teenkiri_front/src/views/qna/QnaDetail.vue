@@ -115,13 +115,8 @@
     <ReportCreate 
       v-if="showReportModal" 
       :postId="reportData.postId" 
-      :postTitle="reportData.postTitle" 
-      :postContent="reportData.postContent" 
-      :authorEmail="reportData.authorEmail" 
-      :postCategory="reportData.postCategory" 
       :commentId="reportData.commentId" 
-      :commentContent="reportData.commentContent" 
-      :commentAuthor="reportData.commentAuthor" 
+      :qnaId="reportData.qnaId" 
       @close="closeReportModal" 
     />
   </v-container>
@@ -250,22 +245,12 @@ export default {
     openReportModal(type, comment = null) {
       if (type === 'question') {
         this.reportData = {
-          postId: this.questionDetail.id,
-          postTitle: this.questionDetail.title,
-          postContent: this.questionDetail.questionText,
-          authorEmail: this.questionDetail.questionUserNickname,
-          postCategory: 'qna'
+          qnaId: this.questionDetail.id,
         };
       } else if (type === 'comment' && comment) {
         this.reportData = {
-          postId: this.questionDetail.id,
-          postTitle: this.questionDetail.title,
-          postContent: this.questionDetail.questionText,
-          authorEmail: this.questionDetail.questionUserNickname,
-          postCategory: 'qna',
+          qnaId: this.questionDetail.id,
           commentId: comment.id,
-          commentContent: comment.content,
-          commentAuthor: comment.nickname
         };
       }
       this.showReportModal = true;

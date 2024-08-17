@@ -10,6 +10,7 @@ import SubscribePage from "@/views/user/SubscribePage.vue";
 import WishListPage from "@/views/user/WishListPage.vue";
 import myQnAListPage from "@/views/user/myQnAListPage.vue";
 
+
 export const memberRouter = [
     {
         path: '/user/create',
@@ -52,15 +53,14 @@ export const memberRouter = [
         name: 'ReportCreate',
         component: ReportCreate,
         props: route => ({
+          // 기존 게시글 정보
           postId: route.query.postId,
-          postTitle: route.query.postTitle,
-          postContent: route.query.postContent,
-          authorEmail: route.query.authorEmail,
-          postCategory: route.query.postCategory,
-          // 댓글 정보를 추가로 전달
+
+          // 댓글 정보
           commentId: route.query.commentId, 
-          commentContent: route.query.commentContent,
-          commentAuthor: route.query.commentAuthor
+
+          // QnA 관련 추가 정보
+          qnaId: route.query.qnaId, // 질문글 ID
         })
     },
     {
@@ -78,5 +78,5 @@ export const memberRouter = [
         name: 'myQnAListPage',
         component: myQnAListPage
       }
-    
+
 ]
