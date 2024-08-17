@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @RestController
 @RequestMapping("qna")
@@ -142,4 +143,12 @@ public class QnAController {
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "해당 강좌의 QnA 목록을 조회합니다.", qnAListResDtos);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyQuestions() {
+        List<QnAListResDto> qnaList = qnAService.getUserQnAs();
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "사용자 작성 질문 목록을 조회합니다.", qnaList);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+    }
+
 }

@@ -17,45 +17,39 @@
             <v-btn text @click="navigate('공지사항')">공지사항</v-btn>
             <v-btn text @click="navigate('자유게시판')">자유게시판</v-btn>
             <v-btn text @click="navigate('QnA')">질문게시판</v-btn>
-            <!-- 관리자만 신고리스트를 볼 수 있게 조건 추가 -->
             <v-btn v-if="isAdmin" text @click="navigate('신고리스트')">신고리스트</v-btn>
           </v-row>
         </v-col>
         <v-col cols="3" class="text-right">
-          <v-btn icon @click="goToMember">
+          <v-btn icon @click="handleAccountClick">
             <v-icon>mdi-account</v-icon>
           </v-btn>
-          <v-btn v-if="isLogin" @click="doLogout">로그아웃</v-btn>
-          <v-btn icon @click="goToMenu">
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-          <!-- 알림 아이콘 및 알림 목록 -->
           <v-btn icon color="primary">
-              <v-badge
-                color="red"
-                :content="unreadNotificationsCount"
-                overlap
-                v-if="unreadNotificationsCount > 0"
-              >
-                <v-icon>mdi-bell</v-icon>
-              </v-badge>
-              <v-icon v-else>mdi-bell</v-icon>
-  
-              <v-menu activator="parent" offset-y>
-                <v-list max-width="300" max-height="400" style="overflow-y: auto;">
-                  <v-list-item
-                    v-for="(notification, index) in unreadNotifications"
-                    :key="index"
-                    :class="{'unread-notification': notification.delYN === 'N'}"
-                    @click="markAsReadAndNavigate(notification, index)"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>{{ notification.message }}</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-btn>
+            <v-badge
+              color="red"
+              :content="unreadNotificationsCount"
+              overlap
+              v-if="unreadNotificationsCount > 0"
+            >
+              <v-icon>mdi-bell</v-icon>
+            </v-badge>
+            <v-icon v-else>mdi-bell</v-icon>
+
+            <v-menu activator="parent" offset-y>
+              <v-list max-width="300" max-height="400" style="overflow-y: auto;">
+                <v-list-item
+                  v-for="(notification, index) in unreadNotifications"
+                  :key="index"
+                  :class="{'unread-notification': notification.delYN === 'N'}"
+                  @click="markAsReadAndNavigate(notification, index)"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>{{ notification.message }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -109,7 +103,7 @@ export default {
     }
   },
   methods: {
-      async fetchNotifications() {
+    async fetchNotifications() {
       try {
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`, {
           headers: {
@@ -174,20 +168,13 @@ export default {
         this.$router.push('/login');
       }
     },
-    goToMenu() {
+    handleAccountClick() {
       if (this.isLogin) {
-        this.$emit('open-sidebar'); // 사이드바 열기 이벤트를 상위 컴포넌트로 전달
+        this.$emit('open-sidebar');
       } else {
         alert("로그인 후 사용이 가능합니다.");
         this.$router.push('/login');
       }
-    },
-    doLogout() {
-      localStorage.removeItem('role');
-      localStorage.removeItem('token');
-      this.isLogin = false;
-      console.log('Logged out');
-      window.location.reload();
     }
   }
 }

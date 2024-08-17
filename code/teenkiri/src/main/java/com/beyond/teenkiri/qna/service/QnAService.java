@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -102,6 +103,15 @@ public class QnAService {
         Page<QnAListResDto> qnAListResDtos = qnAS.map(a->a.listFromEntity());
         return qnAListResDtos;
     }
+
+    //사용자가 작성한 qna 목록 보기
+    public List<QnAListResDto> getUserQnAs() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+        List<QnA> qnAs = qnARepository.findByUser(user);
+        return qnAs.stream().map(QnA::listFromEntity).collect(Collectors.toList()); // DTO로 변환
+    }
+
     public QnADetailDto getQuestionDetail(Long id) {
         QnA qna = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
