@@ -27,6 +27,8 @@ public class NotificationDto implements Serializable {
 
     private Long postId;
 
+    private Long reportId;
+
     private String message;
     private String userEmail;
 
@@ -34,27 +36,28 @@ public class NotificationDto implements Serializable {
     private DelYN delYN;
 
 
-    public NotificationDto saveDto(Long qnaId, Long postId, String userEmail, String message) {
+    public NotificationDto saveDto(Long qnaId, Long postId, Long reportId, String userEmail, String message) {
         return NotificationDto.builder()
                 .id(this.id)
                 .qnaId(qnaId)
                 .postId(postId)
+                .reportId(reportId)
                 .message(message)
                 .userEmail(userEmail)
                 .delYN(DelYN.N)
                 .build();
     }
-
-    public NotificationListDto listFromEntity() {
-        return NotificationListDto.builder()
-                .id(this.id)
-                .qnaId(this.qnaId != null ? this.qnaId : null)
-                .postId(this.postId != null ? this.postId : null)
-                .message(this.message)
-                .userEmail(this.userEmail)
-                .delYN(this.delYN)
-                .build();
-    }
+//
+//    public NotificationListDto listFromEntity() {
+//        return NotificationListDto.builder()
+//                .id(this.id)
+//                .qnaId(this.qnaId != null ? this.qnaId : null)
+//                .postId(this.postId != null ? this.postId : null)
+//                .message(this.message)
+//                .userEmail(this.userEmail)
+//                .delYN(this.delYN)
+//                .build();
+//    }
 
 
     public void updateDelYN(DelYN delYN) {

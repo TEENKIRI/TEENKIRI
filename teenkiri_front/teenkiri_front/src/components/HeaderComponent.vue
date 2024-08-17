@@ -137,6 +137,10 @@ export default {
             window.location.href = `/board/detail/post/${notification.postId}`;
           } else if (notification.qnaId) {
             window.location.href = `/qna/detail/${notification.qnaId}`;
+          } else if (notification.reportId){
+            window.location.href = `/report/list`;
+          } else{
+            console.log('error!!!!!!!!!!!')
           }
         } catch (error) {
           console.error('알림을 읽음으로 표시하는 중 오류 발생:', error);

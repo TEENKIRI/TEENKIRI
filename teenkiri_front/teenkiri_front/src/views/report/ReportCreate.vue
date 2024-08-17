@@ -164,6 +164,7 @@ export default {
         this.cancelReport();
       } catch (error) {
         console.error("신고를 제출하는 데 실패했습니다:", error);
+        console.log(this.reportData)
         alert("신고를 제출하는 데 실패했습니다.");
       }
     },
