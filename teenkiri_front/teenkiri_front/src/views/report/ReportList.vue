@@ -26,6 +26,7 @@
                 <th>신고자 이메일</th>
                 <th>피신고자 이메일</th>
                 <th>사유</th>
+                <th>상세사유</th>
                 <th v-if="showQnaCol">QnA ID</th>
                 <th v-if="showPostCol">Post ID</th>
                 <th v-if="showCommentCol">Comment ID</th>
@@ -38,6 +39,7 @@
                 <td>{{ report.reportEmail }}</td>
                 <td>{{ report.suspectEmail }}</td>
                 <td>{{ formatReason(report.reason) }}</td>
+                <td>{{ report.details }} </td>
                 <td v-if="showQnaCol">{{ report.qnaId }}</td>
                 <td v-if="showPostCol">{{ report.postId }}</td>
                 <td v-if="showCommentCol">{{ report.commentId }}</td>
