@@ -16,6 +16,7 @@
                     <th>번호</th>
                     <th>작성자</th>
                     <th>제목</th>
+                    <th>강좌명</th>
                     <th>생성 시간</th>
                     <th>수정 시간</th>
                     <th
@@ -27,6 +28,7 @@
                     <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
                     <td>{{ question.questionUserName }}</td>
                     <td @click="viewDetail(question.id)" class="clickable">{{ question.title }}</td>
+                    <td>{{ question.subjectTitle }}</td>
                     <td>{{ formatDate(question.createdTime) }}</td>
                     <td>{{ formatDate(question.updatedTime) }}</td>
                     <td>

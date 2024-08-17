@@ -9,6 +9,7 @@ import com.beyond.teenkiri.qna.dto.QnAAtoUpdateDto;
 import com.beyond.teenkiri.qna.dto.QnADetailDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.dto.QnAQtoUpdateDto;
+import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
@@ -59,6 +60,12 @@ public class QnA extends BaseTimeEntity {
     @Builder.Default
     private String aImageUrl = "";
 
+
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject; // 연관된 강좌
+
+
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
@@ -72,6 +79,7 @@ public class QnA extends BaseTimeEntity {
                 .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
                 .qImageUrl(this.qImageUrl)
+                .subjectTitle(this.subject.getTitle()) // 강좌 제목 추가
                 .build();
     }
 
@@ -106,22 +114,4 @@ public class QnA extends BaseTimeEntity {
         this.delYN = delYN;
     }
 
-
-//    public QnADetailDto fromEntity(QnA qna, List<CommentDetailDto> comments) { // 댓글 리스트를 인자로 추가
-//        return QnADetailDto.builder()
-//                .id(this.getId())
-//                .title(this.getTitle())
-//                .questionText(this.getQuestionText())
-//                .answerText(this.getAnswerText())
-//                .questionUserNickname(this.getUser().getNickname())
-//                .answeredByNickname(this.getAnswerer() != null ? this.getAnswerer().getNickname() : null)
-//                .createdTime(this.getCreatedTime())
-//                .updatedTime(this.getUpdatedTime())
-//                .answeredAt(this.getAnsweredAt())
-//                .userEmail(this.getUser().getEmail())
-//                .qImageUrl(this.getQImageUrl())
-//                .aImageUrl(this.getAImageUrl())
-//                .comments(comments) // 댓글 리스트 설정
-//                .build();
-//    }
 }

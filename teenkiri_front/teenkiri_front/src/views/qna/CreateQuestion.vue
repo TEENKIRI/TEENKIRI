@@ -7,6 +7,16 @@
 
       <v-card-text>
         <v-form ref="form" @submit.prevent="submitQuestion">
+          <!-- 강좌 선택 -->
+          <v-select
+            v-model="selectedSubject"
+            :items="subjects"
+            item-text="title"
+            item-value="id"
+            label="강좌 선택"
+            required
+          ></v-select>
+
           <!-- 질문 제목 -->
           <v-text-field
             label="제목"
@@ -44,13 +54,27 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      selectedSubject: null,
+      subjects: [], // 강좌 목록을 저장할 배열
       questionTitle: '',
       questionText: '',
       questionImage: null,
       previewImageSrc: null,
     };
   },
+  mounted() {
+    this.fetchSubjects(); // 컴포넌트가 마운트될 때 강좌 목록을 불러옵니다.
+  },
   methods: {
+    async fetchSubjects() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/list`);
+        this.subjects = response.data.result.content; // 강좌 목록을 subjects 배열에 저장
+      } catch (error) {
+        console.error('강좌 목록을 불러오는 중 오류가 발생했습니다:', error);
+        this.subjects = []; // 오류 발생 시 빈 배열로 초기화
+      }
+    },
     onFileChange(event) {
       const files = event?.target?.files || event?.dataTransfer?.files;
       if (files && files.length > 0) {
@@ -73,9 +97,15 @@ export default {
       }
     },
     async submitQuestion() {
+      if (!this.selectedSubject) {
+        alert('강좌를 선택해주세요.');
+        return;
+      }
+
       const formData = new FormData();
       formData.append('title', this.questionTitle);
       formData.append('questionText', this.questionText);
+      formData.append('subjectId', this.selectedSubject); // 선택한 강좌 ID를 추가
       if (this.questionImage) {
         formData.append('image', this.questionImage);
       }

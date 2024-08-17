@@ -8,6 +8,7 @@ import { memberRouter } from './memberRouter';
 import { boardRouter } from './boardRouter';
 import { subjectRouter } from './subjectRouter';
 import { qnaRouter } from './qnaRouter';
+import { reportRouter } from './reportRouter';
 
 
 const routes = [
@@ -35,6 +36,7 @@ const routes = [
     ...boardRouter,
     ...subjectRouter,
     ...qnaRouter,
+    ...reportRouter,
 
 ]
 

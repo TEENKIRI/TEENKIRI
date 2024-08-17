@@ -26,6 +26,8 @@
             />
             <p><strong>질문 내용:</strong></p>
             <p>{{ questionDetail.questionText }}</p>
+            <p><strong>강좌명:</strong></p>
+            <p>{{ questionDetail.subjectTitle }}</p>
           </v-col>
 
           <v-col cols="12" v-if="questionDetail.answerText">
