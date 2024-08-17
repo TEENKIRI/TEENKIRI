@@ -10,6 +10,8 @@
         <v-btn v-if="isAdmin" color="error" @click="confirmDeleteQuestion">삭제</v-btn>
         <!-- 질문 신고 버튼 -->
         <v-btn color="secondary" @click="openReportModal('question')">신고</v-btn>
+        <!-- 답변하기 버튼 (관리자와 선생님만 보이도록) -->
+        <v-btn v-if="canAnswer" color="primary" @click="goToAnswer">답변하기</v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -151,6 +153,9 @@ export default {
     },
     canEditAnswer() {
       return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
+    },
+    canAnswer() {
+      return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
     }
   },
   created() {
@@ -233,6 +238,9 @@ export default {
     },
     editAnswer() {
       this.$router.push(`/qna/update/answer/${this.$route.params.id}`);
+    },
+    goToAnswer() {
+      this.$router.push(`/qna/answer/${this.$route.params.id}`);
     },
     formatDate(date) {
       if (!date) return '';

@@ -6,6 +6,8 @@ import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.comment.service.CommentService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
+import com.beyond.teenkiri.lecture.domain.Lecture;
+import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.notification.controller.SseController;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
@@ -14,6 +16,7 @@ import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.repository.SubjectRepository;
+import com.beyond.teenkiri.subject.service.SubjectService;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -43,9 +46,10 @@ public class QnAService {
     private final NotificationRepository notificationRepository;
     private final SseController sseController;
     private final SubjectRepository subjectRepository;
+    private final SubjectService subjectService;
 
     @Autowired
-    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository, NotificationRepository notificationRepository, SseController sseController, SubjectRepository subjectRepository) {
+    public QnAService(QnARepository qnARepository, UserService userService, CommentRepository commentRepository, UploadAwsFileService uploadAwsFileService, CommentService commentService, UserRepository userRepository, NotificationRepository notificationRepository, SseController sseController, SubjectRepository subjectRepository, SubjectService subjectService) {
         this.qnARepository = qnARepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
@@ -55,6 +59,7 @@ public class QnAService {
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
         this.subjectRepository = subjectRepository;
+        this.subjectService = subjectService;
     }
 
     @Transactional
@@ -81,7 +86,7 @@ public class QnAService {
         }
 
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 달렸습니다.");
+        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 달렸습니다.");
         notificationRepository.save(notificationDto);
         sseController.publishMessage(notificationDto);
         return qnARepository.save(qnA);
@@ -91,7 +96,12 @@ public class QnAService {
         Page<QnA> qnAS = qnARepository.findByDelYN(DelYN.N, pageable);
         return qnAS.map(QnA::listFromEntity);
     }
-
+    public Page<QnAListResDto> qnaListByGroup(Long subjectId, Pageable pageable){
+        Subject subject = subjectService.findSubjectById(subjectId);
+        Page<QnA> qnAS = qnARepository.findAllBySubjectId(subject.getId(), pageable);
+        Page<QnAListResDto> qnAListResDtos = qnAS.map(a->a.listFromEntity());
+        return qnAListResDtos;
+    }
     public QnADetailDto getQuestionDetail(Long id) {
         QnA qna = qnARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
@@ -132,7 +142,7 @@ public class QnAService {
 
 
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
+        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
         notificationRepository.save(notificationDto);
         sseController.publishMessage(notificationDto);
         return qnARepository.save(qnA);
@@ -166,7 +176,7 @@ public class QnAService {
             throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
         }
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 수정되었습니다.");
+        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 수정되었습니다.");
         notificationRepository.save(notificationDto);
         sseController.publishMessage(notificationDto);
 
@@ -204,7 +214,7 @@ public class QnAService {
             throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 수정되었습니다.");
+        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 수정되었습니다.");
         notificationRepository.save(notificationDto);
         sseController.publishMessage(notificationDto);
     }

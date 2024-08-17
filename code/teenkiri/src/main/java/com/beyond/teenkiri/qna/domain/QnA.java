@@ -79,6 +79,7 @@ public class QnA extends BaseTimeEntity {
                 .answeredAt(this.answeredAt)
                 .answerText(this.answerText)
                 .qImageUrl(this.qImageUrl)
+                .subjectId(this.subject.getId())
                 .subjectTitle(this.subject.getTitle()) // 강좌 제목 추가
                 .build();
     }

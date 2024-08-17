@@ -4,6 +4,7 @@ import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.service.CommentService;
 import com.beyond.teenkiri.common.dto.CommonErrorDto;
 import com.beyond.teenkiri.common.dto.CommonResDto;
+import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
 import com.beyond.teenkiri.qna.service.QnAService;
@@ -133,5 +134,12 @@ public class QnAController {
             CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
             return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/subject/{subjectId}/qna/list")
+    public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable("subjectId") Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
+            direction = Sort.Direction.DESC ) Pageable pageable){
+        Page<QnAListResDto> qnAListResDtos = qnAService.qnaListByGroup(subjectId, pageable);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "해당 강좌의 QnA 목록을 조회합니다.", qnAListResDtos);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 }
