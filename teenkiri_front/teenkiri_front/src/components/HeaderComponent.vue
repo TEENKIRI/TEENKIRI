@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-app-bar app>
     <v-container>
       <v-row align="center">
@@ -75,6 +75,14 @@ export default {
     },
     goToMenu() {
       console.log('Go to menu');
+      if (this.isLogin) {
+        // 로그인된 상태에서 사용자가 클릭할 때 사이드 바 생기게함.
+        // this.$router.push('/user/edit-info'); // 로그인 후 이동할 페이지
+      } else {
+        // 로그인되지 않은 상태에서 사용자가 클릭할 때
+        alert("로그인 후 사용이 가능합니다.");
+        this.$router.push('/login'); // 로그인 페이지로 이동
+      }
     },
     doLogout() {
       localStorage.removeItem('role');
@@ -82,6 +90,109 @@ export default {
       this.isLogin = false; // 로그인 상태 업데이트
       console.log('Logged out');
       window.location.reload(); // 페이지 새로고침
+    }
+  }
+}
+</script>
+
+<style scoped>
+.logo {
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-image {
+  height: 10%; 
+}
+</style> -->
+
+<!-- HeaderComponent.vue -->
+<template>
+  <v-app-bar app>
+    <v-container>
+      <v-row align="center">
+        <v-col cols="3">
+          <v-toolbar-title>
+            <router-link to="/" class="logo">
+              <img :src="logo" alt="로고" class="logo-image" />
+            </router-link>
+          </v-toolbar-title>
+        </v-col>
+        <v-col cols="6">
+          <v-row justify="center">
+            <v-btn text @click="navigate('강좌')">강좌</v-btn>
+            <v-btn text @click="navigate('추천')">추천</v-btn>
+            <v-btn text @click="navigate('이벤트')">이벤트</v-btn>
+            <v-btn text @click="navigate('공지사항')">공지사항</v-btn>
+            <v-btn text @click="navigate('자유게시판')">자유게시판</v-btn>
+            <v-btn text @click="navigate('QnA')">질문게시판</v-btn>
+          </v-row>
+        </v-col>
+        <v-col cols="3" class="text-right">
+          <v-btn icon @click="goToMember">
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+          <v-btn v-if="isLogin" @click="doLogout">로그아웃</v-btn>
+          <v-btn icon @click="goToMenu">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app-bar>
+</template>
+
+<script>
+export default {
+  name: 'HeaderComponent',
+  data() {
+    return {
+      logo: require('@/assets/images/ico_logo.png'),
+      isLogin: false // 초기값 설정
+    };
+  },
+  mounted() {
+    const token = localStorage.getItem('token');
+    this.isLogin = !!token;
+  },
+  methods: {
+    navigate(section) {
+      if (section === '강좌') {
+        this.$router.push({ name: 'SubjectList', params: { category: 'subject' } });
+      } else if (section === '이벤트') {
+        this.$router.push({ name: 'BoardList', params: { category: 'event' } });
+      } else if (section === '공지사항') {
+        this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
+      } else if (section === '자유게시판') {
+        this.$router.push({ name: 'BoardList', params: { category: 'post' } });
+      } else if (section === 'QnA')  {
+        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
+      } else {
+        console.log(section);
+      }
+    },
+    goToMember() {
+      if (this.isLogin) {
+        this.$router.push('/user/edit-info');
+      } else {
+        this.$router.push('/login');
+      }
+    },
+    goToMenu() {
+      if (this.isLogin) {
+        this.$emit('open-sidebar'); // 사이드바 열기 이벤트를 상위 컴포넌트로 전달
+      } else {
+        alert("로그인 후 사용이 가능합니다.");
+        this.$router.push('/login');
+      }
+    },
+    doLogout() {
+      localStorage.removeItem('role');
+      localStorage.removeItem('token');
+      this.isLogin = false;
+      console.log('Logged out');
+      window.location.reload();
     }
   }
 }
