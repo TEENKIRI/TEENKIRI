@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserSubjectService {
     private final UserSubjectRepository userSubjectRepository;
     private final SubjectService subjectService;
@@ -64,6 +64,7 @@ public class UserSubjectService {
                     boolean isFavorite = wishes.stream()
                             .anyMatch(wish -> wish.getSubject().equals(us.getSubject()));
                     return SubjectInfoDto.builder()
+                            .id(us.getSubject().getId())
                             .title(us.getSubject().getTitle())
                             .teacherName(us.getSubject().getUserTeacher().getName())
                             .subjectThumUrl(us.getSubject().getSubjectThumUrl())
@@ -71,10 +72,15 @@ public class UserSubjectService {
                             .build();
                 })
                 .collect(Collectors.toList());
-
         int subjectCount = userSubjects.size();
-        return userSubjects.isEmpty() ? null : userSubjects.get(0).listFromEntity(subjects, subjectCount);
+        System.out.println(subjects.toString());
+
+        return UserSubjectListResDto.builder()
+                .subjects(subjects)
+                .subjectCount(subjectCount)
+                .build();
     }
+
 
         // 위 코드는 아래 코드를 스트림으로 쓴 것입니다.
 //        List<String> subjectTitles = new ArrayList<>();
