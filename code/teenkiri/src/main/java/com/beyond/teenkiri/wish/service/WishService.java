@@ -69,4 +69,15 @@ public class WishService {
 
         return subjectList;
     }
+
+    public boolean isInWishlist(String email, Long subjectId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
+
+        return wishRepository.findByUserAndSubject(user, subject).isPresent();
+    }
+
 }
