@@ -17,6 +17,8 @@
             <v-btn text @click="navigate('공지사항')">공지사항</v-btn>
             <v-btn text @click="navigate('자유게시판')">자유게시판</v-btn>
             <v-btn text @click="navigate('QnA')">질문게시판</v-btn>
+            <!-- 관리자만 신고리스트를 볼 수 있게 조건 추가 -->
+            <v-btn v-if="isAdmin" text @click="navigate('신고리스트')">신고리스트</v-btn>
           </v-row>
         </v-col>
         <v-col cols="3" class="text-right">
@@ -71,6 +73,7 @@ export default {
     return {
       logo: require('@/assets/images/ico_logo.png'),
       isLogin: false,
+      isAdmin: false, // 관리자인지 여부를 확인하기 위한 변수 추가
       notifications: [],
     };
   },
@@ -87,6 +90,7 @@ export default {
     this.isLogin = !!token;
 
     if (this.isLogin) {
+      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; // 로그인 후 역할이 ADMIN인지 확인
       this.fetchNotifications();
 
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
@@ -130,9 +134,9 @@ export default {
           this.notifications[index].delYN = 'Y';
 
           if (notification.postId) {
-            this.$router.push({ name: 'PostDetail', params: { id: notification.postId } });
+            window.location.href = `/board/detail/post/${notification.postId}`;
           } else if (notification.qnaId) {
-            this.$router.push({ name: 'QnaDetail', params: { id: notification.qnaId } });
+            window.location.href = `/qna/detail/${notification.qnaId}`;
           }
         } catch (error) {
           console.error('알림을 읽음으로 표시하는 중 오류 발생:', error);
@@ -150,6 +154,12 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
       } else if (section === 'QnA') {
         this.$router.push({ name: 'QnaList', params: { category: 'qna' } });
+      } else if (section === '신고리스트') {
+        if (this.isAdmin) {
+          this.$router.push({ name: 'ReportList', params: { category: 'report' } });
+        } else {
+          console.log('관리자만 접근할 수 있습니다.');
+        }
       } else {
         console.log(section);
       }
