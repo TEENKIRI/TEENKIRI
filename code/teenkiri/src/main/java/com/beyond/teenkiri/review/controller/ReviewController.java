@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.review.controller;
 
 import com.beyond.teenkiri.review.domain.Review;
+import com.beyond.teenkiri.review.dto.ReviewListResDto;
 import com.beyond.teenkiri.review.dto.ReviewSaveReqDto;
 import com.beyond.teenkiri.review.dto.ReviewUpdateReqDto;
 import com.beyond.teenkiri.review.service.ReviewService;
@@ -34,12 +35,22 @@ public class ReviewController {
             return new ResponseEntity<>(new CommonResDto(HttpStatus.CREATED, "리뷰가 작성되었습니다.", review.getId()), HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.CONFLICT, e.getMessage()), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/list")
-    public ResponseEntity<?> getReviews(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<?> reviews = reviewService.reviewListResDtos(pageable);
-        return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "리뷰 목록입니다.", reviews), HttpStatus.OK);
+    public ResponseEntity<?> getReviews(@RequestParam Long subject_id,
+                                        @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        try {
+            Page<ReviewListResDto> reviews = reviewService.reviewListResDtos(subject_id, pageable);
+            return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "리뷰 목록입니다.", reviews), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 //    @GetMapping("/detail/{id}")

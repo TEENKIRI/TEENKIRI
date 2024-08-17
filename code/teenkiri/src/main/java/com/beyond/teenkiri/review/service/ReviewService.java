@@ -11,6 +11,8 @@ import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.repository.UserSubjectRepository;
+import com.beyond.teenkiri.subject.repository.SubjectRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +29,15 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final UserSubjectRepository userSubjectRepository;
+    private final SubjectRepository subjectRepository;
 //    private final
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, UserSubjectRepository userSubjectRepository) {
+    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, UserSubjectRepository userSubjectRepository, SubjectRepository subjectRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.userSubjectRepository = userSubjectRepository;
+        this.subjectRepository = subjectRepository;
     }
 
 
@@ -60,13 +64,14 @@ public class ReviewService {
 
 
         Review review = dto.toEntity(user, userSubject);
+        review = reviewRepository.save(review);
+        updateSubjectRating(userSubject.getSubject().getId());
 
-        return reviewRepository.save(review);
+        return review;
     }
 
-
-    public Page<ReviewListResDto> reviewListResDtos(Pageable pageable) {
-        Page<Review> reviews = reviewRepository.findAll(pageable);
+    public Page<ReviewListResDto> reviewListResDtos(Long subjectId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findByUserSubject_Subject_Id(subjectId, pageable);
         return reviews.map(review -> review.listFromEntity());
     }
 
@@ -81,6 +86,7 @@ public class ReviewService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 리뷰입니다."));
         review.toUpdate(dto);
         reviewRepository.save(review);
+        updateSubjectRating(review.getUserSubject().getSubject().getId());
     }
 
     @Transactional
@@ -88,5 +94,26 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 리뷰입니다."));
         review.updateDelYN(DelYN.Y);
+        updateSubjectRating(review.getUserSubject().getSubject().getId());
     }
+
+    private void updateSubjectRating(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 강좌를 찾을 수 없습니다."));
+
+        double averageRating = reviewRepository.findByUserSubject_Subject_Id(subjectId)
+                .stream()
+                .filter(review -> review.getDelYn() == DelYN.N)
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+
+        subject.setRating((float) averageRating);
+
+        subjectRepository.save(subject);
+    }
+
 }
+
+
+

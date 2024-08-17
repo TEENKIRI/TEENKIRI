@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ReviewListResDto {
     private Long id;
-    private String userName;
+    private String nickname;
     private String subjectTitle;
     private Long subjectId;
     private int rating;

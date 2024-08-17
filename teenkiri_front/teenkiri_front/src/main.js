@@ -4,16 +4,19 @@ import App from './App.vue'
 // src/router/index.js 파일의 router를 사용하겠다 선언
 import router from '@/router/index.js'
 import vuetify from './plugins/vuetify';
-import '@mdi/font/css/materialdesignicons.css'
+import '@mdi/font/css/materialdesignicons.css';
 import axios from 'axios';
 import "@/assets/css/font.css";
 import store from './store/index.js';
+// import VueVideoPlayer from '@videojs-player/vue'
+import 'video.js/dist/video-js.css'
+
+import '@mdi/font/css/materialdesignicons.css';
 
 
 // createApp(App).mount('#app')
 const app = createApp(App);
 
-app.config.globalProperties.$http = axios;
 
 // axios 요청 인터셉터를 설정하여 모든 요청에 엑세스 토큰을 요청(전역적으로 setting 됐는지 test)
 axios.interceptors.request.use(
@@ -48,10 +51,11 @@ axios.interceptors.response.use(
                 window.location.href='/login';
             }
         }
+        return Promise.reject(error);
     }
 )
 
-
+// app.use(VueVideoPlayer)
 app.use(store);
 app.use(router);
 app.use(vuetify);

@@ -44,10 +44,15 @@ public class UserSubjectService {
         User user = userService.findByEmail(userEmail);
 
         Subject subject = subjectService.findSubjectById(reqDto.getSubjectId());
-        UserSubject userSubject = reqDto.toEntity(subject,user);
-
-        userSubjectRepository.save(userSubject);
-        return userSubject;
+        UserSubject findUserSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElse(null);
+        if(findUserSubject == null){
+            UserSubject userSubject = reqDto.toEntity(subject,user);
+            userSubjectRepository.save(userSubject);
+            return userSubject;
+        }else{
+            throw new IllegalStateException("이미 수강신청한 강의입니다.");
+        }
     }
 
 
