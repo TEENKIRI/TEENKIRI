@@ -12,7 +12,10 @@
       <v-col>
         <v-row>
           <v-col>
-            <v-btn>수강신청</v-btn>
+            <!-- 수강중인 경우 버튼 비활성화 -->
+            <v-btn :disabled="isEnrolled" @click="applyForSubject">
+              {{ isEnrolled ? '이미 수강중입니다' : '수강신청' }}
+            </v-btn>
             <v-btn @click="handleWishlist">
               {{ isInWishlist ? '찜 취소하기' : '찜하기' }}
             </v-btn>
@@ -58,30 +61,45 @@ export default {
       internalValue: this.modelValue,
       subjectId: "",
       subjectData: {},
-      isInWishlist: false // 위시리스트 여부 상태
+      isInWishlist: false,
+      isEnrolled: false // 사용자의 수강 여부 상태
     };
   },
   created() {
     this.subjectId = this.$route.params.id;
     this.getSubjectDetail();
-    this.checkWishlistStatus(); // 강좌가 위시리스트에 있는지 확인
+    this.checkWishlistStatus();
+    this.checkEnrollmentStatus(); // 수강 여부 확인
   },
   methods: {
     async getSubjectDetail() {
-      const response = await axios.get(
-        `${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`
-      );
-      const addtionalData = response.data.result;
-      this.subjectData = addtionalData;
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`
+        );
+        this.subjectData = response.data.result;
+      } catch (error) {
+        console.error('강좌 세부 정보 조회 실패:', error);
+      }
     },
     async checkWishlistStatus() {
       try {
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/wish/check/${this.subjectId}`
         );
-        this.isInWishlist = response.data.isInWishlist; // 응답 데이터에서 위시리스트 여부를 설정
+        this.isInWishlist = response.data.isInWishlist;
       } catch (error) {
         console.error('위시리스트 상태 확인 실패:', error);
+      }
+    },
+    async checkEnrollmentStatus() {
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/my/subject/check-enrollment/${this.subjectId}`
+        );
+        this.isEnrolled = response.data.isEnrolled; // 사용자가 수강중인지 확인
+      } catch (error) {
+        console.error('수강 상태 확인 실패:', error);
       }
     },
     async handleWishlist() {
@@ -90,7 +108,7 @@ export default {
       } else {
         await this.addToWishlist();
       }
-      this.isInWishlist = !this.isInWishlist; // 상태 토글
+      this.isInWishlist = !this.isInWishlist;
     },
     async addToWishlist() {
       try {
@@ -114,9 +132,27 @@ export default {
         console.error(error);
       }
     },
-    goToPage(pathName){
-      console.log(pathName);
-      this.$router.push({ name: pathName, params: {id : this.subjectId}});
+    async applyForSubject() {
+      if (this.isEnrolled) {
+        alert('이미 수강중인 강좌입니다.');
+        return;
+      }
+      try {
+        await axios.post(
+          `${process.env.VUE_APP_API_BASE_URL}/my/subject/create`,
+          {
+            subjectId: this.subjectId
+          }
+        );
+        alert('강좌 수강 신청이 완료되었습니다.');
+        this.isEnrolled = true; // 신청 후 수강 상태 업데이트
+      } catch (error) {
+        alert('강좌 수강 신청 실패');
+        console.error(error);
+      }
+    },
+    goToPage(pathName) {
+      this.$router.push({ name: pathName, params: { id: this.subjectId } });
     }
   },
   computed: {

@@ -12,7 +12,12 @@
           :key="item.id"
           cols="12" sm="6" md="4"
         >
-          <v-card class="ma-4" :elevation="3">
+        <v-card 
+        class="ma-4" 
+        :elevation="4" 
+        @click="goToSubjectDetail(subject.id)" 
+        style="cursor: pointer;"
+      >
             <v-card-title>
               강좌 명 : {{ item.title || '제목 없음' }}
             </v-card-title>
