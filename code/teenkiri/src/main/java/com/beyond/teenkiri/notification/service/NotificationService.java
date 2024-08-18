@@ -26,7 +26,6 @@ public class NotificationService{
         return notificationRepository.findByUserEmail(userEmail);
     }
 
-
     public void updateDelYN(Long id) {
         NotificationDto dto = notificationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));

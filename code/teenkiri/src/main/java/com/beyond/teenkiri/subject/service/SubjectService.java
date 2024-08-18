@@ -3,25 +3,22 @@ package com.beyond.teenkiri.subject.service;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.course.domain.Course;
+import com.beyond.teenkiri.course.repository.CourseRepository;
 import com.beyond.teenkiri.course.service.CourseService;
 import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectSaveReqDto;
 import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.subject.repository.SubjectRepository;
-import com.beyond.teenkiri.user.domain.UserSubject;
-import com.beyond.teenkiri.user.repository.UserSubjectRepository;
 import com.beyond.teenkiri.user.service.UserService;
-import com.beyond.teenkiri.wish.domain.Wish;
-import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,18 +39,14 @@ public class SubjectService {
     private final CourseService courseService;
     private final SubjectRepository subjectRepository;
     private final UploadAwsFileService uploadAwsFileService;
-    private final UserSubjectRepository userSubjectRepository;
-    private final WishService wishService;
 
     @Autowired
     public SubjectService(SubjectRepository subjectRepository, UserService userService
-            , CourseService courseService, UploadAwsFileService uploadAwsFileService, UserSubjectRepository userSubjectRepository, WishService wishService) {
+            , CourseService courseService, UploadAwsFileService uploadAwsFileService) {
         this.subjectRepository = subjectRepository;
         this.userService = userService;
         this.courseService = courseService;
         this.uploadAwsFileService = uploadAwsFileService;
-        this.userSubjectRepository = userSubjectRepository;
-        this.wishService = wishService;
     }
 
 
@@ -68,55 +61,29 @@ public class SubjectService {
 
     // 강좌 list(검색 기능 추가)
 
-    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType, String grades) {
+    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType) {
         Page<Subject> subject;
 
-        List<Grade> gradesList = (grades != null && !grades.isEmpty()) ?
-                Arrays.stream(grades.split("&")).map(Grade::valueOf).collect(Collectors.toList()) : null;
-
         if (search == null || search.isEmpty()) {
-            pageable = applySorting(pageable, sortType);
-            if (gradesList != null) {
-                subject = subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable);
+            if ("like".equals(sortType)) {
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "rating"));
+            } else {
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
+            }
+            subject = subjectRepository.findByDelYN(DelYN.N, pageable);
+        } else {
+            if ("title".equals(searchType)) {
+                subject = subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
+            } else if ("userTeacher".equals(searchType)) {
+                subject = subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
             } else {
                 subject = subjectRepository.findByDelYN(DelYN.N, pageable);
-            }
-        } else {
-            pageable = applySorting(pageable, sortType);
-            switch (searchType) {
-                case "title":
-                    subject = gradesList != null ?
-                            subjectRepository.findByTitleContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
-                    break;
-                case "userTeacher":
-                    subject = gradesList != null ?
-                            subjectRepository.findByUserTeacherNameContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
-                    break;
-                case "all":
-                    subject = gradesList != null ?
-                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingOrGradeInAndDelYN(search, search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingAndDelYN(search, search, DelYN.N, pageable);
-                    break;
-                default:
-                    subject = gradesList != null ?
-                            subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByDelYN(DelYN.N, pageable);
-                    break;
             }
         }
 
         return subject.map(Subject::fromListEntity);
     }
 
-    private Pageable applySorting(Pageable pageable, String sortType) {
-        if ("like".equals(sortType)) {
-            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "rating"));
-        } else {
-            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
-        }
-    }
 
 
     //    강좌 과목별 list
@@ -155,20 +122,9 @@ public class SubjectService {
 
     //    강좌 상세
     public SubjectDetResDto subjectDetail(Long id){
-        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강좌 입니다."));
 //        🚨추후 멤버.. 추가되면 권한체크 + 멤버 연결 체크
-        User user = null;
-        UserSubject userSubject = null;
-        Wish wish = null;
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(!userEmail.isEmpty()){
-            user = userService.findByEmailReturnNull(userEmail);
-            if(user != null){
-                userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
-                wish = wishService.findBySubjectIdAndUserIdReturnNull(subject, user);
-            }
-        }
-        SubjectDetResDto subjectDetResDto = subject.fromDetEntity(userSubject, wish);
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강좌 입니다."));
+        SubjectDetResDto subjectDetResDto = subject.fromDetEntity();
 
         return subjectDetResDto;
     }

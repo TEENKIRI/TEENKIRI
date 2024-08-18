@@ -17,14 +17,12 @@ public class SubjectDetResDto {
     private Long id;
     private String title;
     private Grade grade;
-    private Long userTeacherId;
     private String userTeacherName;
     private String courseTitle;
     private String description;
     private Float rating;
     private DelYN delYN;
-    private Boolean isSubscribe; //로그인한 유저가 찜 해놓았는지
-    private Boolean isRegistered; //로그인한 유저가 수강신청을 했는지
+    private Boolean isSubscribe;
 
     private String subjectThumUrl;
 

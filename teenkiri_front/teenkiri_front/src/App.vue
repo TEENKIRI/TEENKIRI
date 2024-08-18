@@ -1,12 +1,12 @@
 <!-- App.vue -->
 <template>
-  <v-app>
+  <v-app class="app">
     <HeaderComponent @open-sidebar="toggleSidebar" />
     <AppSidebar ref="sidebar" />
-    <v-main>
+    <v-main class="main-content">
       <router-view />
-      <FooterComponent />
     </v-main>
+    <FooterComponent />
   </v-app>
 </template>
 
@@ -29,3 +29,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 화면 높이의 100%를 차지하도록 설정 */
+}
+.main-content {
+  flex: 1; /* 콘텐츠가 footer 위에 표시되도록 설정 */
+}
+</style>

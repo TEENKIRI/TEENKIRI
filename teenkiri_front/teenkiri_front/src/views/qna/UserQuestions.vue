@@ -18,7 +18,6 @@
             <th>제목</th>
             <th>답변일</th>
             <th>작성일</th>
-            <th>보기</th>
           </tr>
         </thead>
         <tbody>
@@ -27,11 +26,6 @@
             <td @click="viewDetails(item.id)" class="text_left subject">{{ item.title }}</td>
             <td>{{ item.answeredAt ? formatDate(item.answeredAt) : '미답변' }}</td>
             <td>{{ formatDate(item.createdTime) }}</td>
-            <td>
-              <v-btn @click="viewDetails(item.id)" class="btn_view">
-                보기
-              </v-btn>
-            </td>
           </tr>
         </tbody>
       </table>
@@ -123,16 +117,6 @@ export default {
 
 .subject:hover {
   text-decoration: underline;
-}
-
-.btn_view {
-  padding: 6px 12px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  text-transform: uppercase;
 }
 
 .btn_view:hover {
