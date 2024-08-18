@@ -68,46 +68,80 @@ public class SubjectService {
 
     // 강좌 list(검색 기능 추가)
 
-    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType, String grades) {
-        Page<Subject> subject;
+    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType, String grades, Long courseId) {
+        Page<Subject> subjects;
 
         List<Grade> gradesList = (grades != null && !grades.isEmpty()) ?
-                Arrays.stream(grades.split("&")).map(Grade::valueOf).collect(Collectors.toList()) : null;
+                Arrays.stream(grades.split("&"))
+                        .map(Grade::valueOf)
+                        .collect(Collectors.toList()) : null;
 
-        if (search == null || search.isEmpty()) {
-            pageable = applySorting(pageable, sortType);
-            if (gradesList != null) {
-                subject = subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable);
+        pageable = applySorting(pageable, sortType);
+
+        if (courseId != null) {
+            if (search == null || search.isEmpty()) {
+                subjects = gradesList != null && !gradesList.isEmpty() ?
+                        subjectRepository.findByCourseIdAndGradeInAndDelYN(courseId, gradesList, DelYN.N, pageable) :
+                        subjectRepository.findByCourseIdAndDelYN(courseId, DelYN.N, pageable);
             } else {
-                subject = subjectRepository.findByDelYN(DelYN.N, pageable);
+                switch (searchType) {
+                    case "title":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByCourseIdAndTitleContainingAndGradeInAndDelYN(courseId, search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByCourseIdAndTitleContainingAndDelYN(courseId, search, DelYN.N, pageable);
+                        break;
+                    case "userTeacher":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByCourseIdAndUserTeacherNameContainingAndGradeInAndDelYN(courseId, search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByCourseIdAndUserTeacherNameContainingAndDelYN(courseId, search, DelYN.N, pageable);
+                        break;
+                    case "all":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByCourseIdAndTitleContainingOrUserTeacherNameContainingAndGradeInAndDelYN(courseId, search, search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByCourseIdAndTitleContainingOrUserTeacherNameContainingAndDelYN(courseId, search, search, DelYN.N, pageable);
+                        break;
+                    default:
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByCourseIdAndGradeInAndDelYN(courseId, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByCourseIdAndDelYN(courseId, DelYN.N, pageable);
+                        break;
+                }
             }
         } else {
-            pageable = applySorting(pageable, sortType);
-            switch (searchType) {
-                case "title":
-                    subject = gradesList != null ?
-                            subjectRepository.findByTitleContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
-                    break;
-                case "userTeacher":
-                    subject = gradesList != null ?
-                            subjectRepository.findByUserTeacherNameContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
-                    break;
-                case "all":
-                    subject = gradesList != null ?
-                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingOrGradeInAndDelYN(search, search, gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingAndDelYN(search, search, DelYN.N, pageable);
-                    break;
-                default:
-                    subject = gradesList != null ?
-                            subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable) :
-                            subjectRepository.findByDelYN(DelYN.N, pageable);
-                    break;
+            // 기존 로직 사용 (courseId 없는 경우)
+            if (search == null || search.isEmpty()) {
+                if (gradesList != null && !gradesList.isEmpty()) {
+                    subjects = subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable);
+                } else {
+                    subjects = subjectRepository.findByDelYN(DelYN.N, pageable);
+                }
+            } else {
+                switch (searchType) {
+                    case "title":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByTitleContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
+                        break;
+                    case "userTeacher":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByUserTeacherNameContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
+                        break;
+                    case "all":
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByTitleContainingOrUserTeacherNameContainingAndGradeInAndDelYN(search, search, gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByTitleContainingOrUserTeacherNameContainingAndDelYN(search, search, DelYN.N, pageable);
+                        break;
+                    default:
+                        subjects = gradesList != null && !gradesList.isEmpty() ?
+                                subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable) :
+                                subjectRepository.findByDelYN(DelYN.N, pageable);
+                        break;
+                }
             }
         }
 
-        return subject.map(Subject::fromListEntity);
+        return subjects.map(Subject::fromListEntity);
     }
 
     private Pageable applySorting(Pageable pageable, String sortType) {
@@ -117,7 +151,6 @@ public class SubjectService {
             return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
         }
     }
-
 
     //    강좌 과목별 list
     public Page<SubjectListResDto> subjectPerCourseList(Pageable pageable, Long courseId){

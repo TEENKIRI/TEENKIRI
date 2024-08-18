@@ -29,16 +29,19 @@ public class SubjectController {
 
     @GetMapping("/list")
     public ResponseEntity<?> subjectListView(
-            @PageableDefault(page = 0, size=10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "sortType", required = false, defaultValue = "latest") String sortType,
-            @RequestParam(value = "grades", required = false) String grades) {
+            @RequestParam(value = "grades", required = false) String grades,
+            @RequestParam(value = "courseId", required = false) Long courseId) {
 
-        Page<SubjectListResDto> subjectListResDto = subjectService.subjectList(pageable, search, searchType, sortType, grades);
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectList(pageable, search, searchType, sortType, grades, courseId);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject list", subjectListResDto);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
+
+
 
     @GetMapping("/{courseId}/list")
     public ResponseEntity<?> subjectCourseListView(

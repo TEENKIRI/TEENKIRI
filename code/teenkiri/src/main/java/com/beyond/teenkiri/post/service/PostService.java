@@ -77,6 +77,36 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Page<PostListResDto> postListWithSearch(Pageable pageable, String searchCategory, String searchQuery) {
+        Page<Post> posts;
+
+        if (searchCategory != null && searchQuery != null) {
+            switch (searchCategory) {
+                case "title":
+                    posts = postRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable);
+                    break;
+                case "userNickname":
+                    posts = postRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable);
+                    break;
+                case "all":
+                    posts = postRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
+                            searchQuery, searchQuery, DelYN.N, pageable);
+                    break;
+                default:
+                    posts = postRepository.findByDelYN(DelYN.N, pageable);
+                    break;
+            }
+        } else {
+            posts = postRepository.findByDelYN(DelYN.N, pageable);
+        }
+
+        return posts.map(Post::listFromEntity);
+    }
+
+
+
+
+
 
     public Page<PostListResDto> postList(Pageable pageable) {
         Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
