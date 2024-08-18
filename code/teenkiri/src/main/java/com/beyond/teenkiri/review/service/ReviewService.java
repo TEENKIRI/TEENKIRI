@@ -71,7 +71,7 @@ public class ReviewService {
     }
 
     public Page<ReviewListResDto> reviewListResDtos(Long subjectId, Pageable pageable) {
-        Page<Review> reviews = reviewRepository.findByUserSubject_Subject_Id(subjectId, pageable);
+        Page<Review> reviews = reviewRepository.findByUserSubject_Subject_IdAndDelYn(subjectId, DelYN.N, pageable);
         return reviews.map(review -> review.listFromEntity());
     }
 

@@ -15,6 +15,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByDelYn(DelYN delYN, Pageable pageable);
     boolean existsByUserSubject(UserSubject userSubject);
-    Page<Review> findByUserSubject_Subject_Id(Long subjectId, Pageable pageable);
+    Page<Review> findByUserSubject_Subject_IdAndDelYn(Long subjectId, DelYN delYn, Pageable pageable);
     List<Review> findByUserSubject_Subject_Id(Long subjectId);
 }
