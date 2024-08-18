@@ -100,6 +100,7 @@ public class Subject extends BaseTimeEntity {
                 .id(this.id)
                 .title(this.title)
                 .grade(this.grade)
+                .userTeacherId(this.userTeacher.getId())
                 .userTeacherName(this.userTeacher.getName())
                 .subjectThumUrl(this.subjectThumUrl)
                 .courseTitle(this.course.getTitle())

@@ -143,6 +143,8 @@ export default {
     navigate(section) {
       if (section === '강좌') {
         this.$router.push({ name: 'SubjectList', params: { category: 'subject' } });
+      } else if (section === '추천') {
+        this.$router.push({ name: 'SubjectRecommendList', params: { category: 'subjectRecommend' } });
       } else if (section === '이벤트') {
         this.$router.push({ name: 'BoardList', params: { category: 'event' } });
       } else if (section === '공지사항') {

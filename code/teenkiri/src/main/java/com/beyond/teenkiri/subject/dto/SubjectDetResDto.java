@@ -17,6 +17,7 @@ public class SubjectDetResDto {
     private Long id;
     private String title;
     private Grade grade;
+    private Long userTeacherId;
     private String userTeacherName;
     private String courseTitle;
     private String description;

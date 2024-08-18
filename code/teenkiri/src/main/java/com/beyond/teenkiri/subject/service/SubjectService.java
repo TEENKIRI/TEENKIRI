@@ -106,9 +106,11 @@ public class SubjectService {
         Wish wish = null;
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!userEmail.isEmpty()){
-            user = userService.findByEmail(userEmail);
-            userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
-            wish = wishService.findBySubjectIdAndUserIdReturnNull(subject, user);
+            user = userService.findByEmailReturnNull(userEmail);
+            if(user != null){
+                userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(subject, user);
+            }
         }
         SubjectDetResDto subjectDetResDto = subject.fromDetEntity(userSubject, wish);
 
