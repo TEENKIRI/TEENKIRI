@@ -71,6 +71,10 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
     }
 
+    public User findByEmailReturnNull(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     public String findId(UserFindIdDto findIdDto) {
         User user = userRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone())
                 .orElseThrow(() -> new EntityNotFoundException("없는 사용자 입니다."));
