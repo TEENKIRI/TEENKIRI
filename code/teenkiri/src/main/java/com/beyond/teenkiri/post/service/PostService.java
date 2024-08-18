@@ -77,41 +77,32 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Page<PostListResDto> postListWithSearch(Pageable pageable, String searchCategory, String searchQuery) {
-        Page<Post> posts;
-
-        if (searchCategory != null && searchQuery != null) {
-            switch (searchCategory) {
+    public Page<PostListResDto> postListWithSearch(Pageable pageable, String searchType, String searchQuery) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            switch (searchType) {
                 case "title":
-                    posts = postRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable);
-                    break;
+                    return postRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
                 case "userNickname":
-                    posts = postRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable);
-                    break;
+                    return postRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
                 case "all":
-                    posts = postRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
-                            searchQuery, searchQuery, DelYN.N, pageable);
-                    break;
+                    return postRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
+                                    searchQuery, searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
                 default:
-                    posts = postRepository.findByDelYN(DelYN.N, pageable);
-                    break;
+                    return postRepository.findByDelYN(DelYN.N, pageable).map(Post::listFromEntity);
             }
         } else {
-            posts = postRepository.findByDelYN(DelYN.N, pageable);
+            return postRepository.findByDelYN(DelYN.N, pageable).map(Post::listFromEntity);
         }
-
-        return posts.map(Post::listFromEntity);
     }
 
 
-
-
-
-
-    public Page<PostListResDto> postList(Pageable pageable) {
-        Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
-        return posts.map(a -> a.listFromEntity());
-    }
+//    public Page<PostListResDto> postList(Pageable pageable) {
+//        Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
+//        return posts.map(a -> a.listFromEntity());
+//    }
 
     public PostDetailDto postDetail(Long id) {
         Post post = postRepository.findById(id)
