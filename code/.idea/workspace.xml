@@ -6,10 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="561545fe-1167-4604-bb18-4bdd10713161" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/application.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/controller/SubjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/controller/SubjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/controller/SubjectSsrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/controller/SubjectSsrController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/repository/SubjectRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/repository/SubjectRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/service/SubjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/teenkiri/src/main/java/com/beyond/teenkiri/subject/service/SubjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/src/views/subject/SubjectList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../teenkiri_front/teenkiri_front/src/views/subject/SubjectList.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

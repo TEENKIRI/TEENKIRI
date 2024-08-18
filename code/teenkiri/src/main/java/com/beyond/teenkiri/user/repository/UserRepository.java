@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.user.repository;
 
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNickname(String nickname);
     @Query("SELECT u.email FROM User u WHERE u.email LIKE 'admin%'")
     List<String> findAllAdminEmails();
+
+    List<User> findAllByRole(Role role);
 }
