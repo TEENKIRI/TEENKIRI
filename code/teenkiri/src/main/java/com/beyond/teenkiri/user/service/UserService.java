@@ -2,6 +2,9 @@ package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.chatting.service.ChatService;
 import com.beyond.teenkiri.common.domain.DelYN;
+import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.dto.NotificationListDto;
+import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
@@ -48,6 +51,9 @@ public class UserService {
 
     @Autowired
     private QnARepository qnARepository;
+
+    @Autowired
+    protected NotificationRepository notificationRepository;
 
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
@@ -227,6 +233,16 @@ public class UserService {
         }
 
         return qnaListResDtos;
+    }
+    public List<NotificationListDto> getNotificationList(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<NotificationDto> notificationDtos=  notificationRepository.findByUserEmail(userEmail);
+        List<NotificationListDto> notificationListDtos = new ArrayList<>();
+
+        for(NotificationDto notificationDto : notificationDtos){
+            notificationListDtos.add(notificationDto.listFromEntity());
+        }
+        return notificationListDtos;
     }
 
 
