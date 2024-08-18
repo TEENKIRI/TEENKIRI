@@ -7,6 +7,7 @@ import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.wish.domain.Wish;
 import com.beyond.teenkiri.wish.dto.WishDto;
+
 import com.beyond.teenkiri.wish.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,7 @@ public class WishService {
     private SubjectRepository subjectRepository;
 
     public WishDto addWish(String email, Long subjectId) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
