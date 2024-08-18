@@ -2,6 +2,7 @@ package com.beyond.teenkiri.user.controller;
 
 import com.beyond.teenkiri.common.dto.CommonErrorDto;
 import com.beyond.teenkiri.common.dto.CommonResDto;
+import com.beyond.teenkiri.notification.dto.NotificationListDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.service.QnAService;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
@@ -245,6 +246,18 @@ public class UserController {
             String email = userDetails.getUsername();
             List<QnAListResDto> qnaList = userService.getUserQnAList(email);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "질문 목록을 성공적으로 가져왔습니다", qnaList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CommonResDto(HttpStatus.UNAUTHORIZED, "Invalid token", null));
+        }
+    }
+
+    @GetMapping("/notification")
+    public ResponseEntity<?> getUserNotificationList(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            List<NotificationListDto> notificationListDtos = userService.getNotificationList();
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "알림 목록을 성공적으로 가져왔습니다.", notificationListDtos));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

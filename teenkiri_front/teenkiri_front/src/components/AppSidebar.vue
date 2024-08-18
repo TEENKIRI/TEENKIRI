@@ -24,7 +24,7 @@ export default {
         { name: '수강 목록', link: '/my/subject/:id' },
         { name: '찜 강좌', link: '/user/wishlist' },
         { name: '나의 질문', link: '/qna/my' },
-        { name: '알림 내역', link: '/contact' },
+        { name: '알림 내역', link: '/user/notification' },
       ]
     };
   },

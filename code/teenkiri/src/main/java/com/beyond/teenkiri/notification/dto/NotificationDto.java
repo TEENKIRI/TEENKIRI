@@ -47,17 +47,17 @@ public class NotificationDto implements Serializable {
                 .delYN(DelYN.N)
                 .build();
     }
-//
-//    public NotificationListDto listFromEntity() {
-//        return NotificationListDto.builder()
-//                .id(this.id)
-//                .qnaId(this.qnaId != null ? this.qnaId : null)
-//                .postId(this.postId != null ? this.postId : null)
-//                .message(this.message)
-//                .userEmail(this.userEmail)
-//                .delYN(this.delYN)
-//                .build();
-//    }
+
+    public NotificationListDto listFromEntity() {
+        return NotificationListDto.builder()
+                .id(this.id)
+                .qnaId(qnaId)
+                .postId(postId)
+                .reportId(reportId)
+                .message(message)
+                .userEmail(userEmail)
+                .build();
+    }
 
 
     public void updateDelYN(DelYN delYN) {

@@ -8,7 +8,7 @@ import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 import ReportCreate from "@/views/report/ReportCreate.vue";
 import SubscribePage from "@/views/user/SubscribePage.vue";
 import WishListPage from "@/views/user/WishListPage.vue";
-import myQnAListPage from "@/views/user/myQnAListPage.vue";
+import UserNotification from "@/views/user/UserNotificaion.vue";
 
 
 export const memberRouter = [
@@ -74,9 +74,9 @@ export const memberRouter = [
         component: WishListPage,
     },
     {
-        path: '/user/qna/list',
-        name: 'myQnAListPage',
-        component: myQnAListPage
-      }
+        path: '/user/notification',
+        name: 'UserNotification',
+        component: UserNotification
+    },
 
 ]
