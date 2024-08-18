@@ -1,26 +1,30 @@
 <template>
   <v-container>
-    <!-- 검색 및 필터 폼 -->
-    <v-sheet class="mx-auto" width="600">
-      <v-form ref="form" class="d-flex">
-        <v-select
-          v-model="searchType"
-          :items="searchOptions"
-          item-title="text"
-          item-value="value"
-          label="검색 범위"
-          class="mr-4"
-          required
-        ></v-select>
-        <v-text-field
-          v-model="searchValue"
-          label="검색어를 입력하세요."
-          append-icon="mdi-magnify"
-          @click:append="performSearch"
-          required
-        ></v-text-field>
+
+    <!-- <v-sheet class="mx-auto" width="600"> -->
+      <v-form ref="form" class="d-flex mb-4">
+        <v-col cols="4">
+          <v-select
+            v-model="searchType"
+            :items="searchOptions"
+            item-title="text"
+            item-value="value"
+            label="검색 범위"
+            required
+          ></v-select>
+        </v-col>
+        <v-col cols="8">
+          <v-text-field
+            v-model="searchValue"
+            label="검색어를 입력하세요."
+            append-icon="mdi-magnify"
+            @click:append="performSearch"
+            required
+          ></v-text-field>
+        </v-col>
       </v-form>
-    </v-sheet>
+    <!-- </v-sheet> -->
+    
     
     <!-- 추천 강좌 섹션 -->
     <v-card class="mt-5">
