@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,9 +23,18 @@ public class NotificationService{
         this.notificationRepository = notificationRepository;
     }
 
+//    public List<NotificationDto> getNotificationsByEmail() {
+//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        return notificationRepository.findByUserEmail(userEmail);
+//    }
     public List<NotificationDto> getNotificationsByEmail() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return notificationRepository.findByUserEmail(userEmail);
+        List<NotificationDto> notifications = notificationRepository.findByUserEmail(userEmail);
+
+        // Id 순으로 내림차순 정렬
+        return notifications.stream()
+                .sorted(Comparator.comparingLong(NotificationDto::getId).reversed())
+                .collect(Collectors.toList());
     }
 
 
