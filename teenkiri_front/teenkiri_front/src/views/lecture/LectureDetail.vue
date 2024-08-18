@@ -251,6 +251,7 @@ export default {
             `${process.env.VUE_APP_API_BASE_URL}/enroll/update/duration/${this.lectureData.enrollmentId}`, 
             userLectureDuration
           );
+        console.log('update response:', response);    // error 해결용 log 추가
         } catch (e) {
           if (e.response.data.status_code === 404) {
             alert(e.response.data.status_code.e.response.data.status_message);
@@ -274,6 +275,7 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/enroll/update/complete/${this.lectureData.enrollmentId}`, 
           isCompleted
         );
+        console.log('update response:', response);  // error 해결용 log 추가
       } catch (e) {
         if (e.response.data.status_code === 404) {
           alert(e.response.data.status_code.e.response.data.status_message);
