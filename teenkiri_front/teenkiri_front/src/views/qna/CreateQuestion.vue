@@ -1,51 +1,57 @@
 <template>
+  <v-app>
   <v-container class="mt-5">
     <v-card>
       <v-card-title>
-        <h3>QnA 질문 등록하기</h3>
+        <h3>글쓰기</h3>
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" @submit.prevent="submitQuestion">
-          <!-- 강좌 선택 -->
+        <v-form ref="form" @submit.prevent="submitForm">
+          <!-- 게시판 선택 -->
           <v-select
-            v-model="selectedSubject"
-            :items="subjects"
-            item-text="title"
-            item-value="id"
-            label="강좌 선택"
+            v-model="selectedCategory"
+            :items="categories"
+            item-text="text"
+            item-value="value"
+            label="게시판 선택"
             required
           ></v-select>
 
-          <!-- 질문 제목 -->
+          <!-- 제목 -->
           <v-text-field
             label="제목"
-            v-model="questionTitle"
+            v-model="title"
             required
           />
 
-          <!-- 질문 내용 -->
+          <!-- 내용 -->
           <v-textarea
-            label="질문 내용"
-            v-model="questionText"
-            rows="5"
+            label="내용"
+            v-model="content"
+            rows="10"
             required
           />
 
-          <!-- 질문 이미지 (선택사항) -->
+          <!-- 파일 첨부 -->
           <v-file-input
-            ref="fileInput"
             @change="onFileChange"
-            label="질문 이미지 (선택사항)"
+            label="파일첨부"
             accept="image/*"
           />
+
+          <!-- 미리보기 이미지 -->
           <v-img v-if="previewImageSrc" :src="previewImageSrc" max-width="200" class="my-3"/>
 
-          <v-btn type="submit" color="primary" class="mt-3">질문 제출</v-btn>
+          <div class="btnWrap">
+            <v-btn text @click="cancel">취소</v-btn>
+            <v-btn color="primary" type="submit" class="ml-4">저장</v-btn>
+          </div>
         </v-form>
       </v-card-text>
     </v-card>
   </v-container>
+</v-app>
 </template>
 
 <script>
@@ -54,83 +60,135 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      selectedSubject: null,
-      subjects: [], // 강좌 목록을 저장할 배열
-      questionTitle: '',
-      questionText: '',
-      questionImage: null,
+      title: '',
+      content: '',
+      image: null,
       previewImageSrc: null,
+      selectedCategory: null, // 선택된 게시판
+      categories: [], // 게시판 목록을 저장할 배열
     };
   },
   mounted() {
-    this.fetchSubjects(); // 컴포넌트가 마운트될 때 강좌 목록을 불러옵니다.
+    this.fetchCategories(); // 컴포넌트가 마운트될 때 게시판 목록을 불러옵니다.
   },
   methods: {
-    async fetchSubjects() {
+    async fetchCategories() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        this.$router.push('/login');
+        return;
+      }
+
+      const decodedToken = this.parseJwt(token);
+      const role = decodedToken.role;
+
+      if (role === 'ADMIN') {
+        this.categories = [
+          { value: 'notice', text: '공지사항' },
+          { value: 'event', text: '이벤트' },
+          { value: 'post', text: '자유게시판' },
+        ];
+        console.log(this.categories)
+      } else {
+        this.categories = [
+          { value: 'post', text: '자유게시판' },
+        ];
+      }
+    },
+    parseJwt(token) {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/list`);
-        this.subjects = response.data.result.content; // 강좌 목록을 subjects 배열에 저장
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        return JSON.parse(jsonPayload);
       } catch (error) {
-        console.error('강좌 목록을 불러오는 중 오류가 발생했습니다:', error);
-        this.subjects = []; // 오류 발생 시 빈 배열로 초기화
+        return null;
       }
     },
     onFileChange(event) {
       const files = event?.target?.files || event?.dataTransfer?.files;
       if (files && files.length > 0) {
-        this.questionImage = files[0];
+        this.image = files[0];
         this.previewImage();
       } else {
-        this.questionImage = null;
+        this.image = null;
         this.previewImageSrc = null;
       }
     },
     previewImage() {
-      if (this.questionImage) {
+      if (this.image) {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.previewImageSrc = e.target.result;
         };
-        reader.readAsDataURL(this.questionImage);
+        reader.readAsDataURL(this.image);
       } else {
         this.previewImageSrc = null;
       }
     },
-    async submitQuestion() {
-      if (!this.selectedSubject) {
-        alert('강좌를 선택해주세요.');
+    async submitForm() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      const decodedToken = this.parseJwt(token);
+      if (decodedToken.role !== 'ADMIN' && this.selectedCategory !== 'post') {
+        alert('관리자만 공지와 이벤트 게시글을 작성할 수 있습니다.');
         return;
       }
 
       const formData = new FormData();
-      formData.append('title', this.questionTitle);
-      formData.append('questionText', this.questionText);
-      formData.append('subjectId', this.selectedSubject); // 선택한 강좌 ID를 추가
-      if (this.questionImage) {
-        formData.append('image', this.questionImage);
+      formData.append('title', this.title);
+      formData.append('content', this.content);
+      formData.append('category', this.selectedCategory); // 선택한 게시판 카테고리 추가
+      if (this.image) {
+        formData.append('image', this.image);
       }
 
       try {
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/qna/create`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-        console.log(response);
-        alert('질문이 성공적으로 등록되었습니다!');
-        this.$router.push({ name: 'QnaList' });
+        let apiUrl = '';
+        switch (this.selectedCategory) {
+          case 'event':
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/create`;
+            break;
+          case 'notice':
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/create`;
+            break;
+          case 'post':
+          default:
+            apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/create`;
+            break;
+        }
+
+        const response = await axios.post(apiUrl, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('저장 성공:', response.data);
+        this.$router.push({ name: 'BoardList', params: { category: this.selectedCategory } });
       } catch (error) {
-        const errorMessage =
-          error.response && error.response.data
-            ? error.response.data.message
-            : '질문 등록에 실패했습니다.';
-        alert(errorMessage);
-        console.error('Error details:', error);
+        if (error.response) {
+          console.error('저장 실패:', error.response.data);
+        } else {
+          console.error('저장 실패: 서버와의 통신에 실패했습니다.');
+        }
+        alert('게시글 저장에 실패했습니다.');
       }
+    },
+    cancel() {
+      this.$router.go(-1); // 이전 페이지로 이동
     },
   },
 };
@@ -138,7 +196,16 @@ export default {
 
 <style scoped>
 .v-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
+}
+.btnWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>

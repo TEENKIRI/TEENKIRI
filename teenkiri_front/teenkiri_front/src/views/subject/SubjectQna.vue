@@ -178,8 +178,11 @@ export default {
       return `${year}년 ${month}월 ${day}일`;
     },
     createNewQuestion() {
-      this.$router.push(`/qna/create?subjectId=${this.subjectId}`);
-    },
+    this.$router.push({
+      path: '/qna/create',
+      query: { subjectId: this.subjectId }, // subjectId를 쿼리 파라미터로 전달
+    });
+  },
     viewDetail(id) {
       this.$router.push(`/qna/detail/${id}`);
     },
@@ -246,7 +249,7 @@ export default {
 }
 
 .btn_write {
-  background-color: black;
+  background-color: #f27885;
   color: #fff;
   padding: 10px 20px;
   text-decoration: none;
@@ -254,10 +257,6 @@ export default {
   font-size: 16px;
   display: inline-block;
   transition: background-color 0.3s ease;
-}
-
-.btn_write:hover {
-  background-color: #0056b3;
 }
 
 .tbl_list {

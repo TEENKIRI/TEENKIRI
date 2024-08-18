@@ -226,7 +226,7 @@ export default {
 }
 
 .btn_write {
-  background-color: black;
+  background-color: #f27885;
   color: #fff;
   padding: 10px 20px;
   text-decoration: none;
@@ -234,10 +234,6 @@ export default {
   font-size: 16px;
   display: inline-block;
   transition: background-color 0.3s ease;
-}
-
-.btn_write:hover {
-  background-color: #0056b3;
 }
 
 .tbl_list {

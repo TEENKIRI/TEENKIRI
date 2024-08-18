@@ -3,52 +3,51 @@
     <v-container>
       <!-- subjectData가 로드된 후에만 컴포넌트를 렌더링 -->
       <SubjectDetailComponent @subject-data-loaded="handleSubjectDataLoaded" v-model="selectedMenu" />
-      <!-- <SubjectDetailComponent  /> -->
 
-      <v-row v-if="this.user.isAdmin">
-        <v-col>
+      <div class="btnWrap" v-if="this.user.isAdmin">
         <router-link to="/lecture/create">
-          <v-btn>강의 업로드하기</v-btn>
+          <a href="javascript:void(0)" class="btn_write">강의 업로드하기</a>
         </router-link>
-        </v-col>
-      </v-row>
+      </div>
 
-      <v-row>
-        <v-col>
-          <v-table>
-            <thead>
-              <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>수강여부</th>
-                <th>강의시간</th>
-                <th>이동</th>
-                <th v-if="this.user.isAdmin">관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in lecture.lectureList" :key="item.id">
-                <td>{{ item.id }}</td>
-                <td>{{ item.title }}</td>
-                <td>{{ item.progress }}</td>
-                <td>{{ item.videoDuration }}</td>
-                <td>
-                  <v-btn v-if="user.userId" 
-                    @click="goToDetail(item.id)">강의보기
-                  </v-btn>
-                </td>
-                <td v-if="this.user.isAdmin">
-                  <v-btn  
-                    :to="`/lecture/create/${item.id}`">수정
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-col>
-      </v-row>
-
-      <!-- 강의 목록에 해당하는 내용 -->
+      <!-- 강의 목록 -->
+      <table class="tbl_list">
+        <caption></caption>
+        <colgroup>
+          <col width="80" />
+          <col width="" />
+          <col width="140" />
+          <col :width="isAdmin ? '180' : '280'" /> <!-- 수강여부 열의 너비를 관리자가 아닐 때 넓힘 -->
+          <col v-if="isAdmin" width="100" /> <!-- 관리 열 -->
+        </colgroup>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>수강여부</th>
+            <th>강의시간</th>
+            <th>이동</th>
+            <th v-if="isAdmin">관리</th> <!-- 관리 버튼 헤더 -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="lecture.lectureList.length === 0">
+            <td :colspan="isAdmin ? 6 : 5" class="text_center">강의가 없습니다.</td>
+          </tr>
+          <tr v-for="(item, index) in lecture.lectureList" :key="item.id">
+            <td>{{ index + 1 }}</td>
+            <td class="text_left">{{ item.title }}</td>
+            <td>{{ item.progress }}</td>
+            <td>{{ item.videoDuration }}</td>
+            <td>
+              <a v-if="user.userId" href="javascript:void(0)" class="btn_write" @click="goToDetail(item.id)">강의보기</a>
+            </td>
+            <td v-if="isAdmin">
+              <a href="javascript:void(0)" class="btn_write" :to="`/lecture/create/${item.id}`">수정</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </v-container>
   </v-app>
 </template>
@@ -61,17 +60,10 @@ export default {
   components: {
     SubjectDetailComponent,
   },
-  provide() {
-    return {
-      getSubjectData: () => this.subjectData, // subjectData를 함수로 제공
-    };
-  },
   data() {
     return {
       user: {},
-
       subjectData: null, // 초기 상태는 null
-
       subjectId: "",
       selectedMenu: "SubjectDetail", // 기본으로 선택된 메뉴
       lecture: {
@@ -89,18 +81,9 @@ export default {
       await this.$store.dispatch("setUserAllInfoActions");
       this.user = this.$store.getters.getUserObj;
     } catch (error) {
-      console.error("An error occurred while fetching user info:", error);
+      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
     }
-
     this.getSubjectPerLectureList();
-  },
-  watch: {
-    subjectData: {
-      deep: true,
-      handler(newVal) {
-        console.log("Subject Data Updated:", newVal);
-      },
-    },
   },
   methods: {
     async getSubjectPerLectureList() {
@@ -113,38 +96,83 @@ export default {
         `${process.env.VUE_APP_API_BASE_URL}/subject/${this.subjectId}/lecture/list`,
         { params }
       );
-      const addtionalData = response.data.result.content;
-      console.log(response);
-      this.lecture.lectureList = [...this.lecture.lectureList, ...addtionalData];
-      
+      const additionalData = response.data.result.content;
+      this.lecture.lectureList = [...this.lecture.lectureList, ...additionalData];
     },
     setLectureCreateBtn() {
-      console.log(this.user);
-      console.log(this.user.userId, this.subjectData.userTeacherId)
       if(Number(this.user.userId) === this.subjectData.userTeacherId || this.user.role == "ADMIN"){
-        console.log("수정 가능!!")
         this.user.isAdmin = true;
-      }else{
-        console.log("수정 불가!")
+      } else {
+        this.user.isAdmin = false;
       }
     },
     handleSubjectDataLoaded(data) {
       this.subjectData = data;
-      // 여기에 추가 작업을 작성하면 됩니다.
       if(this.subjectData && this.user.userId){
         this.setLectureCreateBtn();
       }
     },
-    handleMenuUpdate(newSelection) {
-      this.selectedMenu = newSelection;
-      console.log("메뉴 바뀜 >> ", newSelection);
-    },
     goToDetail(lectureId) {
-      console.log("강의페이지로 이동~", lectureId);
       this.$router.push({ name: "LectureDetail", params: { id: lectureId } });
+    },
+  },
+  computed: {
+    isAdmin() {
+      return this.user.isAdmin;
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.container {
+  padding-top: 20px;
+}
+
+.btnWrap {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.btn_write {
+  background-color:   #f27885;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+
+
+.tbl_list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tbl_list th,
+.tbl_list td {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  border-left: none; 
+  border-right: none; 
+}
+
+.tbl_list th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.text_left {
+  text-align: left;
+}
+
+.text_center {
+  text-align: center;
+}
+</style>
