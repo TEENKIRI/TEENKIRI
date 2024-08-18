@@ -7,6 +7,7 @@ import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -69,6 +70,10 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
+    }
+
+    public List<User> findAllByRole(Role role) {
+        return userRepository.findAllByRole(role);
     }
 
     public String findId(UserFindIdDto findIdDto) {

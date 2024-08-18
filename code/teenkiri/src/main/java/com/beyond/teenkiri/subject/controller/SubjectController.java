@@ -55,14 +55,15 @@ public class SubjectController {
 
     //    강좌 과목별, 학년별 리스트 페이지
     @GetMapping("/subject/{courseId}/{grade_enum}/list")
-    public ResponseEntity<?> subjectCourseAndGradeListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
-            direction = Sort.Direction.DESC ) Pageable pageable,
-                                                   @PathVariable(value = "courseId") Long courseId,
-                                                   @PathVariable(value = "grade_enum") String grades){
+    public ResponseEntity<?> subjectCourseAndGradeListView(
+            @PageableDefault(page = 0, size=10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable(value = "courseId") Long courseId,
+            @PathVariable(value = "grade_enum") String grades) {
         Page<SubjectListResDto> subjectListResDto = subjectService.subjectPerCourseAndGradeList(pageable, courseId, grades);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list",subjectListResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject rating list", subjectListResDto);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
+
 
     //    강좌 순위별 리스트 페이지 :: delyn n인 것만
     @GetMapping("/subject/rating/list")
@@ -98,7 +99,6 @@ public class SubjectController {
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED,"강좌 생성이 완료되었습니다.",subject.getId());
         return new ResponseEntity<>(commonResDto,HttpStatus.CREATED);
     }
-
 
     //    강좌 업데이트
     @PatchMapping("/subject/update/{id}")

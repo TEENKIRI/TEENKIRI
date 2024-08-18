@@ -35,7 +35,6 @@ public class CourseController {
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
-
     // 과목 생성
     @PostMapping("/course/create")
     public ResponseEntity<?> courseCreate(@RequestBody CourseSaveReqDto dto){

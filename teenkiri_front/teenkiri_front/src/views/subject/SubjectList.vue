@@ -14,7 +14,7 @@
           label="검색어를 입력하세요."
           required
         ></v-text-field>
-        <v-btn @click="performSearch">검색</v-btn> <!-- 검색 버튼 추가 -->
+        <v-btn @click="performSearch">검색</v-btn>
       </v-form>
     </v-sheet>
     
@@ -27,11 +27,9 @@
             @click="goToDetail(sm.id)"
           >
             <div class="thumb">
-              <a href="javascript:void(0)"
-                ><img
-                  v-bind:src="sm.subjectThumUrl"
-                  alt="강좌 썸네일"
-              /></a>
+              <a href="javascript:void(0)">
+                <img v-bind:src="sm.subjectThumUrl" alt="강좌 썸네일" />
+              </a>
             </div>
             <div class="txt">
               <p class="subject">{{ sm.title }}</p>
@@ -69,7 +67,7 @@
           multiple
           class="d-flex justify-start"
           v-model="grade.selectedGrades"
-          @update:modelValue="onSelectionGradeChange"
+          @change="onSelectionGradeChange"
         >
           <div class="mr-5">학년</div>
           <v-item v-for="n in grade.gradeList" :key="n.value" v-slot="{ selectedClass, toggle }" :value="n.value">
@@ -79,7 +77,7 @@
               @click="toggle"
               :value="n.value"
             >
-              {{ n.text }} <!-- 1학년, 2학년 등 -->
+              {{ n.text }}
             </v-chip>
           </v-item>
         </v-item-group>
@@ -87,7 +85,8 @@
       <v-col>
         <v-row>
           <v-col class="d-flex flex-row">
-            <v-btn>강좌 업로드</v-btn>
+            <v-btn @click="$router.push('/subject/create')">강좌 업로드</v-btn>
+
             <v-select
               v-model="selectedType"
               :items="selectedOptions"
@@ -115,11 +114,9 @@
               @click="goToDetail(s.id)"
             >
               <div class="thumb">
-                <a href="javascript:void(0)"
-                  ><img
-                    v-bind:src="s.subjectThumUrl"
-                    alt="강좌 썸네일"
-                /></a>
+                <a href="javascript:void(0)">
+                  <img v-bind:src="s.subjectThumUrl" alt="강좌 썸네일" />
+                </a>
               </div>
               <div class="txt">
                 <p class="subject">{{ s.title }}</p>
@@ -140,21 +137,21 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      searchType: "all", // 초기 검색 타입은 '전체'
+      searchType: "all",
       searchOptions: [
         { text: "전체", value: "all" },
         { text: "강사명", value: "userTeacher" },
         { text: "강좌명", value: "title" },
       ],
-      selectedType: "recent", // 초기 정렬 타입은 '최신순'
+      selectedType: "recent",
       selectedOptions: [
         { text: "최신순", value: "recent" },
         { text: "평점순", value: "like" },
       ],
-      searchValue: "", // 검색어 초기화
+      searchValue: "",
       course: {
         courseList: [],
-        selectedMenu: "all", // 초기 선택된 강좌 카테고리
+        selectedMenu: "all",
         page: {
           pageSize: 5,
           currentPage: 0,
@@ -187,11 +184,10 @@ export default {
     this.getSubjectList();
   },
   watch: {
-  'course.selectedMenu': function () { 
-    this.resetSubjectVariables(); 
-    this.getSubjectList(); 
-  }
-},
+    selectedType() {
+      this.performSearch();  // 선택된 정렬 타입이 바뀌면 즉시 검색 수행
+    }
+  },
 
   methods: {
     async getCourseList() {
@@ -219,41 +215,41 @@ export default {
       }
     },
     async getSubjectList() {
-    try {
-      const params = {
-        size: this.subject.page.pageSize,
-        page: this.subject.page.currentPage,
-        search: this.searchValue, 
-        searchType: this.searchType,
-        sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc'
-      };
-      
-      let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
-      if (this.course.selectedMenu === "all") {
-        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
-      } else if (this.grade.selectedGrades.length >= 1) {
-        const selectedGradeStr = this.grade.selectedGrades.join("&");
-        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`;
-      }
+      try {
+        const params = {
+          size: this.subject.page.pageSize,
+          page: this.subject.page.currentPage,
+          search: this.searchValue, 
+          searchType: this.searchType,
+          sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc'
+        };
+        
+        let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
+        if (this.course.selectedMenu === "all") {
+          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
+        } 
+        if (this.grade.selectedGrades.length >= 1) {
+          const selectedGradeStr = this.grade.selectedGrades.join("&");
+          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`;
+        }
 
-      const response = await axios.get(api_url, { params });
-      const additionalData = response.data.result.content;
-      this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
-    } catch (e) {
-      console.error(e);
-    }
-  },
+        const response = await axios.get(api_url, { params });
+        const additionalData = response.data.result.content;
+        this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
+      } catch (e) {
+        console.error(e);
+      }
+    },
 
     resetSubjectVariables() {
       this.subject.page.currentPage = 0;
       this.subject.subjectList = [];
       this.grade.selectedGrades = [];
     },
-      onSelectionGradeChange() {
-    this.subject.page.currentPage = 0;
-    this.subject.subjectList = [];
-    this.getSubjectList();
-  },
+    onSelectionGradeChange() {
+      this.resetSubjectVariables();
+      this.getSubjectList();
+    },
 
     performSearch() {
       this.resetSubjectVariables(); 
@@ -266,77 +262,4 @@ export default {
 };
 </script>
 
-<style>
-.inner {
-  width: 1280px;
-  margin: 0 auto;
-  position: relative;
-}
-.inner h2 {
-  font-size: 36px;
-  font-weight: 700;
-}
-.swiperLectureBest {
-  margin: 35px 0 0;
-  border-right: 1px solid #ccc;
-  display: flex;
-  flex-wrap: wrap;
-}
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  display: none;
-}
-.swiper-button-prev {
-  left: -60px;
-  width: 30px;
-  height: 51px;
-  background: url("@/assets/images/ico_sw_prev.png") 50% 50% no-repeat;
-  background-size: contain;
-}
-.swiper-button-next {
-  right: -60px;
-  width: 30px;
-  height: 51px;
-  background: url("@/assets/images/ico_sw_next.png") 50% 50% no-repeat;
-  background-size: contain;
-}
-.swiper-slide {
-  position: relative;
-  width: calc(100% / 4);
-  height: 390px;
-  border: 1px solid #ccc;
-  padding: 20px 27px;
-}
-.swiper-slide .thumb {
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-}
-.swiper-slide .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.swiper-slide .txt {
-  margin: 20px 0 0;
-}
-.swiper-slide .txt .subject {
-  font-size: 18px;
-  font-weight: 400;
-}
-.swiper-slide .txt .name {
-  margin: 15px 0 0;
-  font-size: 14px;
-  font-weight: 400;
-  color: #5b5b5b;
-}
-.swiper-slide .btn_like {
-  position: absolute;
-  bottom: 20px;
-  right: 27px;
-  width: 24px;
-  height: 24px;
-  background: url("@/assets/images/ico_like.png") 50% 50% no-repeat;
-  background-size: contain;
-}
-</style>
+<style src="@/assets/css/SubjectList.css"></style>

@@ -3,6 +3,7 @@ import SubjectDetail from "@/views/subject/SubjectDetail.vue";
 import SubjectList from "@/views/subject/SubjectList.vue";
 import SubjectQna from "@/views/subject/SubjectQna.vue";
 import SubjectReview from "@/views/subject/SubjectReview.vue";
+import SubjectCreate from "@/views/subject/SubjectCreate.vue";
 
 export const subjectRouter = [
     {
@@ -15,6 +16,11 @@ export const subjectRouter = [
         name: 'SubjectDetail',
         component: SubjectDetail
     },
+    {
+        path: '/subject/create',
+        name: 'SubjectCreate',
+        component: SubjectCreate
+    },    
     {
         path: '/subject/:id/qna',
         name: 'SubjectQna',
