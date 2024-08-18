@@ -1,126 +1,121 @@
 <template>
   <v-container class="mt-5">
-    <v-card v-if="questionDetail">
-      <v-card-title>
-        <h3>{{ questionDetail.title }}</h3>
-        <v-spacer></v-spacer>
-        <!-- 질문 수정 버튼 (작성자만 보이도록) -->
-        <v-btn v-if="isQuestionAuthor" color="warning" @click="editQuestion">질문 수정</v-btn>
-        <!-- 삭제 버튼 (관리자만 보이도록) -->
-        <v-btn v-if="isAdmin" color="error" @click="confirmDeleteQuestion">삭제</v-btn>
-        <!-- 질문 신고 버튼 -->
-        <v-btn color="secondary" @click="openReportModal('question')">신고</v-btn>
-        <!-- 답변하기 버튼 (관리자와 선생님만 보이도록) -->
-        <v-btn v-if="canAnswer" color="primary" @click="goToAnswer">답변하기</v-btn>
-      </v-card-title>
+    <!-- 질문 상세 카드 -->
+    <v-card class="pa-5" v-if="questionDetail">
+      <!-- 제목 및 버튼들 -->
+      <div class="d-flex justify-space-between align-center mb-3">
+        <h2 class="text-h5 font-weight-bold">{{ questionDetail.title }}</h2>
+        <div>
+          <v-btn v-if="isQuestionAuthor" class="btn_st2 mr-2" @click="editQuestion">수정</v-btn>
+          <v-btn v-if="isAdmin" class="btn_del mr-2" @click="confirmDeleteQuestion">삭제</v-btn>
+          <v-btn class="btn_st2 mr-2" @click="openReportModal('question')">신고</v-btn>
+          <v-btn v-if="canAnswer" class="btn_write mr-2" @click="goToAnswer">답변</v-btn>
+        </div>
+      </div>
 
-      <v-card-text>
-        <v-row>
-          <v-col cols="12">
-            <p><strong>작성자:</strong> {{ questionDetail.questionUserNickname }}</p>
-            <p><strong>작성 시간:</strong> {{ formatDate(questionDetail.createdTime) }}</p>
-            <v-img
-              v-if="questionDetail.qimageUrl"
-              :src="questionDetail.qimageUrl"
-              alt="질문 이미지"
-              max-width="400"
-              class="my-3"
-            />
-            <p><strong>질문 내용:</strong></p>
-            <p>{{ questionDetail.questionText }}</p>
-            <p><strong>강좌명:</strong></p>
-            <p>{{ questionDetail.subjectTitle }}</p>
-          </v-col>
+      <!-- 질문 정보 -->
+      <v-row class="mb-5">
+        <v-col cols="12" md="4">
+          <v-img v-if="questionDetail.qimageUrl" :src="questionDetail.qimageUrl" alt="질문 이미지" class="mb-3 rounded" />
+        </v-col>
+        <v-col cols="12" md="8">
+          <v-card flat>
+            <v-card-text>
+              <div class="text-body-1">
+                <p><strong>작성자:</strong> {{ questionDetail.questionUserNickname }}</p>
+                <p><strong>작성 시간:</strong> {{ formatDate(questionDetail.createdTime) }}</p>
+                <p><strong>수정 시간:</strong> {{ formatDate(questionDetail.updatedTime) }}</p>
+                <p><strong>질문 내용:</strong> {{ questionDetail.questionText }}</p>
+                <p><strong>강좌명:</strong> {{ questionDetail.subjectTitle }}</p>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-          <v-col cols="12" v-if="questionDetail.answerText">
-            <v-divider class="my-3"></v-divider>
-            <p><strong>답변자:</strong> {{ questionDetail.answeredByNickname }}</p>
-            <p><strong>답변 시간:</strong> {{ formatDate(questionDetail.answeredAt) }}</p>
-            <v-img
-              v-if="questionDetail.aimageUrl"
-              :src="questionDetail.aimageUrl"
-              alt="답변 이미지"
-              max-width="400"
-              class="my-3"
-            />
-            <p><strong>답변 내용:</strong></p>
-            <p>{{ questionDetail.answerText }}</p>
-            <!-- 답변 수정 버튼 (관리자와 선생님만 보이도록) -->
-            <v-btn v-if="canEditAnswer" color="warning" @click="editAnswer">답변 수정</v-btn>
-          </v-col>
-        </v-row>
+      <!-- 답변 정보 -->
+      <v-row v-if="questionDetail.answerText" class="mb-5">
+        <v-divider></v-divider>
+        <v-col cols="12" md="4">
+          <v-img v-if="questionDetail.aimageUrl" :src="questionDetail.aimageUrl" alt="답변 이미지" class="mb-3 rounded" />
+        </v-col>
+        <v-col cols="12" md="8">
+          <v-card flat>
+            <v-card-text>
+              <div class="text-body-1">
+                <p><strong>답변자:</strong> {{ questionDetail.answeredByNickname }}</p>
+                <p><strong>답변 시간:</strong> {{ formatDate(questionDetail.answeredAt) }}</p>
+                <p><strong>답변 내용:</strong> {{ questionDetail.answerText }}</p>
+              </div>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end">
+              <v-btn v-if="canEditAnswer" class="btn_st2" @click="editAnswer">답변 수정</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
 
-        <!-- 댓글 목록 -->
-        <v-row>
-          <v-col cols="12">
-            <v-divider class="my-3"></v-divider>
-            <h4>댓글</h4>
-            <v-list>
-              <v-list-item v-for="comment in questionDetail.comments" :key="comment.id">
-                <v-list-item-content>
-                  <v-list-item-title>{{ comment.nickname }} ({{ formatDate(comment.createdTime) }})</v-list-item-title>
-                  <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
-                </v-list-item-content>
-                <!-- 댓글 삭제 버튼 (관리자만 볼 수 있음) -->
-                <v-list-item-action v-if="isAdmin">
-                  <v-btn icon @click="deleteComment(comment.id)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-                <!-- 댓글 신고 버튼 -->
-                <v-list-item-action>
-                  <v-btn icon @click="openReportModal('comment', comment)">
-                    <v-icon>mdi-alert-circle-outline</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
+      <!-- 댓글 목록 -->
+      <v-row>
+        <v-divider></v-divider>
+        <v-col cols="12">
+          <h4 class="text-h6 font-weight-bold">댓글</h4>
+          <v-list two-line>
+            <v-list-item v-for="comment in questionDetail.comments" :key="comment.id" class="py-2">
+              <v-list-item-content>
+                <v-list-item-title class="text-subtitle-1">{{ comment.nickname }}</v-list-item-title>
+                <v-list-item-subtitle>{{ formatDate(comment.createdTime) }} - {{ comment.content }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn icon @click="toggleCommentOptions(comment.id)" small>
+                  <v-icon small>mdi-dots-vertical</v-icon>
+                </v-btn>
+                <div v-if="activeComment === comment.id" class="conLayer">
+                  <a v-if="isAdmin" href="javascript:void(0)" class="btn_board_option" @click="deleteComment(comment.id)">삭제</a>
+                  <a href="javascript:void(0)" class="btn_board_option" @click="openReportModal('comment', comment)">신고</a>
+                </div>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
 
-            <!-- 댓글 작성 -->
-            <v-form @submit.prevent="submitComment">
-              <v-textarea
-                label="댓글 작성"
-                v-model="newComment"
-                required
-              />
-              <v-btn type="submit" color="primary">댓글 등록</v-btn>
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-card-text>
+          <!-- 댓글 작성 -->
+          <v-form @submit.prevent="submitComment" class="mt-3">
+            <v-textarea label="댓글 작성" v-model="newComment" outlined required></v-textarea>
+            <div class="mt-3 d-flex justify-end">
+              <v-btn type="submit" class="mt-2 btn_comment_ok">댓글작성</v-btn>
+            </div>
+          </v-form>
+        </v-col>
+      </v-row>
 
-      <v-card-actions>
-        <v-btn color="primary" @click="goBack">목록으로 돌아가기</v-btn>
+      <!-- 액션 버튼들 -->
+      <v-card-actions class="d-flex justify-end">
+        <v-btn class="mr-2 btn_solid" @click="goBack">목록으로</v-btn>
+        <v-btn v-if="isQuestionAuthor" class="mr-2 btn_st2" @click="editQuestion">수정</v-btn>
+        <v-btn v-if="isAdmin" class="mr-2 btn_del" @click="confirmDeleteQuestion">삭제</v-btn>
+        <v-btn v-if="canAnswer" class="mr-2 btn_write" @click="goToAnswer">답변</v-btn>
       </v-card-actions>
     </v-card>
 
-    <v-alert type="error" v-else-if="error">
-      {{ error }}
-    </v-alert>
-
+    <!-- 에러 및 로딩 상태 -->
+    <v-alert type="error" v-if="error">{{ error }}</v-alert>
     <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
 
-    <!-- 질문 삭제 확인 다이얼로그 -->
+    <!-- 삭제 확인 다이얼로그 -->
     <v-dialog v-model="deleteDialog" max-width="500px">
       <v-card>
         <v-card-title class="headline">게시글 삭제</v-card-title>
         <v-card-text>게시글을 정말 삭제하시겠습니까?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="deleteDialog = false">취소</v-btn>
-          <v-btn color="error" text @click="deleteQuestion">삭제</v-btn>
+          <v-btn class="btn_solid" text @click="deleteDialog = false">취소</v-btn>
+          <v-btn class="btn_del" text @click="deleteQuestion">삭제</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <!-- 신고 모달 창 -->
-    <ReportCreate 
-      v-if="showReportModal" 
-      :postId="reportData.postId" 
-      :commentId="reportData.commentId" 
-      :qnaId="reportData.qnaId" 
-      @close="closeReportModal" 
-    />
+    <!-- 신고 모달 -->
+    <ReportCreate v-if="showReportModal" :postId="reportData.postId" :commentId="reportData.commentId" :qnaId="reportData.qnaId" @close="closeReportModal" />
   </v-container>
 </template>
 
@@ -130,7 +125,7 @@ import ReportCreate from '../report/ReportCreate.vue';
 
 export default {
   components: {
-    ReportCreate
+    ReportCreate,
   },
   data() {
     return {
@@ -142,6 +137,7 @@ export default {
       userRole: '',
       showReportModal: false,
       reportData: {},
+      activeComment: null, // 현재 열려있는 conLayer의 댓글 ID
     };
   },
   computed: {
@@ -156,7 +152,7 @@ export default {
     },
     canAnswer() {
       return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
-    }
+    },
   },
   created() {
     this.decodeToken();
@@ -205,7 +201,7 @@ export default {
         await axios.post(`${process.env.VUE_APP_API_BASE_URL}/comment/create`, {
           qnaId: questionId,
           content: this.newComment,
-          userId: localStorage.getItem('userId')
+          userId: localStorage.getItem('userId'),
         });
         this.newComment = '';
         this.fetchQuestionDetail();
@@ -219,6 +215,13 @@ export default {
         this.fetchQuestionDetail();
       } catch (error) {
         this.error = '댓글 삭제에 실패했습니다.';
+      }
+    },
+    toggleCommentOptions(commentId) {
+      if (this.activeComment === commentId) {
+        this.activeComment = null;
+      } else {
+        this.activeComment = commentId;
       }
     },
     confirmDeleteQuestion() {
@@ -272,11 +275,120 @@ export default {
 
 <style scoped>
 .v-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
-.my-3 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+
+.text-body-1 {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+h2.text-h5 {
+  color: #333;
+}
+
+.v-btn {
+  font-weight: bold;
+  border-radius: 0;
+  min-width: 100px;
+}
+
+.v-btn.primary {
+  background-color: #1e88e5 !important;
+  color: white;
+}
+
+.v-btn.teal.darken-3 {
+  background-color: #00796b !important;
+  color: white;
+}
+
+.v-btn.red.darken-2 {
+  background-color: #d32f2f !important;
+  color: white;
+}
+
+.v-btn.secondary {
+  background-color: #424242 !important;
+  color: white;
+}
+
+.v-btn:hover {
+  opacity: 0.9;
+}
+
+.v-list-item-title {
+  font-weight: bold;
+}
+
+.v-list-item-subtitle {
+  color: #757575;
+}
+
+.v-card-actions {
+  padding: 0;
+}
+
+.v-img {
+  border-radius: 10px;
+}
+
+.btn_solid {
+  background-color: #00796b !important;
+  color: white;
+}
+
+.btn_st2 {
+  background-color: #424242 !important;
+  color: white;
+}
+
+.btn_del {
+  background-color: #d32f2f !important;
+  color: white;
+}
+
+.btn_write {
+  background-color: #1e88e5 !important;
+  color: white;
+}
+
+.btn_comment_ok {
+  background-color: #1e88e5 !important;
+  color: white;
+}
+
+.btn_alert {
+  background-color: #ffb300 !important;
+  color: white;
+}
+
+.conLayer {
+  display: inline-block;
+  background-color: white;
+  border: 1px solid #ccc;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+}
+
+.btn_board_option {
+  display: block;
+  padding: 5px 10px;
+  color: #424242;
+  text-decoration: none;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+.btn_board_option:hover {
+  background-color: #f5f5f5;
+  color: black;
+}
+
+.v-icon {
+  font-size: 18px !important;
 }
 </style>

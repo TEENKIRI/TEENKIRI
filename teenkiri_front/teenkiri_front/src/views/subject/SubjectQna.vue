@@ -17,8 +17,7 @@
                 <th>작성자</th>
                 <th>제목</th>
                 <th>강좌명</th>
-                <th>생성 시간</th>
-                <th>수정 시간</th>
+                <th>작성일</th>
               </tr>
             </thead>
             <tbody>
@@ -28,7 +27,6 @@
                 <td @click="viewDetail(question.id)" class="clickable">{{ question.title }}</td>
                 <td>{{ question.subjectTitle }} </td>
                 <td>{{ formatDate(question.createdTime) }}</td>
-                <td>{{ formatDate(question.updatedTime) }}</td>
               </tr>
             </tbody>
           </v-table>
@@ -96,8 +94,11 @@ export default {
       }
     },
     formatDate(date) {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-      return new Date(date).toLocaleDateString('ko-KR', options);
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}년 ${month}월 ${day}일`;
     },
     createNewQuestion() {
       this.$router.push(`/qna/create?subjectId=${this.subjectId}`);

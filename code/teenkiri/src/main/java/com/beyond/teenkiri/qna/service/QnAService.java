@@ -93,16 +93,42 @@ public class QnAService {
         return qnARepository.save(qnA);
     }
 
-    public Page<QnAListResDto> qnaList(Pageable pageable) {
-        Page<QnA> qnAS = qnARepository.findByDelYN(DelYN.N, pageable);
-        return qnAS.map(QnA::listFromEntity);
-    }
+//    public Page<QnAListResDto> qnaList(Pageable pageable) {
+//        Page<QnA> qnAS = qnARepository.findByDelYN(DelYN.N, pageable);
+//        return qnAS.map(QnA::listFromEntity);
+//    }
+
     public Page<QnAListResDto> qnaListByGroup(Long subjectId, Pageable pageable){
         Subject subject = subjectService.findSubjectById(subjectId);
-        Page<QnA> qnAS = qnARepository.findAllBySubjectId(subject.getId(), pageable);
+        Page<QnA> qnAS = qnARepository.findAllBySubjectIdAndDelYN(subject.getId(), DelYN.N, pageable );
         Page<QnAListResDto> qnAListResDtos = qnAS.map(a->a.listFromEntity());
         return qnAListResDtos;
     }
+
+    public Page<QnAListResDto> qnaListWithSearch(Pageable pageable, String searchCategory, String searchQuery) {
+        if (searchCategory != null && searchQuery != null) {
+            switch (searchCategory) {
+                case "제목":
+                    return qnARepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(QnA::listFromEntity);
+                case "작성자":
+                    return qnARepository.findByUser_NicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(QnA::listFromEntity);
+                case "강좌명":
+                    return qnARepository.findBySubjectTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(QnA::listFromEntity);
+                case "all":  // 제목, 작성자, 강좌명을 모두 검색
+                    return qnARepository.findByTitleContainingIgnoreCaseOrUser_NicknameContainingIgnoreCaseOrSubjectTitleContainingIgnoreCaseAndDelYN(
+                                    searchQuery, searchQuery, searchQuery, DelYN.N, pageable)
+                            .map(QnA::listFromEntity);
+                default:
+                    return qnARepository.findByDelYN(DelYN.N, pageable).map(QnA::listFromEntity);
+            }
+        } else {
+            return qnARepository.findByDelYN(DelYN.N, pageable).map(QnA::listFromEntity);
+        }
+    }
+
 
     //사용자가 작성한 qna 목록 보기
     public List<QnAListResDto> getUserQnAs() {
