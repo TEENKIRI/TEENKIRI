@@ -32,12 +32,16 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
-
-        Wish wish = new Wish(user, subject);
-        wishRepository.save(wish);
-
-        return WishDto.fromEntity(wish);
+                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
+        Wish findWish = wishRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElse(null);
+        if(findWish == null){
+            Wish wish = new Wish(user, subject);
+            wishRepository.save(wish);
+            return WishDto.fromEntity(wish);
+        }else{
+            throw new IllegalStateException("이미 등록한 찜입니다.");
+        }
     }
 
     public void removeWish(String email, Long subjectId) {
@@ -45,7 +49,7 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
 
         Wish wish = wishRepository.findByUserAndSubject(user, subject)
                 .orElseThrow(() -> new RuntimeException("찜 항목을 찾을 수 없습니다."));
