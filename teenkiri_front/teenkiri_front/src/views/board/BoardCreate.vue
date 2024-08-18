@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="isComponentReady" class="mt-5">
+  <v-container class="mt-5">
     <v-card>
       <v-card-title>
         <h3>글쓰기</h3>
@@ -9,13 +9,14 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <!-- 게시판 선택 -->
           <v-select
-            v-model="selectedCategory"
-            :items="categories"
-            item-text="text"
-            item-value="value"
-            label="게시판 선택"
-            required
-          ></v-select>
+          v-model="selectedCategory"
+          :items="categories"
+          item-text="title"
+          item-value="value"
+          label="게시판 선택"
+          required
+        ></v-select>
+        
 
           <!-- 제목 -->
           <v-text-field
@@ -58,45 +59,35 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      isComponentReady: false,
       title: '',
       content: '',
       image: null,
       previewImageSrc: null,
       selectedCategory: null, // 선택된 게시판
-      categories: [], // 게시판 목록을 저장할 배열
+      categories: [
+        { value: 'notice', title: '공지사항' },
+        { value: 'event', title: '이벤트' },
+        { value: 'post', title: '자유게시판' },
+      ], // 게시판 목록을 저장할 배열
     };
   },
-  async mounted() {
-    await this.fetchCategories(); // 컴포넌트가 마운트될 때 게시판 목록을 불러옵니다.
-    this.isComponentReady = true; // 데이터가 로드되면 컴포넌트를 렌더링
+  mounted() {
+    this.checkUserRole();
   },
   methods: {
-    async fetchCategories() {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          alert('로그인이 필요합니다.');
-          this.$router.push('/login');
-          return;
-        }
+    checkUserRole() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        this.$router.push('/login');
+        return;
+      }
 
-        const decodedToken = this.parseJwt(token);
-        const role = decodedToken.role;
+      const decodedToken = this.parseJwt(token);
+      const role = decodedToken.role;
 
-        if (role === 'ADMIN') {
-          this.categories = [
-            { value: 'notice', text: '공지사항' },
-            { value: 'event', text: '이벤트' },
-            { value: 'post', text: '자유게시판' },
-          ];
-        } else {
-          this.categories = [
-            { value: 'post', text: '자유게시판' },
-          ];
-        }
-      } catch (error) {
-        console.error('카테고리를 불러오는 중 오류 발생:', error);
+      if (role !== 'ADMIN') {
+        this.categories = this.categories.filter(cat => cat.value === 'post');
       }
     },
     parseJwt(token) {
