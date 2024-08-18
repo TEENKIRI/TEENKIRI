@@ -9,6 +9,8 @@ import com.beyond.teenkiri.notice.dto.NoticeSaveReqDto;
 import com.beyond.teenkiri.notice.dto.NoticeDetailDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
 import com.beyond.teenkiri.notice.repository.NoticeRepository;
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -86,12 +88,27 @@ public class NoticeService {
     }
 
 
-
-
-    public Page<NoticeListResDto> noticeList(Pageable pageable) {
-        Page<Notice> notices = noticeRepository.findByDelYN(DelYN.N, pageable);
-        return notices.map(a->a.listFromEntity());
+    public Page<NoticeListResDto> noticeListWithSearch(Pageable pageable, String searchType, String searchQuery) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    return noticeRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Notice::listFromEntity);
+                case "userNickname":
+                    return noticeRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Notice::listFromEntity);
+                case "all":
+                    return noticeRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
+                                    searchQuery, searchQuery, DelYN.N, pageable)
+                            .map(Notice::listFromEntity);
+                default:
+                    return noticeRepository.findByDelYN(DelYN.N, pageable).map(Notice::listFromEntity);
+            }
+        } else {
+            return noticeRepository.findByDelYN(DelYN.N, pageable).map(Notice::listFromEntity);
+        }
     }
+
 
     public NoticeDetailDto getNoticeDetail(Long id) {
         Notice notice = noticeRepository.findById(id)
