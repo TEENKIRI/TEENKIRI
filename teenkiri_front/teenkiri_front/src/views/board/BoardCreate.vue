@@ -2,17 +2,18 @@
   <v-container class="mt-5">
     <v-card>
       <v-card-title>
-        <h3>게시글 작성</h3>
+        <h3>글쓰기</h3>
       </v-card-title>
 
       <v-card-text>
         <v-form ref="form" @submit.prevent="submitForm">
-        <label for="category">게시판 종류:</label>
-        <select v-model="category" id="category" required>
-          <option v-for="option in availableCategory" :key="option.value" :value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
+          <!-- 게시판 선택 -->
+          <v-select
+            v-model="category"
+            :items="availableCategory"
+            label="게시판"
+            required
+          ></v-select>
 
           <!-- 제목 -->
           <v-text-field
@@ -25,21 +26,24 @@
           <v-textarea
             label="내용"
             v-model="content"
-            rows="5"
+            rows="10"
             required
           />
 
-          <!-- 이미지 선택 -->
+          <!-- 파일 첨부 -->
           <v-file-input
             @change="onFileChange"
-            label="이미지 선택"
+            label="파일첨부"
             accept="image/*"
           />
           
           <!-- 미리보기 이미지 -->
           <v-img v-if="previewImageSrc" :src="previewImageSrc" max-width="200" class="my-3"/>
 
-          <v-btn type="submit" color="primary" class="mt-3">저장</v-btn>
+          <div class="btnWrap">
+            <v-btn text @click="cancel">취소</v-btn>
+            <v-btn color="primary" type="submit" class="ml-4">저장</v-btn>
+          </div>
         </v-form>
       </v-card-text>
     </v-card>
@@ -56,8 +60,12 @@ export default {
       content: '',
       image: null,
       previewImageSrc: null,
-      category: 'post', // 기본 게시판 종류
-      availableCategory: [], // 선택 가능한 게시판 종류
+      category: 'notice', // 기본 게시판 종류
+      availableCategory: [
+        { value: 'notice', text: '공지사항' },
+        { value: 'event', text: '이벤트' },
+        { value: 'post', text: '자유게시판' }
+      ], // 선택 가능한 게시판 종류
     };
   },
   created() {
@@ -75,13 +83,7 @@ export default {
       const decodedToken = this.parseJwt(token);
       const role = decodedToken.role;
 
-      if (role === 'ADMIN') {
-        this.availableCategory = [
-          { value: 'event', text: '이벤트' },
-          { value: 'notice', text: '공지' },
-          { value: 'post', text: '자유게시판' },
-        ];
-      } else {
+      if (role !== 'ADMIN') {
         this.availableCategory = [
           { value: 'post', text: '자유게시판' },
         ];
@@ -183,14 +185,22 @@ export default {
         alert('게시글 저장에 실패했습니다.');
       }
     },
+    cancel() {
+      this.$router.go(-1); // 이전 페이지로 이동
+    },
   },
 };
 </script>
 
 <style scoped>
 .v-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
+}
+.btnWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 .my-3 {
   margin-top: 1rem;

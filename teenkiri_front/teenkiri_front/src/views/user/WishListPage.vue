@@ -12,7 +12,12 @@
           :key="item.id"
           cols="12" sm="6" md="4"
         >
-          <v-card class="ma-4" :elevation="3">
+          <v-card 
+            class="ma-4" 
+            :elevation="4" 
+            @click="goToSubjectDetail(item.id)" 
+            style="cursor: pointer;"
+          >
             <v-card-title>
               강좌 명 : {{ item.title || '제목 없음' }}
             </v-card-title>
@@ -20,7 +25,7 @@
               선생님: {{ item.teacherName || '선생님 정보 없음' }}
             </v-card-subtitle>
             <v-card-actions>
-              <v-btn @click="removeFromWishlist(item.id)" color="red">제거</v-btn>
+              <v-btn @click.stop="removeFromWishlist(item.id)" color="red">제거</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -50,9 +55,9 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      wishlist: [], // 위시리스트 데이터
-      loading: false, // 데이터 로딩 상태
-      error: null // 오류 메시지
+      wishlist: [],
+      loading: false,
+      error: null
     };
   },
   async created() {
@@ -64,10 +69,9 @@ export default {
       this.error = null;
       try {
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/wishlist`);
-        console.log(response.data); // 서버 응답 확인
+        console.log(response.data);
 
         if (response.status === 200 && response.data) {
-          // response.data.result로 데이터 접근
           this.wishlist = response.data.result || [];
         } else {
           console.error('응답 데이터가 없습니다.');
@@ -84,7 +88,7 @@ export default {
         const token = localStorage.getItem('token');
         const response = await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/wish/${id}`, {
           headers: {
-            'Authorization': `Bearer ${token}` // 인증 헤더 추가
+            'Authorization': `Bearer ${token}`
           }
         });
 
@@ -96,6 +100,9 @@ export default {
       } catch (error) {
         console.error('찜 삭제 중 오류 발생:', error.response ? error.response.data.message : error.message);
       }
+    },
+    goToSubjectDetail(id) {
+      this.$router.push({ name: 'SubjectDetail', params: { id } });
     }
   }
 };

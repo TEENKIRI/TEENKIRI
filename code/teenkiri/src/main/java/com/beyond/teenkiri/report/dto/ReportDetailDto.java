@@ -19,4 +19,5 @@ public class ReportDetailDto {
     private String suspectEmail;
     private Reason reason;
     private Long qnaId;
+    private String details;
 }

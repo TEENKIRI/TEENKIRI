@@ -39,6 +39,8 @@ public class QnAListResDto {
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     private LocalDateTime answeredAt;
+    private Long subjectId;
+    private String subjectTitle;
     private String answerText; // 수정
     private String qImageUrl;
 }

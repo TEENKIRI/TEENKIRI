@@ -2,6 +2,7 @@ package com.beyond.teenkiri.wish.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.wish.dto.WishDto;
+import com.beyond.teenkiri.wish.dto.WishStatusDto;
 import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,20 @@ public class WishController {
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "찜 삭제 실패: " + e.getMessage(), null));
         }
     }
+
+    @GetMapping("/check/{subjectId}")
+    public ResponseEntity<?> checkWishlistStatus(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long subjectId) {
+        try {
+            boolean isInWishlist = wishService.isInWishlist(userDetails.getUsername(), subjectId);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "위시리스트 상태 확인 성공", new WishStatusDto(isInWishlist)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, "위시리스트 상태 확인 실패: " + e.getMessage(), null));
+        }
+    }
+
+
 }
 
 

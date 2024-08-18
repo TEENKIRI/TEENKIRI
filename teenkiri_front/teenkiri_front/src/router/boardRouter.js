@@ -21,7 +21,7 @@ export const boardRouter = [
         component: BoardUpdate
     },
     {
-        path: '/board/Detail/:category/:id',
+        path: '/board/detail/:category/:id',
         name: 'BoardDetail',
         component: BoardDetail,
     },

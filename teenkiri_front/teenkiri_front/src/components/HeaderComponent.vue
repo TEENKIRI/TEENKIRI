@@ -17,18 +17,13 @@
             <v-btn text @click="navigate('공지사항')">공지사항</v-btn>
             <v-btn text @click="navigate('자유게시판')">자유게시판</v-btn>
             <v-btn text @click="navigate('QnA')">질문게시판</v-btn>
+            <v-btn v-if="isAdmin" text @click="navigate('신고리스트')">신고리스트</v-btn>
           </v-row>
         </v-col>
         <v-col cols="3" class="text-right">
-          <v-btn icon @click="goToMember">
+          <v-btn icon @click="handleAccountClick">
             <v-icon>mdi-account</v-icon>
           </v-btn>
-          <v-btn v-if="isLogin" @click="doLogout">로그아웃</v-btn>
-          <v-btn icon @click="goToMenu">
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-
-          <!-- 알림 아이콘 및 알림 목록 -->
           <v-btn icon color="primary">
             <v-badge
               color="red"
@@ -70,7 +65,8 @@ export default {
   data() {
     return {
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false,
+      isLogin: false, // 초기값 설정
+      isAdmin: false, // 관리자인지 여부를 확인하기 위한 변수 추가
       notifications: [],
     };
   },
@@ -87,6 +83,7 @@ export default {
     this.isLogin = !!token;
 
     if (this.isLogin) {
+      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; // 로그인 후 역할이 ADMIN인지 확인
       this.fetchNotifications();
 
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
@@ -130,9 +127,13 @@ export default {
           this.notifications[index].delYN = 'Y';
 
           if (notification.postId) {
-            this.$router.push({ name: 'PostDetail', params: { id: notification.postId } });
+            window.location.href = `/board/detail/post/${notification.postId}`;
           } else if (notification.qnaId) {
-            this.$router.push({ name: 'QnaDetail', params: { id: notification.qnaId } });
+            window.location.href = `/qna/detail/${notification.qnaId}`;
+          } else if (notification.reportId){
+            window.location.href = `/report/list`;
+          } else{
+            console.log('error!!!!!!!!!!!')
           }
         } catch (error) {
           console.error('알림을 읽음으로 표시하는 중 오류 발생:', error);
@@ -148,8 +149,14 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
       } else if (section === '자유게시판') {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
-      } else if (section === 'QnA') {
-        this.$router.push({ name: 'QnaList', params: { category: 'qna' } });
+      } else if (section === 'QnA')  {
+        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
+      } else if (section === '신고리스트') {
+        if (this.isAdmin) {
+          this.$router.push({ name: 'ReportList', params: { category: 'report' } });
+        } else {
+          console.log('관리자만 접근할 수 있습니다.');
+        }
       } else {
         console.log(section);
       }
@@ -161,18 +168,16 @@ export default {
         this.$router.push('/login');
       }
     },
-    goToMenu() {
-      console.log('Go to menu');
-    },
-    doLogout() {
-      localStorage.removeItem('role');
-      localStorage.removeItem('token');
-      this.isLogin = false;
-      console.log('Logged out');
-      window.location.reload();
+    handleAccountClick() {
+      if (this.isLogin) {
+        this.$emit('open-sidebar');
+      } else {
+        alert("로그인 후 사용이 가능합니다.");
+        this.$router.push('/login');
+      }
     }
   }
-};
+}
 </script>
 
 <style scoped>

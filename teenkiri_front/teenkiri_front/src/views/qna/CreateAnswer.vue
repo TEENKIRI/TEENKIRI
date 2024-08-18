@@ -16,12 +16,20 @@
               />
             </v-col>
             <v-col cols="6">
+                <v-text-field
+                  label="강좌명"
+                  v-model="subjectTitle"
+                  readonly
+                />
+              </v-col>
+            <v-col cols="6">
               <v-text-field
                 label="질문 날짜"
                 v-model="questionDate"
                 readonly
               />
             </v-col>
+            
           </v-row>
   
           <!-- 질문 내용 -->
@@ -68,6 +76,7 @@
         questionUserNickname: '',
         questionDate: '',
         questionTitle: '',
+        subjectTitle: '',
         questionText: '',
         questionImage: null,
   
@@ -92,6 +101,7 @@
             this.questionDate = new Date(question.createdTime).toLocaleString();
             this.questionTitle = question.title;
             this.questionText = question.questionText;
+            this.subjectTitle = question.subjectTitle;
             this.questionImage = question.qimageUrl;
           })
           .catch((error) => {

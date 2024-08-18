@@ -10,6 +10,8 @@
         <v-btn v-if="isAdmin" color="error" @click="confirmDeleteQuestion">삭제</v-btn>
         <!-- 질문 신고 버튼 -->
         <v-btn color="secondary" @click="openReportModal('question')">신고</v-btn>
+        <!-- 답변하기 버튼 (관리자와 선생님만 보이도록) -->
+        <v-btn v-if="canAnswer" color="primary" @click="goToAnswer">답변하기</v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -26,6 +28,8 @@
             />
             <p><strong>질문 내용:</strong></p>
             <p>{{ questionDetail.questionText }}</p>
+            <p><strong>강좌명:</strong></p>
+            <p>{{ questionDetail.subjectTitle }}</p>
           </v-col>
 
           <v-col cols="12" v-if="questionDetail.answerText">
@@ -113,13 +117,8 @@
     <ReportCreate 
       v-if="showReportModal" 
       :postId="reportData.postId" 
-      :postTitle="reportData.postTitle" 
-      :postContent="reportData.postContent" 
-      :authorEmail="reportData.authorEmail" 
-      :postCategory="reportData.postCategory" 
       :commentId="reportData.commentId" 
-      :commentContent="reportData.commentContent" 
-      :commentAuthor="reportData.commentAuthor" 
+      :qnaId="reportData.qnaId" 
       @close="closeReportModal" 
     />
   </v-container>
@@ -153,6 +152,9 @@ export default {
       return this.userRole === 'ADMIN';
     },
     canEditAnswer() {
+      return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
+    },
+    canAnswer() {
       return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
     }
   },
@@ -237,6 +239,9 @@ export default {
     editAnswer() {
       this.$router.push(`/qna/update/answer/${this.$route.params.id}`);
     },
+    goToAnswer() {
+      this.$router.push(`/qna/answer/${this.$route.params.id}`);
+    },
     formatDate(date) {
       if (!date) return '';
       const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
@@ -248,22 +253,12 @@ export default {
     openReportModal(type, comment = null) {
       if (type === 'question') {
         this.reportData = {
-          postId: this.questionDetail.id,
-          postTitle: this.questionDetail.title,
-          postContent: this.questionDetail.questionText,
-          authorEmail: this.questionDetail.questionUserNickname,
-          postCategory: 'qna'
+          qnaId: this.questionDetail.id,
         };
       } else if (type === 'comment' && comment) {
         this.reportData = {
-          postId: this.questionDetail.id,
-          postTitle: this.questionDetail.title,
-          postContent: this.questionDetail.questionText,
-          authorEmail: this.questionDetail.questionUserNickname,
-          postCategory: 'qna',
+          qnaId: this.questionDetail.id,
           commentId: comment.id,
-          commentContent: comment.content,
-          commentAuthor: comment.nickname
         };
       }
       this.showReportModal = true;

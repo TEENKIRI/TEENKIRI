@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectInfoDto {
+
+    private Long id;
     private String title;
     private String teacherName;
     private String subjectThumUrl;
