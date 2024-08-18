@@ -215,31 +215,29 @@ export default {
       }
     },
     async getSubjectList() {
-      try {
-        const params = {
-          size: this.subject.page.pageSize,
-          page: this.subject.page.currentPage,
-          search: this.searchValue, 
-          searchType: this.searchType,
-          sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc'
-        };
-        
-        let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
-        if (this.course.selectedMenu === "all") {
-          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
-        } 
-        if (this.grade.selectedGrades.length >= 1) {
-          const selectedGradeStr = this.grade.selectedGrades.join("&");
-          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`;
-        }
+  try {
+    const params = {
+      size: this.subject.page.pageSize,
+      page: this.subject.page.currentPage,
+      search: this.searchValue, 
+      searchType: this.searchType,
+      sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc', // 정렬 기준 설정
+      grades: this.grade.selectedGrades.join("&")
+    };
+    
+    let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
+    if (this.course.selectedMenu === "all") {
+      api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
+    }
 
-        const response = await axios.get(api_url, { params });
-        const additionalData = response.data.result.content;
-        this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    const response = await axios.get(api_url, { params });
+    const additionalData = response.data.result.content;
+    this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
+  } catch (e) {
+    console.error(e);
+  }
+},
+
 
     resetSubjectVariables() {
       this.subject.page.currentPage = 0;
@@ -261,5 +259,6 @@ export default {
   },
 };
 </script>
+
 
 <style src="@/assets/css/SubjectList.css"></style>
