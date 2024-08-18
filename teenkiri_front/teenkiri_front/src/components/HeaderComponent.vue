@@ -37,16 +37,25 @@
 
             <v-menu activator="parent" offset-y>
               <v-list max-width="300" max-height="400" style="overflow-y: auto;">
-                <v-list-item
-                  v-for="(notification, index) in unreadNotifications"
-                  :key="index"
-                  :class="{'unread-notification': notification.delYN === 'N'}"
-                  @click="markAsReadAndNavigate(notification, index)"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title>{{ notification.message }}</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
+                <template v-if="unreadNotifications.length > 0">
+                  <v-list-item
+                    v-for="(notification, index) in unreadNotifications"
+                    :key="index"
+                    :class="{'unread-notification': notification.delYN === 'N'}"
+                    @click="markAsReadAndNavigate(notification, index)"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>{{ notification.message }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <template v-else>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>알림이 없습니다</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
               </v-list>
             </v-menu>
           </v-btn>
@@ -130,10 +139,10 @@ export default {
             window.location.href = `/board/detail/post/${notification.postId}`;
           } else if (notification.qnaId) {
             window.location.href = `/qna/detail/${notification.qnaId}`;
-          } else if (notification.reportId){
+          } else if (notification.reportId) {
             window.location.href = `/report/list`;
-          } else{
-            console.log('error!!!!!!!!!!!')
+          } else {
+            console.log('error!!!!!!!!!!!');
           }
         } catch (error) {
           console.error('알림을 읽음으로 표시하는 중 오류 발생:', error);
@@ -149,8 +158,8 @@ export default {
         this.$router.push({ name: 'BoardList', params: { category: 'notice' } });
       } else if (section === '자유게시판') {
         this.$router.push({ name: 'BoardList', params: { category: 'post' } });
-      } else if (section === 'QnA')  {
-        this.$router.push({ name: 'QnaList', params: {category: 'qna'}});
+      } else if (section === 'QnA') {
+        this.$router.push({ name: 'QnaList', params: { category: 'qna' } });
       } else if (section === '신고리스트') {
         if (this.isAdmin) {
           this.$router.push({ name: 'ReportList', params: { category: 'report' } });
@@ -177,7 +186,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

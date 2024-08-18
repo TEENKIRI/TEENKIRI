@@ -19,6 +19,7 @@
           <v-col cols="12">
             <p><strong>작성자:</strong> {{ questionDetail.questionUserNickname }}</p>
             <p><strong>작성 시간:</strong> {{ formatDate(questionDetail.createdTime) }}</p>
+            <p><strong>수정 시간:</strong> {{ formatDate(questionDetail.updatedTime) }}</p>
             <v-img
               v-if="questionDetail.qimageUrl"
               :src="questionDetail.qimageUrl"

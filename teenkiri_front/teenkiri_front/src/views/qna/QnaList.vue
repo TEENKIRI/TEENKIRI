@@ -10,7 +10,6 @@
           <col width="140" />
           <col width="140" />
           <col width="140" />
-          <col width="140" />
         </colgroup>
         <thead>
           <tr>
@@ -18,8 +17,7 @@
             <th>제목</th>
             <th>강좌명</th>
             <th>작성자</th>
-            <th>생성 시간</th>
-            <th>수정 시간</th>
+            <th>작성일</th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +27,6 @@
             <td>{{ question.subjectTitle }}</td>
             <td>{{ question.questionUserName }}</td>
             <td>{{ formatDate(question.createdTime) }}</td>
-            <td>{{ formatDate(question.updatedTime) }}</td>
           </tr>
         </tbody>
       </table>
@@ -90,8 +87,11 @@ export default {
       }
     },
     formatDate(date) {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-      return new Date(date).toLocaleDateString('ko-KR', options);
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}년.${month}월.${day}일`;
     },
     createNewQuestion() {
       this.$router.push('/qna/create');
@@ -123,7 +123,7 @@ export default {
 
 <style scoped>
 .board-container {
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   padding-top: 50px;
 }
@@ -135,7 +135,7 @@ export default {
 }
 
 .board-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -177,7 +177,7 @@ export default {
 }
 
 .btn_write {
-  padding: 10px 20px;
+  padding: 12px 25px;
   background-color: #333;
   color: #fff;
   border: none;
