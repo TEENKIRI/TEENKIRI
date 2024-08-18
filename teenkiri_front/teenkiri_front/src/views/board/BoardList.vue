@@ -282,14 +282,14 @@ export default {
 
 .btn_write {
   padding: 10px 20px;
-  background-color: #333;
+  background-color: #f27885;
   color: #fff;
   border: none;
   cursor: pointer;
 }
 
 .btn_write:hover {
-  background-color: #555;
+  background-color: #fa5263;
 }
 
 .pagingWrap ul {

@@ -2,15 +2,11 @@ package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.chatting.service.ChatService;
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
-import com.beyond.teenkiri.notification.dto.NotificationListDto;
-import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
-import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -53,9 +49,6 @@ public class UserService {
     @Autowired
     private QnARepository qnARepository;
 
-    @Autowired
-    protected NotificationRepository notificationRepository;
-
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
@@ -76,14 +69,6 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
-    }
-
-    public List<User> findAllByRole(Role role) {
-        return userRepository.findAllByRole(role);
-
-    }
-    public User findByEmailReturnNull(String email) {
-        return userRepository.findByEmail(email).orElse(null);
     }
 
     public String findId(UserFindIdDto findIdDto) {
@@ -242,16 +227,6 @@ public class UserService {
         }
 
         return qnaListResDtos;
-    }
-    public List<NotificationListDto> getNotificationList(){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<NotificationDto> notificationDtos=  notificationRepository.findByUserEmail(userEmail);
-        List<NotificationListDto> notificationListDtos = new ArrayList<>();
-
-        for(NotificationDto notificationDto : notificationDtos){
-            notificationListDtos.add(notificationDto.listFromEntity());
-        }
-        return notificationListDtos;
     }
 
 

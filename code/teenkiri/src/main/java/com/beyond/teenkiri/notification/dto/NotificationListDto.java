@@ -1,3 +1,4 @@
+
 package com.beyond.teenkiri.notification.dto;
 
 import com.beyond.teenkiri.common.domain.DelYN;
