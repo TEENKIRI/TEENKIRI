@@ -4,7 +4,7 @@ import CreateAnswer from "@/views/qna/CreateAnswer.vue"
 import QnaDetail from "@/views/qna/QnaDetail.vue";
 import UpdateQuestion from "@/views/qna/UpdateQuestion.vue"
 import UpdateAnswer from "@/views/qna/UpdateAnswer.vue"
-
+import UserQuestions from "@/views/qna/UserQuestions.vue";
 export const qnaRouter = [
     {
         path: '/qna/create',
@@ -35,6 +35,10 @@ export const qnaRouter = [
         path: '/qna/update/answer/:id',
         name: 'UpdateAnswer',
         component: UpdateAnswer
-    }
-    
+    },
+    {
+        path: '/qna/my',
+        name: 'UserQuestions',
+        component: UserQuestions
+    },
 ]

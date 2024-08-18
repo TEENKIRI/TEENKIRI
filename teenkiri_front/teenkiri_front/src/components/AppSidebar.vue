@@ -1,12 +1,15 @@
 <template>
   <div class="sidebar" :class="{ 'is-active': isActive }">
-    <nav>
+    <nav class="nav-content">
       <ul>
         <li v-for="item in menuItems" :key="item.name">
           <router-link :to="getLink(item.link)">{{ item.name }}</router-link>
         </li>
       </ul>
     </nav>
+    <div class="sidebar-footer">
+      <button @click="doLogout">로그아웃</button>
+    </div>
   </div>
 </template>
 
@@ -20,7 +23,7 @@ export default {
         { name: '내 정보 수정', link: '/user/edit-info' },
         { name: '수강 목록', link: '/my/subject/:id' },
         { name: '찜 강좌', link: '/user/wishlist' },
-        { name: '나의 질문', link: '/contact' },
+        { name: '나의 질문', link: '/qna/my' },
         { name: '알림 내역', link: '/contact' },
       ]
     };
@@ -35,6 +38,13 @@ export default {
         return { path: link.replace(':id', 123) };
       }
       return link;
+    },
+    doLogout() {
+      localStorage.removeItem('role');
+      localStorage.removeItem('token');
+      this.$router.push('/login');
+      console.log('Logged out');
+      window.location.reload();
     }
   }
 }
@@ -43,20 +53,25 @@ export default {
 <style scoped>
 .sidebar {
   position: fixed;
-  right: 0; /* 사이드바를 오른쪽에 고정 */
-  top: 64px; /* 헤더 아래로 위치 조정, 헤더 높이에 따라 조정 필요 */
+  right: 0;
+  top: 64px;
   width: 250px;
-  height: calc(100% - 64px); /* 사이드바의 높이를 전체 높이에서 헤더 높이만큼 제외 */
-  background-color: #fff; /* 배경 색상 하얀색으로 변경 */
-  color: #333; /* 텍스트 색상 */
-  transform: translateX(100%); /* 사이드바가 화면 오른쪽 밖에 위치하도록 설정 */
+  height: calc(100% - 64px);
+  background-color: #fff;
+  color: #333;
+  transform: translateX(100%);
   transition: transform 0.3s ease;
-  z-index: 1000; /* 헤더보다 위에 표시되도록 설정 */
-  font-size: 16px; /* 폰트 사이즈를 16px로 설정 */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.is-active {
-  transform: translateX(0); /* 사이드바가 화면에 나타나도록 설정 */
+  transform: translateX(0);
+}
+
+.nav-content {
+  flex: 1;
 }
 
 .sidebar nav ul {
@@ -73,10 +88,31 @@ export default {
   color: #333;
   text-decoration: none;
   display: block;
-  font-size: 18px; /* 링크 텍스트 폰트 사이즈를 18px로 설정 */
+  font-size: 18px;
 }
 
 .sidebar nav ul li a:hover {
-  background-color: #f1f1f1; /* 링크에 마우스를 올렸을 때 배경색 */
+  background-color: #f1f1f1;
+}
+
+.sidebar-footer {
+  padding: 10px 10px;
+  border-top: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.sidebar-footer button {
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #333;
+  text-align: left;
+}
+
+.sidebar-footer button:hover {
+  background-color: #f1f1f1; 
 }
 </style>
