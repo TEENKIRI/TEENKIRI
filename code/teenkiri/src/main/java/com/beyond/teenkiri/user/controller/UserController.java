@@ -6,6 +6,7 @@ import com.beyond.teenkiri.notification.dto.NotificationListDto;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.service.QnAService;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
+import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
 import com.beyond.teenkiri.user.service.UserService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -270,4 +272,21 @@ public class UserController {
         CommonResDto dto = new CommonResDto(HttpStatus.OK,"회원목록을 조회합니다.", userListDtos);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+
+    @GetMapping("/teachers")
+    public ResponseEntity<?> getTeachers() {
+        try {
+            List<User> teachers = userService.findAllByRole(Role.TEACHER);
+            List<UserListDto> teacherDtos = teachers.stream()
+                    .map(User::listFromEntity)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "Teachers list", teacherDtos));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new CommonResDto(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching teachers", null));
+        }
+    }
+
+
 }

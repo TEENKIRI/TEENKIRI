@@ -83,8 +83,7 @@ export default {
     this.subjectId = this.$route.params.id;
     this.getSubjectDetail();
   },
-  mounted() {
-  },
+
   methods: {
     async getSubjectDetail() {
       try {

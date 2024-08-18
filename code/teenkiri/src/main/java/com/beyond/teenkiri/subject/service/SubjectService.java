@@ -68,29 +68,55 @@ public class SubjectService {
 
     // 강좌 list(검색 기능 추가)
 
-    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType) {
+    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType, String grades) {
         Page<Subject> subject;
 
+        List<Grade> gradesList = (grades != null && !grades.isEmpty()) ?
+                Arrays.stream(grades.split("&")).map(Grade::valueOf).collect(Collectors.toList()) : null;
+
         if (search == null || search.isEmpty()) {
-            if ("like".equals(sortType)) {
-                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "rating"));
-            } else {
-                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
-            }
-            subject = subjectRepository.findByDelYN(DelYN.N, pageable);
-        } else {
-            if ("title".equals(searchType)) {
-                subject = subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
-            } else if ("userTeacher".equals(searchType)) {
-                subject = subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
+            pageable = applySorting(pageable, sortType);
+            if (gradesList != null) {
+                subject = subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable);
             } else {
                 subject = subjectRepository.findByDelYN(DelYN.N, pageable);
+            }
+        } else {
+            pageable = applySorting(pageable, sortType);
+            switch (searchType) {
+                case "title":
+                    subject = gradesList != null ?
+                            subjectRepository.findByTitleContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
+                            subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
+                    break;
+                case "userTeacher":
+                    subject = gradesList != null ?
+                            subjectRepository.findByUserTeacherNameContainingAndGradeInAndDelYN(search, gradesList, DelYN.N, pageable) :
+                            subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
+                    break;
+                case "all":
+                    subject = gradesList != null ?
+                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingOrGradeInAndDelYN(search, search, gradesList, DelYN.N, pageable) :
+                            subjectRepository.findByTitleContainingOrUserTeacherNameContainingAndDelYN(search, search, DelYN.N, pageable);
+                    break;
+                default:
+                    subject = gradesList != null ?
+                            subjectRepository.findByGradeInAndDelYN(gradesList, DelYN.N, pageable) :
+                            subjectRepository.findByDelYN(DelYN.N, pageable);
+                    break;
             }
         }
 
         return subject.map(Subject::fromListEntity);
     }
 
+    private Pageable applySorting(Pageable pageable, String sortType) {
+        if ("like".equals(sortType)) {
+            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "rating"));
+        } else {
+            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
+        }
+    }
 
 
     //    강좌 과목별 list
