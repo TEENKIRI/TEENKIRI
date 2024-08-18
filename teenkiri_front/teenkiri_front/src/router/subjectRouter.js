@@ -1,8 +1,10 @@
 import LectureDetail from "@/views/lecture/LectureDetail.vue";
 import SubjectDetail from "@/views/subject/SubjectDetail.vue";
 import SubjectList from "@/views/subject/SubjectList.vue";
+import SubjectRecommendList from "@/views/subject/SubjectRecommendList.vue";
 import SubjectQna from "@/views/subject/SubjectQna.vue";
 import SubjectReview from "@/views/subject/SubjectReview.vue";
+import SubjectCreate from "@/views/subject/SubjectCreate.vue";
 
 export const subjectRouter = [
     {
@@ -10,6 +12,16 @@ export const subjectRouter = [
         name: 'SubjectList',
         component: SubjectList
     },    
+    {
+        path: '/subject/create',
+        name: 'SubjectCreate',
+        component: SubjectCreate
+    },    
+    {
+        path: '/subject/recommend/list',
+        name: 'SubjectRecommendList',
+        component: SubjectRecommendList
+    },
     {
         path: '/subject/detail/:id',
         name: 'SubjectDetail',
@@ -25,6 +37,7 @@ export const subjectRouter = [
         name: 'SubjectReview',
         component: SubjectReview
     },
+
     {
         path: '/lecture/detail/:id',
         name: 'LectureDetail',

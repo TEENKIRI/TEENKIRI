@@ -31,51 +31,41 @@
   </template>
   
   <script>
-import axios from 'axios';
-
-export default {
-  name: "QnAList",
-  data() {
-    return {
-      qnaList: []
-    };
-  },
-  async mounted() {
-    await this.fetchQnAList();
-  },
-  methods: {
-    async fetchQnAList() {
-      try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`);
-        if (response.status === 200) {
-          this.qnaList = response.data.result;
-        } else {
-          console.error('Q&A 리스트 가져오기 실패:', response.data.message || response.statusText);
+  import axios from 'axios';
+  
+  export default {
+    name: "QnAList",
+    data() {
+      return {
+        qnaList: [] // 초기값은 빈 배열
+      };
+    },
+    async mounted() {
+      await this.fetchQnAList(); // 컴포넌트가 마운트될 때 Q&A 리스트를 불러옵니다.
+    },
+    methods: {
+      async fetchQnAList() {
+        try {
+          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/qna`);
+          console.log(response.data);
+          if (response.status === 200) {
+            this.qnaList = response.data.result; // 응답 데이터에서 Q&A 리스트를 추출
+          } else {
+            console.error('Q&A 리스트 가져오기 실패:', response.data.message || response.statusText);
+          }
+        } catch (error) {
+          console.error('Q&A 리스트 가져오기 중 오류 발생:', error.response ? error.response.data.message : error.message);
         }
-      } catch (error) {
-        // 개선된 에러 핸들링
-        if (error.response) {
-          // 서버가 응답을 했고 상태 코드가 2xx가 아님
-          console.error('서버 오류:', error.response.data.message || error.response.statusText);
-        } else if (error.request) {
-          // 요청이 만들어졌으나 응답을 받지 못함
-          console.error('요청 오류:', error.request);
-        } else {
-          // 오류가 요청을 설정하는 중에 발생함
-          console.error('오류 발생:', error.message);
-        }
+      },
+      formatDate(dateString) {
+        return new Date(dateString).toLocaleString();
+      },
+      viewDetails(id) {
+        this.$router.push(`/qna/detail/${id}`); // ID를 포함한 상세 페이지 URL로 이동
       }
-    },
-    formatDate(dateString) {
-      return new Date(dateString).toLocaleString();
-    },
-    viewDetails(id) {
-      this.$router.push(`/qna/detail/${id}`); // ID를 포함한 상세 페이지 URL로 이동
     }
-  }
-};
-</script>
-
+  };
+  </script>
   
   <style scoped>
   .qna-header {

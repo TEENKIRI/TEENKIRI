@@ -1,6 +1,6 @@
 <template>
-  <div class="board-container">
-    <div class="inner">
+  <v-app>
+    <v-container>
       <h1 class="board-title">QnA 목록</h1>
 
       <div class="filters">
@@ -50,6 +50,7 @@
             <th>강좌명</th>
             <th>작성자</th>
             <th>작성일</th>
+            <th>상태</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +60,15 @@
             <td>{{ question.subjectTitle }}</td>
             <td>{{ question.questionUserName }}</td>
             <td>{{ formatDate(question.createdTime) }}</td>
+            <td>
+              <v-chip
+                :color="question.answeredAt ? 'green' : 'red'"
+                dark
+                small
+              >
+                {{ question.answeredAt ? '답변완료' : '미답변' }}
+              </v-chip>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -78,8 +88,8 @@
           <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
         </ul>
       </div>
-    </div>
-  </div>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -183,16 +193,8 @@ export default {
 </script>
 
 <style scoped>
-.board-container {
-  width: 90%;
-  margin: 0 auto;
-  padding-top: 50px;
-}
-
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+.container {
+  padding-top: 20px;
 }
 
 .board-title {
@@ -213,13 +215,17 @@ export default {
 
 .tbl_list th,
 .tbl_list td {
-  border: 1px solid #ccc;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 10px;
   text-align: left;
+  border-left: none; /* 세로 줄 제거 */
+  border-right: none; /* 세로 줄 제거 */
 }
 
 .tbl_list th {
   background-color: #f4f4f4;
+  font-weight: bold;
 }
 
 .text_left {
@@ -227,9 +233,8 @@ export default {
 }
 
 .subject {
-  cursor: pointer;
-  color: #333;
   text-decoration: none;
+  color: #333;
 }
 
 .subject:hover {
@@ -243,14 +248,15 @@ export default {
 
 .btn_write {
   padding: 12px 25px;
-  background-color: #333;
+  background-color: #f27885;
   color: #fff;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn_write:hover {
-  background-color: #555;
+  background-color: #fa5263;
 }
 
 .pagingWrap ul {
@@ -268,13 +274,13 @@ export default {
 .pagingWrap li a {
   margin: 0 5px;
   text-decoration: none;
-  color: black;
+  color: #333;
   cursor: pointer;
 }
 
 .pagingWrap li a.active {
   font-weight: bold;
-  color: blue;
+  color: #0056b3;
 }
 
 .pagingWrap .btn_paging_start:before {

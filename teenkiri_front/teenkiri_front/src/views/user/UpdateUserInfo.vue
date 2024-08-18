@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="10" md="8" lg="7">
         <v-card>
           <v-card-title class="text-h5 text-center">회원 정보 수정</v-card-title>
           <v-card-text>
@@ -31,7 +31,7 @@
                 required
               ></v-text-field>
 
-              <!-- 주소 필드 변경 -->
+              <!-- 주소 필드 -->
               <v-text-field
                 label="주소"
                 v-model="userEditInfo.address.city"
@@ -47,7 +47,7 @@
               <v-text-field
                 label="우편번호"
                 v-model="userEditInfo.address.zipcode"
-                prepend-icon="mdi-home-outline"
+                prepend-icon="mdi-map-marker"
                 required
               ></v-text-field>
 
@@ -152,11 +152,20 @@ export default {
 
 <style scoped>
 .v-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: auto;
+  padding: 20px;
 }
-.my-3 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+
+.v-card {
+  border-radius: 10px;
+}
+
+.v-text-field {
+  margin-bottom: 20px;
+}
+
+.v-btn {
+  font-weight: bold;
 }
 </style>
