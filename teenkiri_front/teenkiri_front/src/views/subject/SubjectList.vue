@@ -14,8 +14,10 @@
           label="검색어를 입력하세요."
           required
         ></v-text-field>
+        <v-btn @click="performSearch">검색</v-btn> <!-- 검색 버튼 추가 -->
       </v-form>
     </v-sheet>
+    
     <v-card>
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
@@ -40,6 +42,7 @@
         </div>
       </v-card-text>
     </v-card>
+
     <v-row class="mt-5">
       <v-col cols="12" class="py-2">
         <v-btn-toggle
@@ -58,6 +61,7 @@
         </v-btn-toggle>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col>
         <v-item-group
@@ -96,9 +100,11 @@
         </v-row>
       </v-col>
     </v-row>
+
     <v-row>
       <h1>채팅이 들어가는 자리</h1>
     </v-row>
+
     <v-row>
       <v-card class="w-100">
         <v-card-title>강좌 목록</v-card-title>
@@ -127,155 +133,141 @@
     </v-row>
   </v-container>
 </template>
-  
-  <script>
+
+<script>
 import axios from 'axios';
 
 export default {
   data() {
     return {
-      searchType: "all",
+      searchType: "all", // 초기 검색 타입은 '전체'
       searchOptions: [
         { text: "전체", value: "all" },
         { text: "강사명", value: "userTeacher" },
         { text: "강좌명", value: "title" },
       ],
-      selectedType: "recent",
+      selectedType: "recent", // 초기 정렬 타입은 '최신순'
       selectedOptions: [
         { text: "최신순", value: "recent" },
-        { text: "인기순", value: "rank" },
         { text: "평점순", value: "like" },
       ],
-      searchValue: "",
-      course:{
-        courseList:[],
-        selectedMenu:"all",
-        page:{
+      searchValue: "", // 검색어 초기화
+      course: {
+        courseList: [],
+        selectedMenu: "all", // 초기 선택된 강좌 카테고리
+        page: {
           pageSize: 5,
-          currentPage:0,
+          currentPage: 0,
         }
       },
-      subject:{
-        subjectIsMainList:[],
-        subjectList:[],
-        page:{
+      subject: {
+        subjectIsMainList: [],
+        subjectList: [],
+        page: {
           pageSize: 5,
-          currentPage:0,
+          currentPage: 0,
         }
       },
-      grade:{
-        gradeList:[ // DB에 있는 GRADE 붙여넣음!
-          {value:"GRADE_1", text:"1학년"}, 
-          {value:"GRADE_2", text:"2학년"}, 
-          {value:"GRADE_3", text:"3학년"}, 
-          {value:"GRADE_4", text:"4학년"}, 
-          {value:"GRADE_5", text:"5학년"}, 
-          {value:"GRADE_6", text:"6학년"},
+      grade: {
+        gradeList: [
+          { value: "GRADE_1", text: "1학년" },
+          { value: "GRADE_2", text: "2학년" },
+          { value: "GRADE_3", text: "3학년" },
+          { value: "GRADE_4", text: "4학년" },
+          { value: "GRADE_5", text: "5학년" },
+          { value: "GRADE_6", text: "6학년" },
         ],
         selectedGrades: []
       },
-      toggle_none: null,
-      toggle_one: 0,
-      toggle_exclusive: 2,
-      toggle_multiple: [0, 1, 2],
-      
     };
   },
-  created(){
+  created() {
     this.getCourseList();
     this.getSubjectMainList();
     this.getSubjectList();
   },
-  watch:{
-      'course.selectedMenu': function(newValue, oldValue) { // 2depth여서 문자열로 작성해야 작동함
-      console.log("선택한 메뉴 변수 값이 변경되었다!");
-      console.log('변경 전:', oldValue, '변경 후:', newValue);
+  watch: {
+  'course.selectedMenu': function () { 
+    this.resetSubjectVariables(); 
+    this.getSubjectList(); 
+  }
+},
 
-      this.resetSubjectVariables(); // subject와 관련된 값 초기화
-
-      this.getSubjectList();
-    }
-  },
   methods: {
-    async getCourseList(){
+    async getCourseList() {
       try {
         const params = {
           size: this.course.page.pageSize,
           page: this.course.page.currentPage
-        }
-        
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, {params});
-        const addtionalData = response.data.result.content;
-        console.log(response)
-        this.course.courseList = [...this.course.courseList, ...addtionalData]
-      }catch (e) {
-        console.error(e)
+        };
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, { params });
+        this.course.courseList = [...this.course.courseList, ...response.data.result.content];
+      } catch (e) {
+        console.error(e);
       }
     },
-    async getSubjectMainList(){
+    async getSubjectMainList() {
       try {
         const params = {
-          size: 10, //10개만 보이도록 작업~
+          size: 10, // 상단 추천 강좌는 10개만 보임
           page: 0
-        }
-        
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, {params});
-        const addtionalData = response.data.result.content;
-        console.log(response)
-        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...addtionalData]
-      }catch (e) {
-        console.error(e)
+        };
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, { params });
+        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...response.data.result.content];
+      } catch (e) {
+        console.error(e);
       }
     },
-    async getSubjectList(){
-      try {
-        const params = {
-          size: this.subject.page.pageSize,
-          page: this.subject.page.currentPage
-        }
-        let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`
-        if(this.course.selectedMenu === "all"){
-          api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`
-        }else{
-          // course id가 있는 경우
-          if(this.grade.selectedGrades.length >= 1){ //선택된 학년이 있는 경우
-            const selectedGradeStr = this.grade.selectedGrades.join("&");
-            api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`
-          }
-        }
-        
-        const response = await axios.get(api_url, {params});
-        const addtionalData = response.data.result.content;
-        console.log(response)
-        this.subject.subjectList = [...this.subject.subjectList, ...addtionalData]
-      }catch (e) {
-        console.error(e)
-      }
+    async getSubjectList() {
+    try {
+      const params = {
+        size: this.subject.page.pageSize,
+        page: this.subject.page.currentPage,
+        search: this.searchValue, 
+        searchType: this.searchType,
+        sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc'
+      };
       
-    },
-    resetSubjectVariables(){
+      let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
+      if (this.course.selectedMenu === "all") {
+        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
+      } else if (this.grade.selectedGrades.length >= 1) {
+        const selectedGradeStr = this.grade.selectedGrades.join("&");
+        api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/${selectedGradeStr}/list`;
+      }
+
+      const response = await axios.get(api_url, { params });
+      const additionalData = response.data.result.content;
+      this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
+    } catch (e) {
+      console.error(e);
+    }
+  },
+
+    resetSubjectVariables() {
       this.subject.page.currentPage = 0;
       this.subject.subjectList = [];
-
       this.grade.selectedGrades = [];
     },
-    onSelectionGradeChange(newValue) {
-      console.log("선택된 학년이 변경되었습니다:", newValue);
-      this.subject.page.currentPage = 0;
-      this.subject.subjectList = [];
+      onSelectionGradeChange() {
+    this.subject.page.currentPage = 0;
+    this.subject.subjectList = [];
+    this.getSubjectList();
+  },
+
+    performSearch() {
+      this.resetSubjectVariables(); 
       this.getSubjectList();
     },
-
     goToDetail(id) {
       this.$router.push({ name: 'SubjectDetail', params: { id } });
     },
   },
 };
 </script>
-  
-  <style>
+
+<style>
 .inner {
-  width: 1280px;
   width: 1280px;
   margin: 0 auto;
   position: relative;

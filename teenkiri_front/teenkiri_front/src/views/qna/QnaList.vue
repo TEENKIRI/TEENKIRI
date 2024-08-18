@@ -2,6 +2,38 @@
   <div class="board-container">
     <div class="inner">
       <h1 class="board-title">QnA 목록</h1>
+
+      <div class="filters">
+        <v-row>
+          <v-col cols="12" md="3">
+            <v-select
+              v-model="selectedSubject"
+              :items="subjects"
+              label="강좌 분류"
+              item-text="title"
+              item-value="id"
+              @change="fetchQuestions"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-select
+              v-model="searchCategory"
+              :items="searchCategories"
+              label="검색 범위"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="searchQuery"
+              label="검색어"
+              append-icon="mdi-magnify"
+              @keyup.enter="fetchQuestions"
+              @click:append="fetchQuestions"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </div>
+
       <table class="tbl_list">
         <caption></caption>
         <colgroup>
@@ -9,8 +41,7 @@
           <col width="auto" />
           <col width="140" />
           <col width="140" />
-          <col width="140" />
-          <col width="140" />
+          <col width="160" /> <!-- 작성일 칸의 너비를 160으로 증가 -->
         </colgroup>
         <thead>
           <tr>
@@ -18,8 +49,7 @@
             <th>제목</th>
             <th>강좌명</th>
             <th>작성자</th>
-            <th>생성 시간</th>
-            <th>수정 시간</th>
+            <th>작성일</th>
           </tr>
         </thead>
         <tbody>
@@ -29,13 +59,14 @@
             <td>{{ question.subjectTitle }}</td>
             <td>{{ question.questionUserName }}</td>
             <td>{{ formatDate(question.createdTime) }}</td>
-            <td>{{ formatDate(question.updatedTime) }}</td>
           </tr>
         </tbody>
       </table>
+
       <div class="btnWrap">
         <button @click="createNewQuestion" class="btn_write">질문 작성하기</button>
       </div>
+
       <div class="pagingWrap">
         <ul>
           <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
@@ -62,21 +93,48 @@ export default {
       totalPages: 1,
       itemsPerPage: 10,
       userRole: '',
+      searchCategory: '전체',
+      searchQuery: '',
+      selectedSubject: '',
+      subjects: [],
+      searchCategories: ['전체', '제목', '작성자'],
     };
   },
   created() {
+    this.fetchSubjects();
     this.fetchQuestions();
     this.userRole = localStorage.getItem('role');
   },
   methods: {
+    async fetchSubjects() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/list`);
+        this.subjects = [{ id: '', title: '전체' }, ...response.data.result.content.map(subject => ({
+          id: subject.id,
+          title: subject.title,
+        }))];
+      } catch (error) {
+        console.error('강좌 목록을 불러오는 중 오류가 발생했습니다:', error);
+      }
+    },
     async fetchQuestions() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/list`, {
-          params: {
-            page: this.currentPage - 1,
-            size: this.itemsPerPage,
-          },
-        });
+        const params = {
+          page: this.currentPage - 1,
+          size: this.itemsPerPage,
+          searchCategory: this.searchCategory,
+          searchQuery: this.searchQuery,
+        };
+
+        if (this.selectedSubject !== '') {
+          params.subjectId = this.selectedSubject;
+        }
+
+        if (this.searchCategory === '전체' && this.searchQuery) {
+          params.searchCategory = 'all';
+        }
+
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/list`, { params });
 
         const result = response.data.result;
         if (result && result.content) {
@@ -90,8 +148,11 @@ export default {
       }
     },
     formatDate(date) {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-      return new Date(date).toLocaleDateString('ko-KR', options);
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}년 ${month}월 ${day}일`;
     },
     createNewQuestion() {
       this.$router.push('/qna/create');
@@ -123,7 +184,7 @@ export default {
 
 <style scoped>
 .board-container {
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   padding-top: 50px;
 }
@@ -135,8 +196,12 @@ export default {
 }
 
 .board-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.filters {
   margin-bottom: 20px;
 }
 
@@ -177,7 +242,7 @@ export default {
 }
 
 .btn_write {
-  padding: 10px 20px;
+  padding: 12px 25px;
   background-color: #333;
   color: #fff;
   border: none;

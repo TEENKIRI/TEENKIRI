@@ -1,62 +1,67 @@
 <template>
   <v-container class="mt-5">
-    <v-card v-if="post">
-      <v-card-title>
-        <h3>{{ post.title }}</h3>
-        <v-spacer></v-spacer>
-        <v-btn v-if="canEditPost" color="warning" @click="editPost">수정</v-btn>
-        <v-btn v-if="canDeletePost" color="error" @click="confirmDeletePost">삭제</v-btn>
-        <v-btn v-if="isFreeBoard" color="secondary" @click="openPostReportModal">신고하기</v-btn>
+    <v-card v-if="post" class="pa-5">
+      <!-- 제목 -->
+      <v-card-title class="d-flex justify-space-between align-center">
+        <h2 class="text-h5 font-weight-bold">{{ post.title }}</h2>
       </v-card-title>
 
+      <!-- 본문 내용 -->
       <v-card-text>
         <v-row>
           <v-col cols="12">
-            <p><strong>작성자:</strong> {{ post.nickname }}</p>
-            <p><strong>작성일:</strong> {{ formatDate(post.createdTime) }}</p>
+            <ul class="info">
+              <li><strong>작성자:</strong> 관리자</li>
+              <li><strong>작성일:</strong> {{ formatDate(post.createdTime) }}</li>
+            </ul>
             <v-img v-if="post.imageUrl" :src="post.imageUrl" alt="Post Image" max-width="400" class="my-3"/>
-            <p><strong>내용:</strong></p>
-            <p>{{ post.content }}</p>
-          </v-col>
-        </v-row>
-
-        <!-- 자유게시판일 때만 댓글 섹션을 표시 -->
-        <v-row v-if="isFreeBoard">
-          <v-col cols="12">
-            <v-divider class="my-3"></v-divider>
-            <h4>댓글</h4>
-            <v-list>
-              <v-list-item v-for="comment in comments" :key="comment.id">
-                <v-list-item-content>
-                  <v-list-item-title>{{ comment.nickname }} ({{ formatDate(comment.createdTime) }})</v-list-item-title>
-                  <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action v-if="isAdmin || comment.user_id === parseInt(userId, 10)">
-                  <v-btn icon @click="deleteComment(comment.id)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-                <v-list-item-action>
-                  <v-btn icon @click="openCommentReportModal(comment)">
-                    <v-icon>mdi-alert-circle-outline</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-
-            <v-form v-if="isLoggedIn" @submit.prevent="submitComment">
-              <v-textarea label="댓글 작성" v-model="newCommentContent" required />
-              <v-btn type="submit" color="primary">댓글 등록</v-btn>
-            </v-form>
+            <div v-html="post.content" class="text-body-1 bodyTxt"></div>
           </v-col>
         </v-row>
       </v-card-text>
 
-      <v-card-actions>
-        <v-btn color="primary" @click="goBack">목록으로 돌아가기</v-btn>
+      <!-- 댓글 섹션 -->
+      <v-row v-if="isFreeBoard">
+        <v-col cols="12">
+          <v-divider class="my-3"></v-divider>
+          <h4>댓글</h4>
+          <v-list>
+            <v-list-item v-for="comment in comments" :key="comment.id">
+              <v-list-item-content>
+                <v-list-item-title>{{ comment.nickname }} ({{ formatDate(comment.createdTime) }})</v-list-item-title>
+                <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action class="d-flex justify-end">
+                <v-btn icon @click="toggleCommentOptions(comment.id)" small>
+                  <v-icon small>mdi-dots-vertical</v-icon>
+                </v-btn>
+                <div v-if="activeComment === comment.id" class="conLayer">
+                  <a v-if="canDeleteComment()" href="javascript:void(0)" class="btn_board_option" @click="deleteComment(comment.id)">삭제</a>
+                  <a href="javascript:void(0)" class="btn_board_option" @click="openCommentReportModal(comment)">신고</a>
+                </div>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+          <v-form v-if="isLoggedIn" @submit.prevent="submitComment" class="mt-3">
+            <v-textarea label="댓글 작성" v-model="newCommentContent" required outlined />
+            <!-- <div class="mt-3 d-flex justify-end"> -->
+            <v-btn type="submit" class="mt-2 btn_comment_ok">댓글 등록</v-btn>
+            <!-- </div> -->
+          </v-form>
+        </v-col>
+      </v-row>
+
+      <!-- 액션 버튼들 -->
+      <v-card-actions class="d-flex justify-end">
+        <v-btn class="mr-2 btn_white" @click="goBack">목록으로 돌아가기</v-btn>
+        <v-btn v-if="canEditPost" class="mr-2 btn_white" @click="editPost">수정</v-btn>
+        <v-btn v-if="canDeletePost" class="mr-2 btn_white" @click="confirmDeletePost">삭제</v-btn>
+        <v-btn v-if="isFreeBoard" class="btn_alert mr-2" @click="openPostReportModal">신고하기</v-btn>
       </v-card-actions>
     </v-card>
 
+    <!-- 에러 및 로딩 상태 -->
     <v-alert type="error" v-else-if="error">{{ error }}</v-alert>
     <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
 
@@ -67,8 +72,8 @@
         <v-card-text>게시글을 정말 삭제하시겠습니까?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="deleteDialog = false">취소</v-btn>
-          <v-btn color="error" text @click="deletePost">삭제</v-btn>
+          <v-btn class="btn_white" text @click="deleteDialog = false">취소</v-btn>
+          <v-btn class="btn_del" text @click="deletePost">삭제</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,27 +104,26 @@ export default {
   },
   data() {
     return {
-      post: null, // 게시글 데이터를 저장할 객체
-      isAdmin: false, // 관리자인지 여부
-      comments: [], // 댓글 목록
-      newCommentContent: '', // 새로운 댓글 내용
-      isLoggedIn: false, // 로그인 여부
-      isFreeBoard: false, // 자유게시판 여부
-      showReportModal: false, // 신고 모달 창 표시 여부
-      reportData: {}, // 신고 모달에 전달할 데이터
-      userId: localStorage.getItem('userId'), // 로그인된 사용자의 ID
-      deleteDialog: false, // 삭제 확인 다이얼로그 표시 여부
-      error: null, // 에러 메시지
-      userEmail: '', // 현재 로그인한 사용자의 이메일
+      post: null,
+      isAdmin: false,
+      comments: [],
+      newCommentContent: '',
+      isLoggedIn: false,
+      isFreeBoard: false,
+      showReportModal: false,
+      reportData: {},
+      userId: localStorage.getItem('userId'),
+      deleteDialog: false,
+      error: null,
+      userEmail: '',
+      activeComment: null, // 현재 열려있는 conLayer의 댓글 ID
     };
   },
   computed: {
     canEditPost() {
-      // 관리자는 모든 게시글을 수정 가능, 'post' 카테고리는 작성자도 수정 가능
       return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
     },
     canDeletePost() {
-      // 관리자는 모든 게시글을 삭제 가능, 'post' 카테고리는 작성자도 삭제 가능
       return this.isAdmin || (this.isFreeBoard && this.post && this.post.userEmail === this.userEmail);
     }
   },
@@ -141,7 +145,7 @@ export default {
         const decoded = this.parseJwt(token);
         this.userEmail = decoded.sub;
       } else {
-        this.$router.push('/login'); // 토큰이 없으면 로그인 페이지로 이동
+        this.$router.push('/login');
       }
     },
     parseJwt(token) {
@@ -240,6 +244,16 @@ export default {
         alert('댓글 삭제에 실패했습니다.');
       }
     },
+    toggleCommentOptions(commentId) {
+      if (this.activeComment === commentId) {
+        this.activeComment = null;
+      } else {
+        this.activeComment = commentId;
+      }
+    },
+    canDeleteComment() {
+      return this.isAdmin;
+    },
     formatDate(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(date).toLocaleDateString(undefined, options);
@@ -315,8 +329,91 @@ export default {
   max-width: 800px;
   margin: 0 auto;
 }
+
 .my-3 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.text-body-1 {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+.info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.v-btn {
+  font-weight: bold;
+  border-radius: 0;
+}
+
+.btn_white {
+  background-color: white !important;
+  color: #424242 !important;
+  border: 1px solid #dcdcdc !important;
+}
+
+.btn_white:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.btn_del {
+  background-color: #d32f2f !important;
+  color: white;
+}
+
+.btn_alert {
+  background-color: #d32f2f !important;
+  color: white;
+}
+
+.btn_comment_ok {
+  background-color: #1e88e5 !important;
+  color: white;
+}
+
+.v-list-item-action {
+  margin-left: auto;
+}
+
+.v-list-item-action .v-btn {
+  margin-left: 8px;
+}
+
+.conLayer {
+  display: inline-block;
+  background-color: white;
+  border: 1px solid #ccc;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+}
+
+.btn_board_option {
+  display: block;
+  padding: 5px 10px;
+  color: #424242;
+  text-decoration: none;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+.btn_board_option:hover {
+  background-color: #f5f5f5;
+  color: black;
+}
+
+.v-icon {
+  font-size: 18px !important;
 }
 </style>

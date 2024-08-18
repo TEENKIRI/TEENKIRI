@@ -17,10 +17,12 @@ import com.beyond.teenkiri.subject.repository.SubjectRepository;
 import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -49,12 +51,40 @@ public class SubjectService {
 
 
     //    강좌 list
-    public Page<SubjectListResDto> subjectList(Pageable pageable){
-//        Page<Subject> subject = subjectRepository.findAll(pageable);
-        Page<Subject> subject = subjectRepository.findBydelYN(DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
-        return subjectListResDtos;
+//    public Page<SubjectListResDto> subjectList(Pageable pageable){
+////        Page<Subject> subject = subjectRepository.findAll(pageable);
+//        Page<Subject> subject = subjectRepository.findBydelYN(DelYN.N, pageable);
+//        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+//        return subjectListResDtos;
+//    }
+
+
+    // 강좌 list(검색 기능 추가)
+
+    public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType) {
+        Page<Subject> subject;
+
+        if (search == null || search.isEmpty()) {
+            if ("like".equals(sortType)) {
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "rating"));
+            } else {
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdTime"));
+            }
+            subject = subjectRepository.findByDelYN(DelYN.N, pageable);
+        } else {
+            if ("title".equals(searchType)) {
+                subject = subjectRepository.findByTitleContainingAndDelYN(search, DelYN.N, pageable);
+            } else if ("userTeacher".equals(searchType)) {
+                subject = subjectRepository.findByUserTeacherNameContainingAndDelYN(search, DelYN.N, pageable);
+            } else {
+                subject = subjectRepository.findByDelYN(DelYN.N, pageable);
+            }
+        }
+
+        return subject.map(Subject::fromListEntity);
     }
+
+
 
     //    강좌 과목별 list
     public Page<SubjectListResDto> subjectPerCourseList(Pageable pageable, Long courseId){
@@ -73,13 +103,13 @@ public class SubjectService {
         return subjectListResDtos;
     }
 
-
     //    강좌 순위별 list
-    public Page<SubjectListResDto> subjectRatingList(Pageable pageable){
-        Page<Subject> subject = subjectRepository.findAllBydelYNOrderByRatingDesc(DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+    public Page<SubjectListResDto> subjectRatingList(Pageable pageable) {
+        Page<Subject> subject = subjectRepository.findAllByDelYNOrderByRatingDesc(DelYN.N, pageable);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a -> a.fromListEntity());
         return subjectListResDtos;
     }
+
 
     //    강좌 상단 노출용 표시된 list
     public Page<SubjectListResDto> subjectMainList(Pageable pageable){

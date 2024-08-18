@@ -29,14 +29,19 @@ public class SubjectController {
     }
 
 
-    //    강좌 리스트 페이지 :: delyn n인 것만
+    // 검색 기능 추가
     @GetMapping("/subject/list")
-    public ResponseEntity<?> subjectListView(@PageableDefault(page = 0, size=10, sort = "createdTime",
-            direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<SubjectListResDto> subjectListResDto = subjectService.subjectList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject list",subjectListResDto);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    public ResponseEntity<?> subjectListView(
+            @PageableDefault(page = 0, size=10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "sortType", required = false, defaultValue = "latest") String sortType) {  // sortType 추가
+
+        Page<SubjectListResDto> subjectListResDto = subjectService.subjectList(pageable, search, searchType, sortType);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "return subject list", subjectListResDto);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
+
 
     //    강좌 과목별 리스트 페이지
     @GetMapping("/subject/{courseId}/list")
