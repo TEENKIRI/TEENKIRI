@@ -48,6 +48,7 @@ public class NotificationDto implements Serializable  {
                 .delYN(DelYN.N)
                 .build();
     }
+
     public NotificationListDto listFromEntity() {
         return NotificationListDto.builder()
                 .id(this.id)

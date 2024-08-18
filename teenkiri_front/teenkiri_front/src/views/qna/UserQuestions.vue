@@ -18,7 +18,6 @@
             <th>제목</th>
             <th>상태</th>
             <th>작성일</th>
-            <th>보기</th>
           </tr>
         </thead>
         <tbody>
@@ -35,11 +34,6 @@
               </v-chip>
             </td>
             <td>{{ formatDate(item.createdTime) }}</td>
-            <td>
-              <v-btn @click="viewDetails(item.id)" class="btn_view" color="grey">
-                보기
-              </v-btn>
-            </td>
           </tr>
         </tbody>
       </table>
@@ -123,16 +117,7 @@ export default {
   text-decoration: underline;
 }
 
-.btn_view {
-  text-transform: uppercase;
-  color: #fff; /* 텍스트 색상 흰색 */
-}
-
-.v-btn.btn_view {
-  background-color: grey !important; /* 기본 회색 */
-}
-
-.v-btn.btn_view:hover {
-  background-color: #777 !important; /* hover 시 더 진한 회색 */
+.btn_view:hover {
+  background-color: #555;
 }
 </style>
