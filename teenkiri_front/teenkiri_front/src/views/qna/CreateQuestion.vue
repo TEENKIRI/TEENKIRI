@@ -63,6 +63,10 @@ export default {
     };
   },
   mounted() {
+    const subjectIdFromQuery = this.$route.query.subjectId;
+    if (subjectIdFromQuery) {
+      this.selectedSubject = Number(subjectIdFromQuery); // 쿼리 파라미터로 전달된 강좌 ID를 선택
+    }
     this.fetchSubjects(); // 컴포넌트가 마운트될 때 강좌 목록을 불러옵니다.
   },
   methods: {
@@ -129,7 +133,7 @@ export default {
             ? error.response.data.message
             : '질문 등록에 실패했습니다.';
         alert(errorMessage);
-        console.error('Error details:', error);
+        console.error('오류 세부사항:', error);
       }
     },
   },

@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.notification.dto;
 
+import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.post.domain.Post;
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Builder
-public class NotificationDto implements Serializable {
+public class NotificationDto implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

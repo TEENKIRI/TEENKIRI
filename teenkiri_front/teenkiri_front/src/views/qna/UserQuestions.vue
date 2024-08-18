@@ -1,6 +1,6 @@
 <template>
-  <div class="board-container">
-    <div class="inner">
+  <v-app>
+    <v-container>
       <h1 class="board-title">내 질문 목록</h1>
 
       <table class="tbl_list">
@@ -9,14 +9,14 @@
           <col width="80" />
           <col width="auto" />
           <col width="140" />
-          <col width="140" />
           <col width="160" /> <!-- 작성일 칸의 너비를 160으로 증가 -->
+          <col width="140" /> <!-- 상태 칸 추가 -->
         </colgroup>
         <thead>
           <tr>
             <th>번호</th>
             <th>제목</th>
-            <th>답변일</th>
+            <th>상태</th>
             <th>작성일</th>
           </tr>
         </thead>
@@ -24,13 +24,21 @@
           <tr v-for="(item, index) in qnaList" :key="item.id">
             <td>{{ index + 1 }}</td>
             <td @click="viewDetails(item.id)" class="text_left subject">{{ item.title }}</td>
-            <td>{{ item.answeredAt ? formatDate(item.answeredAt) : '미답변' }}</td>
+            <td>
+              <v-chip
+                :color="item.answeredAt ? 'green' : 'red'"
+                dark
+                small
+              >
+                {{ item.answeredAt ? '답변완료' : '미답변' }}
+              </v-chip>
+            </td>
             <td>{{ formatDate(item.createdTime) }}</td>
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -70,18 +78,6 @@ export default {
 </script>
 
 <style scoped>
-.board-container {
-  width: 90%;
-  margin: 0 auto;
-  padding-top: 50px;
-}
-
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
 .board-title {
   font-size: 26px;
   font-weight: bold;
@@ -96,13 +92,15 @@ export default {
 
 .tbl_list th,
 .tbl_list td {
-  border: 1px solid #ccc;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 10px;
   text-align: left;
 }
 
 .tbl_list th {
   background-color: #f4f4f4;
+  font-weight: bold;
 }
 
 .text_left {
@@ -110,9 +108,9 @@ export default {
 }
 
 .subject {
-  cursor: pointer;
-  color: #333;
   text-decoration: none;
+  color: #333;
+  cursor: pointer;
 }
 
 .subject:hover {

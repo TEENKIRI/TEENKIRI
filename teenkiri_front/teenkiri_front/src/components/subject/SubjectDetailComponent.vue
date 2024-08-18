@@ -72,9 +72,6 @@ export default {
     },
   },
   inject: ['getSubjectData'],
-  mounted() {
-    
-  },
   data() {
     return {
       internalValue: this.modelValue,

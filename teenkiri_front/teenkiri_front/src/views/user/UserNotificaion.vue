@@ -1,6 +1,6 @@
 <template>
-    <div class="board-container">
-      <div class="inner">
+    <v-app>
+      <v-container>
         <h1 class="board-title">알림 내역</h1>
   
         <table class="tbl_list">
@@ -22,9 +22,9 @@
               <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
               <td class="text_left">{{ notification.message }}</td>
               <td>
-                <button @click="viewDetail(notification)" class="btn_view">
+                <v-btn @click="viewDetail(notification)" class="btn_view" color="grey">
                   보기
-                </button>
+                </v-btn>
               </td>
             </tr>
           </tbody>
@@ -41,8 +41,8 @@
             <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
           </ul>
         </div>
-      </div>
-    </div>
+      </v-container>
+    </v-app>
   </template>
   
   <script>
@@ -92,18 +92,15 @@
       },
       goToPage(page) {
         this.currentPage = page;
-        this.fetchNotifications();
       },
       goToPreviousPage() {
         if (this.currentPage > 1) {
           this.currentPage--;
-          this.fetchNotifications();
         }
       },
       goToNextPage() {
         if (this.currentPage < this.totalPages) {
           this.currentPage++;
-          this.fetchNotifications();
         }
       },
     },
@@ -111,18 +108,6 @@
   </script>
   
   <style scoped>
-  .board-container {
-    width: 90%;
-    margin: 0 auto;
-    padding-top: 50px;
-  }
-  
-  .inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  
   .board-title {
     font-size: 26px;
     font-weight: bold;
@@ -137,13 +122,15 @@
   
   .tbl_list th,
   .tbl_list td {
-    border: 1px solid #ccc;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     padding: 10px;
     text-align: left;
   }
   
   .tbl_list th {
     background-color: #f4f4f4;
+    font-weight: bold;
   }
   
   .text_left {
@@ -151,17 +138,16 @@
   }
   
   .btn_view {
-    padding: 6px 12px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
     text-transform: uppercase;
+    color: #fff; /* 텍스트 색상 흰색 */
   }
   
-  .btn_view:hover {
-    background-color: #555;
+  .v-btn.btn_view {
+    background-color: grey !important; /* 기본 회색 */
+  }
+  
+  .v-btn.btn_view:hover {
+    background-color: #777 !important; /* hover 시 더 진한 회색 */
   }
   
   .pagingWrap ul {
@@ -179,13 +165,13 @@
   .pagingWrap li a {
     margin: 0 5px;
     text-decoration: none;
-    color: black;
+    color: #333;
     cursor: pointer;
   }
   
   .pagingWrap li a.active {
     font-weight: bold;
-    color: blue;
+    color: #0056b3;
   }
   
   .pagingWrap .btn_paging_start:before {
