@@ -1,35 +1,48 @@
 <template>
-    <v-container class="mt-5">
-      <h2 class="text-h4 font-weight-bold mb-4">알림 내역</h2>
+    <div class="board-container">
+      <div class="inner">
+        <h1 class="board-title">알림 내역</h1>
   
-      <v-list two-line>
-        <v-list-item
-          v-for="(notification, index) in paginatedNotifications"
-          :key="notification.id"
-          class="notification-item"
-        >
-          <v-list-item-content>
-            <v-list-item-title class="font-weight-medium">
-              {{ index + 1 + (currentPage - 1) * itemsPerPage }}. {{ notification.message }}
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-btn icon @click="viewDetail(notification)">
-              <v-icon>mdi-arrow-right-bold-circle-outline</v-icon> <!-- 바뀐 아이콘 -->
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
+        <table class="tbl_list">
+          <caption></caption>
+          <colgroup>
+            <col width="80" />
+            <col width="auto" />
+            <col width="160" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>알림 내용</th>
+              <th>보기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(notification, index) in paginatedNotifications" :key="notification.id">
+              <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
+              <td class="text_left">{{ notification.message }}</td>
+              <td>
+                <button @click="viewDetail(notification)" class="btn_view">
+                  보기
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
   
-      <!-- 페이지네이션 -->
-      <v-row justify="center" class="mt-4">
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          @input="fetchNotifications"
-        ></v-pagination>
-      </v-row>
-    </v-container>
+        <div class="pagingWrap">
+          <ul>
+            <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
+            <li><a href="javascript:void(0)" @click="goToPreviousPage" class="btn_paging_prev"></a></li>
+            <li v-for="page in totalPages" :key="page">
+              <a href="javascript:void(0)" @click="goToPage(page)" :class="{ btn_paging: true, active: currentPage === page }">{{ page }}</a>
+            </li>
+            <li><a href="javascript:void(0)" @click="goToNextPage" class="btn_paging_next"></a></li>
+            <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </template>
   
   <script>
@@ -77,36 +90,118 @@
           this.$router.push(`/report/detail/${notification.reportId}`);
         }
       },
+      goToPage(page) {
+        this.currentPage = page;
+        this.fetchNotifications();
+      },
+      goToPreviousPage() {
+        if (this.currentPage > 1) {
+          this.currentPage--;
+          this.fetchNotifications();
+        }
+      },
+      goToNextPage() {
+        if (this.currentPage < this.totalPages) {
+          this.currentPage++;
+          this.fetchNotifications();
+        }
+      },
     },
   };
   </script>
   
   <style scoped>
-  .v-container {
-    max-width: 800px;
+  .board-container {
+    width: 90%;
     margin: 0 auto;
+    padding-top: 50px;
   }
   
-  .notification-item {
-    border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.2s;
+  .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
   
-  .notification-item:hover {
-    background-color: #f5f5f5;
+  .board-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
   }
   
-  .v-list-item-title {
-    font-size: 16px;
-    color: #424242;
+  .tbl_list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
   }
   
-  .v-list-item-action .v-btn {
-    color: #1e88e5;
+  .tbl_list th,
+  .tbl_list td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
   }
   
-  .v-pagination {
+  .tbl_list th {
+    background-color: #f4f4f4;
+  }
+  
+  .text_left {
+    text-align: left;
+  }
+  
+  .btn_view {
+    padding: 6px 12px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  
+  .btn_view:hover {
+    background-color: #555;
+  }
+  
+  .pagingWrap ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
     margin-top: 20px;
+  }
+  
+  .pagingWrap li {
+    display: inline-block;
+  }
+  
+  .pagingWrap li a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+  }
+  
+  .pagingWrap li a.active {
+    font-weight: bold;
+    color: blue;
+  }
+  
+  .pagingWrap .btn_paging_start:before {
+    content: "<<";
+  }
+  
+  .pagingWrap .btn_paging_prev:before {
+    content: "<";
+  }
+  
+  .pagingWrap .btn_paging_next:before {
+    content: ">";
+  }
+  
+  .pagingWrap .btn_paging_end:before {
+    content: ">>";
   }
   </style>
   
