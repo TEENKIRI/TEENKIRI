@@ -2,10 +2,19 @@
   <v-container>
     <div class="mt-5">
       <h1>{{ lectureData.title }}</h1>
-      <div>나의 진행률 : <span>{{ userProgress }}</span>%</div>
+      <div>나의 진행률 : 
+        <span>{{ userProgress }}</span>% 
+        <v-progress-linear
+          v-model="userProgress"
+          color="amber"
+          height="25"
+        >
+          <template v-slot:default>
+            <strong>{{ userProgress }}%</strong>
+          </template>
+        </v-progress-linear>
+      </div>
       <div class="d-flex justify-center mt-5">
-        <!-- videoOptions.sources가 설정되었을 때만 VideoPlayer를 렌더링 -->
-        <!-- <video-player v-if="videoOptions.sources[0].src" :options="videoOptions" /> -->
         <video
           ref="videoPlayer"
           class="video-js vjs-theme-city vjs-16-9 vjs-big-play-centered"
@@ -104,7 +113,6 @@ export default {
     "videoOptions.sources": {
       handler(newSources) {
         const newSrc = newSources[0].src;
-        console.log("주소 바뀜 watch!! >> ", newSrc);
         if (newSrc) {
           if (this.player) {
             this.player.src(newSrc);
@@ -118,19 +126,21 @@ export default {
   },
   methods: {
     async getLectureDetail() {
-      console.log("lecture detail 실행!", this.lectureId);
       try {
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/user/lecture/detail/${this.lectureId}`
         );
         const additionalData = response.data.result;
-        console.log(response);
         this.lectureData = additionalData;
 
 
         // 시간용 변수 적용
-        this.currentVideoTime = this.lectureData.userLectureDuration;
-        this.mostWatchedTime = this.currentVideoTime;
+        this.mostWatchedTime = this.lectureData.userLectureDuration;
+        if(this.lectureData.isCompleted ){ 
+          this.currentVideoTime = 0; //이미 시청이 완료된 경우는처음부터 다시 시청
+        }else{
+          this.currentVideoTime = this.lectureData.userLectureDuration;
+        }
         this.updateUserProgress(); // 유저 표시용도의 퍼센트 계산
 
         // lectureData에서 videoUrl을 가져와 videoOptions를 업데이트합니다.
@@ -180,14 +190,17 @@ export default {
     },
     onVideoPlay() {
       console.log("영상이 시작되었습니다.");
-      // 3초마다 플레이된 시간 체크 시작
-      this.checkInterval = setInterval(() => {
-        this.checkPlayTime();
-      }, 3000);
-
-      this.updateUserProgressInterval = setInterval(() => {
-        this.updateUserProgress();
-      }, 1000);
+      
+      if(!this.lectureData.isCompleted){ //시청 완료가 false인 경우만 check 시작
+        this.checkInterval = setInterval(() => { // 3초마다 플레이된 시간 체크 시작
+          this.checkPlayTime();
+        }, 3000);
+        
+        this.updateUserProgressInterval = setInterval(() => {
+          this.updateUserProgress();
+        }, 1000);
+      }
+      
     },
     onVideoPause() {
       console.log("영상이 일시정지되었습니다.");
@@ -208,7 +221,9 @@ export default {
       clearInterval(this.checkInterval); // 영상이 끝나면 인터벌을 정리합니다.
       clearInterval(this.updateUserProgressInterval); // 영상이 끝나면 인터벌을 정리합니다.
 
-      this.postUserVideoEndedStatus(); // 비디오 끝 함수 호츨
+      if(!this.lectureData.isCompleted){ //기존에 시청완료가 되지 않았던 것만 보냄
+        this.postUserVideoEndedStatus(); // 비디오 끝 함수 호츨
+      }
     },
     checkPlayTime() {
       this.currentVideoTime = Math.floor(this.player.currentTime()); // 소수점 내림으로 고정. (비디오 전체시간때문에!)
@@ -216,12 +231,14 @@ export default {
       console.log("현재 플레이된 시간: ", this.currentVideoTime, "초");
     },
     updateUserProgress() {
-      if(this.currentVideoTime >= this.mostWatchedTime){
-        const percentage = (this.currentVideoTime / this.lectureData.videoDuration) * 100; //현재 시간을 기준으로 퍼센트 계산
+      let progressTime = this.currentVideoTime;
+      if(this.currentVideoTime <= this.mostWatchedTime){
+        progressTime = this.mostWatchedTime;
+      }
+        const percentage = (progressTime / this.lectureData.videoDuration) * 100; //현재 시간을 기준으로 퍼센트 계산
         let roundPercent = Math.round(percentage * 10) / 10; // 소수점 첫 번째 자리까지만 존재하도록 반올림
         roundPercent = (roundPercent >=100 && !this.lectureData.isCompleted) ? 99 : (roundPercent >= 100) ? 100 : roundPercent; // isCompleted true 여야 100
-        this.userProgress = roundPercent; 
-      }
+        this.userProgress = roundPercent;
     },
 
     async postUserDurationVideoTime(){
@@ -234,7 +251,6 @@ export default {
             `${process.env.VUE_APP_API_BASE_URL}/enroll/update/duration/${this.lectureData.enrollmentId}`, 
             userLectureDuration
           );
-          console.log(response);
         } catch (e) {
           if (e.response.data.status_code === 404) {
             alert(e.response.data.status_code.e.response.data.status_message);
@@ -247,7 +263,6 @@ export default {
       }
     },
     async postUserVideoEndedStatus(){
-      console.log("비디오 끝~ 보내보내~")
       if(this.currentVideoTime > this.lectureData.videoDuration){
         this.currentVideoTime = this.lectureData.videoDuration; // 더 큰값이 들어가면 초기화
       }
@@ -259,7 +274,6 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/enroll/update/complete/${this.lectureData.enrollmentId}`, 
           isCompleted
         );
-        console.log(response);
       } catch (e) {
         if (e.response.data.status_code === 404) {
           alert(e.response.data.status_code.e.response.data.status_message);
