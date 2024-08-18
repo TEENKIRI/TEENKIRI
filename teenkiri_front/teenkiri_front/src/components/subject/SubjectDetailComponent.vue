@@ -72,7 +72,7 @@ export default {
     // this.checkEnrollmentStatus(); // 수강 여부 확인
   },
   mounted() {
-    this.checkEnrollmentStatus(); // 컴포넌트가 마운트펻될 때 수강 상태를 확인
+    // this.checkEnrollmentStatus(); // 컴포넌트가 마운트펻될 때 수강 상태를 확인
   },
   methods: {
     async getSubjectDetail() {
@@ -91,7 +91,7 @@ export default {
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/wish/check/${this.subjectId}`
         );
-        this.isInWishlist = response.data.isInWishlist;
+        this.subjectData.isSubscribe = response.data.isInWishlist;
       } catch (error) {
         console.error('위시리스트 상태 확인 실패:', error);
       }
@@ -101,7 +101,7 @@ export default {
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/my/subject/check-enrollment/${this.subjectId}`
         );
-        this.isEnrolled = response.data.isEnrolled; // 사용자가 수강중인지 확인
+        this.subjectData.isRegistered = response.data.isEnrolled; // 사용자가 수강중인지 확인
       } catch (error) {
         console.error('수강 상태 확인 실패:', error);
       }
@@ -120,7 +120,7 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
         );
         alert('찜 추가 성공');
-        this.subjectData.isRegistered = true;
+        this.subjectData.isSubscribe = true;
       } catch (error) {
         alert('찜 추가 실패');
         console.error(error);
@@ -132,7 +132,7 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
         );
         alert('찜 취소 성공');
-        this.subjectData.isRegistered = false;
+        this.subjectData.isSubscribe = false;
       } catch (error) {
         alert('찜 취소 실패');
         console.error(error);
