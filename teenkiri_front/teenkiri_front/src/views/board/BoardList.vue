@@ -3,24 +3,26 @@
     <div class="inner">
       <h1 class="board-title">{{ boardTitle }}</h1>
 
-      <!-- 검색 및 필터 폼 -->
       <v-form ref="form" class="d-flex mb-4">
-        <v-select
-          v-model="searchType"
-          :items="searchOptions"
-          item-title="text"
-          item-value="value"
-          label="검색 범위"
-          class="mr-4"
-          required
-        ></v-select>
-        <v-text-field
-          v-model="searchQuery"
-          label="검색어를 입력하세요."
-          append-icon="mdi-magnify"
-          @click:append="performSearch"
-          required
-        ></v-text-field>
+        <v-col cols="12" md="2"> 
+          <v-select
+            v-model="searchType"
+            :items="searchOptions"
+            item-title="text"
+            item-value="value"
+            label="검색 범위"
+            required
+          ></v-select>
+        </v-col>
+        <v-col cols="12" md="8"> 
+          <v-text-field
+            v-model="searchQuery"
+            label="검색어를 입력하세요."
+            append-icon="mdi-magnify"
+            @click:append="performSearch"
+            required
+          ></v-text-field>
+        </v-col>
       </v-form>
 
       <!-- 게시글 목록 테이블 -->
