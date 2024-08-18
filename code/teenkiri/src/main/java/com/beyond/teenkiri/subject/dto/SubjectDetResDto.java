@@ -22,7 +22,8 @@ public class SubjectDetResDto {
     private String description;
     private Float rating;
     private DelYN delYN;
-    private Boolean isSubscribe;
+    private Boolean isSubscribe; //로그인한 유저가 찜 해놓았는지
+    private Boolean isRegistered; //로그인한 유저가 수강신청을 했는지
 
     private String subjectThumUrl;
 

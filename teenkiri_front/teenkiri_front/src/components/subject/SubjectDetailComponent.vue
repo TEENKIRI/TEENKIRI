@@ -13,11 +13,11 @@
         <v-row>
           <v-col>
             <!-- 수강중인 경우 버튼 비활성화 -->
-            <v-btn :disabled="isEnrolled" @click="applyForSubject">
-              {{ isEnrolled ? '이미 수강중입니다' : '수강신청' }}
+            <v-btn :disabled="this.subjectData.isRegistered" @click="applyForSubject">
+              {{ this.subjectData.isRegistered ? '이미 수강중입니다' : '수강신청' }}
             </v-btn>
             <v-btn @click="handleWishlist">
-              {{ isInWishlist ? '찜 취소하기' : '찜하기' }}
+              {{ this.subjectData.isSubscribe ? '찜 취소하기' : '찜하기' }}
             </v-btn>
           </v-col>
         </v-row>
@@ -61,15 +61,18 @@ export default {
       internalValue: this.modelValue,
       subjectId: "",
       subjectData: {},
-      isInWishlist: false,
-      isEnrolled: false // 사용자의 수강 여부 상태
+      // isInWishlist: false,
+      // isEnrolled: false // 사용자의 수강 여부 상태
     };
   },
   created() {
     this.subjectId = this.$route.params.id;
     this.getSubjectDetail();
-    this.checkWishlistStatus();
-    this.checkEnrollmentStatus(); // 수강 여부 확인
+    // this.checkWishlistStatus();
+    // this.checkEnrollmentStatus(); // 수강 여부 확인
+  },
+  mounted() {
+    this.checkEnrollmentStatus(); // 컴포넌트가 마운트펻될 때 수강 상태를 확인
   },
   methods: {
     async getSubjectDetail() {
@@ -78,6 +81,7 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`
         );
         this.subjectData = response.data.result;
+        console.log(this.subjectData)
       } catch (error) {
         console.error('강좌 세부 정보 조회 실패:', error);
       }
@@ -108,7 +112,7 @@ export default {
       } else {
         await this.addToWishlist();
       }
-      this.isInWishlist = !this.isInWishlist;
+      // this.isInWishlist = !this.isInWishlist;
     },
     async addToWishlist() {
       try {
@@ -116,6 +120,7 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
         );
         alert('찜 추가 성공');
+        this.subjectData.isRegistered = true;
       } catch (error) {
         alert('찜 추가 실패');
         console.error(error);
@@ -127,13 +132,14 @@ export default {
           `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
         );
         alert('찜 취소 성공');
+        this.subjectData.isRegistered = false;
       } catch (error) {
         alert('찜 취소 실패');
         console.error(error);
       }
     },
     async applyForSubject() {
-      if (this.isEnrolled) {
+      if (this.subjectData.isRegistered) {
         alert('이미 수강중인 강좌입니다.');
         return;
       }
@@ -145,7 +151,7 @@ export default {
           }
         );
         alert('강좌 수강 신청이 완료되었습니다.');
-        this.isEnrolled = true; // 신청 후 수강 상태 업데이트
+        this.subjectData.isRegistered = true; // 신청 후 수강 상태 업데이트
       } catch (error) {
         alert('강좌 수강 신청 실패');
         console.error(error);

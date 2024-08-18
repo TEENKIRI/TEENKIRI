@@ -3,21 +3,24 @@ package com.beyond.teenkiri.subject.service;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
 import com.beyond.teenkiri.course.domain.Course;
-import com.beyond.teenkiri.course.repository.CourseRepository;
 import com.beyond.teenkiri.course.service.CourseService;
 import com.beyond.teenkiri.subject.domain.Grade;
 import com.beyond.teenkiri.user.domain.User;
-import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.subject.domain.Subject;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectSaveReqDto;
 import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.subject.repository.SubjectRepository;
+import com.beyond.teenkiri.user.domain.UserSubject;
+import com.beyond.teenkiri.user.repository.UserSubjectRepository;
 import com.beyond.teenkiri.user.service.UserService;
+import com.beyond.teenkiri.wish.domain.Wish;
+import com.beyond.teenkiri.wish.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,14 +40,18 @@ public class SubjectService {
     private final CourseService courseService;
     private final SubjectRepository subjectRepository;
     private final UploadAwsFileService uploadAwsFileService;
+    private final UserSubjectRepository userSubjectRepository;
+    private final WishService wishService;
 
     @Autowired
     public SubjectService(SubjectRepository subjectRepository, UserService userService
-            , CourseService courseService, UploadAwsFileService uploadAwsFileService) {
+            , CourseService courseService, UploadAwsFileService uploadAwsFileService, UserSubjectRepository userSubjectRepository, WishService wishService) {
         this.subjectRepository = subjectRepository;
         this.userService = userService;
         this.courseService = courseService;
         this.uploadAwsFileService = uploadAwsFileService;
+        this.userSubjectRepository = userSubjectRepository;
+        this.wishService = wishService;
     }
 
 
@@ -92,9 +99,18 @@ public class SubjectService {
 
     //    강좌 상세
     public SubjectDetResDto subjectDetail(Long id){
-//        🚨추후 멤버.. 추가되면 권한체크 + 멤버 연결 체크
         Subject subject = subjectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 강좌 입니다."));
-        SubjectDetResDto subjectDetResDto = subject.fromDetEntity();
+//        🚨추후 멤버.. 추가되면 권한체크 + 멤버 연결 체크
+        User user = null;
+        UserSubject userSubject = null;
+        Wish wish = null;
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!userEmail.isEmpty()){
+            user = userService.findByEmail(userEmail);
+            userSubject = userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
+            wish = wishService.findBySubjectIdAndUserIdReturnNull(subject, user);
+        }
+        SubjectDetResDto subjectDetResDto = subject.fromDetEntity(userSubject, wish);
 
         return subjectDetResDto;
     }

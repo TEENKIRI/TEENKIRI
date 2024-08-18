@@ -11,6 +11,7 @@ import com.beyond.teenkiri.wish.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,9 +76,18 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
 
         return wishRepository.findByUserAndSubject(user, subject).isPresent();
+    }
+
+    public Wish findBySubjectIdAndUserIdRequire(Subject subject, User user) {
+        return wishRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 신청하지 않은 강좌입니다."));
+    }
+
+    public Wish findBySubjectIdAndUserIdReturnNull(Subject subject, User user) {
+        return wishRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
     }
 
 }
