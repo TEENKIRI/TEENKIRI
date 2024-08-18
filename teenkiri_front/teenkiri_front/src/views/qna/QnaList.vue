@@ -41,7 +41,7 @@
           <col width="auto" />
           <col width="140" />
           <col width="140" />
-          <col width="140" />
+          <col width="160" /> <!-- 작성일 칸의 너비를 160으로 증가 -->
         </colgroup>
         <thead>
           <tr>
@@ -130,7 +130,6 @@ export default {
           params.subjectId = this.selectedSubject;
         }
 
-        // 검색 범위가 전체인 경우, 제목, 작성자, 강좌명 모두 검색하도록 처리
         if (this.searchCategory === '전체' && this.searchQuery) {
           params.searchCategory = 'all';
         }
@@ -153,7 +152,7 @@ export default {
       const year = d.getFullYear();
       const month = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
-      return `${year}년.${month}월.${day}일`;
+      return `${year}년 ${month}월 ${day}일`;
     },
     createNewQuestion() {
       this.$router.push('/qna/create');

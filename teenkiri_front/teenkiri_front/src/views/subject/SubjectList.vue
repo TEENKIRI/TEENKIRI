@@ -187,11 +187,11 @@ export default {
     this.getSubjectList();
   },
   watch:{
-      'course.selectedMenu': function(newValue, oldValue) { // 2depth여서 문자열로 작성해야 작동함
+      'course.selectedMenu': function(newValue, oldValue) {
       console.log("선택한 메뉴 변수 값이 변경되었다!");
       console.log('변경 전:', oldValue, '변경 후:', newValue);
 
-      this.resetSubjectVariables(); // subject와 관련된 값 초기화
+      this.resetSubjectVariables(); 
 
       this.getSubjectList();
     }
@@ -215,7 +215,7 @@ export default {
     async getSubjectMainList(){
       try {
         const params = {
-          size: 10, //10개만 보이도록 작업~
+          size: 10, 
           page: 0
         }
         
