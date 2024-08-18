@@ -28,6 +28,7 @@
               label="검색어"
               append-icon="mdi-magnify"
               @keyup.enter="fetchQuestions"
+              @click:append="fetchQuestions"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -94,8 +95,8 @@ export default {
       userRole: '',
       searchCategory: '전체',
       searchQuery: '',
-      selectedSubject: '', // 선택한 강좌
-      subjects: [], // 강좌 리스트
+      selectedSubject: '',
+      subjects: [],
       searchCategories: ['전체', '제목', '작성자'],
     };
   },
@@ -117,41 +118,36 @@ export default {
       }
     },
     async fetchQuestions() {
-  try {
-    const params = {
-      page: this.currentPage - 1,
-      size: this.itemsPerPage,
-      searchCategory: this.searchCategory,
-      searchQuery: this.searchQuery,
-    };
+      try {
+        const params = {
+          page: this.currentPage - 1,
+          size: this.itemsPerPage,
+          searchCategory: this.searchCategory,
+          searchQuery: this.searchQuery,
+        };
 
-    // subjectId가 ''(전체)인 경우 파라미터에서 삭제
-    if (this.selectedSubject !== '') {
-      params.subjectId = this.selectedSubject;
-    }
+        if (this.selectedSubject !== '') {
+          params.subjectId = this.selectedSubject;
+        }
 
-    // 검색 범위가 전체인 경우, 제목, 작성자, 강좌명 모두 검색하도록 처리
-    if (this.searchCategory === '전체' && this.searchQuery) {
-      // 서버에서 '제목', '작성자', '강좌명'을 모두 검색하는 쿼리를 처리할 수 있도록
-      params.searchCategory = 'all'; // 'all'은 예시이므로 서버에서 처리할 수 있도록 설정
-    }
+        // 검색 범위가 전체인 경우, 제목, 작성자, 강좌명 모두 검색하도록 처리
+        if (this.searchCategory === '전체' && this.searchQuery) {
+          params.searchCategory = 'all';
+        }
 
-    const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/list`, { params });
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/list`, { params });
 
-    const result = response.data.result;
-    if (result && result.content) {
-      this.questions = result.content;
-      this.totalPages = result.totalPages;
-    } else {
-      console.error('올바르지 않은 데이터 형식입니다:', response.data);
-    }
-  } catch (error) {
-    console.error('질문 목록을 불러오는 중 오류가 발생했습니다:', error);
-  }
-},
-
-
-
+        const result = response.data.result;
+        if (result && result.content) {
+          this.questions = result.content;
+          this.totalPages = result.totalPages;
+        } else {
+          console.error('올바르지 않은 데이터 형식입니다:', response.data);
+        }
+      } catch (error) {
+        console.error('질문 목록을 불러오는 중 오류가 발생했습니다:', error);
+      }
+    },
     formatDate(date) {
       const d = new Date(date);
       const year = d.getFullYear();
