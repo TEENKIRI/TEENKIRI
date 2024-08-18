@@ -3,12 +3,14 @@ package com.beyond.teenkiri.subject.domain;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.course.domain.Course;
+import com.beyond.teenkiri.enrollment.domain.Enrollment;
 import com.beyond.teenkiri.lecture.domain.Lecture;
 import com.beyond.teenkiri.subject.dto.SubjectDetResDto;
 import com.beyond.teenkiri.subject.dto.SubjectListResDto;
 import com.beyond.teenkiri.subject.dto.SubjectUpdateReqDto;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.domain.UserSubject;
+import com.beyond.teenkiri.wish.domain.Wish;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -93,21 +95,25 @@ public class Subject extends BaseTimeEntity {
                 .build();
     }
 
-    public SubjectDetResDto fromDetEntity() {
-        return SubjectDetResDto.builder()
+    public SubjectDetResDto fromDetEntity(UserSubject userSubject, Wish wish) {
+        SubjectDetResDto subjectDetResDto = SubjectDetResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .grade(this.grade)
+                .userTeacherId(this.userTeacher.getId())
                 .userTeacherName(this.userTeacher.getName())
                 .subjectThumUrl(this.subjectThumUrl)
                 .courseTitle(this.course.getTitle())
                 .description(this.description)
                 .rating(this.rating)
                 .delYN(this.delYN)
-                .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .isSubscribe((wish != null) ? true : false) // 유저 로그인 및 wish 여부 확인
+                .isRegistered((userSubject != null) ? true : false) // 유저 로그인 및 수강신청 여부 확인
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
+
+        return subjectDetResDto;
     }
 
     public void updateImagePath(String s3ImagePath) {

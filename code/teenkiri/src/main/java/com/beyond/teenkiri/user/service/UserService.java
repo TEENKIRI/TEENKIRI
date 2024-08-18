@@ -72,8 +72,13 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다.11"));
     }
 
+<<<<<<< HEAD
     public List<User> findAllByRole(Role role) {
         return userRepository.findAllByRole(role);
+=======
+    public User findByEmailReturnNull(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+>>>>>>> 953b92642318f6a8ce056372550782cbff63c5a6
     }
 
     public String findId(UserFindIdDto findIdDto) {

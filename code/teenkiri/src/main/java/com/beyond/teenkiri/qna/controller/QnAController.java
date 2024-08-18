@@ -2,6 +2,7 @@ package com.beyond.teenkiri.qna.controller;
 
 import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.service.CommentService;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.dto.CommonErrorDto;
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.lecture.dto.LectureListResDto;
@@ -50,8 +51,20 @@ public class QnAController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAllQuestions(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<QnAListResDto> qnaList = qnAService.qnaList(pageable);
+    public ResponseEntity<?> getAllQuestions(
+            @PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(required = false) String searchCategory,
+            @RequestParam(required = false) String searchQuery,
+            @RequestParam(required = false) Long subjectId) {
+
+        Page<QnAListResDto> qnaList;
+
+        if (subjectId != null) {
+            qnaList = qnAService.qnaListByGroup(subjectId, pageable);
+        } else {
+            qnaList = qnAService.qnaListWithSearch(pageable, searchCategory, searchQuery);
+        }
+
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "질문 목록을 조회합니다.", qnaList);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
@@ -70,14 +83,12 @@ public class QnAController {
         }
     }
 
-
     @PostMapping("/comment/create")
     public ResponseEntity<?> createQnaComment(@RequestBody CommentSaveReqDto dto) {
         commentService.saveComment(dto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "댓글이 성공적으로 등록되었습니다.", dto.getQnaId());
         return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/answer/{id}")
@@ -95,7 +106,7 @@ public class QnAController {
     }
 
     @PostMapping("/update/question/{id}")
-    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id,QnAQtoUpdateDto dto,
+    public ResponseEntity<?> qnaQUpdate(@PathVariable Long id, QnAQtoUpdateDto dto,
                                         @RequestPart(value="image", required = false) MultipartFile imageSsr) {
         try {
             qnAService.QnAQUpdate(id, dto, imageSsr);
@@ -136,12 +147,13 @@ public class QnAController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/subject/{subjectId}/qna/list")
-    public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable("subjectId") Long subjectId, @PageableDefault(page = 0, size=10, sort = "createdTime",
-            direction = Sort.Direction.DESC ) Pageable pageable){
+    public ResponseEntity<?> lectureGroupBySubjectListView(@PathVariable("subjectId") Long subjectId,
+                                                           @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<QnAListResDto> qnAListResDtos = qnAService.qnaListByGroup(subjectId, pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "해당 강좌의 QnA 목록을 조회합니다.", qnAListResDtos);
-        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
     @GetMapping("/my")
@@ -150,5 +162,5 @@ public class QnAController {
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "사용자 작성 질문 목록을 조회합니다.", qnaList);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
-
 }
+
