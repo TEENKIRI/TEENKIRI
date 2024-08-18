@@ -113,7 +113,8 @@ export default {
   },
   methods: {
     async fetchNotifications() {
-      try {
+      if(this.isLogin){
+        try {
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -122,6 +123,7 @@ export default {
         this.notifications = response.data;
       } catch (error) {
         console.error('알림 목록을 가져오는 중 오류 발생:', error);
+      }
       }
     },
     async markAsReadAndNavigate(notification, index) {
