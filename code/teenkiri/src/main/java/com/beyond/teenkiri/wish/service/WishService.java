@@ -61,6 +61,7 @@ public class WishService {
             SubjectListResDto subjectListResDto = new SubjectListResDto(
                     subject.getId(),
                     subject.getTitle(),
+                    subject.getSubjectThumUrl(),
                     subject.getUserTeacher().getName(),
                     true
             );

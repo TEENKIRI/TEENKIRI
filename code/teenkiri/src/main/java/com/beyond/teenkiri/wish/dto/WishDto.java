@@ -16,6 +16,7 @@ public class WishDto {
     private Long id;
     private Long userId;
     private Long subjectId;
+    private String subjectThumUrl;
 
     public Wish toEntity(User user, Subject subject) {
         return Wish.builder()
