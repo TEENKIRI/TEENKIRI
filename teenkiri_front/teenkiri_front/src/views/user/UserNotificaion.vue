@@ -71,6 +71,7 @@
       async fetchNotifications() {
         try {
           const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/notification`);
+          console.log(this.response)
           if (response.status === 200) {
             this.notifications = response.data.result;
             this.totalPages = Math.ceil(this.notifications.length / this.itemsPerPage);
