@@ -199,7 +199,6 @@ export default {
 }
 
 
-
 .tbl_list {
   width: 100%;
   border-collapse: collapse;
@@ -214,13 +213,14 @@ export default {
   text-align: left;
   border-left: none;
   border-right: none;
+  font-size: 20px;
 }
 
 .tbl_list th {
   background-color: #f4f4f4;
   font-weight: bold;
+  font-size: 20px; 
 }
-
 .text_left {
   text-align: left;
 }
@@ -228,4 +228,5 @@ export default {
 .text_center {
   text-align: center;
 }
+
 </style>
