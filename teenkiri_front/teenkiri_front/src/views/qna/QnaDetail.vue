@@ -1,5 +1,12 @@
 <template>
   <v-container class="mt-5">
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-3 mb-4">
+<h1 class="board-title"> QnA </h1>
+        </v-card>
+      </v-col>
+    </v-row>
     <!-- 질문 카드와 관련된 내용 -->
     <v-card class="pa-5" v-if="questionDetail">
       <div class="d-flex justify-space-between align-center mb-3">
