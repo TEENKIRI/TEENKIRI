@@ -1,4 +1,4 @@
-# TEENKIRI
+![notion](https://github.com/user-attachments/assets/bc542877-71e4-41cb-b282-0f1a42bb2e4c)# TEENKIRI
 초등온라인교육사이트!
 
 # 팀원
@@ -16,6 +16,10 @@
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+<img src="https://img.shields.io/badge/notion-F05032?style=for-the-badge&logo=git&logoColor=white">
+
+
+
 # 프로젝트 개요
 
 # 프로젝트 요구사항 명세서
