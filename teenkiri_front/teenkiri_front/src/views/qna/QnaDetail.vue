@@ -5,8 +5,6 @@
       <div class="d-flex justify-space-between align-center mb-3">
         <h2 class="text-h4 font-weight-bold">{{ questionDetail.title }} (강좌 명:{{ questionDetail.subjectTitle }})</h2>
         <div class="d-flex justify-end mb-3">
-          <v-btn v-if="isQuestionAuthor" class="btn_st2 mr-2" @click="editQuestion">수정</v-btn>
-          <v-btn v-if="isAdmin" class="btn_del mr-2" @click="confirmDeleteQuestion">삭제</v-btn>
           <v-btn class="btn_st2 mr-2" @click="openReportModal('question')">신고</v-btn>
         </div>
       </div>
@@ -365,26 +363,31 @@ h2.text-h5 {
 .btn_solid {
   background-color: #ffdb69 !important;
   color: rgb(255, 255, 255);
+  border-radius: 8px;
 }
 
 .btn_st2 {
   background-color: #424242 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_del {
   background-color: #f27885 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_write {
   background-color: #6fc8b8 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_comment_ok {
   background-color: #5087c7 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_alert {
@@ -420,10 +423,11 @@ h2.text-h5 {
 .btn_board_option {
   display: block;
   padding: 5px 10px;
-  color: #424242;
+  color: #ffffff;
   text-decoration: none;
-  background-color: white;
+  background-color: #f27885;
   border-bottom: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 .btn_board_option:hover {

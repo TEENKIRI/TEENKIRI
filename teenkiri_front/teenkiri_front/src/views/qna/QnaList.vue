@@ -41,7 +41,6 @@
           <col width="auto" />
           <col width="140" />
           <col width="140" />
-          <col width="160" /> <!-- 작성일 칸의 너비를 160으로 증가 -->
         </colgroup>
         <thead>
           <tr>
@@ -253,6 +252,7 @@ export default {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  border-radius: 8px;
 }
 
 .btn_write:hover {
