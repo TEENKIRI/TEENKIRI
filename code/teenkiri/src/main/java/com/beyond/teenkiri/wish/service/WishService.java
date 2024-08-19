@@ -39,7 +39,7 @@ public class WishService {
         if(findWish == null){
             Wish wish = new Wish(user, subject);
             wishRepository.save(wish);
-            return WishDto.fromEntity(wish);
+            return WishDto.fromEntity(wish, true);
         }else{
             throw new IllegalStateException("이미 등록한 찜입니다.");
         }
@@ -56,6 +56,24 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("찜 항목을 찾을 수 없습니다."));
 
         wishRepository.delete(wish);
+    }
+
+    public WishDto toggleWish(String email, Long subjectId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
+        Wish findWish = wishRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElse(null);
+        if(findWish == null){
+            Wish wish = new Wish(user, subject);
+            wishRepository.save(wish);
+            return WishDto.fromEntity(wish, true);
+        }else{
+            wishRepository.delete(findWish);
+            return WishDto.fromEntity(findWish, false);
+        }
     }
 
     public List<SubjectListResDto> getUserWishList(User user) {

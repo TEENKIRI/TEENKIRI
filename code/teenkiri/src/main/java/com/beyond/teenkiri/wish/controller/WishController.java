@@ -42,6 +42,18 @@ public class WishController {
         }
     }
 
+    @GetMapping("toggle/{subjectId}")
+    public ResponseEntity<?> toggleWish(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long subjectId) {
+        try {
+            WishDto wishDto = wishService.toggleWish(userDetails.getUsername(), subjectId);
+            return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "찜 토글 성공", wishDto));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResDto(HttpStatus.BAD_REQUEST, "찜 토글 실패: " + e.getMessage(), null));
+        }
+    }
+
     @GetMapping("/check/{subjectId}")
     public ResponseEntity<?> checkWishlistStatus(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long subjectId) {
         try {

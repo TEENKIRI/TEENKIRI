@@ -83,13 +83,13 @@ public class Subject extends BaseTimeEntity {
     private LocalDateTime mainSubjectUpdatedDate;
 
 
-    public SubjectListResDto fromListEntity() {
+    public SubjectListResDto fromListEntity(Wish wish) {
         return SubjectListResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .teacherName(this.userTeacher.getName())
                 .subjectThumUrl(this.subjectThumUrl)
-                .isSubscribe(false) // 🚨 멤버로그인 여부 확인 필요
+                .isSubscribe((wish != null) ? true : false) // 유저 로그인 및 wish 여부 확인
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
