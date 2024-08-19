@@ -3,6 +3,7 @@
 
 # 팀원
 김창현 김정은 이예나 이한아 황요한
+
 <img width="518" alt="스크린샷 2024-08-07 오후 8 36 10" src="https://github.com/user-attachments/assets/0322c499-2c8b-4e59-b356-d75f5799c18e">
 
 # 프로젝트 개요
