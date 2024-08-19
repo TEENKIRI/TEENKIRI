@@ -1,7 +1,7 @@
 <template>
-  <v-container >
+  <v-container>
     <!-- 추천 강좌 섹션 -->
-    <v-card class="mt-5" >
+    <v-card class="mt-5">
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
@@ -34,22 +34,22 @@
       </v-card-text>
     </v-card>
 
-    <!-- <v-sheet class="mx-auto" width="600"> -->
-      <br>
-      <v-row>
-        <v-col class="d-flex flex-row align-center" cols="12" md="2">
-          <v-select
-            v-model="selectedType"
-            :items="selectedOptions"
-            item-title="text"
-            item-value="value"
-            label="정렬 기준"
-            class="ml-auto"
-            width="200"
-            required
-            @change="performSearch"
-          ></v-select>
-        </v-col>
+    <!-- 검색 및 정렬 섹션 -->
+    <br />
+    <v-row>
+      <v-col class="d-flex flex-row align-center" cols="12" md="2">
+        <v-select
+          v-model="selectedType"
+          :items="selectedOptions"
+          item-title="text"
+          item-value="value"
+          label="정렬 기준"
+          class="ml-auto"
+          width="200"
+          required
+          @change="performSearch"
+        ></v-select>
+      </v-col>
 
       <v-col cols="4" md="3">
         <v-select
@@ -72,16 +72,14 @@
       </v-col>
     </v-row>
 
-    <!-- </v-sheet> -->
-
     <!-- 과목 선택 섹션 -->
     <v-btn
-    class="mb-2"
-    color="success"
-    @click="$router.push('/subject/create')"
-    v-if="this.user.role === `ADMIN`"
-    >강좌 업로드</v-btn
-  >
+      class="mb-2"
+      color="success"
+      @click="$router.push('/subject/create')"
+      v-if="this.user.role === `ADMIN`"
+      >강좌 업로드</v-btn
+    >
     <v-btn
       class="mb-2"
       color="success"
@@ -147,14 +145,13 @@
             </v-chip>
           </v-item>
         </v-item-group>
-        <br>
+        <br />
       </v-col>
     </v-row>
 
-    <v-card class="mt-5" >
     <!-- 강좌 목록 섹션 -->
-    <v-row class="mt-5">
-
+    <v-card class="mt-5">
+      <v-row class="mt-5">
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest">
@@ -185,8 +182,16 @@
             </div>
           </div>
         </v-card-text>
-    </v-row>
+      </v-row>
     </v-card>
+
+    <!-- 페이지네이션 -->
+    <v-pagination
+      v-model="page"
+      :length="totalPages"
+      @input="performSearch"
+      class="my-4"
+    ></v-pagination>
   </v-container>
 </template>
 
@@ -197,7 +202,6 @@ export default {
   data() {
     return {
       user: {},
-
       searchType: "all",
       searchOptions: [
         { text: "전체", value: "all" },
@@ -237,39 +241,38 @@ export default {
         ],
         selectedGrades: [],
       },
+      page: 1,
+      totalPages: 1,
     };
   },
-  async created() {
-    try {
-      await this.$store.dispatch("setUserAllInfoActions");
-      this.user = this.$store.getters.getUserObj;
-    } catch (error) {
-      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
-    }
-    this.getCourseList();
-    this.getSubjectMainList();
-    this.getSubjectList();
-  },
-  watch: {
-    selectedType() {
-      this.performSearch();
-    },
-    selectedGrades() {
-      this.performSearch();
-    },
-    "course.selectedMenu": function () {
-      this.performSearch();
-    },
-    searchValue() {
-      this.performSearch();
-    },
-    searchType() {
-      this.performSearch();
-    },
-  },
-
   methods: {
-    async getCourseList() {
+    onPageChange(page) {
+    this.page = page;
+    this.performSearch();
+  },
+    async performSearch() {
+      try {
+        const params = {
+          size:9,
+          page: this.page - 1, // MySQL에서의 페이지는 0부터 시작
+          search: this.searchValue,
+          searchType: this.searchType,
+          sortType: this.selectedType,
+          grades: this.grade.selectedGrades.join("&"),
+          courseId: this.course.selectedMenu !== "all" ? this.course.selectedMenu : null,
+        };
+
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/list`,
+          { params }
+        );
+        this.subject.subjectList = response.data.result.content;
+        this.totalPages = response.data.result.totalPages;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+        async getCourseList() {
       try {
         const params = {
           size: 1000,
@@ -302,87 +305,72 @@ export default {
         console.error(e);
       }
     },
-    async getSubjectList() {
-      try {
-        const params = {
-          size: this.subject.page.pageSize,
-          page: this.subject.page.currentPage,
-          search: this.searchValue,
-          searchType: this.searchType,
-          sortType: this.selectedType,
-          grades: this.grade.selectedGrades.join("&"),
-          courseId: this.course.selectedMenu !== "all" ? this.course.selectedMenu : null,
-        };
-
-        const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/subject/list`,
-          { params }
-        );
-        this.subject.subjectList = response.data.result.content;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-
-    resetSubjectVariables() {
-      this.subject.page.currentPage = 0;
-      this.subject.subjectList = [];
-    },
-
-    performSearch() {
-      this.resetSubjectVariables();
-      this.getSubjectList();
-    },
-
     goToDetail(id) {
       this.$router.push({ name: "SubjectDetail", params: { id } });
     },
     async toggleWish(id, event, type) {
       event.stopPropagation(); // 이벤트 전파 방지
-      console.log("클릭!!", id, type);
-      if (Object.keys(this.user).length > 0) {
-        // 로그인 한 유저
-        try {
-          const response = await axios.get(
-            `${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`
-          );
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`
+        );
 
-          let subject;
-          console.log(type, type == "subjectList", type == "subjectMain");
-          if (type == "subjectList") {
-            subject = this.subject.subjectList.find((s) => s.id === id);
-          } else if (type == "subjectMain") {
-            subject = this.subject.subjectIsMainList.find((sm) => sm.id === id);
-          }
-
-          if (subject) {
-            subject.isSubscribe = response.data.result.status;
-          }
-        } catch (error) {
-          alert("찜 추가 실패");
-          console.error(error);
+        let subject;
+        if (type == "subjectList") {
+          subject = this.subject.subjectList.find((s) => s.id === id);
+        } else if (type == "subjectMain") {
+          subject = this.subject.subjectIsMainList.find((sm) => sm.id === id);
         }
-      } else {
-        alert("로그인 후 사용 가능합니다.");
+
+        if (subject) {
+          subject.isSubscribe = response.data.result.status;
+        }
+      } catch (error) {
+        alert("찜 추가 실패");
+        console.error(error);
       }
     },
-    editCourse(id, event){
+    editCourse(id, event) {
       event.stopPropagation(); // 이벤트 전파 방지
       this.$router.push({ name: "CourseEdit", params: { id } });
+    },
+  },
+  watch: {
+    page() {
+    this.performSearch();
+  },
+    selectedType() {
+      this.performSearch();
+    },
+    selectedGrades() {
+      this.performSearch();
+    },
+    "course.selectedMenu": function () {
+      this.performSearch();
+    },
+    searchValue() {
+      this.performSearch();
+    },
+    searchType() {
+      this.performSearch();
+    },
+  },
+  async created() {
+    try {
+      await this.$store.dispatch("setUserAllInfoActions");
+      this.user = this.$store.getters.getUserObj;
+    } catch (error) {
+      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
     }
+    this.getCourseList();
+    this.getSubjectMainList();
+    this.performSearch();
   },
 };
 </script>
 
 <style src="@/assets/css/SubjectList.css"></style>
 <style>
-.bg-container {
-  background-image: url('@/assets/images/visual_bg_1.png');
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh; /* 전체 페이지를 덮도록 설정 */
-}
-
 .select-small .v-select {
   min-height: 32px;
   max-height: 32px;
@@ -394,4 +382,3 @@ export default {
   margin-left: 16px;
 }
 </style>
-

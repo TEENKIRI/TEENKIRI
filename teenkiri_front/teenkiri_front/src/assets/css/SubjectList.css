@@ -1,76 +1,79 @@
 .inner {
-    width: 1280px;
-    margin: 0 auto;
-    position: relative;
-  }
-  .inner h2 {
-    font-size: 36px;
-    font-weight: 700;
-  }
-  .swiperLectureBest {
-    margin: 35px 0 0;
-    border-right: 1px solid #ccc;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .swiper-button-prev:after,
-  .swiper-button-next:after {
-    display: none;
-  }
-  .swiper-button-prev {
-    left: -60px;
-    width: 30px;
-    height: 51px;
-    background: url("@/assets/images/ico_sw_prev.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
-  .swiper-button-next {
-    right: -60px;
-    width: 30px;
-    height: 51px;
-    background: url("@/assets/images/ico_sw_next.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
-  .swiper-slide {
-    position: relative;
-    width: calc(100% / 4);
-    height: 390px;
-    border: 1px solid #ccc;
-    padding: 20px 27px;
-  }
-  .swiper-slide .thumb {
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-  }
-  .swiper-slide .thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .swiper-slide .txt {
-    margin: 20px 0 0;
-  }
-  .swiper-slide .txt .subject {
-    font-size: 18px;
-    font-weight: 400;
-  }
-  .swiper-slide .txt .name {
-    margin: 15px 0 0;
-    font-size: 14px;
-    font-weight: 400;
-    color: #5b5b5b;
-  }
-  .swiper-slide .btn_like {
-    position: absolute;
-    bottom: 20px;
-    right: 27px;
-    width: 24px;
-    height: 24px;
-    font-size: 24px;
-    color: grey; /* 기본 색상 */
+  width: 100%; /* 전체 너비를 100%로 설정 */
+  max-width: 1600px; /* 최대 너비를 1600px로 설정 */
+  margin: 0 auto;
+  position: relative;
 }
-
+.inner h2 {
+  font-size: 42px; /* 글자 크기 확대 */
+  font-weight: 700;
+}
+.swiperLectureBest {
+  margin: 45px 0 0; /* 여백을 더 크게 설정 */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* 슬라이드 간격 균등 배분 */
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  display: none;
+}
+.swiper-button-prev {
+  left: -70px; /* 버튼 위치 조정 */
+  width: 40px; /* 버튼 크기 확대 */
+  height: 61px;
+  background: url("@/assets/images/ico_sw_prev.png") 50% 50% no-repeat;
+  background-size: contain;
+}
+.swiper-button-next {
+  right: -70px; /* 버튼 위치 조정 */
+  width: 40px; /* 버튼 크기 확대 */
+  height: 61px;
+  background: url("@/assets/images/ico_sw_next.png") 50% 50% no-repeat;
+  background-size: contain;
+}
+.swiper-slide {
+  position: relative;
+  width: calc(100% / 3 - 20px); /* 슬라이드 간격 조정 */
+  height: 500px; /* 슬라이드 높이 확대 */
+  border: 1px solid #ccc;
+  padding: 20px 27px; /* 패딩 조정 */
+  box-sizing: border-box;
+}
+.swiper-slide .thumb {
+  width: 100%;
+  height: 300px; /* 썸네일 이미지 높이 확대 */
+  overflow: hidden;
+}
+.swiper-slide .thumb img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: contain; 이미지를 잘리지 않고 슬라이드에 맞춤 */
+  object-position: center;  
+  /* 이미지 중심을 기준으로 맞춤 */
+}
+.swiper-slide .txt {
+  margin: 15px 0 0; /* 텍스트 위 여백 조정 */
+}
+.swiper-slide .txt .subject {
+  font-size: 24px; /* 글자 크기 확대 */
+  font-weight: 400;
+}
+.swiper-slide .txt .name {
+  margin: 10px 0 0; /* 이름 위 여백 조정 */
+  font-size: 20px; /* 글자 크기 확대 */
+  font-weight: 400;
+  color: #5b5b5b;
+}
+.swiper-slide .btn_like {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 30px; /* 버튼 크기 확대 */
+  height: 30px;
+  font-size: 30px;
+  color: grey; /* 기본 색상 */
+}
 .swiper-slide .btn_like.mdi-heart {
-    color: red; /* 활성화된 상태의 색상 */
+  color: red; /* 활성화된 상태의 색상 */
 }
