@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <v-carousel show-arrows="hover" cycle hide-delimiter-background>
+    <v-carousel show-arrows="hover" cycle hide-delimiter-background class="font">
       <v-carousel-item :src="require('../assets/images/visual_bg_1.png')" cover>
         <v-container>
           <v-row class="mainVisual">
             <v-col class="txtWrap">
               <p class="description">친구들과 대화하며 신나고 즐겁게 공부하자</p>
-              <h1>즐겁게 캐치! 성취도 캐치!</h1>
+              <h1 class="font_notrahope">즐겁게 캐치! 성취도 캐치!</h1>
             </v-col>
           </v-row>
         </v-container>
@@ -16,7 +16,7 @@
           <v-row class="mainVisual">
             <v-col class="txtWrap">
               <p class="description text-red-lighten-1">내 사랑을 듬~뿍 줄게!</p>
-              <h1>어렵다면?! 도움 캐치!</h1>
+              <h1 class="font_notrahope">어렵다면?! 도움 캐치!</h1>
             </v-col>
           </v-row>
         </v-container>
@@ -26,7 +26,7 @@
           <v-row class="mainVisual">
             <v-col class="txtWrap">
               <p class="description">좋~아 할 수 있따! 아잣!</p>
-              <h1>할 수 있어 캐치!! 아자!</h1>
+              <h1 class="font_notrahope">할 수 있어 캐치!! 아자!</h1>
             </v-col>
           </v-row>
         </v-container>
@@ -36,7 +36,7 @@
           <v-row class="mainVisual">
             <v-col class="txtWrap">
               <p class="description">백마로 변신해서 캐치!</p>
-              <h1>백마 캐치! 변신 캐치!</h1>
+              <h1 class="font_notrahope">백마 캐치! 변신 캐치!</h1>
             </v-col>
           </v-row>
         </v-container>
@@ -44,7 +44,9 @@
     </v-carousel>
     <!-- 추천 강좌 섹션 -->
     <v-container>
-        <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
+        <v-card-title class="font_notrahope" style="font-size:2rem;">
+          티니키리 서비스가 <span class="teen_red_font">추천</span>해요! 👍
+        </v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest" style="border-right:0">
             <div
@@ -53,11 +55,13 @@
               :key="sm.id"
               @click="goToDetail(sm.id)"
             >
-              <div class="thumb">
-                <a href="javascript:void(0)">
-                  <img v-bind:src="sm.subjectThumUrl" alt="강좌 썸네일" />
-                </a>
-              </div>
+              <v-img
+                aspect-ratio="16/9"
+                cover
+                :src="sm.subjectThumUrl"
+                style="border-radius: 0px;"
+                alt="강좌 썸네일"
+              ></v-img>
               <div class="txt">
                 <p class="subject">{{ sm.title }}</p>
                 <p class="name">{{ sm.teacherName }}</p>
@@ -106,7 +110,10 @@
     </v-sheet>
 
     <v-container class="mx-auto mt-5 mb-5" elevation="4" max-width="1200">
-      <v-card-title class="mb-4">최고 인기 강좌</v-card-title>
+      <v-card-title class="mb-4"></v-card-title>
+      <v-card-title class="mb-4 font_notrahope" style="font-size:2rem;">
+          최고 <span class="teen_red_font">인기</span>강좌 에요! 😍
+        </v-card-title>
       <v-card-text>
         <v-slide-group 
           v-model="model" 

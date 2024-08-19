@@ -4,8 +4,11 @@
 @font-face { font-family: "Noto Sans KR"; font-weight: 500; src: local("Noto Sans KR Medium"), url("../fonts/NotoSansKR-Medium.woff2") format("woff2"), url("../fonts/NotoSansKR-Medium.woff") format("woff"), url("../fonts/NotoSansKR-Medium.otf") format("opentype"); } 
 @font-face { font-family: "Noto Sans KR"; font-weight: 400; src: local("Noto Sans KR Regular"), url("../fonts/NotoSansKR-Regular.woff2") format("woff2"), url("../fonts/NotoSansKR-Regular.woff") format("woff"), url("../fonts/NotoSansKR-Regular.otf") format("opentype"); } 
 @font-face { font-family: "Noto Sans KR"; font-weight: 300; src: local("Noto Sans KR Light"), url("../fonts/NotoSansKR-Light.woff2") format("woff2"), url("../fonts/NotoSansKR-Light.woff") format("woff"), url("../fonts/NotoSansKR-Light.otf") format("opentype"); } 
-
+@font-face { font-family: "KOTRAHOPE"; 
+    src: url("../fonts/KOTRA_HOPE.ttf") format("ttf"), url("../fonts/KOTRA_HOPE.otf") format("opentype");
+    font-weight: normal; font-style: normal; } 
 body {margin:0;padding:0;font-family:'Noto Sans KR', dotum, sans-serif; }
+.font_notrahope{font-family:'KOTRAHOPE', 'Noto Sans KR', sans-serif !important;}
 h1, h2, h3, h4, h5, h6 {font-family:'Noto Sans KR', dotum, sans-serif}
 input, button {margin:0;padding:0;font-family:'Noto Sans KR', dotum, sans-serif;}
 textarea, select {font-family:'Noto Sans KR', dotum, sans-serif;}

@@ -8,9 +8,9 @@
     left: 0;
   }
   .mainVisual .txtWrap .description {
-    font-size: 26px;
+    font-size: 1.1rem;
     font-weight: 500;
-    color: #3370b6;
+    color: #666666;
   }
   .mainVisual .txtWrap h1 {
     font-size: 50px;
@@ -234,6 +234,7 @@
   .mainLectureBest .swiperLectureBest {
     margin: 35px 0 0;
     border-right: 1px solid #ccc;
+    gap: 20px 10px;
   }
   .mainLectureBest .swiper-button-prev:after,
   .mainLectureBest .swiper-button-next:after {
@@ -255,10 +256,7 @@
   }
   .mainLectureBest .swiper-slide {
     position: relative;
-    height: 390px;
-    border: 1px solid #ccc;
-    border-right: 0;
-    padding: 20px 27px;
+    width: calc((100% / 4) - 8px);
   }
   .mainLectureBest .swiper-slide .thumb {
     width: 100%;

@@ -14,6 +14,9 @@ import 'video.js/dist/video-js.css'
 import '@mdi/font/css/materialdesignicons.css';
 
 
+import '@/assets/css/global.css'
+
+
 // createApp(App).mount('#app')
 const app = createApp(App);
 
