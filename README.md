@@ -1,4 +1,3 @@
-![notion](https://github.com/user-attachments/assets/bc542877-71e4-41cb-b282-0f1a42bb2e4c)# TEENKIRI
 초등온라인교육사이트!
 
 # 팀원
