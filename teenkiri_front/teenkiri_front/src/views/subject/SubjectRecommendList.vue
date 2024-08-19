@@ -30,7 +30,11 @@
                 <p class="subject">{{ s.title }}</p>
                 <p class="name">{{ s.teacherName }}</p>
               </div>
-              <button type="button" class="btn_like"></button>
+              <button type="button" 
+                class="btn_like" 
+                @click="toggleWish(s.id, $event)" 
+                :class="{ 'mdi mdi-heart': s.isSubscribe, 'mdi mdi-heart-outline': !s.isSubscribe }">
+              </button>
             </div>
           </div>
         </v-card-text>
@@ -45,6 +49,8 @@ import axios from 'axios';
 export default {
   data(){
     return{
+      user:{},
+      
       subject:{
         subjectIsMainList:[],
         page:{
@@ -54,7 +60,13 @@ export default {
       },
     }
   },
-  created(){
+  async created(){
+    try {
+      await this.$store.dispatch("setUserAllInfoActions");
+      this.user = this.$store.getters.getUserObj;
+    } catch (error) {
+      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
+    }
     this.getSubjectMainList();
   },
   methods:{
@@ -75,6 +87,24 @@ export default {
     },
     goToDetail(id) {
       this.$router.push({ name: 'SubjectDetail', params: { id } });
+    },
+    async toggleWish(id, event){
+      event.stopPropagation();  // 이벤트 전파 방지
+      console.log("클릭!!", id);
+      if(Object.keys(this.user).length > 0){ // 로그인 한 유저
+        try {
+          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`);
+          const subject = this.subject.subjectIsMainList.find(sm => sm.id === id);
+          if (subject) {
+            subject.isSubscribe = response.data.result.status;
+          }
+        } catch (error) {
+          alert("찜 추가 실패");
+          console.error(error);
+        }
+      }else{
+        alert("로그인 후 사용 가능합니다.")
+      }
     },
   }
 }

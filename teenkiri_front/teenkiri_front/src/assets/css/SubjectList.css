@@ -67,6 +67,10 @@
     right: 27px;
     width: 24px;
     height: 24px;
-    background: url("@/assets/images/ico_like.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
+    font-size: 24px;
+    color: grey; /* 기본 색상 */
+}
+
+.swiper-slide .btn_like.mdi-heart {
+    color: red; /* 활성화된 상태의 색상 */
+}

@@ -141,7 +141,16 @@ public class SubjectService {
             }
         }
 
-        return subjects.map(Subject::fromListEntity);
+//        로그인 여부 확인 및 찜 확인
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+        return subjects.map(a-> {
+            Wish wish = null;
+                if(user != null){
+                    wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+                }
+            return a.fromListEntity(wish);
+        });
     }
 
     private Pageable applySorting(Pageable pageable, String sortType) {
@@ -156,7 +165,18 @@ public class SubjectService {
     public Page<SubjectListResDto> subjectPerCourseList(Pageable pageable, Long courseId){
         Course course = courseService.findByIdRequired(courseId);
         Page<Subject> subject = subjectRepository.findByCourseIdAndDelYN(course.getId(), DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+
+//        로그인 여부 확인 및 찜 확인
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a-> {
+            Wish wish = null;
+            if(user != null){
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+            }
+            return a.fromListEntity(wish);
+        });
         return subjectListResDtos;
     }
 
@@ -165,14 +185,35 @@ public class SubjectService {
         Course course = courseService.findByIdRequired(courseId);
         List<Grade> gradesArr = Arrays.stream(grades.split("&")).map(Grade::valueOf).collect(Collectors.toList());
         Page<Subject> subject = subjectRepository.findByCourseIdAndGradeInAndDelYN(course.getId(), gradesArr, DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+
+        //        로그인 여부 확인 및 찜 확인
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a-> {
+            Wish wish = null;
+            if(user != null){
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+            }
+            return a.fromListEntity(wish);
+        });
         return subjectListResDtos;
     }
 
     //    강좌 순위별 list
     public Page<SubjectListResDto> subjectRatingList(Pageable pageable) {
         Page<Subject> subject = subjectRepository.findAllByDelYNOrderByRatingDesc(DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a -> a.fromListEntity());
+
+        //        로그인 여부 확인 및 찜 확인
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a-> {
+            Wish wish = null;
+            if(user != null){
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+            }
+            return a.fromListEntity(wish);
+        });
         return subjectListResDtos;
     }
 
@@ -181,7 +222,17 @@ public class SubjectService {
     public Page<SubjectListResDto> subjectMainList(Pageable pageable){
         Boolean isMainsubject = true; // 상단 표시된 강좌 리스트만
         Page<Subject> subject = subjectRepository.findByIsMainSubjectAndDelYN(isMainsubject, DelYN.N, pageable);
-        Page<SubjectListResDto> subjectListResDtos = subject.map(a->a.fromListEntity());
+        //        로그인 여부 확인 및 찜 확인
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+
+        Page<SubjectListResDto> subjectListResDtos = subject.map(a-> {
+            Wish wish = null;
+            if(user != null){
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+            }
+            return a.fromListEntity(wish);
+        });
         return subjectListResDtos;
     }
 

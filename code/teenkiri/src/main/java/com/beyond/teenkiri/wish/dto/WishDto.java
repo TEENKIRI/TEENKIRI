@@ -17,6 +17,7 @@ public class WishDto {
     private Long userId;
     private Long subjectId;
     private String subjectThumUrl;
+    private Boolean status;
 
     public Wish toEntity(User user, Subject subject) {
         return Wish.builder()
@@ -26,11 +27,12 @@ public class WishDto {
                 .build();
     }
 
-    public static WishDto fromEntity(Wish wish) {
+    public static WishDto fromEntity(Wish wish, Boolean status) {
         return WishDto.builder()
                 .id(wish.getId())
                 .userId(wish.getUser().getId())
                 .subjectId(wish.getSubject().getId())
+                .status(status)
                 .build();
     }
 }

@@ -44,7 +44,11 @@
               <p class="subject">{{ sm.title }}</p>
               <p class="name">{{ sm.teacherName }}</p>
             </div>
-            <button type="button" class="btn_like"></button>
+            <button type="button" 
+              class="btn_like" 
+              @click="toggleWish(sm.id, $event)" 
+              :class="{ 'mdi mdi-heart': sm.isSubscribe, 'mdi mdi-heart-outline': !sm.isSubscribe }">
+            </button>
           </div>
         </div>
       </v-card-text>
@@ -133,7 +137,11 @@
                 <p class="subject">{{ s.title }}</p>
                 <p class="name">{{ s.teacherName }}</p>
               </div>
-              <button type="button" class="btn_like"></button>
+              <button type="button" 
+                class="btn_like" 
+                @click="toggleWish(s.id, $event)" 
+                :class="{ 'mdi mdi-heart': s.isSubscribe, 'mdi mdi-heart-outline': !s.isSubscribe }">
+              </button>
             </div>
           </div>
         </v-card-text>
@@ -148,6 +156,8 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      user: {},
+
       searchType: "all",
       searchOptions: [
         { text: "전체", value: "all" },
@@ -170,6 +180,7 @@ export default {
       },
       subject: {
         subjectList: [],
+        subjectIsMainList: [],
         page: {
           pageSize: 5,
           currentPage: 0,
@@ -188,8 +199,15 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
+    try {
+      await this.$store.dispatch("setUserAllInfoActions");
+      this.user = this.$store.getters.getUserObj;
+    } catch (error) {
+      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
+    }
     this.getCourseList();
+    this.getSubjectMainList();
     this.getSubjectList();
   },
   watch: {
@@ -219,6 +237,18 @@ export default {
         };
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, { params });
         this.course.courseList = response.data.result.content;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async getSubjectMainList() {
+      try {
+        const params = {
+          size: 10, // 상단 추천 강좌는 10개만 보임
+          page: 0
+        };
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, { params });
+        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...response.data.result.content];
       } catch (e) {
         console.error(e);
       }
@@ -254,6 +284,27 @@ export default {
 
     goToDetail(id) {
       this.$router.push({ name: 'SubjectDetail', params: { id } });
+    },
+    async toggleWish(id, event){
+      event.stopPropagation();  // 이벤트 전파 방지
+      console.log("클릭!!", id);
+      if(Object.keys(this.user).length > 0){ // 로그인 한 유저
+        try {
+          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`);
+          console.log(response)
+          console.log(response.data.result)
+          console.log(response.data.result.status)
+          const subject = this.subject.subjectIsMainList.find(sm => sm.id === id);
+          if (subject) {
+            subject.isSubscribe = response.data.result.status;
+          }
+        } catch (error) {
+          alert("찜 추가 실패");
+          console.error(error);
+        }
+      }else{
+        alert("로그인 후 사용 가능합니다.")
+      }
     },
   },
 };
