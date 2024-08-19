@@ -2,13 +2,10 @@
   <v-container>
     <div class="mt-5">
       <h1>{{ lectureData.title }}</h1>
-      <div>나의 진행률 : 
-        <span>{{ userProgress }}</span>% 
-        <v-progress-linear
-          v-model="userProgress"
-          color="amber"
-          height="25"
-        >
+      <div>
+        나의 진행률 : <span>{{ userProgress }}</span
+        >%
+        <v-progress-linear v-model="userProgress" color="amber" height="25">
           <template v-slot:default>
             <strong>{{ userProgress }}%</strong>
           </template>
@@ -47,24 +44,9 @@ export default {
 
       // 영상 진행률 체크를 위한 코드
       isVideoPlay: false,
-      currentVideoTime : 0,
-      mostWatchedTime : 0,
-      userProgress : 0, // 유저 진행률 표시용
-
-      json: {
-        createdTime: "2024-08-16T16:28:53",
-        enrollmentId: 4,
-        id: 1,
-        imageUrl:
-          "https://hannahbucket21.s3.ap-northeast-2.amazonaws.com/1_t240612014338002.jpg",
-        isCompleted: false,
-        progress: 0,
-        title: "20분 강의 - 1번강좌",
-        updatedTime: "2024-08-16T16:28:55",
-        userLectureDuration: 0,
-        videoDuration: 1294,
-        videoUrl: "https://hannahbucket2",
-      },
+      currentVideoTime: 0,
+      mostWatchedTime: 0,
+      userProgress: 0, // 유저 진행률 표시용
 
       player: null,
 
@@ -79,9 +61,9 @@ export default {
         ],
       },
 
-    // 인터벌 ID를 저장할 변수
-      checkInterval: null, 
-      updateUserProgressInterval : null
+      // 인터벌 ID를 저장할 변수
+      checkInterval: null,
+      updateUserProgressInterval: null,
     };
   },
   async created() {
@@ -126,6 +108,7 @@ export default {
   },
   methods: {
     async getLectureDetail() {
+      console.log("강의 불러오기");
       try {
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/user/lecture/detail/${this.lectureId}`
@@ -133,12 +116,11 @@ export default {
         const additionalData = response.data.result;
         this.lectureData = additionalData;
 
-
         // 시간용 변수 적용
         this.mostWatchedTime = this.lectureData.userLectureDuration;
-        if(this.lectureData.isCompleted ){ 
+        if (this.lectureData.isCompleted) {
           this.currentVideoTime = 0; //이미 시청이 완료된 경우는처음부터 다시 시청
-        }else{
+        } else {
           this.currentVideoTime = this.lectureData.userLectureDuration;
         }
         this.updateUserProgress(); // 유저 표시용도의 퍼센트 계산
@@ -190,17 +172,18 @@ export default {
     },
     onVideoPlay() {
       console.log("영상이 시작되었습니다.");
-      
-      if(!this.lectureData.isCompleted){ //시청 완료가 false인 경우만 check 시작
-        this.checkInterval = setInterval(() => { // 3초마다 플레이된 시간 체크 시작
+
+      if (!this.lectureData.isCompleted) {
+        //시청 완료가 false인 경우만 check 시작
+        this.checkInterval = setInterval(() => {
+          // 3초마다 플레이된 시간 체크 시작
           this.checkPlayTime();
         }, 3000);
-        
+
         this.updateUserProgressInterval = setInterval(() => {
           this.updateUserProgress();
         }, 1000);
       }
-      
     },
     onVideoPause() {
       console.log("영상이 일시정지되었습니다.");
@@ -218,12 +201,16 @@ export default {
     },
     onVideoEnded() {
       console.log("영상이 끝났습니다.");
-      clearInterval(this.checkInterval); // 영상이 끝나면 인터벌을 정리합니다.
-      clearInterval(this.updateUserProgressInterval); // 영상이 끝나면 인터벌을 정리합니다.
+      
 
-      if(!this.lectureData.isCompleted){ //기존에 시청완료가 되지 않았던 것만 보냄
+      if (!this.lectureData.isCompleted) {
+        //기존에 시청완료가 되지 않았던 것만 보냄
+        this.currentVideoTime = this.lectureData.videoDuration
+        this.updateUserProgress(); //완료된 것을 통해 100%로 다시 진행률 업데이트
         this.postUserVideoEndedStatus(); // 비디오 끝 함수 호츨
       }
+      clearInterval(this.checkInterval); // 영상이 끝나면 인터벌을 정리합니다.
+      clearInterval(this.updateUserProgressInterval); // 영상이 끝나면 인터벌을 정리합니다.
     },
     checkPlayTime() {
       this.currentVideoTime = Math.floor(this.player.currentTime()); // 소수점 내림으로 고정. (비디오 전체시간때문에!)
@@ -232,26 +219,31 @@ export default {
     },
     updateUserProgress() {
       let progressTime = this.currentVideoTime;
-      if(this.currentVideoTime <= this.mostWatchedTime){
+      if (this.currentVideoTime <= this.mostWatchedTime) {
         progressTime = this.mostWatchedTime;
       }
-        const percentage = (progressTime / this.lectureData.videoDuration) * 100; //현재 시간을 기준으로 퍼센트 계산
-        let roundPercent = Math.round(percentage * 10) / 10; // 소수점 첫 번째 자리까지만 존재하도록 반올림
-        roundPercent = (roundPercent >=100 && !this.lectureData.isCompleted) ? 99 : (roundPercent >= 100) ? 100 : roundPercent; // isCompleted true 여야 100
-        this.userProgress = roundPercent;
+      const percentage = (progressTime / this.lectureData.videoDuration) * 100; //현재 시간을 기준으로 퍼센트 계산
+      let roundPercent = Math.round(percentage * 10) / 10; // 소수점 첫 번째 자리까지만 존재하도록 반올림
+      roundPercent =
+        roundPercent >= 100 && !this.lectureData.isCompleted
+          ? 99
+          : roundPercent >= 100
+          ? 100
+          : roundPercent; // isCompleted true 여야 100
+      this.userProgress = roundPercent;
     },
 
-    async postUserDurationVideoTime(){
-      if(this.currentVideoTime >= this.mostWatchedTime){
+    async postUserDurationVideoTime() {
+      if (this.currentVideoTime >= this.mostWatchedTime) {
         try {
           const userLectureDuration = {
-            userLectureDuration : this.currentVideoTime
-          }
+            userLectureDuration: this.currentVideoTime,
+          };
           const response = await axios.patch(
-            `${process.env.VUE_APP_API_BASE_URL}/enroll/update/duration/${this.lectureData.enrollmentId}`, 
+            `${process.env.VUE_APP_API_BASE_URL}/enroll/update/duration/${this.lectureData.enrollmentId}`,
             userLectureDuration
           );
-        console.log('update response:', response);    // error 해결용 log 추가
+          console.log("update response:", response); // error 해결용 log 추가
         } catch (e) {
           if (e.response.data.status_code === 404) {
             alert(e.response.data.status_code.e.response.data.status_message);
@@ -263,19 +255,21 @@ export default {
         }
       }
     },
-    async postUserVideoEndedStatus(){
-      if(this.currentVideoTime > this.lectureData.videoDuration){
+    async postUserVideoEndedStatus() {
+      if (this.currentVideoTime > this.lectureData.videoDuration) {
         this.currentVideoTime = this.lectureData.videoDuration; // 더 큰값이 들어가면 초기화
       }
       try {
         const isCompleted = {
-          isCompleted : true
-        }
+          isCompleted: true,
+        };
         const response = await axios.patch(
-          `${process.env.VUE_APP_API_BASE_URL}/enroll/update/complete/${this.lectureData.enrollmentId}`, 
+          `${process.env.VUE_APP_API_BASE_URL}/enroll/update/complete/${this.lectureData.enrollmentId}`,
           isCompleted
         );
-        console.log('update response:', response);  // error 해결용 log 추가
+        console.log("update response:", response); // error 해결용 log 추가
+        this.lectureData.isCompleted = true;
+        this.updateUserProgress();
       } catch (e) {
         if (e.response.data.status_code === 404) {
           alert(e.response.data.status_code.e.response.data.status_message);
@@ -285,7 +279,7 @@ export default {
           console.error(e);
         }
       }
-    }
+    },
   },
   beforeUnmount() {
     if (this.player) {

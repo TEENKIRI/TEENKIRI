@@ -63,13 +63,14 @@ public class Lecture extends BaseTimeEntity {
         this.videoDuration = videoDuration;
     }
 
-    public LectureListResDto fromListEntity() {
+    public LectureListResDto fromListEntity(Enrollment enrollment) {
         return LectureListResDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .videoUrl(this.videoUrl)
-                .progress(null) // 🚨 유저별 진행률
+                .progress((enrollment != null) ? enrollment.getProgress() : null) // 유저별 진행률
+                .isCompleted((enrollment != null) ? enrollment.getIsCompleted() : null) // 유저별 진행률
                 .videoDuration(this.videoDuration)
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
@@ -79,6 +80,7 @@ public class Lecture extends BaseTimeEntity {
     public LectureDetResDto fromDetEntity() {
         return LectureDetResDto.builder()
                 .id(this.id)
+                .subjectId(this.subject.getId())
                 .title(this.title)
                 .imageUrl(this.imageUrl)
                 .videoUrl(this.videoUrl)

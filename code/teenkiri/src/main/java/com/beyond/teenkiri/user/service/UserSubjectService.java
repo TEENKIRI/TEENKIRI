@@ -87,10 +87,32 @@ public class UserSubjectService {
     }
 
 
-        // 위 코드는 아래 코드를 스트림으로 쓴 것입니다.
+    // 위 코드는 아래 코드를 스트림으로 쓴 것입니다.
 //        List<String> subjectTitles = new ArrayList<>();
 //        for (UserSubject userSubject : userSubjects) {
 //            String title = userSubject.getSubject().getTitle();
 //            subjectTitles.add(title);
 //        }
+
+
+    //    ==============
+    public UserSubject findByIdRequired(Long id) {
+        return userSubjectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 수강신청 내역입니다."));
+    }
+
+    public UserSubject findByIdReturnNull(Long id) {
+        return userSubjectRepository.findById(id).orElse(null);
+    }
+
+    public UserSubject findBySubjectIdAndUserIdRequire(Subject subject, User user) {
+        return userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 신청하지 않은 강좌입니다."));
+    }
+
+    public UserSubject findBySubjectIdAndUserIdReturnNull(Subject subject, User user) {
+        return userSubjectRepository.findBySubjectIdAndUserId(subject.getId(), user.getId()).orElse(null);
+    }
+
+
 }
