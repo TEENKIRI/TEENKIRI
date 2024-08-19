@@ -22,6 +22,7 @@ public class UserEditReqDto {
         this.address = address;
     }
 
+
     public User toEntity() {
         return User.builder()
                 .nickname(this.nickname)

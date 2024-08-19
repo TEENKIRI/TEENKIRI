@@ -23,10 +23,10 @@
                 v-model="subject.userTeacherEmail"
                 :items="teachers"
                 label="선생님 이메일"
-                item-text="teacher"
+                item-text="email"
                 item-value="email"
                 required
-              />
+              />            
             </v-col>
 
             <!-- 과목 선택 -->
@@ -49,12 +49,18 @@
                 :items="grades"
                 required
               >
-                <template v-slot:selection="{ item }">
-                  <v-chip v-if="item" small>{{ item }}</v-chip>
-                </template>
               </v-select>
             </v-col>
 
+            <!-- 메인 페이지 상단 노출 여부 -->
+            <v-col cols="12">
+              <v-checkbox
+                v-model="subject.isMainSubject"
+                label="메인 페이지 상단 노출"
+              />
+            </v-col>
+
+            
             <!-- 내용 입력 -->
             <v-col cols="12">
               <v-textarea
@@ -71,6 +77,7 @@
                 label="강좌 썸네일 이미지 업로드"
                 v-model="subject.thumbnail"
                 accept="image/*"
+                @change="onFileChange"
               />
               <v-img v-if="previewImageSrc" :src="previewImageSrc" max-width="200" />
             </v-col>
@@ -111,11 +118,12 @@ export default {
     return {
       subject: {
         title: '',
-        userTeacherEmail: '',
+        userTeacherEmail: null,
         courseId: null,
         grade: '',
         description: '',
         thumbnail: null,
+        isMainSubject: false,  // 메인 페이지 상단 노출 여부
       },
       teachers: [],
       courses: [],
@@ -133,7 +141,8 @@ export default {
     async fetchTeacherList() {
       try {
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/teachers`);
-        this.teachers = response.data.result;
+        this.teachers = response.data.result.map(teacher => teacher.email);
+        console.log(this.teachers);
       } catch (error) {
         console.error("Error fetching teachers:", error);
         alert("선생님 정보를 가져오는 데 실패했습니다.");
@@ -146,6 +155,7 @@ export default {
           params: { page: 0, size: 100, sort: 'id,desc' },
         });
         this.courses = response.data.result.content;
+        console.log(this.courses);
       } catch (error) {
         console.error("Error fetching courses:", error);
         alert("과목 정보를 가져오는 데 실패했습니다.");
@@ -182,7 +192,8 @@ export default {
       formData.append('courseId', this.subject.courseId);
       formData.append('grade', this.subject.grade);
       formData.append('description', this.subject.description);
-      
+      formData.append('isMainSubject', this.subject.isMainSubject);  // 추가된 필드
+
       if (this.subject.thumbnail) {
         formData.append('subjectThum', this.subject.thumbnail);
       }
