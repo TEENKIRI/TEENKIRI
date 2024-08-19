@@ -7,6 +7,7 @@ import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.wish.domain.Wish;
 import com.beyond.teenkiri.wish.dto.WishDto;
+
 import com.beyond.teenkiri.wish.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
 
         Wish wish = wishRepository.findByUserAndSubject(user, subject)
                 .orElseThrow(() -> new RuntimeException("찜 항목을 찾을 수 없습니다."));
@@ -66,6 +67,7 @@ public class WishService {
             SubjectListResDto subjectListResDto = new SubjectListResDto(
                     subject.getId(),
                     subject.getTitle(),
+                    subject.getSubjectThumUrl(),
                     subject.getUserTeacher().getName(),
                     true
             );
@@ -80,7 +82,7 @@ public class WishService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("강좌를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("과목을 찾을 수 없습니다."));
 
         return wishRepository.findByUserAndSubject(user, subject).isPresent();
     }

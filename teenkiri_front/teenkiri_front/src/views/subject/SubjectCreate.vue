@@ -23,7 +23,7 @@
                 v-model="subject.userTeacherEmail"
                 :items="teachers"
                 label="선생님 이메일"
-                item-text="email"
+                item-text="teacher"
                 item-value="email"
                 required
               />

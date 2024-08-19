@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LectureDetResDto {
     private Long id;
+    private Long subjectId;
     private String title;
     private String imageUrl;
     private String videoUrl;

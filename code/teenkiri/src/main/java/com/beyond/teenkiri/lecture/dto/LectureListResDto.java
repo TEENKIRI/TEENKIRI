@@ -17,6 +17,7 @@ public class LectureListResDto {
     private String imageUrl;
     private String videoUrl;
     private Float progress;
+    private Boolean isCompleted;
 
     private Integer videoDuration;
 

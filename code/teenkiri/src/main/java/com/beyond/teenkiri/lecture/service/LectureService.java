@@ -56,15 +56,33 @@ public class LectureService {
     //    강의 리스트 페이지
     public Page<LectureListResDto> lectureList(Pageable pageable){
         Page<Lecture> lectures = lectureRepository.findBydelYN(DelYN.N, pageable);
-        Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromListEntity());
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
+        Page<LectureListResDto> lectureListResDtos = lectures.map(a-> {
+            Enrollment enrollment = null;
+            if(user != null){ // 로그인한 상황
+                enrollment = enrollmentService.findByLectureIdAndUserId(user,a);
+            }
+            LectureListResDto lectureListResDto = a.fromListEntity(enrollment);
+            return lectureListResDto;
+        });
         return lectureListResDtos;
     }
 
     //    강의 ((((강좌 그룹별)))) 리스트 페이지
     public Page<LectureListResDto> lectureListByGroup(Long subjectId, Pageable pageable){
         Subject subject = subjectService.findSubjectById(subjectId);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmailReturnNull(userEmail);
         Page<Lecture> lectures = lectureRepository.findAllBySubjectId(subject.getId() ,pageable);
-        Page<LectureListResDto> lectureListResDtos = lectures.map(a->a.fromListEntity());
+        Page<LectureListResDto> lectureListResDtos = lectures.map(a-> {
+            Enrollment enrollment = null;
+            if(user != null){ // 로그인한 상황
+                enrollment = enrollmentService.findByLectureIdAndUserId(user,a);
+            }
+            LectureListResDto lectureListResDto = a.fromListEntity(enrollment);
+            return lectureListResDto;
+        });
         return lectureListResDtos;
     }
 
@@ -161,21 +179,26 @@ public class LectureService {
         }
 
         try {
-            MultipartFile imageFile = image;
-            if(!imageFile.isEmpty()){
-                String bgImagePathFileName = lecture.getId() + "_lectureImage_"  + imageFile.getOriginalFilename();
-                byte[] bgImagePathByte =  imageFile.getBytes();
-                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
-                lecture.updateImagePath(s3ImagePath);
+            if(image != null){
+                MultipartFile imageFile = image;
+                if(!imageFile.isEmpty()){
+                    String bgImagePathFileName = lecture.getId() + "_lectureImage_"  + imageFile.getOriginalFilename();
+                    byte[] bgImagePathByte =  imageFile.getBytes();
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                    lecture.updateImagePath(s3ImagePath);
+                }
             }
 
-            MultipartFile videoFile = video;
-            if(!videoFile.isEmpty()){
-                String bgImagePathFileName = lecture.getId() + "_lectureVideo_"  + videoFile.getOriginalFilename();
-                byte[] bgImagePathByte =  videoFile.getBytes();
-                String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
-                lecture.updateVideoPath(s3ImagePath, dto.getVideoDuration());
+            if(video != null){
+                MultipartFile videoFile = video;
+                if(!videoFile.isEmpty() && video != null){
+                    String bgImagePathFileName = lecture.getId() + "_lectureVideo_"  + videoFile.getOriginalFilename();
+                    byte[] bgImagePathByte =  videoFile.getBytes();
+                    String s3ImagePath = uploadAwsFileService.UploadAwsFileAndReturnPath(bgImagePathFileName,bgImagePathByte);
+                    lecture.updateVideoPath(s3ImagePath, dto.getVideoDuration());
+                }
             }
+
         }catch (IOException e) {
             throw new RuntimeException("파일 저장 실패");
         }

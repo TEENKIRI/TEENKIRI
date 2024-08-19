@@ -1,6 +1,4 @@
-
-// import LectureCreate from "@/views/lecture/LectureCreate.vue";
-
+import LectureCreate from "@/views/lecture/LectureCreate.vue";
 import LectureDetail from "@/views/lecture/LectureDetail.vue";
 import SubjectDetail from "@/views/subject/SubjectDetail.vue";
 import SubjectList from "@/views/subject/SubjectList.vue";
@@ -19,7 +17,7 @@ export const subjectRouter = [
         path: '/subject/create',
         name: 'SubjectCreate',
         component: SubjectCreate
-    },    
+    },
     {
         path: '/subject/recommend/list',
         name: 'SubjectRecommendList',
@@ -28,7 +26,7 @@ export const subjectRouter = [
     {
         path: '/subject/detail/:id',
         name: 'SubjectDetail',
-        component: SubjectDetail
+    component: SubjectDetail
     },
     {
         path: '/subject/:id/qna',
@@ -40,16 +38,16 @@ export const subjectRouter = [
         name: 'SubjectReview',
         component: SubjectReview
     },
-    // {
-    //     path: '/lecture/create', // 생성용
-    //     name: 'LectureCreate',
-    //     component: LectureCreate
-    // },
-    // {
-    //     path: '/lecture/create/:id', // 수정용
-    //     name: 'LectureCreate',
-    //     component: LectureCreate
-    // },
+    {
+        path: '/lecture/create/:subjectId', // 생성용
+        name: 'LectureCreate',
+        component: LectureCreate
+    },
+    {
+        path: '/lecture/edit/:id', // 수정용
+        name: 'LectureEdit',
+        component: LectureCreate
+    },
     {
         path: '/lecture/detail/:id',
         name: 'LectureDetail',
