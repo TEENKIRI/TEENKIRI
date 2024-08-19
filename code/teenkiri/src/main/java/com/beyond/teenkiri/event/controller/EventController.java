@@ -8,6 +8,7 @@ import com.beyond.teenkiri.event.dto.EventListResDto;
 import com.beyond.teenkiri.event.dto.EventSaveReqDto;
 import com.beyond.teenkiri.event.dto.EventUpdateDto;
 import com.beyond.teenkiri.event.service.EventService;
+import com.beyond.teenkiri.post.dto.PostListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,9 +49,16 @@ public class EventController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAllEvents(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<EventListResDto> eventList = eventService.eventList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"이벤트 목록을 조회합니다.", eventList);
+    public ResponseEntity<?> postListView(
+            @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "searchQuery", required = false) String searchQuery,
+            @RequestParam(value = "searchType", required = false) String searchType) {
+
+        System.out.println("Search Query Received: " + searchQuery);
+        System.out.println("Search Type Received: " + searchType);
+
+        Page<EventListResDto> postListResDto = eventService.eventListWithSearch(pageable, searchType, searchQuery);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "Return post list", postListResDto);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 

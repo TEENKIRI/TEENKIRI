@@ -1,24 +1,33 @@
 <template>
   <v-container>
-    <v-sheet class="mx-auto" width="500">
-      <v-form ref="form" class="d-flex">
-        <v-select
-          v-model="searchType"
-          :items="searchOptions"
-          item-title="text"
-          item-value="value"
-          required
-        ></v-select>
-        <v-text-field
-          v-model="searchValue"
-          label="검색어를 입력하세요."
-          required
-        ></v-text-field>
-        <v-btn @click="performSearch">검색</v-btn>
+
+    <!-- <v-sheet class="mx-auto" width="600"> -->
+      <v-form ref="form" class="d-flex mb-4">
+        <v-col cols="4">
+          <v-select
+            v-model="searchType"
+            :items="searchOptions"
+            item-title="text"
+            item-value="value"
+            label="검색 범위"
+            required
+          ></v-select>
+        </v-col>
+        <v-col cols="8">
+          <v-text-field
+            v-model="searchValue"
+            label="검색어를 입력하세요."
+            append-icon="mdi-magnify"
+            @click:append="performSearch"
+            required
+          ></v-text-field>
+        </v-col>
       </v-form>
-    </v-sheet>
+    <!-- </v-sheet> -->
     
-    <v-card>
+    
+    <!-- 추천 강좌 섹션 -->
+    <v-card class="mt-5">
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
@@ -41,6 +50,7 @@
       </v-card-text>
     </v-card>
 
+    <!-- 과목 선택 섹션 -->
     <v-row class="mt-5">
       <v-col cols="12" class="py-2">
         <v-btn-toggle
@@ -49,6 +59,7 @@
           rounded="0"
           group
           class="d-flex flex-row"
+          @change="performSearch"
         >
           <v-btn class="flex-grow-1" value="all">
             all
@@ -60,6 +71,7 @@
       </v-col>
     </v-row>
 
+    <!-- 학년 선택 및 정렬 -->
     <v-row>
       <v-col>
         <v-item-group
@@ -67,7 +79,7 @@
           multiple
           class="d-flex justify-start"
           v-model="grade.selectedGrades"
-          @change="onSelectionGradeChange"
+          @change="performSearch"
         >
           <div class="mr-5">학년</div>
           <v-item v-for="n in grade.gradeList" :key="n.value" v-slot="{ selectedClass, toggle }" :value="n.value">
@@ -84,27 +96,26 @@
       </v-col>
       <v-col>
         <v-row>
-          <v-col class="d-flex flex-row">
-            <v-btn @click="$router.push('/subject/create')">강좌 업로드</v-btn>
-
+          <v-col class="d-flex flex-row align-center">
             <v-select
               v-model="selectedType"
               :items="selectedOptions"
               item-title="text"
               item-value="value"
-              width="100"
+              label="정렬 기준"
+              class="ml-auto"
+              width="200"
               required
+              @change="performSearch"
             ></v-select>
+            <v-btn class="ml-4" color="success" @click="$router.push('/subject/create')">강좌 업로드</v-btn>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
 
-    <v-row>
-      <h1>채팅이 들어가는 자리</h1>
-    </v-row>
-
-    <v-row>
+    <!-- 강좌 목록 섹션 -->
+    <v-row class="mt-5">
       <v-card class="w-100">
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
@@ -143,22 +154,21 @@ export default {
         { text: "강사명", value: "userTeacher" },
         { text: "강좌명", value: "title" },
       ],
-      selectedType: "recent",
+      selectedType: "latest",  // 최신순 또는 평점순
       selectedOptions: [
-        { text: "최신순", value: "recent" },
+        { text: "최신순", value: "latest" },
         { text: "평점순", value: "like" },
       ],
       searchValue: "",
       course: {
         courseList: [],
-        selectedMenu: "all",
+        selectedMenu: "all",  // 선택된 과목 ID
         page: {
           pageSize: 5,
           currentPage: 0,
         }
       },
       subject: {
-        subjectIsMainList: [],
         subjectList: [],
         page: {
           pageSize: 5,
@@ -174,18 +184,29 @@ export default {
           { value: "GRADE_5", text: "5학년" },
           { value: "GRADE_6", text: "6학년" },
         ],
-        selectedGrades: []
+        selectedGrades: []  
       },
     };
   },
   created() {
     this.getCourseList();
-    this.getSubjectMainList();
     this.getSubjectList();
   },
   watch: {
     selectedType() {
-      this.performSearch();  // 선택된 정렬 타입이 바뀌면 즉시 검색 수행
+      this.performSearch(); 
+    },
+    selectedGrades() {
+      this.performSearch();  
+    },
+    'course.selectedMenu': function() {
+      this.performSearch();  
+    },
+    searchValue() {
+      this.performSearch();  
+    },
+    searchType() {
+      this.performSearch();  
     }
   },
 
@@ -197,68 +218,45 @@ export default {
           page: this.course.page.currentPage
         };
         const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, { params });
-        this.course.courseList = [...this.course.courseList, ...response.data.result.content];
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async getSubjectMainList() {
-      try {
-        const params = {
-          size: 10, // 상단 추천 강좌는 10개만 보임
-          page: 0
-        };
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, { params });
-        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...response.data.result.content];
+        this.course.courseList = response.data.result.content;
       } catch (e) {
         console.error(e);
       }
     },
     async getSubjectList() {
-  try {
-    const params = {
-      size: this.subject.page.pageSize,
-      page: this.subject.page.currentPage,
-      search: this.searchValue, 
-      searchType: this.searchType,
-      sort: this.selectedType === 'like' ? 'rating,desc' : 'createdTime,desc', // 정렬 기준 설정
-      grades: this.grade.selectedGrades.join("&")
-    };
-    
-    let api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/${this.course.selectedMenu}/list`;
-    if (this.course.selectedMenu === "all") {
-      api_url = `${process.env.VUE_APP_API_BASE_URL}/subject/list`;
-    }
+      try {
+        const params = {
+          size: this.subject.page.pageSize,
+          page: this.subject.page.currentPage,
+          search: this.searchValue, 
+          searchType: this.searchType,
+          sortType: this.selectedType,  
+          grades: this.grade.selectedGrades.join("&"),
+          courseId: this.course.selectedMenu !== "all" ? this.course.selectedMenu : null, 
+        };
 
-    const response = await axios.get(api_url, { params });
-    const additionalData = response.data.result.content;
-    this.subject.subjectList = [...this.subject.subjectList, ...additionalData];
-  } catch (e) {
-    console.error(e);
-  }
-},
-
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/list`, { params });
+        this.subject.subjectList = response.data.result.content;
+      } catch (e) {
+        console.error(e);
+      }
+    },
 
     resetSubjectVariables() {
       this.subject.page.currentPage = 0;
       this.subject.subjectList = [];
-      this.grade.selectedGrades = [];
-    },
-    onSelectionGradeChange() {
-      this.resetSubjectVariables();
-      this.getSubjectList();
     },
 
     performSearch() {
       this.resetSubjectVariables(); 
       this.getSubjectList();
     },
+
     goToDetail(id) {
       this.$router.push({ name: 'SubjectDetail', params: { id } });
     },
   },
 };
 </script>
-
 
 <style src="@/assets/css/SubjectList.css"></style>

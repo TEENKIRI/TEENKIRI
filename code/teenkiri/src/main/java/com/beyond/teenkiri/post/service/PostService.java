@@ -77,11 +77,32 @@ public class PostService {
         return postRepository.save(post);
     }
 
-
-    public Page<PostListResDto> postList(Pageable pageable) {
-        Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
-        return posts.map(a -> a.listFromEntity());
+    public Page<PostListResDto> postListWithSearch(Pageable pageable, String searchType, String searchQuery) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    return postRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
+                case "userNickname":
+                    return postRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
+                case "all":
+                    return postRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
+                                    searchQuery, searchQuery, DelYN.N, pageable)
+                            .map(Post::listFromEntity);
+                default:
+                    return postRepository.findByDelYN(DelYN.N, pageable).map(Post::listFromEntity);
+            }
+        } else {
+            return postRepository.findByDelYN(DelYN.N, pageable).map(Post::listFromEntity);
+        }
     }
+
+
+//    public Page<PostListResDto> postList(Pageable pageable) {
+//        Page<Post> posts = postRepository.findByDelYN(DelYN.N, pageable);
+//        return posts.map(a -> a.listFromEntity());
+//    }
 
     public PostDetailDto postDetail(Long id) {
         Post post = postRepository.findById(id)

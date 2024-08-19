@@ -16,15 +16,15 @@ public class SubjectListResDto {
     private String title;
     private String teacherName;
     private Boolean isSubscribe;
+
     private String subjectThumUrl;
 
     private LocalDateTime updatedTime;
     private LocalDateTime createdTime;
 
-    public SubjectListResDto(Long id, String title, String subjectThumUrl, String teacherName, boolean isSubscribe) {
+    public SubjectListResDto(Long id, String title, String teacherName, boolean isSubscribe) {
         this.id = id;
         this.title = title;
-        this.subjectThumUrl = subjectThumUrl;
         this.teacherName = teacherName;
         this.isSubscribe = isSubscribe;
     }

@@ -56,11 +56,24 @@ public class PostController {
         }
     }
 
-    // 모든 게시물 목록을 보여줍니다.
-    @GetMapping("list")
-    public ResponseEntity<?> postListResDtosList(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostListResDto> postList = postService.postList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "자유게시판 목록을 조회합니다.",postList);
+//    @GetMapping("list")
+//    public ResponseEntity<?> postListResDtosList(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+//        Page<PostListResDto> postList = postService.postList(pageable);
+//        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "자유게시판 목록을 조회합니다.",postList);
+//        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+//    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> postListView(
+            @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "searchQuery", required = false) String searchQuery,
+            @RequestParam(value = "searchType", required = false) String searchType) {
+
+        System.out.println("Search Query Received: " + searchQuery);
+        System.out.println("Search Type Received: " + searchType);
+
+        Page<PostListResDto> postListResDto = postService.postListWithSearch(pageable, searchType, searchQuery);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "Return post list", postListResDto);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 

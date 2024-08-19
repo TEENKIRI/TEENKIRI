@@ -11,5 +11,11 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post,Long> {
     Page<Post> findAll(Pageable pageable);
     Page<Post> findByDelYN(DelYN delYN, Pageable pageable);
-    List<Post> findByDelYN(DelYN delYN);
+//    List<Post> findByDelYN(DelYN delYN);
+
+    Page<Post> findByTitleContainingIgnoreCaseAndDelYN(String title, DelYN delYN, Pageable pageable);
+    Page<Post> findByUserNicknameContainingIgnoreCaseAndDelYN(String userNickname, DelYN delYN, Pageable pageable);
+    Page<Post> findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(String title, String nickname, DelYN delYN, Pageable pageable);
 }
+
+

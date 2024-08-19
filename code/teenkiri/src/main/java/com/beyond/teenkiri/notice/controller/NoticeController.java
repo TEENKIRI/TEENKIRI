@@ -8,6 +8,7 @@ import com.beyond.teenkiri.notice.dto.NoticeListResDto;
 import com.beyond.teenkiri.notice.dto.NoticeSaveReqDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
 import com.beyond.teenkiri.notice.service.NoticeService;
+import com.beyond.teenkiri.post.dto.PostListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,9 +49,13 @@ public class NoticeController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAllNotices(@PageableDefault(size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<NoticeListResDto> noticeList = noticeService.noticeList(pageable);
-        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "공지사항 목록을 조회합니다.", noticeList);
+    public ResponseEntity<?> postListView(
+            @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "searchQuery", required = false) String searchQuery,
+            @RequestParam(value = "searchType", required = false) String searchType) {
+
+        Page<NoticeListResDto> postListResDto = noticeService.noticeListWithSearch(pageable, searchType, searchQuery);
+        com.beyond.teenkiri.common.CommonResDto commonResDto = new com.beyond.teenkiri.common.CommonResDto(HttpStatus.OK, "Return post list", postListResDto);
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
