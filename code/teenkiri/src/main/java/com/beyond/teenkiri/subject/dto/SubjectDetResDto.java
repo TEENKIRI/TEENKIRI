@@ -19,10 +19,13 @@ public class SubjectDetResDto {
     private Grade grade;
     private Long userTeacherId;
     private String userTeacherName;
+    private String userTeacherEmail;
+    private Long courseId;
     private String courseTitle;
     private String description;
     private Float rating;
     private DelYN delYN;
+    private Boolean isMainSubject; // 상단 고정용 여부
     private Boolean isSubscribe; //로그인한 유저가 찜 해놓았는지
     private Boolean isRegistered; //로그인한 유저가 수강신청을 했는지
 
