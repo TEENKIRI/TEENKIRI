@@ -6,38 +6,58 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
-        <img v-bind:src="subjectData.subjectThumUrl" />
+      <v-col cols="12" md="6">
+        <v-img
+          :src="subjectData.subjectThumUrl"
+          max-width="100%"
+          max-height="400px"
+          class="mx-auto my-4 mt-8"
+          aspect-ratio="16/9"
+          contain
+          elevation="4"
+          rounded="lg"
+          
+        ></v-img>
       </v-col>
-      <v-col>
+      <v-col cols="12" md="6">
         <v-row>
-          <v-col>
-            <!-- 수강중인 경우 버튼 비활성화 -->
-            <v-btn :disabled="this.subjectData.isRegistered" @click="applyForSubject">
-              {{ this.subjectData.isRegistered ? "이미 수강중입니다" : "수강신청" }}
+          <v-col class="d-flex justify-end">
+            <v-btn
+              :disabled="this.subjectData.isRegistered"
+              @click="applyForSubject"
+              color="primary"
+              class="mr-4"
+            >
+              {{ this.subjectData.isRegistered ? "수강 중" : "수강신청" }}
             </v-btn>
-            <v-btn @click="handleWishlist">
+            <v-btn @click="handleWishlist" color="secondary">
               {{ this.subjectData.isSubscribe ? "찜 취소하기" : "찜하기" }}
             </v-btn>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <v-list lines="two">
-              <v-list-item
-                title="선생님"
-                :subtitle="subjectData.userTeacherName"
-              ></v-list-item>
-              <v-list-item title="수강대상" :subtitle="subjectData.grade"></v-list-item>
-              <v-list-item
-                title="강좌구성"
-                :subtitle="subjectData.userTeacherName"
-              ></v-list-item>
-              <v-list-item
-                title="평점"
-                :subtitle="subjectData.rating + ' 점'"
-              ></v-list-item>
-              <v-list-item title="설명" :subtitle="subjectData.description"></v-list-item>
+            <v-list dense lines="two">
+              <v-list-item>
+                <v-list-item-title class="custom-title">선생님</v-list-item-title>
+                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.userTeacherName }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title class="custom-title">수강대상</v-list-item-title>
+                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.grade }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title class="custom-title">강좌구성</v-list-item-title>
+                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.userTeacherName }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title class="custom-title">평점</v-list-item-title>
+                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.rating + ' 점' }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title class="custom-title">설명</v-list-item-title>
+                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.description }}</v-list-item-subtitle>
+              </v-list-item>
             </v-list>
           </v-col>
         </v-row>
@@ -45,7 +65,12 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-btn-toggle v-model="internalValue" color="primary" rounded="0" group>
+        <v-btn-toggle
+          v-model="internalValue"
+          color="primary"
+          rounded="0"
+          group
+        >
           <v-btn
             class="flex-grow-1"
             v-for="item in menuItems"
@@ -71,7 +96,7 @@ export default {
       required: true,
     },
   },
-  inject: ['getSubjectData'],
+  inject: ["getSubjectData"],
   data() {
     return {
       internalValue: this.modelValue,
@@ -93,8 +118,7 @@ export default {
         console.log(this.subjectData);
 
         // 데이터가 로드된 후 상위 컴포넌트에 알림
-        this.$emit('subject-data-loaded', this.subjectData);
-
+        this.$emit("subject-data-loaded", this.subjectData);
       } catch (error) {
         console.error("강좌 세부 정보 조회 실패:", error);
       }
@@ -125,11 +149,12 @@ export default {
       } else {
         await this.addToWishlist();
       }
-      // this.isInWishlist = !this.isInWishlist;
     },
     async addToWishlist() {
       try {
-        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`);
+        await axios.post(
+          `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
+        );
         alert("찜 추가 성공");
         this.subjectData.isSubscribe = true;
       } catch (error) {
@@ -139,7 +164,9 @@ export default {
     },
     async removeFromWishlist() {
       try {
-        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`);
+        await axios.delete(
+          `${process.env.VUE_APP_API_BASE_URL}/wish/${this.subjectId}`
+        );
         alert("찜 취소 성공");
         this.subjectData.isSubscribe = false;
       } catch (error) {
@@ -153,9 +180,12 @@ export default {
         return;
       }
       try {
-        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/my/subject/create`, {
-          subjectId: this.subjectId,
-        });
+        await axios.post(
+          `${process.env.VUE_APP_API_BASE_URL}/my/subject/create`,
+          {
+            subjectId: this.subjectId,
+          }
+        );
         alert("강좌 수강 신청이 완료되었습니다.");
         this.subjectData.isRegistered = true; // 신청 후 수강 상태 업데이트
       } catch (error) {
@@ -179,4 +209,23 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.v-img {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.v-btn {
+  min-width: 150px;
+}
+
+.custom-title {
+  font-size: 1.25rem !important; /* 약 20px */
+  font-weight: bold;
+}
+
+.custom-subtitle {
+  font-size: 1rem !important; /* 약 16px */
+}
+
+</style>

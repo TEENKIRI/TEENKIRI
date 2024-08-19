@@ -228,4 +228,5 @@ export default {
 .text_center {
   text-align: center;
 }
+
 </style>
