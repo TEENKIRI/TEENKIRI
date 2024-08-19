@@ -50,6 +50,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isVerified = false;
 
+    @Builder.Default
     private int reportCount = 0;
 
     @Enumerated(EnumType.STRING)

@@ -6,6 +6,7 @@
         :key="item.id"
         cols="12" sm="6" md="4">
         <v-card class="ma-4" :elevation="4" @click="viewDetails(item.id)" style="cursor: pointer;">
+          <!-- 이미지 부분 -->
           <v-img :src="item.subjectThumUrl" height="200px" contain></v-img>
           <v-card-title>
             {{ item.title }}
@@ -73,4 +74,3 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
-ㅞㅡ

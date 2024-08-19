@@ -24,6 +24,7 @@ public class SubjectListResDto {
     public SubjectListResDto(Long id, String title, String subjectThumUrl, String teacherName, boolean isSubscribe) {
         this.id = id;
         this.title = title;
+        this.subjectThumUrl = subjectThumUrl;
         this.teacherName = teacherName;
         this.isSubscribe = isSubscribe;
     }
