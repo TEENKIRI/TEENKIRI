@@ -1,5 +1,14 @@
 <template>
   <v-container class="mt-5">
+    <!-- 헤드 부분 -->
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-3 mb-4">
+<h1 class="board-title">{{ boardTitle }}</h1>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-card v-if="post" class="pa-5">
       <!-- 제목 -->
       <v-card-title class="d-flex justify-space-between align-center">
@@ -117,6 +126,7 @@ export default {
       error: null,
       userEmail: '',
       activeComment: null, // 현재 열려있는 conLayer의 댓글 ID
+      boardTitle: '' // 추가된 데이터 속성
     };
   },
   computed: {
@@ -132,6 +142,7 @@ export default {
     this.checkAdminRole();
     this.checkLoginStatus();
     this.checkIfFreeBoard();
+    this.setBoardTitle(); // 게시판 제목 설정
     this.fetchPostDetail();
 
     if (this.isFreeBoard) {
@@ -176,6 +187,18 @@ export default {
     checkIfFreeBoard() {
       const category = this.$route.params.category;
       this.isFreeBoard = category === 'post';
+    },
+    setBoardTitle() {
+      const category = this.$route.params.category;
+      if (category === 'event') {
+        this.boardTitle = '이벤트 게시판';
+      } else if (category === 'notice') {
+        this.boardTitle = '공지사항';
+      } else if (category === 'post') {
+        this.boardTitle = '자유게시판';
+      } else {
+        this.boardTitle = '게시판';
+      }
     },
     async fetchPostDetail() {
       try {
