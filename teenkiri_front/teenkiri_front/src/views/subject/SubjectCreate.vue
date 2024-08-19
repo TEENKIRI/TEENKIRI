@@ -223,8 +223,27 @@ export default {
       this.$router.push('/subject/list');
     },
 
-    getSubjectDetail(){
+    async getSubjectDetail(){
       console.log("수정용 콘솔")
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`);
+        console.log(response);
+        const subjectData = response.data.result;
+        this.subject = {
+          title: subjectData.title,
+          userTeacherEmail: subjectData.userTeacherEmail,
+          courseId: subjectData.courseId,
+          grade: subjectData.grade,
+          description: subjectData.description,
+          thumbnail: null,
+          isMainSubject: subjectData.isMainSubject,  // 메인 페이지 상단 노출 여부
+        }
+        this.previewImageSrc = subjectData.subjectThumUrl;
+        
+      } catch (error) {
+        console.error('Error creating subject:', error);
+        alert('강좌 생성에 실패했습니다.');
+      }
     }
   },
 };

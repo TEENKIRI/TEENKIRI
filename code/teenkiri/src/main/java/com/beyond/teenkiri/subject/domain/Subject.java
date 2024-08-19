@@ -102,11 +102,14 @@ public class Subject extends BaseTimeEntity {
                 .grade(this.grade)
                 .userTeacherId(this.userTeacher.getId())
                 .userTeacherName(this.userTeacher.getName())
+                .userTeacherEmail(this.userTeacher.getEmail())
                 .subjectThumUrl(this.subjectThumUrl)
+                .courseId(this.course.getId())
                 .courseTitle(this.course.getTitle())
                 .description(this.description)
                 .rating(this.rating)
                 .delYN(this.delYN)
+                .isMainSubject(this.isMainSubject) // 상단 고정용 인지
                 .isSubscribe((wish != null) ? true : false) // 유저 로그인 및 wish 여부 확인
                 .isRegistered((userSubject != null) ? true : false) // 유저 로그인 및 수강신청 여부 확인
                 .createdTime(this.getCreatedTime())
