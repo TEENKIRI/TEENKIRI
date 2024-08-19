@@ -56,6 +56,7 @@ public class Review extends BaseTimeEntity {
                 .subjectId(this.userSubject.getSubject().getId())
                 .rating(this.rating)
                 .reviewText(this.reviewText)
+                .userId(this.user.getId())
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
                 .build();
