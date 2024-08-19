@@ -78,6 +78,9 @@ public class UserService {
         return maskEmail(user.getEmail());
     }
 
+    public User findByEmailReturnNull(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
 
     private String maskEmail(String email) {
         return email.substring(0, 4) + "******" + email.substring(email.indexOf("@"));

@@ -10,6 +10,8 @@ import com.beyond.teenkiri.event.dto.EventUpdateDto;
 import com.beyond.teenkiri.event.repository.EventRepository;
 
 
+import com.beyond.teenkiri.post.domain.Post;
+import com.beyond.teenkiri.post.dto.PostListResDto;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -81,9 +83,25 @@ public class EventService {
     }
 
 
-    public Page<EventListResDto> eventList(Pageable pageable) {
-        Page<Event> Events = eventRepository.findByDelYN(DelYN.N, pageable);
-        return Events.map(a -> a.listFromEntity());
+    public Page<EventListResDto> eventListWithSearch(Pageable pageable, String searchType, String searchQuery) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    return eventRepository.findByTitleContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Event::listFromEntity);
+                case "userNickname":
+                    return eventRepository.findByUserNicknameContainingIgnoreCaseAndDelYN(searchQuery, DelYN.N, pageable)
+                            .map(Event::listFromEntity);
+                case "all":
+                    return eventRepository.findByTitleContainingIgnoreCaseOrUserNicknameContainingIgnoreCaseAndDelYN(
+                                    searchQuery, searchQuery, DelYN.N, pageable)
+                            .map(Event::listFromEntity);
+                default:
+                    return eventRepository.findByDelYN(DelYN.N, pageable).map(Event::listFromEntity);
+            }
+        } else {
+            return eventRepository.findByDelYN(DelYN.N, pageable).map(Event::listFromEntity);
+        }
     }
 
     public EventDetailDto getEventDetail(Long id) {

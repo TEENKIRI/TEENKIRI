@@ -2,6 +2,30 @@
   <div class="board-container">
     <div class="inner">
       <h1 class="board-title">{{ boardTitle }}</h1>
+
+      <v-form ref="form" class="d-flex mb-4">
+        <v-col cols="12" md="2"> 
+          <v-select
+            v-model="searchType"
+            :items="searchOptions"
+            item-title="text"
+            item-value="value"
+            label="검색 범위"
+            required
+          ></v-select>
+        </v-col>
+        <v-col cols="12" md="8"> 
+          <v-text-field
+            v-model="searchQuery"
+            label="검색어를 입력하세요."
+            append-icon="mdi-magnify"
+            @click:append="performSearch"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-form>
+
+      <!-- 게시글 목록 테이블 -->
       <table class="tbl_list">
         <caption></caption>
         <colgroup>
@@ -41,9 +65,13 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- 작성하기 버튼 -->
       <div class="btnWrap">
         <button @click="createNewPost" class="btn_write">작성하기</button>
       </div>
+
+      <!-- 페이지네이션 -->
       <div class="pagingWrap">
         <ul>
           <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
@@ -75,14 +103,23 @@ export default {
       category: '', // 현재 게시판 종류
       boardTitle: '', // 게시판 제목
       activeItem: null, // 현재 열려있는 conLayer의 아이템 ID
+
+      // 검색 필드 추가
+      searchType: 'all',
+      searchQuery: '',
+      searchOptions: [
+        { text: "전체", value: "all" },
+        { text: "제목", value: "title" },
+        { text: "작성자", value: "userNickname" },
+      ], 
     };
   },
   watch: {
-    '$route.params.category': 'fetchBoardItems', // category가 변경될 때마다 fetchBoardItems 호출
+    '$route.params.category': 'updateCategoryAndFetchItems', // category가 변경될 때마다 호출
   },
   created() {
     this.checkUserRole();
-    this.fetchBoardItems(); // 컴포넌트 생성 시 게시글 목록을 가져옴
+    this.updateCategoryAndFetchItems(); // 컴포넌트 생성 시 게시글 목록을 가져옴
     this.userId = localStorage.getItem('userId'); // 로컬스토리지에서 userId 가져오기
   },
   methods: {
@@ -91,38 +128,39 @@ export default {
       this.isAdmin = role === 'ADMIN';
       this.role = role;
     },
-    async fetchBoardItems() {
+    updateCategoryAndFetchItems() {
       this.category = this.$route.params.category;
       this.setBoardTitle();
-
-      let apiUrl = '';
-      if (this.category === 'event') {
-        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/list`;
-      } else if (this.category === 'notice') {
-        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/list`;
-      } else if (this.category === 'post') {
-        apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/list`;
-      } else {
-        console.error('잘못된 카테고리입니다.');
-        return;
-      }
-
-      try {
-        const response = await axios.get(apiUrl, {
-          params: {
-            page: this.currentPage - 1, // 페이지 번호 (0부터 시작)
-            size: this.itemsPerPage, // 페이지당 항목 수
-          },
-        });
-        console.log(response.data); // 응답 데이터를 콘솔에 출력
-    const data = response.data.result || response.data; // result 안에 데이터가 없다면 데이터 자체 사용
-    this.boardItems = data.content || data; // content가 없다면 데이터 자체 사용
-    this.totalPages = data.totalPages || 1; // totalPages가 없다면 1로 기본값 설정
-  } catch (error) {
-    console.error('목록을 가져오는 데 실패했습니다:', error);
-    alert('목록을 가져오는 데 실패했습니다.');
-  }
+      this.fetchBoardItems();
     },
+    async fetchBoardItems() {
+        try {
+            const params = {
+                page: this.currentPage - 1,
+                size: this.itemsPerPage,
+                searchType: this.searchType,
+                searchQuery: this.searchQuery,
+            };
+
+            // 이 부분은 검색 카테고리에 따라 'all'을 처리하는 로직입니다.
+            if (this.searchType === 'all' && this.searchQuery) {
+                params.searchType = 'all';
+            }
+
+            const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/board/${this.category}/list`, { params });
+
+            const result = response.data.result;
+            if (result && result.content) {
+                this.boardItems = result.content;
+                this.totalPages = result.totalPages;
+            } else {
+                console.error('올바르지 않은 데이터 형식입니다:', response.data);
+            }
+        } catch (error) {
+            console.error('목록을 가져오는 중 오류가 발생했습니다:', error);
+        }
+    },
+
     setBoardTitle() {
       if (this.category === 'event') {
         this.boardTitle = '이벤트 게시판';
@@ -151,8 +189,10 @@ export default {
       }
     },
     goToPage(page) {
-      this.currentPage = page;
-      this.fetchBoardItems();
+      if (page !== this.currentPage) {
+        this.currentPage = page;
+        this.fetchBoardItems();
+      }
     },
     createNewPost() {
       if (this.category !== 'post' && !this.isAdmin) {
@@ -161,39 +201,21 @@ export default {
       }
       this.$router.push({ name: 'BoardCreate', params: { category: this.category } });
     },
-    goToDetail(id, category) {
-      this.$router.push({ name: 'BoardDetail', params: { category, id } });
+    goToDetail(id) {
+      this.$router.push({ name: 'BoardDetail', params: { id, category: this.category } });
     },
     canEditOrDelete(item) {
-      if (this.category === 'post') {
-        return this.isAdmin || item.userId === this.userId;
-      } else {
-        return this.isAdmin;
-      }
+      return this.isAdmin || item.userId === this.userId;
     },
     toggleConLayer(itemId) {
-      if (this.activeItem === itemId) {
-        this.activeItem = null;
-      } else {
-        this.activeItem = itemId;
-      }
+      this.activeItem = this.activeItem === itemId ? null : itemId;
     },
     modifyPost(id) {
       this.$router.push({ name: 'BoardUpdate', params: { id, category: this.category } });
     },
     async deletePost(id) {
       if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
-        let apiUrl = '';
-        if (this.category === 'event') {
-          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/event/delete/${id}`;
-        } else if (this.category === 'notice') {
-          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/notice/delete/${id}`;
-        } else if (this.category === 'post') {
-          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/post/delete/${id}`;
-        } else {
-          console.error('잘못된 카테고리입니다.');
-          return;
-        }
+        let apiUrl = `${process.env.VUE_APP_API_BASE_URL}/board/${this.category}/delete/${id}`;
 
         try {
           await axios.delete(apiUrl);
@@ -205,130 +227,12 @@ export default {
         }
       }
     },
+    performSearch() {
+      this.currentPage = 1; // 검색할 때 첫 페이지로 초기화
+      this.fetchBoardItems();
+    },
   },
 };
 </script>
+<style src="@/assets/css/boardList.css"></style>
 
-<style scoped>
-/* (CSS 스타일은 그대로 유지) */
-.board-container {
-  width: 80%;
-  margin: 0 auto;
-  padding-top: 50px;
-}
-
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.board-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.tbl_list {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.tbl_list th,
-.tbl_list td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.tbl_list th {
-  background-color: #f4f4f4;
-}
-
-.text_left {
-  text-align: left;
-}
-
-.subject {
-  cursor: pointer;
-  color: #333;
-  text-decoration: none;
-}
-
-.subject:hover {
-  text-decoration: underline;
-}
-
-.btn_adm_control {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-.conLayer {
-  display: inline-block;
-  background-color: #f4f4f4;
-  border: 1px solid #ccc;
-  position: absolute;
-  z-index: 1;
-}
-
-.btnWrap {
-  text-align: right;
-  margin-top: 20px;
-}
-
-.btn_write {
-  padding: 10px 20px;
-  background-color: #f27885;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.btn_write:hover {
-  background-color: #fa5263;
-}
-
-.pagingWrap ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.pagingWrap li {
-  display: inline-block;
-}
-
-.pagingWrap li a {
-  margin: 0 5px;
-  text-decoration: none;
-  color: black;
-  cursor: pointer;
-}
-
-.pagingWrap li a.active {
-  font-weight: bold;
-  color: blue;
-}
-
-.pagingWrap .btn_paging_start:before {
-  content: "<<";
-}
-
-.pagingWrap .btn_paging_prev:before {
-  content: "<";
-}
-
-.pagingWrap .btn_paging_next:before {
-  content: ">";
-}
-
-.pagingWrap .btn_paging_end:before {
-  content: ">>";
-}
-</style>
