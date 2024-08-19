@@ -3,13 +3,12 @@
 
 # 팀원
 김창현 김정은 이예나 이한아 황요한
-https://github.com/user-attachments/assets/154772f6-deb4-4087-b661-e41a8c68e806
-
+<img width="518" alt="스크린샷 2024-08-07 오후 8 36 10" src="https://github.com/user-attachments/assets/0322c499-2c8b-4e59-b356-d75f5799c18e">
 
 # 프로젝트 개요
 
 # 프로젝트 요구사항 명세서
-[[요구사항 명세서]([https://github.com/beyond-sw-camp/be07-1st-7team-Tabling/blob/main/PDF%20file/Software%20Requirements%20Specification.pdf](https://docs.google.com/spreadsheets/d/120qVjj7PFPoHNYqx8IHpAQztUI7F3E29oSD8xP9Lv3Y/edit?pli=1&gid=0#gid=0))](https://docs.google.com/spreadsheets/d/120qVjj7PFPoHNYqx8IHpAQztUI7F3E29oSD8xP9Lv3Y/edit?pli=1&gid=0#gid=0)
+[요구사항 명세서](https://docs.google.com/spreadsheets/d/120qVjj7PFPoHNYqx8IHpAQztUI7F3E29oSD8xP9Lv3Y/edit?pli=1&gid=0#gid=0)
 
 # ER Diagram
 
