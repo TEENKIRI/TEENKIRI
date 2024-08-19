@@ -16,7 +16,7 @@
                 label="이름"
                 v-model="userEditInfo.name"
                 prepend-icon="mdi-account-box"
-                required
+                disabled
               ></v-text-field>
               <v-text-field
                 label="이메일"
@@ -28,7 +28,7 @@
                 label="핸드폰 번호"
                 v-model="userEditInfo.phone"
                 prepend-icon="mdi-phone"
-                required
+                disabled
               ></v-text-field>
 
               <!-- 주소 필드 -->
