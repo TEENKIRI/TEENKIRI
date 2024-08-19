@@ -108,7 +108,9 @@ public class ReviewService {
                 .average()
                 .orElse(0.0);
 
-        subject.setRating((float) averageRating);
+        double roundedRating = Math.round(averageRating * 100) / 100.0;
+
+        subject.setRating((float) roundedRating);
 
         subjectRepository.save(subject);
     }
