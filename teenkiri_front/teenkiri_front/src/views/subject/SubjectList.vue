@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container >
     <!-- 추천 강좌 섹션 -->
-    <v-card class="mt-5">
+    <v-card class="mt-5" >
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
@@ -35,8 +35,23 @@
     </v-card>
 
     <!-- <v-sheet class="mx-auto" width="600"> -->
-    <v-form ref="form" class="d-flex mt-4 mb-4">
-      <v-col cols="4">
+      <br>
+      <v-row>
+        <v-col class="d-flex flex-row align-center" cols="12" md="2">
+          <v-select
+            v-model="selectedType"
+            :items="selectedOptions"
+            item-title="text"
+            item-value="value"
+            label="정렬 기준"
+            class="ml-auto"
+            width="200"
+            required
+            @change="performSearch"
+          ></v-select>
+        </v-col>
+
+      <v-col cols="4" md="3">
         <v-select
           v-model="searchType"
           :items="searchOptions"
@@ -46,7 +61,7 @@
           required
         ></v-select>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="8" md="7">
         <v-text-field
           v-model="searchValue"
           label="검색어를 입력하세요."
@@ -55,10 +70,18 @@
           required
         ></v-text-field>
       </v-col>
-    </v-form>
+    </v-row>
+
     <!-- </v-sheet> -->
 
     <!-- 과목 선택 섹션 -->
+    <v-btn
+    class="mb-2"
+    color="success"
+    @click="$router.push('/subject/create')"
+    v-if="this.user.role === `ADMIN`"
+    >강좌 업로드</v-btn
+  >
     <v-btn
       class="mb-2"
       color="success"
@@ -66,6 +89,7 @@
       v-if="this.user.role === `ADMIN`"
       >과목 업로드</v-btn
     >
+
     <v-row>
       <v-col cols="12" class="py-2">
         <v-btn-toggle
@@ -123,36 +147,14 @@
             </v-chip>
           </v-item>
         </v-item-group>
-      </v-col>
-      <v-col>
-        <v-row>
-          <v-col class="d-flex flex-row align-center">
-            <v-select
-              v-model="selectedType"
-              :items="selectedOptions"
-              item-title="text"
-              item-value="value"
-              label="정렬 기준"
-              class="ml-auto"
-              width="200"
-              required
-              @change="performSearch"
-            ></v-select>
-            <v-btn
-              class="ml-4"
-              color="success"
-              @click="$router.push('/subject/create')"
-              v-if="this.user.role === `ADMIN`"
-              >강좌 업로드</v-btn
-            >
-          </v-col>
-        </v-row>
+        <br>
       </v-col>
     </v-row>
 
+    <v-card class="mt-5" >
     <!-- 강좌 목록 섹션 -->
     <v-row class="mt-5">
-      <v-card class="w-100">
+
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest">
@@ -183,8 +185,8 @@
             </div>
           </div>
         </v-card-text>
-      </v-card>
     </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -373,3 +375,23 @@ export default {
 </script>
 
 <style src="@/assets/css/SubjectList.css"></style>
+<style>
+.bg-container {
+  background-image: url('@/assets/images/visual_bg_1.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh; /* 전체 페이지를 덮도록 설정 */
+}
+
+.select-small .v-select {
+  min-height: 32px;
+  max-height: 32px;
+  font-size: 14px;
+  line-height: 32px;
+}
+
+.v-btn + .v-btn {
+  margin-left: 16px;
+}
+</style>
+

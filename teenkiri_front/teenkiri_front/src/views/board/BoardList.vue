@@ -14,7 +14,7 @@
             required
           ></v-select>
         </v-col>
-        <v-col cols="12" md="8"> 
+        <v-col cols="12" md="10"> 
           <v-text-field
             v-model="searchQuery"
             label="검색어를 입력하세요."

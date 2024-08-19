@@ -22,3 +22,4 @@ public class ReviewListResDto {
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }
+
