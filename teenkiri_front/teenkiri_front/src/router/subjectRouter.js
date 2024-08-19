@@ -1,3 +1,4 @@
+import CourseCreate from "@/views/course/CourseCreate.vue";
 import LectureCreate from "@/views/lecture/LectureCreate.vue";
 import LectureDetail from "@/views/lecture/LectureDetail.vue";
 import SubjectDetail from "@/views/subject/SubjectDetail.vue";
@@ -16,6 +17,11 @@ export const subjectRouter = [
     {
         path: '/subject/create',
         name: 'SubjectCreate',
+        component: SubjectCreate
+    },   
+    {
+        path: '/subject/edit/:id',
+        name: 'SubjectEdit',
         component: SubjectCreate
     },
     {
@@ -52,5 +58,15 @@ export const subjectRouter = [
         path: '/lecture/detail/:id',
         name: 'LectureDetail',
         component: LectureDetail
+    },
+    {
+        path: '/course/create', // 생성용
+        name: 'CourseCreate',
+        component: CourseCreate
+    },
+    {
+        path: '/course/edit/:id', // 수정용
+        name: 'CourseEdit',
+        component: CourseCreate
     },
 ]

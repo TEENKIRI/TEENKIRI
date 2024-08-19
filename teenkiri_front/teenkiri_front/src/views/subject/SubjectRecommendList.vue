@@ -3,7 +3,7 @@
     <h1>티니키리 서비스가 추천하는 강좌 👍</h1>
     <v-row>
       <v-col>
-        <v-row>
+        <v-row v-if="this.user.role===`ADMIN`">
           <v-col class="d-flex flex-row">
             <v-btn>강좌 업로드</v-btn>
           </v-col>

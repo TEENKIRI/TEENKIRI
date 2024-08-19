@@ -129,12 +129,20 @@ export default {
       courses: [],
       grades: ['GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'GRADE_5', 'GRADE_6'], 
       previewImageSrc: null,
+
+      subjectId: this.$route.params.id,
+      routeName: this.$route.name,
     };
   },
 
   created() {
     this.fetchTeacherList();
     this.fetchCourseList();
+    console.log("@@@@",this.routeName)
+    if (this.routeName === "SubjectEdit") {
+      // 수정용 라우터
+      this.getSubjectDetail();
+    }
   },
 
   methods: {
@@ -214,6 +222,10 @@ export default {
     goBack() {
       this.$router.push('/subject/list');
     },
+
+    getSubjectDetail(){
+      console.log("수정용 콘솔")
+    }
   },
 };
 </script>

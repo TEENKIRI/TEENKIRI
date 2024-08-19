@@ -1,38 +1,14 @@
 <template>
   <v-container>
-
-    <!-- <v-sheet class="mx-auto" width="600"> -->
-      <v-form ref="form" class="d-flex mb-4">
-        <v-col cols="4">
-          <v-select
-            v-model="searchType"
-            :items="searchOptions"
-            item-title="text"
-            item-value="value"
-            label="검색 범위"
-            required
-          ></v-select>
-        </v-col>
-        <v-col cols="8">
-          <v-text-field
-            v-model="searchValue"
-            label="검색어를 입력하세요."
-            append-icon="mdi-magnify"
-            @click:append="performSearch"
-            required
-          ></v-text-field>
-        </v-col>
-      </v-form>
-    <!-- </v-sheet> -->
-    
-    
     <!-- 추천 강좌 섹션 -->
     <v-card class="mt-5">
       <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
       <v-card-text>
         <div class="swiper swiperLectureBest">
-          <div class="swiper-slide" 
-            v-for="sm in subject.subjectIsMainList" :key="sm.id"
+          <div
+            class="swiper-slide"
+            v-for="sm in subject.subjectIsMainList"
+            :key="sm.id"
             @click="goToDetail(sm.id)"
           >
             <div class="thumb">
@@ -44,18 +20,53 @@
               <p class="subject">{{ sm.title }}</p>
               <p class="name">{{ sm.teacherName }}</p>
             </div>
-            <button type="button" 
-              class="btn_like" 
-              @click="toggleWish(sm.id, $event)" 
-              :class="{ 'mdi mdi-heart': sm.isSubscribe, 'mdi mdi-heart-outline': !sm.isSubscribe }">
-            </button>
+            <button
+              type="button"
+              class="btn_like"
+              @click="toggleWish(sm.id, $event, `subjectMain`)"
+              :class="{
+                'mdi mdi-heart': sm.isSubscribe,
+                'mdi mdi-heart-outline': !sm.isSubscribe,
+              }"
+            ></button>
           </div>
         </div>
       </v-card-text>
     </v-card>
 
+    <!-- <v-sheet class="mx-auto" width="600"> -->
+    <v-form ref="form" class="d-flex mt-4 mb-4">
+      <v-col cols="4">
+        <v-select
+          v-model="searchType"
+          :items="searchOptions"
+          item-title="text"
+          item-value="value"
+          label="검색 범위"
+          required
+        ></v-select>
+      </v-col>
+      <v-col cols="8">
+        <v-text-field
+          v-model="searchValue"
+          label="검색어를 입력하세요."
+          append-icon="mdi-magnify"
+          @click:append="performSearch"
+          required
+        ></v-text-field>
+      </v-col>
+    </v-form>
+    <!-- </v-sheet> -->
+
     <!-- 과목 선택 섹션 -->
-    <v-row class="mt-5">
+    <v-btn
+      class="mb-2"
+      color="success"
+      @click="$router.push('/course/create')"
+      v-if="this.user.role === `ADMIN`"
+      >과목 업로드</v-btn
+    >
+    <v-row>
       <v-col cols="12" class="py-2">
         <v-btn-toggle
           v-model="course.selectedMenu"
@@ -65,11 +76,26 @@
           class="d-flex flex-row"
           @change="performSearch"
         >
-          <v-btn class="flex-grow-1" value="all">
-            all
-          </v-btn>
-          <v-btn class="flex-grow-1" v-for="c in course.courseList" :key="c.id" :value="c.id">
+          <v-btn class="flex-grow-1" value="all"> all </v-btn>
+          <v-btn
+            class="flex-grow-1"
+            v-for="c in course.courseList"
+            :key="c.id"
+            :value="c.id"
+          >
             {{ c.title }}
+            <span
+              v-if="this.user.role === `ADMIN`"
+              class="mdi mdi-pencil"
+              style="
+                width: 24px;
+                height: 24px;
+                font-size: 24px;
+                line-height: 24px;
+                color: #f27885;
+              "
+              @click="editCourse(c.id, $event)"
+            ></span>
           </v-btn>
         </v-btn-toggle>
       </v-col>
@@ -86,13 +112,13 @@
           @change="performSearch"
         >
           <div class="mr-5">학년</div>
-          <v-item v-for="n in grade.gradeList" :key="n.value" v-slot="{ selectedClass, toggle }" :value="n.value">
-            <v-chip
-              class="mr-2"
-              :class="selectedClass"
-              @click="toggle"
-              :value="n.value"
-            >
+          <v-item
+            v-for="n in grade.gradeList"
+            :key="n.value"
+            v-slot="{ selectedClass, toggle }"
+            :value="n.value"
+          >
+            <v-chip class="mr-2" :class="selectedClass" @click="toggle" :value="n.value">
               {{ n.text }}
             </v-chip>
           </v-item>
@@ -112,7 +138,13 @@
               required
               @change="performSearch"
             ></v-select>
-            <v-btn class="ml-4" color="success" @click="$router.push('/subject/create')">강좌 업로드</v-btn>
+            <v-btn
+              class="ml-4"
+              color="success"
+              @click="$router.push('/subject/create')"
+              v-if="this.user.role === `ADMIN`"
+              >강좌 업로드</v-btn
+            >
           </v-col>
         </v-row>
       </v-col>
@@ -124,8 +156,10 @@
         <v-card-title>강좌 목록</v-card-title>
         <v-card-text>
           <div class="swiper swiperLectureBest">
-            <div class="swiper-slide" 
-              v-for="s in subject.subjectList" :key="s.id"
+            <div
+              class="swiper-slide"
+              v-for="s in subject.subjectList"
+              :key="s.id"
               @click="goToDetail(s.id)"
             >
               <div class="thumb">
@@ -137,11 +171,15 @@
                 <p class="subject">{{ s.title }}</p>
                 <p class="name">{{ s.teacherName }}</p>
               </div>
-              <button type="button" 
-                class="btn_like" 
-                @click="toggleWish(s.id, $event)" 
-                :class="{ 'mdi mdi-heart': s.isSubscribe, 'mdi mdi-heart-outline': !s.isSubscribe }">
-              </button>
+              <button
+                type="button"
+                class="btn_like"
+                @click="toggleWish(s.id, $event, `subjectList`)"
+                :class="{
+                  'mdi mdi-heart': s.isSubscribe,
+                  'mdi mdi-heart-outline': !s.isSubscribe,
+                }"
+              ></button>
             </div>
           </div>
         </v-card-text>
@@ -151,7 +189,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -164,7 +202,7 @@ export default {
         { text: "강사명", value: "userTeacher" },
         { text: "강좌명", value: "title" },
       ],
-      selectedType: "latest",  // 최신순 또는 평점순
+      selectedType: "latest", // 최신순 또는 평점순
       selectedOptions: [
         { text: "최신순", value: "latest" },
         { text: "평점순", value: "like" },
@@ -172,11 +210,11 @@ export default {
       searchValue: "",
       course: {
         courseList: [],
-        selectedMenu: "all",  // 선택된 과목 ID
+        selectedMenu: "all", // 선택된 과목 ID
         page: {
           pageSize: 5,
           currentPage: 0,
-        }
+        },
       },
       subject: {
         subjectList: [],
@@ -184,7 +222,7 @@ export default {
         page: {
           pageSize: 5,
           currentPage: 0,
-        }
+        },
       },
       grade: {
         gradeList: [
@@ -195,7 +233,7 @@ export default {
           { value: "GRADE_5", text: "5학년" },
           { value: "GRADE_6", text: "6학년" },
         ],
-        selectedGrades: []  
+        selectedGrades: [],
       },
     };
   },
@@ -212,30 +250,33 @@ export default {
   },
   watch: {
     selectedType() {
-      this.performSearch(); 
+      this.performSearch();
     },
     selectedGrades() {
-      this.performSearch();  
+      this.performSearch();
     },
-    'course.selectedMenu': function() {
-      this.performSearch();  
+    "course.selectedMenu": function () {
+      this.performSearch();
     },
     searchValue() {
-      this.performSearch();  
+      this.performSearch();
     },
     searchType() {
-      this.performSearch();  
-    }
+      this.performSearch();
+    },
   },
 
   methods: {
     async getCourseList() {
       try {
         const params = {
-          size: this.course.page.pageSize,
-          page: this.course.page.currentPage
+          size: 1000,
+          page: this.course.page.currentPage,
         };
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, { params });
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/course/list`,
+          { params }
+        );
         this.course.courseList = response.data.result.content;
       } catch (e) {
         console.error(e);
@@ -245,10 +286,16 @@ export default {
       try {
         const params = {
           size: 10, // 상단 추천 강좌는 10개만 보임
-          page: 0
+          page: 0,
         };
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/main/list`, { params });
-        this.subject.subjectIsMainList = [...this.subject.subjectIsMainList, ...response.data.result.content];
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/main/list`,
+          { params }
+        );
+        this.subject.subjectIsMainList = [
+          ...this.subject.subjectIsMainList,
+          ...response.data.result.content,
+        ];
       } catch (e) {
         console.error(e);
       }
@@ -258,14 +305,17 @@ export default {
         const params = {
           size: this.subject.page.pageSize,
           page: this.subject.page.currentPage,
-          search: this.searchValue, 
+          search: this.searchValue,
           searchType: this.searchType,
-          sortType: this.selectedType,  
+          sortType: this.selectedType,
           grades: this.grade.selectedGrades.join("&"),
-          courseId: this.course.selectedMenu !== "all" ? this.course.selectedMenu : null, 
+          courseId: this.course.selectedMenu !== "all" ? this.course.selectedMenu : null,
         };
 
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/list`, { params });
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/list`,
+          { params }
+        );
         this.subject.subjectList = response.data.result.content;
       } catch (e) {
         console.error(e);
@@ -278,23 +328,31 @@ export default {
     },
 
     performSearch() {
-      this.resetSubjectVariables(); 
+      this.resetSubjectVariables();
       this.getSubjectList();
     },
 
     goToDetail(id) {
-      this.$router.push({ name: 'SubjectDetail', params: { id } });
+      this.$router.push({ name: "SubjectDetail", params: { id } });
     },
-    async toggleWish(id, event){
-      event.stopPropagation();  // 이벤트 전파 방지
-      console.log("클릭!!", id);
-      if(Object.keys(this.user).length > 0){ // 로그인 한 유저
+    async toggleWish(id, event, type) {
+      event.stopPropagation(); // 이벤트 전파 방지
+      console.log("클릭!!", id, type);
+      if (Object.keys(this.user).length > 0) {
+        // 로그인 한 유저
         try {
-          const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`);
-          console.log(response)
-          console.log(response.data.result)
-          console.log(response.data.result.status)
-          const subject = this.subject.subjectIsMainList.find(sm => sm.id === id);
+          const response = await axios.get(
+            `${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`
+          );
+
+          let subject;
+          console.log(type, type == "subjectList", type == "subjectMain");
+          if (type == "subjectList") {
+            subject = this.subject.subjectList.find((s) => s.id === id);
+          } else if (type == "subjectMain") {
+            subject = this.subject.subjectIsMainList.find((sm) => sm.id === id);
+          }
+
           if (subject) {
             subject.isSubscribe = response.data.result.status;
           }
@@ -302,10 +360,14 @@ export default {
           alert("찜 추가 실패");
           console.error(error);
         }
-      }else{
-        alert("로그인 후 사용 가능합니다.")
+      } else {
+        alert("로그인 후 사용 가능합니다.");
       }
     },
+    editCourse(id, event){
+      event.stopPropagation(); // 이벤트 전파 방지
+      this.$router.push({ name: "CourseEdit", params: { id } });
+    }
   },
 };
 </script>

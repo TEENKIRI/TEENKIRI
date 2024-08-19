@@ -5,6 +5,11 @@
         <h1>{{ subjectData.title }}</h1>
       </v-col>
     </v-row>
+    <v-row v-if="this.user.role == `ADMIN`">
+      <v-col>
+        <v-btn @click="editSubject()">강의 수정</v-btn>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="12" md="6">
         <v-img
@@ -99,12 +104,19 @@ export default {
   inject: ["getSubjectData"],
   data() {
     return {
+      user: {},
       internalValue: this.modelValue,
       subjectId: "",
       subjectData: null,
     };
   },
-  created() {
+  async created() {
+    try {
+      await this.$store.dispatch("setUserAllInfoActions");
+      this.user = this.$store.getters.getUserObj;
+    } catch (error) {
+      console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", error);
+    }
     this.subjectId = this.$route.params.id;
     this.getSubjectDetail();
   },
@@ -196,6 +208,9 @@ export default {
     goToPage(pathName) {
       this.$router.push({ name: pathName, params: { id: this.subjectId } });
     },
+    editSubject(){
+      this.$router.push({ name: "SubjectEdit", params: { id: this.subjectId } });
+    }
   },
   computed: {
     menuItems() {

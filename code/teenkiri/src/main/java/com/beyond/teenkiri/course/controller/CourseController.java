@@ -2,6 +2,7 @@ package com.beyond.teenkiri.course.controller;
 
 import com.beyond.teenkiri.common.dto.CommonResDto;
 import com.beyond.teenkiri.course.domain.Course;
+import com.beyond.teenkiri.course.dto.CourseDetResDto;
 import com.beyond.teenkiri.course.dto.CourseListResDto;
 import com.beyond.teenkiri.course.dto.CourseSaveReqDto;
 import com.beyond.teenkiri.course.dto.CourseUpdateReqDto;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,10 +30,18 @@ public class CourseController {
 
     //    과목 리스트
     @GetMapping("/course/list")
-    public ResponseEntity<?> courseListView(@PageableDefault(page = 0, size=10, sort = "id",
+    public ResponseEntity<?> courseListView(@PageableDefault(page = 0, size=1000, sort = "id",
             direction = Sort.Direction.DESC ) Pageable pageable){
         Page<CourseListResDto> courseListResDtos = courseService.courseList(pageable);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "과목 리스트",courseListResDtos);
+        return new ResponseEntity<>(commonResDto,HttpStatus.OK);
+    }
+
+    // 과목 상세페이지 화면
+    @GetMapping("/course/detail/{id}")
+    public ResponseEntity<?> courseDetail(@PathVariable Long id){
+        CourseDetResDto courseDetResDto = courseService.courseDetail(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "과목 상세", courseDetResDto);
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 

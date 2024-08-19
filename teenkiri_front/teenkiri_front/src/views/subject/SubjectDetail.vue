@@ -24,8 +24,10 @@
           <col width="80" />
           <col width="" />
           <col width="140" />
-          <col :width="isAdmin ? '180' : '280'" /> <!-- 수강여부 열의 너비를 관리자가 아닐 때 넓힘 -->
-          <col v-if="isAdmin" width="100" /> <!-- 관리 열 -->
+          <col :width="isAdmin ? '180' : '280'" />
+          <!-- 수강여부 열의 너비를 관리자가 아닐 때 넓힘 -->
+          <col v-if="isAdmin" width="100" />
+          <!-- 관리 열 -->
         </colgroup>
         <thead>
           <tr>
@@ -34,7 +36,8 @@
             <th class="text-center">수강여부</th>
             <th>강의시간</th>
             <th>이동</th>
-            <th v-if="this.user.isAdmin">관리</th> <!-- 관리 버튼 헤더 -->
+            <th v-if="this.user.isAdmin">관리</th>
+            <!-- 관리 버튼 헤더 -->
           </tr>
         </thead>
         <tbody>
@@ -46,29 +49,35 @@
             <td class="text_left">{{ item.title }}</td>
             <td class="text-center">
               <div class="py-2">
-                    <div v-if="item.progress">{{ item.progress }} %</div>
-                    <div>
-                      <v-chip v-if="item.isCompleted" color="primary">
-                        수강완료
-                      </v-chip>
-                      <v-chip v-if="item.isCompleted === false" color="green">
-                        수강 중
-                      </v-chip>
-                      <v-chip
-                        v-if="item.isCompleted === null"
-                        color="secondary"
-                      >
-                        시청 전
-                      </v-chip>
-                    </div>
-                  </div>
+                <div v-if="item.progress">{{ item.progress }} %</div>
+                <div>
+                  <v-chip v-if="item.isCompleted" color="primary"> 수강완료 </v-chip>
+                  <v-chip v-if="item.isCompleted === false" color="green">
+                    수강 중
+                  </v-chip>
+                  <v-chip v-if="item.isCompleted === null" color="secondary">
+                    시청 전
+                  </v-chip>
+                </div>
+              </div>
             </td>
             <td>{{ item.videoDuration }}</td>
             <td>
-              <a v-if="user.userId" href="javascript:void(0)" class="btn_write" @click="goToDetail(item.id)">강의보기</a>
+              <a
+                v-if="user.userId"
+                href="javascript:void(0)"
+                class="btn_write"
+                @click="goToDetail(item.id)"
+                >강의보기</a
+              >
             </td>
             <td v-if="this.user.isAdmin">
-              <a href="javascript:void(0)" class="btn_write" :to="`/lecture/edit/${item.id}`">수정</a>
+              <a
+                href="javascript:void(0)"
+                class="btn_write"
+                :to="`/lecture/edit/${item.id}`"
+                >수정</a
+              >
             </td>
           </tr>
         </tbody>
@@ -138,15 +147,15 @@ export default {
       );
       const additionalData = response.data.result.content;
       console.log(response);
-      this.lecture.lectureList = [
-        ...this.lecture.lectureList,
-        ...additionalData,
-      ];
+      this.lecture.lectureList = [...this.lecture.lectureList, ...additionalData];
     },
     setLectureCreateBtn() {
       console.log(this.user);
       console.log(this.user.userId, this.subjectData.userTeacherId);
-      if (Number(this.user.userId) === this.subjectData.userTeacherId || this.user.role == "ADMIN") {
+      if (
+        Number(this.user.userId) === this.subjectData.userTeacherId ||
+        this.user.role == "ADMIN"
+      ) {
         console.log("수정 가능!!");
         this.user.isAdmin = true;
       } else {
@@ -157,7 +166,7 @@ export default {
     handleSubjectDataLoaded(data) {
       this.subjectData = data;
       // 여기에 추가 작업을 작성하면 됩니다.
-      if(this.subjectData && this.user.userId){
+      if (this.subjectData && this.user.userId) {
         this.setLectureCreateBtn();
       }
     },
@@ -188,7 +197,7 @@ export default {
 }
 
 .btn_write {
-  background-color:   #f27885;
+  background-color: #f27885;
   color: #fff;
   padding: 10px 20px;
   text-decoration: none;
@@ -197,7 +206,6 @@ export default {
   display: inline-block;
   transition: background-color 0.3s ease;
 }
-
 
 .tbl_list {
   width: 100%;
@@ -219,7 +227,7 @@ export default {
 .tbl_list th {
   background-color: #f4f4f4;
   font-weight: bold;
-  font-size: 20px; 
+  font-size: 20px;
 }
 .text_left {
   text-align: left;
@@ -228,5 +236,4 @@ export default {
 .text_center {
   text-align: center;
 }
-
 </style>

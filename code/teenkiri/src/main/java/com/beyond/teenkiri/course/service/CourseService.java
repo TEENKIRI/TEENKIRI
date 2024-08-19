@@ -33,7 +33,7 @@ public class CourseService {
 
     //    과목 리스트
     public Page<CourseListResDto> courseList(Pageable pageable){
-        Page<Course> courses = courseRepository.findAll(pageable);
+        Page<Course> courses = courseRepository.findByDelYN(DelYN.N,pageable);
         Page<CourseListResDto> courseListResDtos = courses.map(a->a.fromListEntity());
         return courseListResDtos;
     }
@@ -73,6 +73,9 @@ public class CourseService {
     public Course courseDelete(Long id){
         Course course = courseRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("존재하지 않는 과목입니다."));
+        if(!course.getSubjects().isEmpty()){
+            throw new RuntimeException("연결되어있는 강좌가 존재하여 삭제하실 수 없습니다.");
+        }
         course.updateDelYn(DelYN.Y);
         return course;
     }
