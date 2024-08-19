@@ -30,7 +30,7 @@ public class SubjectController {
 
     @GetMapping("/list")
     public ResponseEntity<?> subjectListView(
-            @PageableDefault(page = 0, size = 10, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 0, size = 9, sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "sortType", required = false, defaultValue = "latest") String sortType,
