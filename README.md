@@ -2,14 +2,16 @@
 초등온라인교육사이트!
 
 # 팀원
-김창현 김정은 이예나 이한아 황요한
-
-<img width="518" alt="스크린샷 2024-08-07 오후 8 36 10" src="https://github.com/user-attachments/assets/0322c499-2c8b-4e59-b356-d75f5799c18e">
 
 |팀장|팀원|팀원|팀원|팀원|
 |------|---|---|---|---|
 |김창현|김정은|이예나|이한아|황요한|
-|![KakaoTalk_Photo_2024-08-19-14-39-35](https://github.com/user-attachments/assets/9218f7ef-7a3f-40bc-aa6a-a65b8bb65aac)|
+|![창현](https://github.com/user-attachments/assets/6cbde653-2dc2-41bc-967b-98c385ca0324) |
+![정은](https://github.com/user-attachments/assets/39f023ed-c272-4218-b11c-c03c2c51ed5e) |
+![한아](https://github.com/user-attachments/assets/29f30df2-465e-45e3-925a-c84bdb003a72) |
+![예나](https://github.com/user-attachments/assets/50ca9133-e2ab-4d45-b4ee-200bc1f21f31) |
+![요한](https://github.com/user-attachments/assets/f69d21a0-496b-46e3-b380-3443a905a791) |
+
 # 프로젝트 개요
 
 # 프로젝트 요구사항 명세서
