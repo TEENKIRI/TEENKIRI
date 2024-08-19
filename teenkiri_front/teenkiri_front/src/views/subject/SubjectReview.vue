@@ -112,6 +112,9 @@ export default {
     isAdmin() {
       return this.user.role === 'ADMIN';
     },
+    hasUserAlreadyReviewed() {
+      return this.reviews.some(review => review.userId === this.user.id);
+    }
   },
   async created() {
     try {
@@ -147,7 +150,11 @@ export default {
       }
     },
     openReviewForm() {
-      this.dialog = true;
+      if (this.hasUserAlreadyReviewed) {
+        alert('이미 이 과목에 대한 리뷰를 작성하셨습니다.');
+      } else {
+        this.dialog = true;
+      }
     },
     closeReviewForm() {
       this.dialog = false;
@@ -174,8 +181,7 @@ export default {
               id: response.data.data,
               createdTime: new Date(),
             });
-            this.snackbarMessage = '리뷰가 성공적으로 등록되었습니다.';
-            this.snackbar = true; 
+            alert('리뷰가 성공적으로 등록되었습니다.');
             this.closeReviewForm();
           } else if (response.status === 409) {
             throw new Error('이미 이 과목에 대한 리뷰를 작성하셨습니다.');
@@ -197,8 +203,7 @@ export default {
 
           if (response.status === 200) {
             this.reviews = this.reviews.filter(review => review.id !== reviewId);
-            this.snackbarMessage = '리뷰가 삭제되었습니다.';
-            this.snackbar = true;
+            alert('리뷰가 삭제되었습니다.');
           } else {
             throw new Error('리뷰 삭제 중 오류가 발생했습니다.');
           }
