@@ -62,27 +62,18 @@
                 <p class="subject">{{ sm.title }}</p>
                 <p class="name">{{ sm.teacherName }}</p>
               </div>
-              <button
-                type="button"
-                class="btn_like"
-                @click="toggleWish(sm.id, $event)"
-                :class="{
-                  'mdi mdi-heart': sm.isSubscribe,
-                  'mdi mdi-heart-outline': !sm.isSubscribe,
-                }"
-              ></button>
             </div>
           </div>
         </v-card-text>
     </v-container>
     <v-sheet class="mainStudy">
       <div class="inner">
-        <div class="movieWrap" v-if="this.subject.subjectList.length > 0">
+        <div class="movieWrap" v-if="this.subject.subjectList.length > 0" @click="goToDetail(subject.subjectList[0].id)">
           <div class="movie">
             <img v-bind:src="subject.subjectList[0].subjectThumUrl" alt="" />
           </div>
           <div class="txt">
-            <p class="subject">
+            <p class="subject" >
               {{ subject.subjectList[0].title }}
             </p>
             <p class="name">{{ subject.subjectList[0].teacherName }}</p>
@@ -126,9 +117,8 @@
             class="swiper-slide"
             v-for="s in subject.subjectList"
             :key="s.id"
-            @click="goToDetail(s.id)"
           >
-            <div class="swiper-slide">
+            <div class="swiper-slide" @click="goToDetail(s.id)">
               <div class="thumb">
                 <a href="javascript:void(0)">
                   <img v-bind:src="s.subjectThumUrl" alt="강좌 썸네일" />
@@ -273,6 +263,9 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+    goToDetail(id) {
+      this.$router.push({ name: 'SubjectDetail', params: { id } });
     },
   },
 };
