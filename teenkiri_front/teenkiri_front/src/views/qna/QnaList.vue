@@ -41,7 +41,7 @@
           <col width="auto" />
           <col width="140" />
           <col width="140" />
-          <col width="160" /> <!-- 작성일 칸의 너비를 160으로 증가 -->
+
         </colgroup>
         <thead>
           <tr>

@@ -3,8 +3,8 @@
     <v-container>
       <SubjectDetailComponent v-model="selectedMenu" />
 
-      <div class="btnWrap">
-        <a href="javascript:void(0)" class="btn_write" @click="openReviewForm">후기 작성</a>
+      <div class="btnWrap" v-if="hasEnrolled">
+        <a href="javascript:void(0)" class="btn_write" @click="handleReviewButtonClick">후기 작성</a>
       </div>
 
       <!-- 리뷰 목록 -->
@@ -70,10 +70,10 @@
         </v-card>
       </v-dialog>
 
-      <!-- 스낵바 -->
-      <v-snackbar v-model="snackbar" :timeout="3000">
-        {{ snackbarMessage }}
-        <v-btn color="red" text @click="snackbar = false">Close</v-btn>
+      <!-- 수강 상태에 따른 알림 모달 -->
+      <v-snackbar v-model="enrollmentSnackbar" :timeout="3000">
+        수강 신청을 해야 후기를 작성할 수 있습니다.
+        <v-btn color="red" text @click="enrollmentSnackbar = false">Close</v-btn>
       </v-snackbar>
     </v-container>
   </v-app>
@@ -91,7 +91,7 @@ export default {
     return {
       user: {
         token: '',
-        id: '',
+        userId: '',
         email: '',
         nickname: '',
       },
@@ -104,8 +104,8 @@ export default {
         rating: 0,
         reviewText: '',
       },
-      snackbar: false, 
-      snackbarMessage: '',
+      enrollmentSnackbar: false, // 수강 여부에 따른 모달
+      hasEnrolled: false, // 수강 여부 상태를 나타내는 변수
     };
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
       return this.user.role === 'ADMIN';
     },
     hasUserAlreadyReviewed() {
-      return this.reviews.some(review => review.userId === this.user.id);
+      return this.reviews.some(review => review.userId === parseInt(this.user.userId, 10));
     }
   },
   async created() {
@@ -126,6 +126,7 @@ export default {
         location.href = -1;
       } else {
         this.fetchReviews();
+        this.checkSubject();
       }
     } catch (error) {
       console.error('사용자 정보를 가져오는 중 오류가 발생했습니다:', error);
@@ -149,12 +150,29 @@ export default {
         this.reviews = [];
       }
     },
-    openReviewForm() {
-      if (this.hasUserAlreadyReviewed) {
-        alert('이미 이 과목에 대한 리뷰를 작성하셨습니다.');
-      } else {
-        this.dialog = true;
+    async checkSubject() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/my/subject/${this.subjectId}`);
+        const subjects = response.data.result.subjects;
+
+        this.hasEnrolled = subjects.some(subject => subject.id === parseInt(this.subjectId, 10));
+
+        if (!this.hasEnrolled) {
+          this.enrollmentSnackbar = true; // 수강 상태 알림 모달을 표시합니다.
+        }
+      } catch (error) {
+        console.error('수강 상태 확인 중 오류가 발생했습니다:', error);
       }
+    },
+    handleReviewButtonClick() {
+      if (this.hasUserAlreadyReviewed) {
+        alert('후기는 한번만 작성이 가능합니다.');
+      } else {
+        this.openReviewForm();
+      }
+    },
+    openReviewForm() {
+      this.dialog = true;
     },
     closeReviewForm() {
       this.dialog = false;
@@ -165,7 +183,7 @@ export default {
           rating: this.newReview.rating,
           reviewText: this.newReview.reviewText,
           subjectId: this.subjectId,
-          userId: this.user.id, 
+          userId: this.user.userId, 
         };
 
         try {
@@ -188,7 +206,7 @@ export default {
           }
         } catch (error) {
           console.error('리뷰 제출 중 오류가 발생했습니다.', error);
-          alert(error.message); 
+          alert(error.message);
         }
       }
     },

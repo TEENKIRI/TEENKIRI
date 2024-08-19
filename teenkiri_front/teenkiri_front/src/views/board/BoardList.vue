@@ -234,5 +234,168 @@ export default {
   },
 };
 </script>
-<style src="@/assets/css/boardList.css"></style>
 
+<style scoped>
+.board-container {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 50px;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.board-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tbl_list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tbl_list th,
+.tbl_list td {
+  border: none; /* 모든 테두리 제거 */
+  padding: 10px;
+  text-align: left;
+}
+
+/* 테두리 스타일을 유지하려면 아래 코드 사용 */
+.tbl_list th {
+  background-color: #f4f4f4;
+}
+
+.tbl_list tr:not(:last-child) td {
+  border-bottom: 1px solid #ccc; /* 하단 선만 유지 */
+}
+
+.text_left {
+  text-align: left;
+}
+
+.subject {
+  cursor: pointer;
+  color: #333;
+  text-decoration: none;
+}
+
+.subject:hover {
+  text-decoration: underline;
+}
+
+.btn_adm_control {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 8px;
+}
+
+.btn_adm_control:hover {
+  background-color: #ccc;
+}
+
+.btn_board_modify {
+  background-color: #6cb1ff;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn_board_modify:hover {
+  background-color: #007bff;
+}
+
+.btn_board_del {
+  background-color: #f57380;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn_board_del:hover {
+  background-color: #dc3545;
+}
+
+.conLayer {
+  display: inline-block;
+  background-color: white;
+  border: 1px solid #ccc;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  padding: 5px;
+}
+
+.btnWrap {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.btn_write {
+  padding: 10px 20px;
+  background-color: #f27885;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn_write:hover {
+  background-color: #fa5263;
+}
+
+.pagingWrap ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagingWrap li {
+  display: inline-block;
+}
+
+.pagingWrap li a {
+  margin: 0 5px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.pagingWrap li a.active {
+  font-weight: bold;
+  color: blue;
+}
+
+.pagingWrap .btn_paging_start:before {
+  content: "<<";
+}
+
+.pagingWrap .btn_paging_prev:before {
+  content: "<";
+}
+
+.pagingWrap .btn_paging_next:before {
+  content: ">";
+}
+
+.pagingWrap .btn_paging_end:before {
+  content: ">>";
+}
+</style>

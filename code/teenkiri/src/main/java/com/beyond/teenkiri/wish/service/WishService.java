@@ -92,6 +92,7 @@ public class WishService {
             subjectList.add(subjectListResDto);
         }
 
+        
         return subjectList;
     }
 

@@ -1,12 +1,17 @@
 <template>
   <v-container class="mt-5">
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-3 mb-4">
+<h1 class="board-title"> QnA </h1>
+        </v-card>
+      </v-col>
+    </v-row>
     <!-- 질문 카드와 관련된 내용 -->
     <v-card class="pa-5" v-if="questionDetail">
       <div class="d-flex justify-space-between align-center mb-3">
         <h2 class="text-h4 font-weight-bold">{{ questionDetail.title }} (강좌 명:{{ questionDetail.subjectTitle }})</h2>
         <div class="d-flex justify-end mb-3">
-          <v-btn v-if="isQuestionAuthor" class="btn_st2 mr-2" @click="editQuestion">수정</v-btn>
-          <v-btn v-if="isAdmin" class="btn_del mr-2" @click="confirmDeleteQuestion">삭제</v-btn>
           <v-btn class="btn_st2 mr-2" @click="openReportModal('question')">신고</v-btn>
         </div>
       </div>
@@ -42,35 +47,29 @@
         </v-col>
       </v-row>
       <v-divider></v-divider>
-<v-row v-if="questionDetail.answerText" class="mb-5">
-  <v-col cols="12">
-    <v-card flat>
-      <v-card-text>
-        <!-- 답변 이미지 -->
-        <div class="image-container">
-          <v-img v-if="questionDetail.aimageUrl" :src="questionDetail.aimageUrl" alt="답변 이미지" class="mb-3 rounded center-image" />
-        </div>
 
-        <!-- 답변 내용 -->
-        <div class="text-body-1">
-          <p><strong>답변자:</strong> {{ questionDetail.answeredByNickname }} | <strong>답변 시간:</strong> {{ formatDate(questionDetail.answeredAt) }}</p>
-          <p class="text-h5"><strong>답변 내용:</strong> <br>{{ questionDetail.answerText }}</p>
-        </div>
+      <!-- 답변 섹션 -->
+      <v-row v-if="questionDetail.answerText" class="mb-5">
+        <v-col cols="12">
+          <v-card flat>
+            <v-card-text>
+              <!-- 답변 이미지 -->
+              <div class="image-container">
+                <v-img v-if="questionDetail.aimageUrl" :src="questionDetail.aimageUrl" alt="답변 이미지" class="mb-3 rounded center-image" />
+              </div>
 
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn v-if="canEditAnswer" class="btn_st2" @click="editAnswer">답변 수정</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-col>
-</v-row>
-
-
-
-
-
-
-
+              <!-- 답변 내용 -->
+              <div class="text-body-1">
+                <p><strong>답변자:</strong> {{ questionDetail.answeredByNickname }} | <strong>답변 시간:</strong> {{ formatDate(questionDetail.answeredAt) }}</p>
+                <p class="text-h5"><strong>답변 내용:</strong> <br>{{ questionDetail.answerText }}</p>
+              </div>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end">
+              <v-btn v-if="canEditAnswer" class="btn_st2" @click="editAnswer">답변 수정</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
       
       <!-- 댓글 작성 및 표시 -->
       <v-row>
@@ -98,7 +97,7 @@
               <v-btn class="btn_solid" @click="goBack">목록으로</v-btn>
               <v-btn type="submit" class="btn_comment_ok">댓글작성</v-btn>
               <v-btn v-if="isQuestionAuthor" class="btn_st2" @click="editQuestion">수정</v-btn>
-              <v-btn v-if="isAdmin" class="btn_del" @click="confirmDeleteQuestion">삭제</v-btn>
+              <v-btn v-if="canDeleteQuestion" class="btn_del" @click="confirmDeleteQuestion">삭제</v-btn>
               <v-btn v-if="canAnswer" class="btn_write" @click="goToAnswer">답변</v-btn>
             </div>
           </v-form>
@@ -127,7 +126,6 @@
     <ReportCreate v-if="showReportModal" :postId="reportData.postId" :commentId="reportData.commentId" :qnaId="reportData.qnaId" @close="closeReportModal" />
   </v-container>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -162,6 +160,9 @@ export default {
     },
     canAnswer() {
       return this.userRole === 'ADMIN' || this.userRole === 'TEACHER';
+    },
+    canDeleteQuestion() {
+      return this.isAdmin || this.isQuestionAuthor;
     },
   },
   created() {
@@ -221,7 +222,7 @@ export default {
     },
     async deleteComment(commentId) {
       try {
-        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/comment/delete/${commentId}`);
+        await axios.get(`${process.env.VUE_APP_API_BASE_URL}/comment/delete/${commentId}`);
         this.fetchQuestionDetail();
       } catch (error) {
         this.error = '댓글 삭제에 실패했습니다.';
@@ -236,7 +237,7 @@ export default {
     async deleteQuestion() {
       const questionId = this.$route.params.id;
       try {
-        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/qna/delete/${questionId}`);
+        await axios.get(`${process.env.VUE_APP_API_BASE_URL}/qna/delete/${questionId}`);
         this.$router.push('/qna/list');
       } catch (error) {
         this.error = '질문 삭제에 실패했습니다.';
@@ -365,26 +366,31 @@ h2.text-h5 {
 .btn_solid {
   background-color: #ffdb69 !important;
   color: rgb(255, 255, 255);
+  border-radius: 8px;
 }
 
 .btn_st2 {
   background-color: #424242 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_del {
   background-color: #f27885 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_write {
   background-color: #6fc8b8 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_comment_ok {
   background-color: #5087c7 !important;
   color: white;
+  border-radius: 8px;
 }
 
 .btn_alert {
@@ -420,10 +426,11 @@ h2.text-h5 {
 .btn_board_option {
   display: block;
   padding: 5px 10px;
-  color: #424242;
+  color: #ffffff;
   text-decoration: none;
-  background-color: white;
+  background-color: #f27885;
   border-bottom: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 .btn_board_option:hover {
