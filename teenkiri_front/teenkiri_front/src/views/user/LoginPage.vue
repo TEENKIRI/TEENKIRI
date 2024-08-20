@@ -112,17 +112,15 @@ export default {
             }
         },
         googleLogin() {
-            const clientId = "84045606752-rgoj9d32kp1bqjkv5i833kh96r9io2o3.apps.googleusercontent.com";
-            const redirectUri = encodeURIComponent("http://localhost:8088/login/oauth2/code/google");
-            const scope = encodeURIComponent("profile email");
-            const state = encodeURIComponent("A8aTYlXPfFh7a0mlRBpdPgZYSpdYGBYs7qIs877C1As=");
-            
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?` +
-                `response_type=code&client_id=${clientId}&scope=${scope}&state=${state}&redirect_uri=${redirectUri}` +
-                `&service=lso&o2v=2&ddm=0&flowName=GeneralOAuthFlow`;
+            const clientId = '84045606752-rgoj9d32kp1bqjkv5i833kh96r9io2o3.apps.googleusercontent.com';
+      const responseType = 'code';
+      const scope = encodeURIComponent('profile email');
+      const state = encodeURIComponent('A8aTYlXPfFh7a0mlRBpdPgZYSpdYGBYs7qIs877C1As=');
+      const redirectUri = encodeURIComponent('http://localhost:8088/login/oauth2/code/google');
 
-            window.location.href = authUrl;
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&response_type=${responseType}&scope=${scope}&state=${state}&redirect_uri=${redirectUri}`;
 
+      window.location.href = authUrl;
     },
         findId() {
             this.$router.push("/user/find-id");

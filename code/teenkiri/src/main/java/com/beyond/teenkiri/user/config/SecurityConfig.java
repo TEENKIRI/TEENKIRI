@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userService(customOAuth2UserService) // OAuth2 사용자 서비스 설정
                 .and()
                 .successHandler(oAuth2SuccessHandler) // OAuth2 로그인 성공 핸들러 설정
-                .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉션할 URL
+//                .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉션할 URL
                 .and()
                 .addFilterBefore(new JwtAuthFilter(jwtTokenProvider, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
