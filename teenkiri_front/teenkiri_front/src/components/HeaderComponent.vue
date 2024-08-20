@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app>
+  <v-app-bar app >
     <v-container>
       <v-row align="center">
         <v-col>

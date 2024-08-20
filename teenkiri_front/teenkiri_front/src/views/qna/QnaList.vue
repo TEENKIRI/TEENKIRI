@@ -41,7 +41,6 @@
           <col width="auto" />
           <col width="140" />
           <col width="140" />
-
         </colgroup>
         <thead>
           <tr>
@@ -77,21 +76,16 @@
         <button @click="createNewQuestion" class="btn_write">질문 작성하기</button>
       </div>
 
-      <div class="pagingWrap">
-        <ul>
-          <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
-          <li><a href="javascript:void(0)" @click="goToPreviousPage" class="btn_paging_prev"></a></li>
-          <li v-for="page in totalPages" :key="page">
-            <a href="javascript:void(0)" @click="goToPage(page)" :class="{ btn_paging: true, active: currentPage === page }">{{ page }}</a>
-          </li>
-          <li><a href="javascript:void(0)" @click="goToNextPage" class="btn_paging_next"></a></li>
-          <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
-        </ul>
-      </div>
+      <!-- 페이지네이션 -->
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        @input="fetchQuestions"
+        class="my-4"
+      ></v-pagination>
     </v-container>
   </v-app>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -170,28 +164,9 @@ export default {
     viewDetail(id) {
       this.$router.push(`/qna/detail/${id}`);
     },
-    goToPreviousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchQuestions();
-      }
-    },
-    goToNextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        this.fetchQuestions();
-      }
-    },
-    goToPage(page) {
-      if (page !== this.currentPage) {
-        this.currentPage = page;
-        this.fetchQuestions();
-      }
-    },
   }
 };
 </script>
-
 <style scoped>
 .container {
   padding-top: 20px;
