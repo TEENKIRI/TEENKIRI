@@ -335,24 +335,26 @@ export default {
     },
     async toggleWish(id, event, type) {
       event.stopPropagation(); // 이벤트 전파 방지
-      try {
-        const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`
-        );
+      if (this.user.token != null) { // 로그인한 유저만 가능
+        try {
+          const response = await axios.get(
+            `${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`
+          );
 
-        let subject;
-        if (type == "subjectList") {
-          subject = this.subject.subjectList.find((s) => s.id === id);
-        } else if (type == "subjectMain") {
-          subject = this.subject.subjectIsMainList.find((sm) => sm.id === id);
-        }
+          let subject;
+          if (type == "subjectList") {
+            subject = this.subject.subjectList.find((s) => s.id === id);
+          } else if (type == "subjectMain") {
+            subject = this.subject.subjectIsMainList.find((sm) => sm.id === id);
+          }
 
-        if (subject) {
-          subject.isSubscribe = response.data.result.status;
+          if (subject) {
+            subject.isSubscribe = response.data.result.status;
+          }
+        } catch (error) {
+          alert("찜 추가 실패");
+          console.error(error);
         }
-      } catch (error) {
-        alert("찜 추가 실패");
-        console.error(error);
       }
     },
     editCourse(id, event) {
