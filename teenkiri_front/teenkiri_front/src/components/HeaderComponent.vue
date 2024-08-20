@@ -62,12 +62,10 @@
             </v-menu>
           </v-btn>
 
-          <!-- 채팅 아이콘 추가 -->
           <v-btn icon @click="showChatModal = true">
             <v-icon>mdi-chat</v-icon>
           </v-btn>
 
-          <!-- 채팅 모달 -->
           <v-dialog v-model="showChatModal" max-width="600px">
             <v-card>
               <v-card-title class="headline">채팅</v-card-title>
