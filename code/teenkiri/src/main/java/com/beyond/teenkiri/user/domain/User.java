@@ -23,19 +23,19 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column( length = 50)
+    @Column(length = 50)
     private String name;
 
     @Column
     private String password;
 
-    @Column( length = 20, unique = true)
+    @Column(length = 20, unique = true)
     private String phone;
 
     @Column(length = 255)
     private Address address;
 
-    @Column( length = 100, unique = true)
+    @Column(length = 100, unique = true)
     private String email;
 
     @Column(length = 100, unique = true)
@@ -46,7 +46,7 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private Role role = Role.STUDENT;
 
-//    @Column()
+    //    @Column()
     private boolean isVerified = false;
 
     @Builder.Default
@@ -58,9 +58,6 @@ public class User extends BaseTimeEntity {
     // providerId : 구굴 로그인 한 유저의 고유 ID가 들어감
     private String providerId;
 
-    @Column
-    private String picture;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
@@ -70,7 +67,7 @@ public class User extends BaseTimeEntity {
     private List<Post> posts;
 
 
-    public UserListDto listFromEntity(){
+    public UserListDto listFromEntity() {
         return UserListDto.builder()
                 .id(this.id)
                 .name(this.name)
@@ -83,13 +80,16 @@ public class User extends BaseTimeEntity {
                 .delYN(this.delYN)
                 .build();
     }
+
     public String getRoleKey() {
         return this.role.getKey();
     }
+
     public User update(String name) {
         this.name = name;
         return this;
     }
+
     @Builder
     public User(String name, String email, Role role) {
         this.name = name;
@@ -97,12 +97,19 @@ public class User extends BaseTimeEntity {
         this.role = role;
         this.nickname = String.valueOf(UUID.randomUUID());
     }
-    public User updateNick(String uuid){
-     this.nickname = uuid;
-     return this;
+
+    public User updateNick(String uuid) {
+        this.nickname = uuid;
+        return this;
     }
+
     public User updatePass(String uuid) {
         this.password = uuid;
+        return this;
+    }
+
+    public User updateAddress(String temp) {
+        this.address = new Address(temp, temp, temp);
         return this;
     }
 }

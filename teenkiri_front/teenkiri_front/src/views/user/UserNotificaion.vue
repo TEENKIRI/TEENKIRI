@@ -86,7 +86,7 @@
         if (notification.qnaId) {
           this.$router.push(`/qna/detail/${notification.qnaId}`);
         } else if (notification.postId) {
-          this.$router.push(`/post/detail/${notification.postId}`);
+          this.$router.push(`/board/detail/post/${notification.postId}`);
         } else if (notification.reportId) {
           this.$router.push(`/report/detail/${notification.reportId}`);
         }
