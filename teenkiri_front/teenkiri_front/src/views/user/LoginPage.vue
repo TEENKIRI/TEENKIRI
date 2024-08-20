@@ -31,6 +31,12 @@
                           <v-btn block type="submit" color="primary">로그인</v-btn>
                           <v-divider class="my-4"></v-divider>
                           <v-btn block color="warning" @click="kakaoLogin">카카오 로그인</v-btn>
+                          <a href="/oauth2/authorization/google">구글 로그인</a>
+                          /login/oauth2/code/google
+                          <a href="/login/oauth2/code/google">구글 로그인</a>
+                          <a href="http://localhost:8088/login/oauth2/code/google">구글 로그인</a>
+                          
+
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
@@ -108,8 +114,8 @@ export default {
             }
         },
         kakaoLogin() {
-            console.log("카카오 로그인");
-        },
+      window.location.href = "/login/oauth2/code/google";  // 카카오 로그인 링크로 이동 (예시)
+    },
         findId() {
             this.$router.push("/user/find-id");
         },

@@ -6,6 +6,8 @@ import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import lombok.*;
 
+import java.util.UUID;
+
 
 @Data
 @Builder
@@ -15,7 +17,8 @@ public class UserSaveReqDto {
     private String name;
     private String email;
     private String password;
-    private String nickname;
+    @Builder.Default
+    private String nickname = String.valueOf(UUID.randomUUID());
     private Address address;
     private String phone;
     @Builder.Default

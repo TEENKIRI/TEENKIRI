@@ -27,7 +27,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false, length = 20, unique = true)
@@ -39,7 +39,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(length = 100, unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -52,6 +52,15 @@ public class User extends BaseTimeEntity {
 
     @Builder.Default
     private int reportCount = 0;
+
+    // provider : google이 들어감
+    private String provider;
+
+    // providerId : 구굴 로그인 한 유저의 고유 ID가 들어감
+    private String providerId;
+
+    @Column
+    private String picture;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -74,5 +83,18 @@ public class User extends BaseTimeEntity {
                 .reportCount(this.reportCount)
                 .delYN(this.delYN)
                 .build();
+    }
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
+    @Builder
+    public User(String name, String email, Role role) {
+        this.name = name;
+        this.email = email;
+        this.role = role;
     }
 }
