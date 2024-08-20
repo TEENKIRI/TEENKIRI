@@ -292,34 +292,4 @@ public class UserController {
         }
     }
 
-
-//    @GetMapping("/login/google")
-//    public void googleLogin(HttpServletResponse response) throws  IOException {
-//        String state = generateRandomState(); // CSRF 또는 상태 보호를 위한 state 생성
-//        saveStateInSession(state); // 세션 또는 다른 저장소에 state를 저장
-//
-//        String clientId = "84045606752-rgoj9d32kp1bqjkv5i833kh96r9io2o3.apps.googleusercontent.com";
-//        String redirectUri = URLEncoder.encode("http://localhost:8088/login/oauth2/code/google", "UTF-8");
-//        String scope = URLEncoder.encode("profile email", "UTF-8");
-//
-//        String authUrl = "https://accounts.google.com/o/oauth2/v2/auth?"
-//                + "response_type=code&client_id=" + clientId
-//                + "&scope=" + scope
-//                + "&state=" + state
-//                + "&redirect_uri=" + redirectUri;
-//
-//        response.sendRedirect(authUrl);
-//    }
-//
-//    private String generateRandomState() {
-//        // CSRF 방지 또는 상태 유지를 위한 고유한 문자열을 생성합니다.
-//        return UUID.randomUUID().toString();
-//    }
-//
-//    private void saveStateInSession(String state) {
-//        // 실제로는 이 state를 사용자의 세션에 저장하여 인증 요청 시 이 값을 비교합니다.
-//        // 예를 들어, HttpSession을 통해 세션에 저장할 수 있습니다.
-//        // session.setAttribute("oauth2_state", state);
-//    }
-
 }
