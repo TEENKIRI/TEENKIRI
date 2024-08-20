@@ -77,7 +77,7 @@ TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품�
 
 ## WBS
 
-[WBS.pdf](https://github.com/user-attachments/files/16681097/WBS.pdf)
+[WBS 보기](https://docs.google.com/spreadsheets/d/120qVjj7PFPoHNYqx8IHpAQztUI7F3E29oSD8xP9Lv3Y/edit?pli=1&gid=95638865#gid=95638865)
 
 ## 프로젝트 요구사항 명세서
 
