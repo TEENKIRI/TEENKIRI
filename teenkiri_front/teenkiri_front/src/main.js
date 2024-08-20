@@ -27,7 +27,10 @@ axios.interceptors.request.use(
         return config;
     },
     error => {
-        return Promise.reject(error);
+        console.log('에러다에러에러에러')
+
+        return Promise.reject(error );
+
     }
 );
 
@@ -36,6 +39,7 @@ axios.interceptors.response.use(
     async error => {
         if(error.response && error.response.status === 401){
             const refreshToken = localStorage.getItem('refreshToken');
+
             try{
                 localStorage.removeItem('token');
                 const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/member/refresh-token`, {refreshToken});

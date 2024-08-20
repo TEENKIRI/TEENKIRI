@@ -34,6 +34,22 @@ public class JwtTokenprovider {
                 .compact();
     }
 
+    public String googleToken(String email, Long userId, String role) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("role", role);
+        claims.put("userId", userId);  // userId를 클레임에 추가
+
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + tokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
     // 토큰에서 이메일 추출
     public String getEmailFromToken(String token) {
         return Jwts.parser()

@@ -30,7 +30,10 @@
                           ></v-checkbox>
                           <v-btn block type="submit" color="primary">로그인</v-btn>
                           <v-divider class="my-4"></v-divider>
-                          <v-btn block color="warning" @click="kakaoLogin">카카오 로그인</v-btn>
+                          <v-btn block color="warning" @click="googleLogin">구글 로그인</v-btn>
+    
+                          
+
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
@@ -42,6 +45,7 @@
                               <v-list-item @click="signUp">
                                   <v-list-item-title>회원가입</v-list-item-title>
                               </v-list-item>
+                              <a href="/oauth2/authorization/google">Google Login</a>
                           </v-list>
                       </v-form>
                   </v-card-text>
@@ -107,9 +111,17 @@ export default {
                 alert(error_message);
             }
         },
-        kakaoLogin() {
-            console.log("카카오 로그인");
-        },
+        googleLogin() {
+            const clientId = '84045606752-rgoj9d32kp1bqjkv5i833kh96r9io2o3.apps.googleusercontent.com';
+      const responseType = 'code';
+      const scope = encodeURIComponent('profile email');
+      const state = encodeURIComponent('A8aTYlXPfFh7a0mlRBpdPgZYSpdYGBYs7qIs877C1As=');
+      const redirectUri = encodeURIComponent('http://localhost:8088/login/oauth2/code/google');
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&response_type=${responseType}&scope=${scope}&state=${state}&redirect_uri=${redirectUri}`;
+
+      window.location.href = authUrl;
+    },
         findId() {
             this.$router.push("/user/find-id");
         },
