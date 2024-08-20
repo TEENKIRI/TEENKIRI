@@ -1,6 +1,6 @@
 <!-- App.vue -->
 <template>
-  <v-app class="app">
+  <v-app class="app global_bg">
     <HeaderComponent @open-sidebar="toggleSidebar" />
     <AppSidebar ref="sidebar" />
     <v-main class="main-content">

@@ -369,7 +369,7 @@ export default {
 };
 </script>
 
-<style src="@/assets/css/SubjectList.css"></style>
+<!-- <style src="@/assets/css/SubjectList.css"></style> -->
 <style>
 .select-small .v-select {
   min-height: 32px;

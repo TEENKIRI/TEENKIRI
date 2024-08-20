@@ -14,8 +14,12 @@
     "core-js": "^3.8.3",
     "event-source-polyfill": "1.0.31",
     "jwt-decode": "^4.0.0",
+
     "mitt": "^3.0.1",
     "sockjs-client": "^1.6.1",
+
+    "swiper": "^11.1.9",
+
     "vue": "^3.2.13",
     "vue-router": "^4.4.3",
     "vuetify": "^3.6.14",
@@ -27,8 +31,15 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "assert": "^2.1.0",
+    "browserify-zlib": "^0.2.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "https-browserify": "^1.0.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
     "video.js": "^8.17.3"
   },
   "eslintConfig": {

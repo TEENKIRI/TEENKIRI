@@ -2,6 +2,7 @@
 // module.exports = defineConfig({
 //   transpileDependencies: true
 // })
+const webpack = require('webpack');
 
 module.exports = {
   devServer: {
@@ -13,6 +14,25 @@ module.exports = {
       }
     }
   },
+  configureWebpack: {
+    resolve: {
+      fallback: {
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        "zlib": require.resolve("browserify-zlib"),
+        "util": require.resolve("util/"),
+        "assert": require.resolve("assert/"),
+        "url": require.resolve("url/")
+      }
+    },
+    plugins: [
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
+      }),
+    ],
+  }
 
   // configureWebpack: {
   //   // Feature flags 설정

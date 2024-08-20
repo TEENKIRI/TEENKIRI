@@ -2,15 +2,15 @@
   <v-app-bar app >
     <v-container>
       <v-row align="center">
-        <v-col cols="3">
+        <v-col>
           <v-toolbar-title>
             <router-link to="/" class="logo">
-              <img :src="logo" alt="로고" class="logo-image" />
+              <img :src="logo" alt="로고" class="logo-image" style="max-width:100%;" />
             </router-link>
           </v-toolbar-title>
         </v-col>
-        <v-col cols="6">
-          <v-row justify="center">
+        <v-col>
+          <v-row class="menu flex-nowrap">
             <v-btn text @click="navigate('강좌')">강좌</v-btn>
             <v-btn text @click="navigate('추천')">추천</v-btn>
             <v-btn text @click="navigate('이벤트')">이벤트</v-btn>
@@ -20,11 +20,11 @@
             <v-btn v-if="isAdmin" text @click="navigate('신고리스트')">신고리스트</v-btn>
           </v-row>
         </v-col>
-        <v-col cols="3" class="text-right">
+        <v-col class="text-right">
           <v-btn icon @click="handleAccountClick">
             <v-icon>mdi-account</v-icon>
           </v-btn>
-          <v-btn icon color="primary">
+          <v-btn icon class="teen_red_font">
             <v-badge
               color="red"
               :content="unreadNotificationsCount"

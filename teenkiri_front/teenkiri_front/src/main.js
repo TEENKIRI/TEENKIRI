@@ -7,10 +7,12 @@ import '@mdi/font/css/materialdesignicons.css';
 import axios from 'axios';
 import "@/assets/css/font.css";
 import store from './store/index.js';
-// WebSocket 및 mitt 추가
+
 import mitt from 'mitt';
 
-// WebSocket 설정을 위해 mitt를 사용하여 이벤트 버스를 생성
+import '@mdi/font/css/materialdesignicons.css';
+import '@/assets/css/global.css'
+
 const app = createApp(App);
 const emitter = mitt();
 app.config.globalProperties.emitter = emitter;
