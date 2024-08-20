@@ -75,6 +75,10 @@ TEENKIRI의 목표는 무상으로 제공되는 고품질 교육을 통해 경�
 TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품질의 학습 콘텐츠를 제공하여 학생들이 경제적 차별 없이 양질의 교육을 받을 수 있도록 지원합니다.
 <br>
 
+## WBS
+
+[WBS.pdf](https://github.com/user-attachments/files/16681097/WBS.pdf)
+
 ## 프로젝트 요구사항 명세서
 
 [요구사항 명세서 보기](https://docs.google.com/spreadsheets/d/120qVjj7PFPoHNYqx8IHpAQztUI7F3E29oSD8xP9Lv3Y/edit?pli=1&gid=0#gid=0)
@@ -203,3 +207,11 @@ TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품�
   <summary>알림 드롭다운, 알림 목록 조회</summary>
   <img src=“” alt="">
 </details>
+
+#### 🚨 신고
+
+<details>
+  <summary>게시판별 신고 목록 - 관리자</summary>
+  <img src=“” alt="">
+</details>
+
