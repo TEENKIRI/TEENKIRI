@@ -106,7 +106,8 @@ export default {
       this.$router.push({ name: "SubjectDetail", params: { id } });
     },
     async toggleWish(id) {
-      if (Object.keys(this.user).length > 0) { // 로그인한 유저만 가능
+      event.stopPropagation(); // 이벤트 전파 방지
+      if (this.user.token != null) { // 로그인한 유저만 가능
         try {
           const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/wish/toggle/${id}`);
           const subject = this.subject.subjectList.find((sm) => sm.id === id);
