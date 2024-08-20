@@ -36,19 +36,38 @@ TEENKIRI의 목표는 무상으로 제공되는 고품질 교육을 통해 경�
 
 ## 스택
 
+### BACKEND
 ![Java](https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white)
-![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Vue.js](https://img.shields.io/badge/vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![GitHub](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white)
-![Git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Notion](https://img.shields.io/badge/notion-181717?style=for-the-badge&logo=notion&logoColor=white)
-![Jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
-![Discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+![socketdotio](https://img.shields.io/badge/socketdotio-010101?style=for-the-badge)
+
+### FRONTEND
+![Vue.js](https://img.shields.io/badge/vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![figma](https://img.shields.io/badge/figma-2F5EF5?style=for-the-badge)
+![vuetify](https://img.shields.io/badge/vuetify-1867C0?style=for-the-badge)
+
+
+
+
+
+
+###  DB
+![mariadb](https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![redis](https://img.shields.io/badge/redis-FF4438?style=for-the-badge)
+![amazons3](https://img.shields.io/badge/amazons3-569A31?style=for-the-badge)
+
+### TOOLS
+![Notion](https://img.shields.io/badge/notion-181717?style=for-the-badge&logo=notion&logoColor=white)
+![Git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white)
 ![Gather](https://img.shields.io/badge/gather-2F5EF5?style=for-the-badge)
+![figma](https://img.shields.io/badge/figma-2F5EF5?style=for-the-badge)
+
+
+
 <br>
 
 ## 프로젝트 개요
