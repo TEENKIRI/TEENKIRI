@@ -40,13 +40,19 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 //        System.out.println("att!!!!!!!"+attributes);
 
         User user = saveOrUpdate(attributes);
-        String uuidNick = String.valueOf(UUID.randomUUID());
-        user.updateNick(uuidNick);
-        String uuidPass = String.valueOf(UUID.randomUUID());
-        user.updatePass(uuidPass);
-        String address = "임시주소입니다. 변경해주세요";
-        user.updateAddress(address);
-        userRepository.save(user);
+        if (user.getNickname().isEmpty()){
+            String uuidNick = String.valueOf(UUID.randomUUID());
+            user.updateNick(uuidNick);
+        }
+       if (user.getPassword().isEmpty()){
+           String uuidPass = String.valueOf(UUID.randomUUID());
+           user.updatePass(uuidPass);
+       }
+       if (user.getAddress().getCity().isEmpty() || user.getAddress().getStreet().isEmpty() || user.getAddress().getZipcode().isEmpty() ){
+           String address = "임시주소입니다. 변경해주세요";
+           user.updateAddress(address);
+           userRepository.save(user);
+       }
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
