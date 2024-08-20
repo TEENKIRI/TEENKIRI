@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,9 +49,18 @@ public class ChatMessageService {
     }
 
     public String filterMessage(String content) {
-        for (Pattern pattern : forbiddenWordsPatterns) { // 모든 금지된 단어 패턴에 대해
+        for (Pattern pattern : forbiddenWordsPatterns) {
             content = pattern.matcher(content).replaceAll(m -> "*".repeat(m.group().length())); // 패턴과 일치하는 부분을 *로 대체
         }
-        return content; // 필터링된 메시지 반환
+        return content;
+    }
+
+    public List<ChatMessageDto> getMessagesSince(LocalDateTime since) {
+        return chatMessageRepository.findByCreatedTimeAfter(since).stream()
+                .map(chatMessage -> {
+                    String nickname = userRepository.findById(chatMessage.getSenderId()).orElseThrow().getNickname();
+                    return ChatMessageDto.fromEntity(chatMessage, nickname);
+                })
+                .collect(Collectors.toList());
     }
 }
