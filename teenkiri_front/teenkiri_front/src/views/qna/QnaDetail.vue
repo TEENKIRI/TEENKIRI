@@ -263,7 +263,7 @@ export default {
     openReportModal(type, comment = null) {
       if (type === 'question') {
         this.reportData = {
-          postId: this.questionDetail.id,
+          qnaId: this.questionDetail.id,
         };
       } else if (type === 'comment' && comment) {
         this.reportData = {
