@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app >
+  <v-app-bar app>
     <v-container>
       <v-row align="center">
         <v-col>
@@ -36,6 +36,7 @@
             <v-icon v-else>mdi-bell</v-icon>
 
             <v-menu activator="parent" offset-y>
+              <!-- 알림 목록 -->
               <v-list max-width="300" max-height="400" style="overflow-y: auto;">
                 <template v-if="unreadNotifications.length > 0">
                   <v-list-item
@@ -63,6 +64,17 @@
       </v-row>
     </v-container>
   </v-app-bar>
+
+  <!-- 로그인 안내 스낵바 -->
+  <v-snackbar 
+    v-model="loginSnackbar" 
+    :timeout="3000000"
+    class="custom-snackbar"
+  >
+    로그인을 하셔야 해당 기능을 사용할 수 있습니다.
+    <v-btn color="yellow" text @click="goToLoginPage">로그인</v-btn>
+    <v-btn color="yellow" text @click="closeLoginSnackbar">닫기</v-btn>
+  </v-snackbar>
 </template>
 
 <script>
@@ -74,9 +86,10 @@ export default {
   data() {
     return {
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false, // 초기값 설정
-      isAdmin: false, // 관리자인지 여부를 확인하기 위한 변수 추가
+      isLogin: false, 
+      isAdmin: false, 
       notifications: [],
+      loginSnackbar: false, // 로그인 안내 스낵바 상태
     };
   },
   computed: {
@@ -92,7 +105,7 @@ export default {
     this.isLogin = !!token;
 
     if (this.isLogin) {
-      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; // 로그인 후 역할이 ADMIN인지 확인
+      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; 
       this.fetchNotifications();
 
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
@@ -121,7 +134,6 @@ export default {
             },
           });
 
-          // 알림을 id 기준으로 내림차순 정렬
           this.notifications = response.data.sort((a, b) => b.id - a.id);
         } catch (error) {
           console.error('알림 목록을 가져오는 중 오류 발생:', error);
@@ -187,9 +199,14 @@ export default {
       if (this.isLogin) {
         this.$emit('open-sidebar');
       } else {
-        alert("로그인 후 사용이 가능합니다.");
-        this.$router.push('/login');
+        this.loginSnackbar = true; // 로그인 안내 스낵바 열기
       }
+    },
+    closeLoginSnackbar() {
+      this.loginSnackbar = false;
+    },
+    goToLoginPage() {
+      this.$router.push('/login');
     }
   }
 };
@@ -212,5 +229,10 @@ export default {
 
 .v-list-item {
   background-color: white;
+}
+
+.custom-snackbar {
+  opacity: 0.7;
+  color: #FFD700 !important; /* 노란색 글씨 */
 }
 </style>
