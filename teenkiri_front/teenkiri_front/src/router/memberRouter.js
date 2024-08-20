@@ -113,6 +113,7 @@ export const memberRouter = [
                     if (refreshToken) {
                         localStorage.setItem("refreshToken", refreshToken);
                     }
+                    localStorage.setItem("userId", decoded.userId)
                     localStorage.setItem("email", decoded.sub); // 이메일은 JWT에서 'sub' 클레임으로 보통 저장됩니다.
                     localStorage.setItem("role", decoded.role);
     

@@ -30,7 +30,19 @@
                           ></v-checkbox>
                           <v-btn block type="submit" color="primary">로그인</v-btn>
                           <v-divider class="my-4"></v-divider>
-                          <v-btn block color="warning" @click="googleLogin">구글 로그인</v-btn>
+                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
+                            <v-btn 
+                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
+                              @click="googleLogin"
+                            >
+                              <img 
+                                :src="require('@/assets/images/google.png')"
+                                alt="Google"
+                                style="max-width: 85%; height: 60px; object-fit: contain;"
+                              />
+                            </v-btn>
+                          </div>
+                          
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
