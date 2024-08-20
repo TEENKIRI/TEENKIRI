@@ -67,10 +67,6 @@
   }
   .mainLecture .swiper-slide {
     position: relative;
-    height: 390px;
-    border: 1px solid #ccc;
-    border-right: 0;
-    padding: 20px 27px;
   }
   .mainLecture .swiper-slide .thumb {
     width: 100%;
