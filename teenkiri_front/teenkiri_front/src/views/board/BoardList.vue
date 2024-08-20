@@ -72,17 +72,12 @@
       </div>
 
       <!-- 페이지네이션 -->
-      <div class="pagingWrap">
-        <ul>
-          <li><a href="javascript:void(0)" @click="goToPage(1)" class="btn_paging_start"></a></li>
-          <li><a href="javascript:void(0)" @click="goToPreviousPage" class="btn_paging_prev"></a></li>
-          <li v-for="page in totalPages" :key="page">
-            <a href="javascript:void(0)" @click="goToPage(page)" :class="{ btn_paging: true, active: currentPage === page }">{{ page }}</a>
-          </li>
-          <li><a href="javascript:void(0)" @click="goToNextPage" class="btn_paging_next"></a></li>
-          <li><a href="javascript:void(0)" @click="goToPage(totalPages)" class="btn_paging_end"></a></li>
-        </ul>
-      </div>
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        @input="fetchBoardItems"
+        class="my-4"
+      ></v-pagination>
     </div>
   </div>
 </template>
@@ -374,13 +369,13 @@ export default {
 .pagingWrap li a {
   margin: 0 5px;
   text-decoration: none;
-  color: black;
+  color: #333;
   cursor: pointer;
 }
 
 .pagingWrap li a.active {
   font-weight: bold;
-  color: blue;
+  color: #0056b3;
 }
 
 .pagingWrap .btn_paging_start:before {
