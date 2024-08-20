@@ -48,9 +48,14 @@
           티니키리 서비스가 <span class="teen_red_font">추천</span>해요! 👍
         </v-card-title>
         <v-card-text>
-          <div class="swiper swiperLectureBest" style="border-right:0">
-            <div
-              class="swiper-slide"
+        <swiper
+          :slides-per-view="3"
+          :spaceBetween="30"
+          :loop="true"
+          :pagination="{clickable: true}"
+          :modules="modules"
+        >
+          <swiper-slide 
               v-for="sm in subject.subjectIsMainList"
               :key="sm.id"
               @click="goToDetail(sm.id)"
@@ -66,15 +71,20 @@
                 <p class="subject">{{ sm.title }}</p>
                 <p class="name">{{ sm.teacherName }}</p>
               </div>
-            </div>
-          </div>
+            </swiper-slide>
+        </swiper>
         </v-card-text>
     </v-container>
     <v-sheet class="mainStudy">
-      <div class="inner">
+      <v-container class="inner">
         <div class="movieWrap" v-if="this.subject.subjectList.length > 0" @click="goToDetail(subject.subjectList[0].id)">
           <div class="movie">
-            <img v-bind:src="subject.subjectList[0].subjectThumUrl" alt="" />
+            <v-img
+                aspect-ratio="16/9"
+                cover
+                :src="subject.subjectList[0].subjectThumUrl"
+                alt="강좌 썸네일"
+              ></v-img>
           </div>
           <div class="txt">
             <p class="subject" >
@@ -106,44 +116,44 @@
             </div>
           </div>
         </div>
-      </div>
+      </v-container>
     </v-sheet>
 
     <v-container class="mx-auto mt-5 mb-5" elevation="4" max-width="1200">
-      <v-card-title class="mb-4"></v-card-title>
       <v-card-title class="mb-4 font_notrahope" style="font-size:2rem;">
           최고 <span class="teen_red_font">인기</span>강좌 에요! 😍
-        </v-card-title>
+      </v-card-title>
       <v-card-text>
-        <v-slide-group 
-          v-model="model" 
-          class="pa-4" 
-          show-arrows
-        >
-          <v-slide-group-item
-            class="swiper-slide"
-            v-for="s in subject.subjectList"
-            :key="s.id"
+        <swiper
+            :slides-per-view="3"
+            :spaceBetween="30"
+            :loop="true"
+            :pagination="{clickable: true}"
+            :modules="modules"
           >
-            <div class="swiper-slide" @click="goToDetail(s.id)">
-              <div class="thumb">
-                <a href="javascript:void(0)">
-                  <img v-bind:src="s.subjectThumUrl" alt="강좌 썸네일" />
-                </a>
-              </div>
-              <div class="txt">
-                <p class="subject">{{ s.title }}</p>
-                <p class="name">{{ s.teacherName }}</p>
-              </div>
-            </div>
-            
-          </v-slide-group-item>
-        </v-slide-group>
+            <swiper-slide 
+                v-for="s in subject.subjectList"
+                :key="s.id"
+                @click="goToDetail(s.id)"
+              >
+                <v-img
+                  aspect-ratio="16/9"
+                  cover
+                  :src="s.subjectThumUrl"
+                  style="border-radius: 0px;"
+                  alt="강좌 썸네일"
+                ></v-img>
+                <div class="txt">
+                  <p class="subject">{{ s.title }}</p>
+                  <p class="name">{{ s.teacherName }}</p>
+                </div>
+              </swiper-slide>
+          </swiper>
       </v-card-text>
       
     </v-container>
 
-    <div class="mainNews">
+    <v-container class="mainNews">
       <div class="inner">
         <div class="tit">
           <h2>티니키리 소식</h2>
@@ -156,17 +166,42 @@
           </li>
         </ul>
       </div>
-    </div>
-
-    <div class="mainBanner">
-      <img src="../assets/images/banner.png" alt="" />
-    </div>
+    </v-container>
+    <v-sheet style="background:#F0BFB3;">
+      <div class="mainBanner" style="font-size:0;" @click="moveEventPage">
+        <img src="../assets/images/banner.png" alt="" />
+      </div>
+    </v-sheet>
+    
   </v-app>
 </template>
 
 <script>
 import axios from "axios";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
 export default {
+  components: {
+    Swiper,
+    SwiperSlide
+  },
+  setup() {
+    const onSwiper = (swiper) => {
+      console.log(swiper);
+    };
+    const onSlideChange = () => {
+      console.log('slide change');
+    };
+    return {
+      onSwiper,
+      onSlideChange,
+      modules: [Pagination, Navigation],
+    };
+  },
   data() {
     return {
       event: [],
@@ -274,8 +309,17 @@ export default {
     goToDetail(id) {
       this.$router.push({ name: 'SubjectDetail', params: { id } });
     },
+    moveEventPage(){
+      this.$router.push({ name: 'BoardList', params: { category: 'event' } });
+    }
   },
 };
 </script>
 
 <style src="@/assets/css/HomePage.css"></style>
+<style>
+.swiper-pagination{
+  position:static;
+  margin-top:12px;
+}
+</style>

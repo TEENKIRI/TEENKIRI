@@ -14,24 +14,6 @@
   flex-wrap: wrap;
   justify-content: space-between; /* 슬라이드 간격 균등 배분 */
 }
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  display: none;
-}
-.swiper-button-prev {
-  left: -70px; /* 버튼 위치 조정 */
-  width: 40px; /* 버튼 크기 확대 */
-  height: 61px;
-  background: url("@/assets/images/ico_sw_prev.png") 50% 50% no-repeat;
-  background-size: contain;
-}
-.swiper-button-next {
-  right: -70px; /* 버튼 위치 조정 */
-  width: 40px; /* 버튼 크기 확대 */
-  height: 61px;
-  background: url("@/assets/images/ico_sw_next.png") 50% 50% no-repeat;
-  background-size: contain;
-}
 .swiper-slide {
   position: relative;
   width: calc(100% / 3 - 20px); /* 슬라이드 간격 조정 */

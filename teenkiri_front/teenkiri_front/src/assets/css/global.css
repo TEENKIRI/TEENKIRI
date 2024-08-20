@@ -15,3 +15,11 @@
 .teen_blue{color:#5087c7; background-color:#5087c7;}
 .teen_blue_font{color:#5087c7;}
 .teen_blue_bg{background-color:#5087c7;}
+
+a{
+    transition: all 0.1s;
+}
+
+a:hover{
+    color:#f27885;
+  }

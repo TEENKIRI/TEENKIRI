@@ -47,24 +47,6 @@
     margin: 35px 0 0;
     border-right: 1px solid #ccc;
   }
-  .mainLecture .swiper-button-prev:after,
-  .mainLecture .swiper-button-next:after {
-    display: none;
-  }
-  .mainLecture .swiper-button-prev {
-    left: -60px;
-    width: 30px;
-    height: 51px;
-    background: url("../images/ico_sw_prev.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
-  .mainLecture .swiper-button-next {
-    right: -60px;
-    width: 30px;
-    height: 51px;
-    background: url("../images/ico_sw_next.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
   .mainLecture .swiper-slide {
     position: relative;
   }
@@ -112,25 +94,28 @@
     position: relative;
     display: flex;
     gap: 30px;
+    align-items: flex-end;
   }
   .mainStudy .inner .movieWrap {
     margin: 40px 0 0;
-    width: 800px;
-    height: 540px;
+    width: 60%;
     padding: 25px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
   }
   .mainStudy .inner .movieWrap .movie {
-    width: 750px;
-    height: 420px;
     overflow: hidden;
   }
   .mainStudy .inner .movieWrap .movie img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: all 0.2s linear;
+  }
+  .mainStudy .inner .movieWrap .movie img:hover {
+    transform: scale(1.2);
   }
   .mainStudy .inner .movieWrap .txt {
     position: relative;
@@ -162,6 +147,7 @@
   
   .mainStudy .inner .eventWrap {
     margin: 57px 0 0;
+    width: 40%;
   }
   .mainStudy .inner .eventWrap .titimg {
     position: relative;
@@ -207,6 +193,11 @@
   .mainStudy .inner .eventWrap .event .evList li a {
     font-size: 18px;
     font-weight: 400;
+    transition: all 0.1s;
+  }
+  .mainStudy .inner .eventWrap .event .evList li a:hover{
+    color:#f27885;
+    text-decoration: underline;
   }
   .mainStudy .inner .eventWrap .event .evList li span {
     margin-left: auto;
@@ -218,66 +209,59 @@
     margin: 15px 0 0;
   }
   
-  .mainLectureBest .inner {
-    width: 1280px;
+  .inner {
     margin: 12vh 0;
     position: relative;
   }
-  .mainLectureBest .inner h2 {
+  .inner h2 {
     font-size: 36px;
     font-weight: 700;
   }
-  .mainLectureBest .swiperLectureBest {
-    margin: 35px 0 0;
+  .swiperLectureBest {
+    margin: 0;
     border-right: 1px solid #ccc;
-    gap: 20px 10px;
   }
-  .mainLectureBest .swiper-button-prev:after,
-  .mainLectureBest .swiper-button-next:after {
-    display: none;
-  }
-  .mainLectureBest .swiper-button-prev {
-    left: -60px;
-    width: 30px;
-    height: 51px;
-    background: url("../images/ico_sw_prev.png") 50% 50% no-repeat;
-    background-size: contain;
-  }
-  .mainLectureBest .swiper-button-next {
+  .swiper-button-next {
     right: -60px;
     width: 30px;
     height: 51px;
     background: url("../images/ico_sw_next.png") 50% 50% no-repeat;
     background-size: contain;
   }
-  .mainLectureBest .swiper-slide {
+  .swiper-slide {
     position: relative;
-    width: calc((100% / 4) - 8px);
+    width: calc(100% / 3) !important;
+    cursor: pointer;
   }
-  .mainLectureBest .swiper-slide .thumb {
+  .swiper-slide .thumb {
     width: 100%;
     height: 220px;
     overflow: hidden;
+    border-radius: 8px 8px 0 0;
   }
-  .mainLectureBest .swiper-slide .thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .swiper-slide img {
+    transition: all 0.2s linear;
   }
-  .mainLectureBest .swiper-slide .txt {
-    margin: 20px 0 0;
+  .swiper-slide img:hover {
+    transform: scale(1.2);
   }
-  .mainLectureBest .swiper-slide .txt .subject {
-    font-size: 18px;
+  .swiper-slide .txt {
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    padding: 12px;
+    border-radius: 0 0 8px 8px;
+  }
+  .swiper-slide .txt .subject {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .swiper-slide .txt .name {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
     font-weight: 400;
+    color: #ccc;
   }
-  .mainLectureBest .swiper-slide .txt .name {
-    margin: 15px 0 0;
-    font-size: 14px;
-    font-weight: 400;
-    color: #5b5b5b;
-  }
-  .mainLectureBest .swiper-slide .btn_like {
+  .swiper-slide .btn_like {
     position: absolute;
     bottom: 20px;
     right: 27px;
@@ -288,13 +272,13 @@
   }
   
   .mainNews {
-    padding: 0 0 90px;
+    margin: 90px 0;
   }
   .mainNews .inner {
-    width: 1280px;
     margin: 0 auto;
     position: relative;
     display: flex;
+    justify-content: space-between;
   }
   .mainNews .tit h2 {
     font-size: 36px;
@@ -309,8 +293,9 @@
     background: url("../images/ico_arrow.png") 100% 8px no-repeat;
   }
   .mainNews .newsList {
-    margin-left: auto;
-    width: 755px;
+    margin-left: 16px;
+    flex-grow:1;
+    max-width:700px;
     border-top: 1px solid #bdbdbd;
   }
   .mainNews .newsList li {
