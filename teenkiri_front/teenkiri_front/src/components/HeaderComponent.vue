@@ -37,6 +37,7 @@
             <v-icon v-else>mdi-bell</v-icon>
 
             <v-menu activator="parent" offset-y>
+              <!-- 알림 목록 -->
               <v-list max-width="300" max-height="400" style="overflow-y: auto;">
                 <template v-if="unreadNotifications.length > 0">
                   <v-list-item
@@ -81,6 +82,20 @@
       </v-row>
     </v-container>
   </v-app-bar>
+
+  <!-- 로그인 안내 스낵바 (중앙 모달 스타일) -->
+  <v-snackbar color="white"
+    v-model="loginSnackbar" 
+    :timeout="3000"
+    class="custom-snackbar"
+    top
+  >
+    <div class="snackbar-content">
+      로그인을 하셔야 해당 기능을 사용할 수 있습니다.
+      <v-btn color="#6fc8b8" text @click="goToLoginPage">로그인</v-btn>
+      <v-btn color="#6fc8b8" text @click="closeLoginSnackbar">닫기</v-btn>
+    </div>
+  </v-snackbar>
 </template>
 
 <script>
@@ -100,6 +115,7 @@ export default {
       isLogin: false,
       isAdmin: false,
       notifications: [],
+      loginSnackbar: false, // 로그인 안내 스낵바 상태
     };
   },
   computed: {
@@ -211,11 +227,17 @@ export default {
       if (this.isLogin) {
         this.$emit('open-sidebar');
       } else {
-        alert('로그인 후 사용이 가능합니다.');
-        this.$router.push('/login');
+        this.loginSnackbar = true; // 로그인 안내 스낵바 열기
       }
     },
-  },
+    closeLoginSnackbar() {
+      this.loginSnackbar = false;
+    },
+    goToLoginPage() {
+      this.loginSnackbar =false
+      this.$router.push('/login');
+    }
+  }
 };
 </script>
 
@@ -236,5 +258,21 @@ export default {
 
 .v-list-item {
   background-color: white;
+}
+
+.custom-snackbar {
+  color:#ffdb69 !important;
+  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+
+}
+
+.v-snackbar--variant-elevated, 
+.v-snackbar--variant-flat {
+  background-color: white !important; /* 흰색 배경 */
 }
 </style>

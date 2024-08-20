@@ -31,9 +31,6 @@
                           <v-btn block type="submit" color="primary">로그인</v-btn>
                           <v-divider class="my-4"></v-divider>
                           <v-btn block color="warning" @click="googleLogin">구글 로그인</v-btn>
-    
-                          
-
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
@@ -45,7 +42,6 @@
                               <v-list-item @click="signUp">
                                   <v-list-item-title>회원가입</v-list-item-title>
                               </v-list-item>
-                              <a href="/oauth2/authorization/google">Google Login</a>
                           </v-list>
                       </v-form>
                   </v-card-text>
