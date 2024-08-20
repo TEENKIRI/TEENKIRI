@@ -19,6 +19,7 @@
   </template>
   
   <script>
+
   import SockJS from 'sockjs-client';
   import { Stomp } from '@stomp/stompjs';
   export default {
@@ -46,17 +47,17 @@
       });
     },
     sendMessage() {
-      const userId = localStorage.getItem('userId'); // userId를 localStorage에서 가져오기
+      const userId = localStorage.getItem('userId');
 
       if (!userId) {
-        console.error("User ID is not available in localStorage");
+        console.error("유저가 없습니다.");
         return;
       }
 
       if (this.stompClient && this.stompClient.connected) {
         const message = {
           content: this.newMessage,
-          senderId: userId, // userId를 senderId로 설정
+          senderId: userId, 
         };
         this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
         this.newMessage = '';

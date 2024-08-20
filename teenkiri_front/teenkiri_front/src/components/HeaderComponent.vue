@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app >
+  <v-app-bar app>
     <v-container>
       <v-row align="center">
         <v-col>
@@ -24,6 +24,7 @@
           <v-btn icon @click="handleAccountClick">
             <v-icon>mdi-account</v-icon>
           </v-btn>
+
           <v-btn icon class="teen_red_font">
             <v-badge
               color="red"
@@ -59,6 +60,25 @@
               </v-list>
             </v-menu>
           </v-btn>
+
+          <!-- 채팅 아이콘 추가 -->
+          <v-btn icon @click="showChatModal = true">
+            <v-icon>mdi-chat</v-icon>
+          </v-btn>
+
+          <!-- 채팅 모달 -->
+          <v-dialog v-model="showChatModal" max-width="600px">
+            <v-card>
+              <v-card-title class="headline">채팅</v-card-title>
+              <v-card-text>
+                <ChatComponent />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="showChatModal = false">닫기</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
     </v-container>
@@ -68,33 +88,42 @@
 <script>
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import axios from 'axios';
+import ChatComponent from '@/components/ChatComponent.vue'; // 채팅 컴포넌트 추가
 
 export default {
   name: 'HeaderComponent',
+  components: {
+    ChatComponent, // ChatComponent를 components에 추가
+  },
   data() {
     return {
+      showChatModal: false, // 채팅 모달 제어를 위한 데이터
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false, // 초기값 설정
-      isAdmin: false, // 관리자인지 여부를 확인하기 위한 변수 추가
+      isLogin: false,
+      isAdmin: false,
       notifications: [],
     };
   },
   computed: {
     unreadNotificationsCount() {
-      return this.notifications.filter(notification => notification.delYN === 'N').length;
+      return this.notifications.filter((notification) => notification.delYN === 'N').length;
     },
     unreadNotifications() {
-      return this.notifications.filter(notification => notification.delYN === 'N');
-    }
+      return this.notifications.filter((notification) => notification.delYN === 'N');
+    },
   },
   mounted() {
     const token = localStorage.getItem('token');
     this.isLogin = !!token;
 
     if (this.isLogin) {
-      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; // 로그인 후 역할이 ADMIN인지 확인
+      this.isAdmin = localStorage.getItem('role') === 'ADMIN';
       this.fetchNotifications();
-
+      this.initEventSource(token);
+    }
+  },
+  methods: {
+    initEventSource(token) {
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -109,11 +138,9 @@ export default {
       eventSource.onerror = (error) => {
         console.error('SSE 연결 오류:', error);
       };
-    }
-  },
-  methods: {
+    },
     async fetchNotifications() {
-      if(this.isLogin){
+      if (this.isLogin) {
         try {
           const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`, {
             headers: {
@@ -121,7 +148,6 @@ export default {
             },
           });
 
-          // 알림을 id 기준으로 내림차순 정렬
           this.notifications = response.data.sort((a, b) => b.id - a.id);
         } catch (error) {
           console.error('알림 목록을 가져오는 중 오류 발생:', error);
@@ -187,11 +213,11 @@ export default {
       if (this.isLogin) {
         this.$emit('open-sidebar');
       } else {
-        alert("로그인 후 사용이 가능합니다.");
+        alert('로그인 후 사용이 가능합니다.');
         this.$router.push('/login');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

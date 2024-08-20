@@ -32,4 +32,3 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/public", savedMessage);
     }
 }
-
