@@ -1,12 +1,9 @@
 package com.beyond.teenkiri.notification.controller;
 
-import com.beyond.teenkiri.comment.domain.Comment;
-import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.service.NotificationService;
-import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.qna.domain.QnA;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -27,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+@Slf4j
 @RestController
 public class SseController implements MessageListener {
 
@@ -98,6 +97,10 @@ public class SseController implements MessageListener {
 
             if (emitter != null) {
                 emitter.send(SseEmitter.event().name("notification").data(notification));
+                String body = new String(message.getBody());
+                String channel = new String(message.getChannel());
+                log.info("Received message: {} from channel: {}", body, channel);
+                System.out.println("Received message: {} from channel: {}" + body + "   "+ channel);
             }
         } catch (IOException e) {
             // 로깅 추가
