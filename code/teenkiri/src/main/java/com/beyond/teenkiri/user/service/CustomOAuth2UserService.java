@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.util.Collections;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
@@ -39,9 +40,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         //OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 담은 클래스
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                 userNameAttributeName, oAuth2User.getAttributes());
+        System.out.println("att!!!!!!!"+attributes);
 
         //우리의 서비스에 회원가입이나 기존 회원의 정보를 업데이트를 한다.
         User user = saveOrUpdate(attributes);
+        String uuidNick = String.valueOf(UUID.randomUUID());
+        user.updateNick(uuidNick);
+        String uuidPass = String.valueOf(UUID.randomUUID());
+        user.updatePass(uuidPass);
+        userRepository.save(user);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),

@@ -6,11 +6,10 @@ import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.user.dto.UserListDto;
 import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -24,30 +23,30 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column( length = 50)
     private String name;
 
     @Column
     private String password;
 
-    @Column(nullable = false, length = 20, unique = true)
+    @Column( length = 20, unique = true)
     private String phone;
 
     @Column(length = 255)
     private Address address;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column( length = 100, unique = true)
     private String email;
 
     @Column(length = 100, unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Builder.Default
     private Role role = Role.STUDENT;
 
-    @Column(nullable = false)
+//    @Column()
     private boolean isVerified = false;
 
     @Builder.Default
@@ -96,5 +95,14 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.email = email;
         this.role = role;
+        this.nickname = String.valueOf(UUID.randomUUID());
+    }
+    public User updateNick(String uuid){
+     this.nickname = uuid;
+     return this;
+    }
+    public User updatePass(String uuid) {
+        this.password = uuid;
+        return this;
     }
 }

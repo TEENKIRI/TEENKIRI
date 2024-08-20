@@ -30,8 +30,8 @@ public class UserSaveReqDto {
         return User.builder()
                 .password(password)
                 .name(this.name)
-                .nickname(this.nickname)
                 .email(this.email)
+                .nickname(this.nickname != null ? this.nickname : String.valueOf(UUID.randomUUID())) // nickname이 null이면 UUID 생성
                 .role(this.role)
                 .address(this.address)
                 .delYN(this.delYN)
