@@ -15,7 +15,7 @@
         <v-card-text class="lectureList">
           <div
             class="item"
-            v-for="s in subject.subjectIsMainList"
+            v-for="s in subject.subjectList"
             :key="s.id"
             @click="goToDetail(s.id)"
           >
@@ -72,7 +72,7 @@ export default {
       subject: {
         subjectList: [],
         page: {
-          pageSize: 5,
+          pageSize: 9,
           currentPage: 1,
         },
       },
@@ -90,13 +90,10 @@ export default {
         const params = {
           size: this.subject.page.pageSize,
           page: this.page - 1, // MySQL에서의 페이지는 0부터 시작
-          search: this.searchValue,
-          searchType: this.searchType,
-          sortType: this.selectedType,
         };
 
         const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/subject/list`,
+          `${process.env.VUE_APP_API_BASE_URL}/subject/main/list`,
           { params }
         );
         this.subject.subjectList = response.data.result.content;

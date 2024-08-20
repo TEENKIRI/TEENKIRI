@@ -194,6 +194,7 @@ export default {
     },
 
     async submitForm() {
+
       const formData = new FormData();
       formData.append('title', this.subject.title);
       formData.append('userTeacherEmail', this.subject.userTeacherEmail);
@@ -201,21 +202,39 @@ export default {
       formData.append('grade', this.subject.grade);
       formData.append('description', this.subject.description);
       formData.append('isMainSubject', this.subject.isMainSubject);  // 추가된 필드
+      
 
       if (this.subject.thumbnail) {
         formData.append('subjectThum', this.subject.thumbnail);
       }
 
       try {
-        const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/subject/create`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+
+        let response = null;
+        let apiUrl = `${process.env.VUE_APP_API_BASE_URL}/subject/create`;
+
+        if (this.routeName === 'SubjectEdit') {
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/subject/update/${this.subjectId}`;
+          response = await axios.patch(apiUrl, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          alert('강좌가 성공적으로 수정되었습니다!');
+          window.reload();
+        }else{
+          response = await axios.post(apiUrl, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          alert('강의가 성공적으로 등록되었습니다!');
+          this.$router.push('/subject/list');
+        }
         console.log(response);
-        alert('강좌 생성이 완료되었습니다.');
-        this.$router.push('/subject/list');
+
       } catch (error) {
         console.error('Error creating subject:', error);
-        alert('강좌 생성에 실패했습니다.');
       }
     },
 

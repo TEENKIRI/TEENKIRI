@@ -5,7 +5,7 @@
         <h1>{{ subjectData.title }}</h1>
       </v-col>
       <v-col class="d-flex justify-end flex-end">
-        <v-btn v-if="this.user.role == `ADMIN`" @click="editSubject()">강의 수정</v-btn>
+        <v-btn v-if="this.user.role == `ADMIN`" @click="editSubject()">강좌 수정</v-btn>
         <v-btn
           :disabled="this.subjectData.isRegistered"
           @click="applyForSubject"
@@ -45,7 +45,7 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-title class="custom-title">수강대상</v-list-item-title>
-                <v-list-item-subtitle class="custom-subtitle">{{ subjectData.grade }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="custom-subtitle">{{ changeGradeWord(subjectData.grade) }}</v-list-item-subtitle>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title class="custom-title">강좌구성</v-list-item-title>
@@ -206,6 +206,24 @@ export default {
     },
     editSubject(){
       this.$router.push({ name: "SubjectEdit", params: { id: this.subjectId } });
+    },
+    changeGradeWord(grade) {
+      switch (grade) {
+          case 'GRADE_1':
+              return '1학년';
+          case 'GRADE_2':
+              return '2학년';
+          case 'GRADE_3':
+              return '3학년';
+          case 'GRADE_4':
+              return '4학년';
+          case 'GRADE_5':
+              return '5학년';
+          case 'GRADE_6':
+              return '6학년';
+          default:
+              return '알 수 없음';  // 예외 처리
+      }
     }
   },
   computed: {
