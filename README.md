@@ -87,4 +87,119 @@ TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품�
 
 ## 프로젝트 시연
 
+#### 👤 로그인, 회원가입
+<details>
+  <summary>회원가입 및 로그인</summary>
+</details>
 
+<details>
+  <summary>아이디 저장</summary>
+</details>
+
+<details>
+  <summary>아이디 찾기</summary>
+</details>
+
+<details>
+  <summary>비밀번호 찾기</summary>
+</details>
+
+<details>
+  <summary>구글 로그인</summary>
+</details>
+
+<details>
+  <summary>id 저장</summary>
+</details>
+
+<details>
+  <summary>로그인 및 로그아웃</summary>
+</details>
+
+#### 📚 강좌 및 강의
+
+<details>
+  <summary>강좌 생성</summary>
+  <img src=“” alt="강좌생성">
+</details>
+
+<details>
+  <summary>강좌 리스트</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강좌 추천</summary>
+  <img src="https://github.com/user-attachments/assets/99f3a64f-570b-4c38-bf96-32972a88d6b2" alt="강좌추천">
+</details>
+
+<details>
+  <summary>강좌 상세, 강좌 수강여부 조회, 강좌 수강률 조회</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강의 업로드 및 수정</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강좌 수강신청 및 내가 수강중인 강좌 리스트</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강의 시청 플레이어, 강의 진행률 서버와 통신, 강의 수강완료 여부 통신</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강의 후기 작성 및 조회</summary>
+  <img src="https://github.com/user-attachments/assets/ff13b853-5ae3-4912-9e99-fa06d87a334c" alt="별점 및 후기">
+</details>
+
+<details>
+  <summary>강좌 찜, 찜 목록</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>강좌 추천</summary>
+  <img src=“” alt="">
+</details>
+
+#### 📋 게시판
+
+<details>
+  <summary>자유게시판 검색</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>자유게시판 작성, 수정, 삭제, 댓글, 신고</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>질문 게시판 검색</summary>
+  <img src=“” alt="">
+</details>
+
+<details>
+  <summary>질문 게시판 작성, 수정, 삭제, 댓글, 신고, 알림</summary>
+  <img src=“” alt="">
+</details>
+
+#### 💬 실시간 채팅
+
+<details>
+  <summary>실시간 채팅</summary>
+  <img src=“” alt="">
+</details>
+
+#### 🔔 알림
+
+<details>
+  <summary>알림 드롭다운, 알림 목록 조회</summary>
+  <img src=“” alt="">
+</details>
