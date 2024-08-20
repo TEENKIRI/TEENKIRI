@@ -9,8 +9,7 @@ import { boardRouter } from './boardRouter';
 import { subjectRouter } from './subjectRouter';
 import { qnaRouter } from './qnaRouter';
 import { reportRouter } from './reportRouter';
-import { chatRouter } from './chatRouter';
-
+import { chatRouter } from './chatRouter'; 
 
 const routes = [
     // {

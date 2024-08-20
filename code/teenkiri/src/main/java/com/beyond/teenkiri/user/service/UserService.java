@@ -8,7 +8,7 @@ import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-z
+
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;

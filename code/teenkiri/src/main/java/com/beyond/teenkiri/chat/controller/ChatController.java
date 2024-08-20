@@ -1,9 +1,11 @@
 package com.beyond.teenkiri.chat.controller;
 
+import com.beyond.teenkiri.chat.domain.ChatMessage;
 import com.beyond.teenkiri.chat.dto.ChatMessageDto;
 import com.beyond.teenkiri.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,3 +32,4 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/public", savedMessage);
     }
 }
+
