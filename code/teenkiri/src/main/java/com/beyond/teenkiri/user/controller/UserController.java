@@ -23,8 +23,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -287,4 +291,5 @@ public class UserController {
                     .body(new CommonResDto(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching teachers", null));
         }
     }
+
 }
