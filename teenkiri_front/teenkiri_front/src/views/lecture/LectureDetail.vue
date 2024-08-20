@@ -3,11 +3,9 @@
     <div class="mt-5">
       <h1>{{ lectureData.title }}</h1>
       <div>
-        나의 진행률 : <span>{{ userProgress }}</span
-        >%
         <v-progress-linear v-model="userProgress" color="amber" height="25">
           <template v-slot:default>
-            <strong>{{ userProgress }}%</strong>
+            <strong> 진행률 {{ userProgress }}%</strong>
           </template>
         </v-progress-linear>
       </div>
@@ -25,6 +23,7 @@
 // import VideoPlayer from '@/components/Lecture/videoPlayer.vue';
 import axios from "axios";
 import videojs from "video.js";
+import 'video.js/dist/video-js.min.css';
 
 export default {
   // name: 'VideoExample',
