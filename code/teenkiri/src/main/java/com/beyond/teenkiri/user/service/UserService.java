@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.user.service;
 
-import com.beyond.teenkiri.chatting.service.ChatService;
+import com.beyond.teenkiri.chat.service.ChatMessageService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.dto.NotificationListDto;
@@ -8,7 +8,7 @@ import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
-
+z
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
@@ -48,7 +48,7 @@ public class UserService {
     private RedisService redisService;
 
     @Autowired
-    private ChatService chatService;
+    private ChatMessageService chatService;
 
     @Autowired
     private QnARepository qnARepository;
