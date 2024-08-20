@@ -1,35 +1,32 @@
 <template>
   <v-container>
-    <h1>티니키리 서비스가 추천하는 강좌 👍</h1>
-    <v-row>
-      <v-col>
-        <v-row v-if="this.user.role===`ADMIN`">
-          <v-col class="d-flex flex-row">
-            <v-btn>강좌 업로드</v-btn>
-          </v-col>
-        </v-row>
+    <v-row class="align-end">
+      <v-col class="font_notrahope" style="font-size:2.5rem;">
+        티니키리 서비스가 <span class="teen_red_font">추천</span>해요! 👍
+      </v-col>
+      <v-col class="text-right">
+        <v-btn v-if="this.user.role===`ADMIN`">강좌 업로드</v-btn>
       </v-col>
     </v-row>
     <v-row>
-      <v-card class="w-100">
-        <v-card-title>강좌 목록</v-card-title>
-        <v-card-text>
-          <div class="swiper swiperLectureBest">
-            <div
-              class="swiper-slide"
-              v-for="s in subject.subjectIsMainList"
-              :key="s.id"
-              @click="goToDetail(s.id)"
-            >
-              <div class="thumb">
-                <a href="javascript:void(0)"
-                  ><img v-bind:src="s.subjectThumUrl" alt="강좌 썸네일"
-                /></a>
-              </div>
-              <div class="txt">
-                <p class="subject">{{ s.title }}</p>
-                <p class="name">{{ s.teacherName }}</p>
-              </div>
+      <v-card class="w-100 py-5 px-5 mb-5">
+        <v-card-text class="lectureList">
+          <div
+            class="item"
+            v-for="s in subject.subjectIsMainList"
+            :key="s.id"
+            @click="goToDetail(s.id)"
+          >
+            <div class="thumb">
+              <a href="javascript:void(0)"
+                ><img v-bind:src="s.subjectThumUrl" alt="강좌 썸네일"
+              /></a>
+            </div>
+            <div class="txt">
+              <p class="subject">{{ s.title }}</p>
+              <p class="name">{{ s.teacherName }}</p>
+            </div>
+            <div class="text-right">
               <button type="button" 
                 class="btn_like" 
                 @click="toggleWish(s.id, $event)" 

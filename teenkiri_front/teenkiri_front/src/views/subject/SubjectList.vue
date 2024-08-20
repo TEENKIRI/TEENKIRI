@@ -2,35 +2,39 @@
   <v-container>
     <!-- 추천 강좌 섹션 -->
     <v-card class="mt-5">
-      <v-card-title>티니키리 서비스가 이 강좌를 추천해요!</v-card-title>
-      <v-card-text>
-        <div class="swiper swiperLectureBest">
-          <div
-            class="swiper-slide"
-            v-for="sm in subject.subjectIsMainList"
-            :key="sm.id"
-            @click="goToDetail(sm.id)"
-          >
-            <div class="thumb">
-              <a href="javascript:void(0)">
-                <img v-bind:src="sm.subjectThumUrl" alt="강좌 썸네일" />
-              </a>
-            </div>
-            <div class="txt">
-              <p class="subject">{{ sm.title }}</p>
-              <p class="name">{{ sm.teacherName }}</p>
-            </div>
-            <button
-              type="button"
-              class="btn_like"
-              @click="toggleWish(sm.id, $event, `subjectMain`)"
-              :class="{
-                'mdi mdi-heart': sm.isSubscribe,
-                'mdi mdi-heart-outline': !sm.isSubscribe,
-              }"
-            ></button>
-          </div>
-        </div>
+      <v-card-title class="font_notrahope" style="font-size:2rem;">
+        티니키리 서비스가 <span class="teen_red_font">추천</span>해요! 👍
+      </v-card-title>
+      <v-card-text v-if="subject.subjectIsMainList.length">
+        <swiper
+          :slides-per-view="4"
+          :spaceBetween="30"
+          :loop="true"
+          :pagination="{clickable: true}"
+          :modules="modules"
+          :autoplay="{
+            delay: 2000,
+            disableOnInteraction: false,
+          }"
+        >
+          <swiper-slide 
+              v-for="sm in subject.subjectIsMainList"
+              :key="sm.id"
+              @click="goToDetail(sm.id)"
+            >
+              <v-img
+                aspect-ratio="16/9"
+                cover
+                :src="sm.subjectThumUrl"
+                style="border-radius: 0px;"
+                alt="강좌 썸네일"
+              ></v-img>
+              <div class="txt">
+                <p class="subject">{{ sm.title }}</p>
+                <p class="name">{{ sm.teacherName }}</p>
+              </div>
+            </swiper-slide>
+        </swiper>
       </v-card-text>
     </v-card>
 
@@ -73,26 +77,27 @@
     </v-row>
 
     <!-- 과목 선택 섹션 -->
+    <div class="text-right mb-2">
     <v-btn
-      class="mb-2"
-      color="success"
+      color="grey-darken-1"
       @click="$router.push('/subject/create')"
       v-if="this.user.role === `ADMIN`"
       >강좌 업로드</v-btn
     >
     <v-btn
-      class="mb-2"
-      color="success"
+      color="grey-darken-1"
       @click="$router.push('/course/create')"
       v-if="this.user.role === `ADMIN`"
       >과목 업로드</v-btn
     >
+    </div>
+    
 
-    <v-row>
+    <v-row style="background:#ffffff;">
       <v-col cols="12" class="py-2">
         <v-btn-toggle
           v-model="course.selectedMenu"
-          color="primary"
+          selected-class="teen_mint_bg_c_white"
           rounded="0"
           group
           class="d-flex flex-row"
@@ -127,7 +132,7 @@
     <v-row>
       <v-col>
         <v-item-group
-          selected-class="bg-purple"
+          selected-class="teen_mint_bg_c_white"
           multiple
           class="d-flex justify-start"
           v-model="grade.selectedGrades"
@@ -150,13 +155,11 @@
     </v-row>
 
     <!-- 강좌 목록 섹션 -->
-    <v-card class="mt-5">
-      <v-row class="mt-5">
-        <v-card-title>강좌 목록</v-card-title>
-        <v-card-text>
-          <div class="swiper swiperLectureBest">
+    <v-card class="py-5 px-5">
+        <!-- <v-card-title>강좌 목록</v-card-title> -->
+        <v-card-text class="lectureList">
             <div
-              class="swiper-slide"
+              class="item"
               v-for="s in subject.subjectList"
               :key="s.id"
               @click="goToDetail(s.id)"
@@ -170,7 +173,8 @@
                 <p class="subject">{{ s.title }}</p>
                 <p class="name">{{ s.teacherName }}</p>
               </div>
-              <button
+              <div class="text-right">
+                <button
                 type="button"
                 class="btn_like"
                 @click="toggleWish(s.id, $event, `subjectList`)"
@@ -179,10 +183,9 @@
                   'mdi mdi-heart-outline': !s.isSubscribe,
                 }"
               ></button>
+              </div>
             </div>
-          </div>
         </v-card-text>
-      </v-row>
     </v-card>
 
     <!-- 페이지네이션 -->
@@ -197,8 +200,30 @@
 
 <script>
 import axios from "axios";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default {
+  components: {
+    Swiper,
+    SwiperSlide
+  },
+  setup() {
+    const onSwiper = (swiper) => {
+      console.log(swiper);
+    };
+    const onSlideChange = () => {
+      console.log('slide change');
+    };
+    return {
+      onSwiper,
+      onSlideChange,
+      modules: [Autoplay, Pagination, Navigation],
+    };
+  },
   data() {
     return {
       user: {},
@@ -381,4 +406,10 @@ export default {
 .v-btn + .v-btn {
   margin-left: 16px;
 }
+
+.swiper-pagination{
+  position:static;
+  margin-top:12px;
+}
+
 </style>

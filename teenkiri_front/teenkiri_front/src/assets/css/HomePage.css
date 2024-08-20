@@ -230,7 +230,6 @@
   }
   .swiper-slide {
     position: relative;
-    width: calc(100% / 3) !important;
     cursor: pointer;
   }
   .swiper-slide .thumb {

@@ -1,20 +1,24 @@
-.global_bg{background-color:#fffdfa;}
+.global_bg{background-color:#fafcff;}
 
 .teen_yellow{color:#ffdb69; background-color:#ffdb69;}
 .teen_yellow_font{color:#ffdb69;}
 .teen_yellow_bg{background-color:#ffdb69;}
+.teen_yellow_bg_c_white{background-color:#ffdb69; color: #ffffff;}
 
 .teen_red{color:#f27885; background-color:#f27885;}
 .teen_red_font{color:#f27885;}
 .teen_red_bg{background-color:#f27885;}
+.teen_red_bg_c_white{background-color:#f27885; color: #ffffff;}
 
 .teen_mint{color:#6fc8b8; background-color:#6fc8b8;}
 .teen_mint_font{color:#6fc8b8;}
 .teen_mint_bg{background-color:#6fc8b8;}
+.teen_mint_bg_c_white{background-color:#6fc8b8; color: #ffffff;}
 
 .teen_blue{color:#5087c7; background-color:#5087c7;}
 .teen_blue_font{color:#5087c7;}
 .teen_blue_bg{background-color:#5087c7;}
+.teen_blue_bg_c_white{background-color:#5087c7; color: #ffffff;}
 
 a{
     transition: all 0.1s;
@@ -22,4 +26,52 @@ a{
 
 a:hover{
     color:#f27885;
-  }
+}
+
+.lectureList{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px 16px;
+    padding:0 !important;
+}
+.lectureList .item{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.lectureList .item img{
+    width: 100%;
+    transition: all 0.2s linear;
+}
+
+.lectureList .item .thumb{
+    overflow: hidden;
+}
+
+.lectureList .item:hover img{
+    transform: scale(1.2);
+}
+.lectureList .item:hover .subject{
+    color:#f27885;
+}
+
+.lectureList .subject{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.lectureList .name{
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.lectureList .btn_like{
+    font-size: 1.5rem;
+    color: #aaa;
+
+}
+.lectureList .btn_like.mdi-heart{
+    color: #db3e5d;
+}

@@ -47,13 +47,17 @@
         <v-card-title class="font_notrahope" style="font-size:2rem;">
           티니키리 서비스가 <span class="teen_red_font">추천</span>해요! 👍
         </v-card-title>
-        <v-card-text>
+        <v-card-text v-if="subject.subjectIsMainList.length">
         <swiper
           :slides-per-view="3"
           :spaceBetween="30"
           :loop="true"
           :pagination="{clickable: true}"
           :modules="modules"
+          :autoplay="{
+            delay: 2000,
+            disableOnInteraction: false,
+          }"
         >
           <swiper-slide 
               v-for="sm in subject.subjectIsMainList"
@@ -123,13 +127,17 @@
       <v-card-title class="mb-4 font_notrahope" style="font-size:2rem;">
           최고 <span class="teen_red_font">인기</span>강좌 에요! 😍
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="subject.subjectList.length">
         <swiper
             :slides-per-view="3"
             :spaceBetween="30"
             :loop="true"
             :pagination="{clickable: true}"
             :modules="modules"
+            :autoplay="{
+              delay: 2000,
+              disableOnInteraction: false,
+            }"
           >
             <swiper-slide 
                 v-for="s in subject.subjectList"
@@ -179,7 +187,7 @@
 <script>
 import axios from "axios";
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -199,7 +207,7 @@ export default {
     return {
       onSwiper,
       onSlideChange,
-      modules: [Pagination, Navigation],
+      modules: [ Autoplay, Pagination, Navigation],
     };
   },
   data() {

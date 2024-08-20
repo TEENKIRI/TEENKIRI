@@ -10,8 +10,8 @@
 
       <div class="btnWrap" v-if="this.user.isAdmin">
         <v-col>
-          <router-link :to="`/lecture/create/${subjectId}`">
-            <v-btn class="btn_write">강의 업로드하기</v-btn>
+          <router-link :to="`/lecture/create/${subjectId}`" class="btn_write">
+            강의 업로드하기
           </router-link>
         </v-col>
       </div>
@@ -61,7 +61,7 @@
                 </div>
               </div>
             </td>
-            <td>{{ item.videoDuration }}</td>
+            <td>{{ formatDuration(item.videoDuration) }}</td>
             <td>
               <a
                 v-if="user.userId"
@@ -134,6 +134,11 @@ export default {
     },
   },
   methods: {
+    formatDuration(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes} 분 ${remainingSeconds.toString().padStart(2, '0')} 초`;
+    },
     async getSubjectPerLectureList() {
       const params = {
         size: this.lecture.page.pageSize,
@@ -207,6 +212,7 @@ export default {
   font-size: 16px;
   display: inline-block;
   transition: background-color 0.3s ease;
+  word-break: keep-all;
 }
 
 .tbl_list {
@@ -223,13 +229,11 @@ export default {
   text-align: left;
   border-left: none;
   border-right: none;
-  font-size: 20px;
 }
 
 .tbl_list th {
   background-color: #f4f4f4;
   font-weight: bold;
-  font-size: 20px;
 }
 .text_left {
   text-align: left;

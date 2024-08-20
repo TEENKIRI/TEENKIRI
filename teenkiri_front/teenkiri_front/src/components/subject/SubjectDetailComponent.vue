@@ -1,13 +1,21 @@
 <template>
   <v-sheet v-if="subjectData">
-    <v-row>
+    <v-row class="mb-5">
       <v-col>
         <h1>{{ subjectData.title }}</h1>
       </v-col>
-    </v-row>
-    <v-row v-if="this.user.role == `ADMIN`">
-      <v-col>
-        <v-btn @click="editSubject()">강의 수정</v-btn>
+      <v-col class="d-flex justify-end flex-end">
+        <v-btn v-if="this.user.role == `ADMIN`" @click="editSubject()">강의 수정</v-btn>
+        <v-btn
+          :disabled="this.subjectData.isRegistered"
+          @click="applyForSubject"
+          class="teen_red_bg_c_white"
+        >
+          {{ this.subjectData.isRegistered ? "수강 중" : "수강신청" }}
+        </v-btn>
+        <v-btn @click="handleWishlist" color="secondary">
+          {{ this.subjectData.isSubscribe ? "찜 취소하기" : "찜하기" }}
+        </v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -26,19 +34,7 @@
       </v-col>
       <v-col cols="12" md="6">
         <v-row>
-          <v-col class="d-flex justify-end">
-            <v-btn
-              :disabled="this.subjectData.isRegistered"
-              @click="applyForSubject"
-              color="primary"
-              class="mr-4"
-            >
-              {{ this.subjectData.isRegistered ? "수강 중" : "수강신청" }}
-            </v-btn>
-            <v-btn @click="handleWishlist" color="secondary">
-              {{ this.subjectData.isSubscribe ? "찜 취소하기" : "찜하기" }}
-            </v-btn>
-          </v-col>
+          
         </v-row>
         <v-row>
           <v-col>
@@ -72,7 +68,7 @@
       <v-col>
         <v-btn-toggle
           v-model="internalValue"
-          color="primary"
+          selected-class="teen_mint_bg_c_white"
           rounded="0"
           group
         >
