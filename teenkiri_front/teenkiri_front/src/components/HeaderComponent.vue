@@ -24,6 +24,7 @@
           <v-btn icon @click="handleAccountClick">
             <v-icon>mdi-account</v-icon>
           </v-btn>
+
           <v-btn icon class="teen_red_font">
             <v-badge
               color="red"
@@ -60,54 +61,85 @@
               </v-list>
             </v-menu>
           </v-btn>
+
+          <!-- 채팅 아이콘 추가 -->
+          <v-btn icon @click="showChatModal = true">
+            <v-icon>mdi-chat</v-icon>
+          </v-btn>
+
+          <!-- 채팅 모달 -->
+          <v-dialog v-model="showChatModal" max-width="600px">
+            <v-card>
+              <v-card-title class="headline">채팅</v-card-title>
+              <v-card-text>
+                <ChatComponent />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="showChatModal = false">닫기</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
     </v-container>
   </v-app-bar>
 
-  <!-- 로그인 안내 스낵바 -->
-  <v-snackbar 
+  <!-- 로그인 안내 스낵바 (중앙 모달 스타일) -->
+  <v-snackbar color="white"
     v-model="loginSnackbar" 
-    :timeout="3000000"
+    :timeout="3000"
     class="custom-snackbar"
+    top
   >
-    로그인을 하셔야 해당 기능을 사용할 수 있습니다.
-    <v-btn color="yellow" text @click="goToLoginPage">로그인</v-btn>
-    <v-btn color="yellow" text @click="closeLoginSnackbar">닫기</v-btn>
+    <div class="snackbar-content">
+      로그인을 하셔야 해당 기능을 사용할 수 있습니다.
+      <v-btn color="#6fc8b8" text @click="goToLoginPage">로그인</v-btn>
+      <v-btn color="#6fc8b8" text @click="closeLoginSnackbar">닫기</v-btn>
+    </div>
   </v-snackbar>
 </template>
 
 <script>
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import axios from 'axios';
+import ChatComponent from '@/components/ChatComponent.vue'; // 채팅 컴포넌트 추가
 
 export default {
   name: 'HeaderComponent',
+  components: {
+    ChatComponent, // ChatComponent를 components에 추가
+  },
   data() {
     return {
+      showChatModal: false, // 채팅 모달 제어를 위한 데이터
       logo: require('@/assets/images/ico_logo.png'),
-      isLogin: false, 
-      isAdmin: false, 
+      isLogin: false,
+      isAdmin: false,
       notifications: [],
       loginSnackbar: false, // 로그인 안내 스낵바 상태
     };
   },
   computed: {
     unreadNotificationsCount() {
-      return this.notifications.filter(notification => notification.delYN === 'N').length;
+      return this.notifications.filter((notification) => notification.delYN === 'N').length;
     },
     unreadNotifications() {
-      return this.notifications.filter(notification => notification.delYN === 'N');
-    }
+      return this.notifications.filter((notification) => notification.delYN === 'N');
+    },
   },
   mounted() {
     const token = localStorage.getItem('token');
     this.isLogin = !!token;
 
     if (this.isLogin) {
-      this.isAdmin = localStorage.getItem('role') === 'ADMIN'; 
+      this.isAdmin = localStorage.getItem('role') === 'ADMIN';
       this.fetchNotifications();
-
+      this.initEventSource(token);
+    }
+  },
+  methods: {
+    initEventSource(token) {
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -122,11 +154,9 @@ export default {
       eventSource.onerror = (error) => {
         console.error('SSE 연결 오류:', error);
       };
-    }
-  },
-  methods: {
+    },
     async fetchNotifications() {
-      if(this.isLogin){
+      if (this.isLogin) {
         try {
           const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/notifications/list`, {
             headers: {
@@ -206,6 +236,7 @@ export default {
       this.loginSnackbar = false;
     },
     goToLoginPage() {
+      this.loginSnackbar =false
       this.$router.push('/login');
     }
   }
@@ -232,7 +263,18 @@ export default {
 }
 
 .custom-snackbar {
-  opacity: 0.7;
-  color: #FFD700 !important; /* 노란색 글씨 */
+  color:#ffdb69 !important;
+  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+
+}
+
+.v-snackbar--variant-elevated, 
+.v-snackbar--variant-flat {
+  background-color: white !important; /* 흰색 배경 */
 }
 </style>
