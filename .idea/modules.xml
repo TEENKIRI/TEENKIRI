@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.beyond.teenkiri.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.beyond.teenkiri.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TEENKIRI.iml" filepath="$PROJECT_DIR$/.idea/TEENKIRI.iml" />
     </modules>
   </component>
 </project>
