@@ -29,25 +29,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        //로그인 진행중인 서비스를 구분하는 ID -> 여러 개의 소셜 로그인할 때 사용하는 ID
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        //OAuth2 로그인 진행 시 키가 되는 필드값(Primary Key) -> 구글은 기본적으로 해당 값 지원("sub")
-        //그러나, 네이버, 카카오 로그인 시 필요한 값
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        //OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 담은 클래스
+        //OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 저장
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                 userNameAttributeName, oAuth2User.getAttributes());
-        System.out.println("att!!!!!!!"+attributes);
+//        System.out.println("att!!!!!!!"+attributes);
 
-        //우리의 서비스에 회원가입이나 기존 회원의 정보를 업데이트를 한다.
         User user = saveOrUpdate(attributes);
         String uuidNick = String.valueOf(UUID.randomUUID());
         user.updateNick(uuidNick);
         String uuidPass = String.valueOf(UUID.randomUUID());
         user.updatePass(uuidPass);
+        String address = "임시주소입니다. 변경해주세요";
+        user.updateAddress(address);
         userRepository.save(user);
 
         return new DefaultOAuth2User(
@@ -56,12 +54,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
-        //소셜 로그인의 회원 정보가 업데이트 되었다면, 기존 DB에 저장된 회원의 이름을 업데이트해줍니다.
+
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName()))
                 .orElse(attributes.toEntity());
 
-        //만약에 DB에 등록된 이메일이 아니라면, save하여 DB에 등록(회원가입)을 진행시켜준다.
+
         return userRepository.save(user);
     }
 }
