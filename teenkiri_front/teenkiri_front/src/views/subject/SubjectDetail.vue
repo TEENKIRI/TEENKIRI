@@ -73,9 +73,8 @@
             </td>
             <td v-if="this.user.isAdmin">
               <a
-                href="javascript:void(0)"
-                class="btn_write"
-                :to="`/lecture/edit/${item.id}`"
+                class="btn_write"       
+                @click="editLecture(item.id)"
                 >수정</a
               >
             </td>
@@ -177,6 +176,9 @@ export default {
     goToDetail(lectureId) {
       this.$router.push({ name: "LectureDetail", params: { id: lectureId } });
     },
+    editLecture(id) {
+      this.$router.push({ name: "LectureEdit", params: { id } });
+    }
   },
   computed: {
     isAdmin() {
