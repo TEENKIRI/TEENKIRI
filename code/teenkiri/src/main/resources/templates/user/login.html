@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>로그인</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* 그라데이션 색상 */
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white; /* 텍스트 색상 */
+            font-family: Arial, sans-serif;
+        }
+
+        #error-message {
+            color: red;
+        }
+
+        #success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<form id="login-form">
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br>
+    <button type="button" onclick="login()">로그인</button>
+</form>
+<div id="error-message" style="color: red;"></div>
+<div>
+    <a href="/api/find-id">아이디 찾기</a>
+    <a href="/api/find-password">비밀번호 찾기</a>
+    <a href="/api/register">회원가입</a>
+</div>
+<script>
+    async function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('token', data.data); // JWT 토큰 저장
+            localStorage.setItem('username', email); // 이메일 저장
+            window.location.href = '/api/welcome'; // 환영 페이지로 리디렉션
+        } else {
+            const errorData = await response.text();
+            document.getElementById('error-message').innerText = `로그인 실패ㅠㅠ 흑흑: ${errorData}`;
+        }
+    }
+</script>
+</body>
+</html>
+

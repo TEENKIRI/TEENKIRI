@@ -1,0 +1,120 @@
+.board-container {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 50px;
+  }
+  
+  .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .board-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .tbl_list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .tbl_list th,
+  .tbl_list td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .tbl_list th {
+    background-color: #f4f4f4;
+  }
+  
+  .text_left {
+    text-align: left;
+  }
+  
+  .subject {
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .subject:hover {
+    text-decoration: underline;
+  }
+  
+  .btn_adm_control {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  .conLayer {
+    display: inline-block;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .btnWrap {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .btn_write {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn_write:hover {
+    background-color: #555;
+  }
+  
+  .pagingWrap ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .pagingWrap li {
+    display: inline-block;
+  }
+  
+  .pagingWrap li a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+  }
+  
+  .pagingWrap li a.active {
+    font-weight: bold;
+    color: blue;
+  }
+  
+  .pagingWrap .btn_paging_start:before {
+    content: "<<";
+  }
+  
+  .pagingWrap .btn_paging_prev:before {
+    content: "<";
+  }
+  
+  .pagingWrap .btn_paging_next:before {
+    content: ">";
+  }
+  
+  .pagingWrap .btn_paging_end:before {
+    content: ">>";
+  }

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QnA 상세보기</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="common/header :: headerFragment"></div>
+<div class="container">
+  <div class="page-header"><h3>QnA 상세보기</h3></div>
+  <table class="table">
+    <tr>
+      <td>작성자</td>
+      <td th:text="${question.questionUserNickname}"></td>
+    </tr>
+    <tr>
+      <td>제목</td>
+      <td th:text="${question.title}"></td>
+    </tr>
+    <tr>
+      <td>질문 작성 시간</td>
+      <td th:text="${#temporals.format(question.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
+      <td>질문 수정 시간</td>
+      <td th:text="${#temporals.format(question.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
+      <td>질문 내용</td>
+      <td th:text="${question.questionText}"></td>
+    </tr>
+    <tr>
+      <td>답변자</td>
+      <td th:if="${question.answeredByNickname != null}" th:text="${question.answeredByNickname}"></td>
+      <td th:if="${question.answeredByNickname == null}">답변 없음</td>
+    </tr>
+    <tr>
+      <td>답변 내용</td>
+      <td th:if="${question.answerText != null}" th:text="${question.answerText}"></td>
+      <td th:if="${question.answerText == null}">답변 없음</td>
+    </tr>
+    <tr>
+      <td>답변 시간</td>
+      <td th:if="${question.answeredAt != null}" th:text="${#temporals.format(question.answeredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+      <td th:if="${question.answeredAt == null}">답변 없음</td>
+    </tr>
+
+  </table>
+  <div class="float-end">
+    <button th:if="${question.answerText == null}" onclick="showUpdateForm('question')" class="btn btn-primary">질문 수정</button>
+    <button onclick="showUpdateForm('answer')" class="btn btn-primary">답변 수정</button>
+    <a th:href="@{/qna/delete/{id}(id=${question.id})}" class="btn btn-primary">삭제</a>
+    <a th:href="@{/report/create(qnaId=${question.id}, suspectEmail=${question.userEmail})}" class="btn btn-danger">신고하기</a>
+  </div>
+</div>
+<br>
+<div id="update-question-form" class="mt-4" style="display:none;">
+  <form th:action="@{/qna/update/question/{id}(id=${question.id})}" method="post">
+    <div class="form-group">
+      <label for="userEmail">이메일</label>
+      <input type="email" class="form-control" name="userEmail" id="userEmail" th:value="${question.userEmail}" required>
+    </div>
+    <div class="form-group">
+      <label for="questionTitle">질문 제목</label>
+      <input type="text" class="form-control" name="title" id="questionTitle" th:value="${question.title}">
+    </div>
+    <div class="form-group">
+      <label for="questionContents">질문 내용</label>
+      <textarea class="form-control" name="questionText" id="questionContents" rows="3" th:text="${question.questionText}"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <button type="submit" class="btn btn-secondary">질문 수정 완료</button>
+    </div>
+  </form>
+</div>
+<div id="update-answer-form" class="mt-4" style="display:none;">
+  <form th:action="@{/qna/update/answer/{id}(id=${question.id})}" method="post">
+    <div class="form-group">
+      <label for="answererEmail">답변자 이메일</label>
+      <input type="email" class="form-control" name="answererEmail" id="answererEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="answerContents">답변 내용</label>
+      <textarea class="form-control" name="answerText" id="answerContents" rows="3" th:text="${question.answerText}"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <button type="submit" class="btn btn-secondary">답변 수정 완료</button>
+    </div>
+  </form>
+</div>
+<br>
+<div class="comments">
+  <h4>댓글</h4>
+  <div th:each="comment : ${comments}">
+    <p><strong th:text="${comment.userEmail}"></strong>: <span th:text="${comment.content}"></span></p>
+    <p><small th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
+    <a th:href="@{/report/create(commentId=${comment.id}, suspectEmail=${comment.userEmail})}" class="btn btn-danger">신고하기</a>
+  </div>
+</div>
+
+<div class="add-comment">
+  <h4>댓글 작성하기</h4>
+  <form th:action="@{/qna/comment/create}" method="post">
+    <input type="hidden" name="qnaId" th:value="${question.id}"/>
+    <div class="form-group">
+      <label for="content">내용</label>
+      <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="userEmail">이메일</label>
+      <input type="email" class="form-control" id="userEmail" name="userEmail" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">댓글 작성</button>
+  </form>
+</div>
+</div>
+
+<script>
+  function showUpdateForm(type) {
+    if (type === 'question') {
+      document.getElementById('update-question-form').style.display = 'block';
+      document.getElementById('update-answer-form').style.display = 'none';
+    } else if (type === 'answer') {
+      document.getElementById('update-answer-form').style.display = 'block';
+      document.getElementById('update-question-form').style.display = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>
