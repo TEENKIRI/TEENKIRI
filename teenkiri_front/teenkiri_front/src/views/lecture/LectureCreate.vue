@@ -102,6 +102,16 @@
         </v-card-text>
       </v-card>
     </v-container>
+    <v-dialog v-model="isLoadingActive" max-width="500" persistent>
+      <div class="text-center">
+        <v-progress-circular
+            color="primary"
+            indeterminate="disable-shrink"
+            :size="100"
+            :width="7"
+          ></v-progress-circular>
+      </div>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -136,6 +146,9 @@ export default {
       previewImageSrc: null,
       video: null,
       previewVideoSrc: null,
+
+      isLoadingActive: false,
+      loadingMessage: ""
     };
   },
   async created() {
@@ -163,6 +176,7 @@ export default {
   },
   methods: {
     async submitForm() {
+      this.isLoadingActive = true;
       const formData = new FormData();
       formData.append('title', this.lectureData.title);
       formData.append('subjectId', this.subjectId);
@@ -186,18 +200,18 @@ export default {
               'Content-Type': 'multipart/form-data',
             },
           });
-          alert('강의가 성공적으로 수정되었습니다!');
+          this.loadingMessage = '강의가 성공적으로 수정되었습니다!'
         } else {
           response = await axios.post(apiUrl, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           });
-          alert('강의가 성공적으로 등록되었습니다!');
+          this.loadingMessage = '강의가 성공적으로 등록되었습니다!'
         }
 
         console.log(response);
-
+        this.isLoadingActive = false;
         // 강의 생성 후 해당 강의의 상세 페이지로 이동
         this.$router.push({ name: 'SubjectDetail', params: { id: this.subjectId } });
 
@@ -282,6 +296,9 @@ export default {
         this.previewVideoSrc = null;
       }
     },
+    goToHistoryGo(){
+      history.go(-1);
+    }
   },
 };
 </script>

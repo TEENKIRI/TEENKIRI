@@ -1,5 +1,9 @@
 package com.beyond.teenkiri.report.dto;
 
+<<<<<<< HEAD
+=======
+import com.beyond.teenkiri.chat.domain.ChatMessage;
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.qna.domain.QnA;
@@ -23,12 +27,20 @@ public class ReportSaveReqDto {
     private Long qnaId;
     private Long postId;
     private Long commentId;
+<<<<<<< HEAD
+=======
+    private Long chatMessageId;
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
     private String details;  // 상세 내용 추가
 
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+<<<<<<< HEAD
     public Report toEntity(User user, QnA qna, Post post, Comment comment) {
+=======
+    public Report toEntity(User user, QnA qna, Post post, Comment comment, ChatMessage chatMessage) {
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
         return Report.builder()
                 .user(user)
                 .reason(this.reason)
@@ -36,6 +48,10 @@ public class ReportSaveReqDto {
                 .post(post)
                 .delYN(this.delYN)
                 .comment(comment)
+<<<<<<< HEAD
+=======
+                .chatMessage(chatMessage)
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
                 .details(this.details)  // 상세 내용 저장
                 .build();
     }

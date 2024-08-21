@@ -64,6 +64,10 @@
 //}
 package com.beyond.teenkiri.report.domain;
 
+<<<<<<< HEAD
+=======
+import com.beyond.teenkiri.chat.domain.ChatMessage;
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
@@ -115,6 +119,13 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "comment_id", nullable = true)
     private Comment comment;
 
+<<<<<<< HEAD
+=======
+    @ManyToOne
+    @JoinColumn(name = "chatMessage_id", nullable = true)
+    private ChatMessage chatMessage;
+
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
     public ReportListResDto listFromEntity() {
         return ReportListResDto.builder()
                 .id(this.id)
@@ -127,10 +138,18 @@ public class Report extends BaseTimeEntity {
                 .commentId(this.comment != null ? this.comment.getId() : null)
                 .commentPostId(this.comment != null && this.comment.getPost() != null ? this.comment.getPost().getId() : null)
                 .commentQnaId(this.comment != null && this.comment.getQna() != null ? this.comment.getQna().getId() : null)
+<<<<<<< HEAD
+=======
+                .chatMessageId(this.chatMessage != null ? this.chatMessage.getId() : null)  // ChatMessage ID 추가
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
                 .createdTime(this.getCreatedTime())
                 .build();
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
     private String determineSuspectEmail() {
         if (this.qna != null) {
             return this.qna.getUser().getEmail();

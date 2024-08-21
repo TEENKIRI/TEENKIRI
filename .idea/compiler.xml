@@ -5,6 +5,7 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+<<<<<<< HEAD
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
         </processorPath>
         <module name="com.beyond.teenkiri.main" />
@@ -13,5 +14,13 @@
     <bytecodeTargetLevel target="11">
       <module name="teenkiri" target="11" />
     </bytecodeTargetLevel>
+=======
+          <entry name="$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
+        </processorPath>
+        <module name="teenkiri.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="11" />
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
   </component>
 </project>
