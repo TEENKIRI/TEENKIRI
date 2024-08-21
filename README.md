@@ -4,10 +4,14 @@
 
 ## 팀원
 
+<center>
+  
 | 팀장 | 팀원 | 팀원 | 팀원 | 팀원 |
-|------|------|------|------|------|
+|:------:|:------:|:------:|:------:|:------:|
 | 김창현 | 김정은 | 이예나 | 이한아 | 황요한 |
 | ![김창현](https://github.com/user-attachments/assets/6cbde653-2dc2-41bc-967b-98c385ca0324) | ![김정은](https://github.com/user-attachments/assets/39f023ed-c272-4218-b11c-c03c2c51ed5e) | ![이예나](https://github.com/user-attachments/assets/50ca9133-e2ab-4d45-b4ee-200bc1f21f31) | ![이한아](https://github.com/user-attachments/assets/29f30df2-465e-45e3-925a-c84bdb003a72) | ![황요한](https://github.com/user-attachments/assets/f69d21a0-496b-46e3-b380-3443a905a791) |
+
+</center>
 
 ## ✏️TEENKIRI: 초등학생을 위한 온라인 교육 사이트
 
@@ -33,6 +37,9 @@ TEENKIRI의 목표는 무상으로 제공되는 고품질 교육을 통해 경�
 | **실시간 알림** | 질문에 대한 답변이나 댓글 알림을 학생들에게 실시간으로 전달하여 빠르고 원활한 학습 환경을 지원합니다. |
 | **신고 기능** | 부적절한 게시글이나 댓글, 채팅을 신고하여 관리하며, 안전하고 건전한 학습 환경을 유지합니다. |
 <br>
+
+## API 명세서
+[API 명세서](https://www.notion.so/ara-boka/fc5d0810549e4d1b824bbbaba4e4a317?v=7d45cf341d364c86aaf799a90e747692&pvs=4)
 
 ## 스택
 
@@ -85,76 +92,91 @@ TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품�
 <br>
 
 ## ER Diagram
-![ERD](https://github.com/user-attachments/assets/0e07e805-d444-48a6-8b5c-e4abb72e72ab)
+![Teenieping (1)](https://github.com/user-attachments/assets/3fa98825-9fbf-4175-a241-7fa7e8887cb2)
 
 <br>
+
+## 시스템 아키텍쳐
+### 백엔드 아키텍쳐
+![backend](/asset/백엔드아키텍쳐.png)
+### 프론트엔드 아키텍쳐
+![frontend](/asset/아키텍쳐.png)
+
+<details>
+  <summary>통신플로우</summary>
+  <img src="https://github.com/user-attachments/assets/a5c9e695-5d42-4d8c-bf0f-0e2914bcd0cf">
+  <img src="https://github.com/user-attachments/assets/8b8a8a56-00da-402b-8d8e-d187f81f008c">
+  <img src="https://github.com/user-attachments/assets/ced481be-325d-4dcb-b52b-826d4e9065c4">
+</details>
 
 ## 프로젝트 시연
 
 #### 👤 로그인, 회원가입
 <details>
   <summary>회원가입 및 로그인</summary>
+  <img src="https://github.com/user-attachments/assets/4cc8f76e-4b72-4a83-a12b-d6811b53b024">
 </details>
 
 <details>
   <summary>아이디 저장</summary>
+  <img src="https://github.com/user-attachments/assets/271e8b47-4686-4949-9ee8-fd7c3d98414a">
 </details>
 
 <details>
   <summary>아이디 찾기</summary>
+  <img src="https://github.com/user-attachments/assets/8dc01686-587a-4ae7-94ce-c8c9ef840a33">
 </details>
 
 <details>
   <summary>비밀번호 찾기</summary>
+  <img src = "https://github.com/user-attachments/assets/31659318-a183-4825-9c6c-1a1f4fe5d9e3">
+</details>
+
+<details>
+  <summary>비밀번호 재설정 링크 사용자 이메일로 전송</summary>
+  <img width="1170" alt="비밀번호_재설정_링크" src="https://github.com/user-attachments/assets/d1d59ff7-ec19-4d0b-ae60-9d00ccc7128c">
 </details>
 
 <details>
   <summary>구글 로그인</summary>
+<img src = "https://github.com/user-attachments/assets/6adbcfab-2034-4241-af68-9a29ea2bd0ad">
 </details>
 
 <details>
   <summary>id 저장</summary>
+  <img src = "https://github.com/user-attachments/assets/f0aba189-fd64-4381-b8ce-dec71f413cb9">
 </details>
 
 <details>
   <summary>로그인 및 로그아웃</summary>
+<br>
+<summary>로그인</summary>
+<img src ="https://github.com/user-attachments/assets/a2f71dc3-a939-4c40-a3da-964b0ed6dd87">
+<br>
+  <summary>로그아웃</summary>
+<img src ="https://github.com/user-attachments/assets/ac47c3f1-f6d9-44c4-8c3f-d10393a46e89">
 </details>
 
 #### 📚 강좌 및 강의
 
 <details>
-  <summary>강좌 생성</summary>
-  <img src=“” alt="강좌생성">
-</details>
-
-<details>
-  <summary>강좌 리스트</summary>
-  <img src=“” alt="">
+  <summary>강좌 생성 및 강좌 리스트, 강좌 상세</summary>
+  <img src="https://github.com/user-attachments/assets/531492fd-d958-40b2-ae54-912b8159e80c">
 </details>
 
 <details>
   <summary>강좌 추천</summary>
-  <img src="https://github.com/user-attachments/assets/99f3a64f-570b-4c38-bf96-32972a88d6b2" alt="강좌추천">
-</details>
-
-<details>
-  <summary>강좌 상세, 강좌 수강여부 조회, 강좌 수강률 조회</summary>
-  <img src=“” alt="">
-</details>
-
-<details>
-  <summary>강의 업로드 및 수정</summary>
-  <img src=“” alt="">
+  <img src="https://github.com/user-attachments/assets/99f3a64f-570b-4c38-bf96-32972a88d6b2">
 </details>
 
 <details>
   <summary>강좌 수강신청 및 내가 수강중인 강좌 리스트</summary>
-  <img src=“” alt="">
+  <img src="https://github.com/user-attachments/assets/f968dfa0-8316-4fe1-8649-674f50c10ac5">
 </details>
 
 <details>
   <summary>강의 시청 플레이어, 강의 진행률 서버와 통신, 강의 수강완료 여부 통신</summary>
-  <img src=“” alt="">
+  <img src= "https://github.com/user-attachments/assets/f7ff0202-637b-4e0b-a25a-606fc532c506">
 </details>
 
 <details>
@@ -164,54 +186,50 @@ TEENKIRI는 초등학생을 위한 교육 플랫폼으로, 무상으로 고품�
 
 <details>
   <summary>강좌 찜, 찜 목록</summary>
-  <img src=“” alt="">
+  <img src="https://github.com/user-attachments/assets/f5046e16-c634-42a8-a4fd-f6477be81e82">
 </details>
 
-<details>
-  <summary>강좌 추천</summary>
-  <img src=“” alt="">
-</details>
 
 #### 📋 게시판
 
 <details>
   <summary>자유게시판 검색</summary>
-  <img src=“” alt="">
+  <img src="https://github.com/user-attachments/assets/9d2d7b5b-ebe9-4a41-9783-ffd881b72362">
 </details>
 
 <details>
   <summary>자유게시판 작성, 수정, 삭제, 댓글, 신고</summary>
-  <img src=“” alt="">
+  <img src = "https://github.com/user-attachments/assets/bb5b3ce2-22ad-430d-91f9-4a63035acc82">
 </details>
 
 <details>
   <summary>질문 게시판 검색</summary>
-  <img src=“” alt="">
+  <img src = "https://github.com/user-attachments/assets/d21a2480-c7b3-4cf0-bfff-f376c90677e9">
 </details>
 
 <details>
   <summary>질문 게시판 작성, 수정, 삭제, 댓글, 신고, 알림</summary>
-  <img src=“” alt="">
+  <img src= "https://github.com/user-attachments/assets/849eccc6-42da-4238-bc25-e9f3e112923e">
 </details>
 
 #### 💬 실시간 채팅
 
 <details>
   <summary>실시간 채팅</summary>
-  <img src=“” alt="">
+  <img src= "https://github.com/user-attachments/assets/c73dcbd6-9cff-46b1-88f5-4486eb3f6eed">
 </details>
 
 #### 🔔 알림
 
 <details>
   <summary>알림 드롭다운, 알림 목록 조회</summary>
-  <img src=“” alt="">
+  <img src = "https://github.com/user-attachments/assets/5b904e40-f5b0-4864-ae66-4903ea1d1532">
 </details>
 
 #### 🚨 신고
 
 <details>
   <summary>게시판별 신고 목록 - 관리자</summary>
-  <img src=“” alt="">
+  <img src= "https://github.com/user-attachments/assets/3fc0e9f5-54ba-4c33-88fa-be6c36749ea1">
 </details>
 
