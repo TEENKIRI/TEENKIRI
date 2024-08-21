@@ -64,6 +64,7 @@
 //}
 package com.beyond.teenkiri.report.domain;
 
+import com.beyond.teenkiri.chat.domain.ChatMessage;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
@@ -115,6 +116,10 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "comment_id", nullable = true)
     private Comment comment;
 
+    @ManyToOne
+    @JoinColumn(name = "chatMessage_id", nullable = true)
+    private ChatMessage chatMessage;
+
     public ReportListResDto listFromEntity() {
         return ReportListResDto.builder()
                 .id(this.id)
@@ -127,9 +132,11 @@ public class Report extends BaseTimeEntity {
                 .commentId(this.comment != null ? this.comment.getId() : null)
                 .commentPostId(this.comment != null && this.comment.getPost() != null ? this.comment.getPost().getId() : null)
                 .commentQnaId(this.comment != null && this.comment.getQna() != null ? this.comment.getQna().getId() : null)
+                .chatMessageId(this.chatMessage != null ? this.chatMessage.getId() : null)  // ChatMessage ID 추가
                 .createdTime(this.getCreatedTime())
                 .build();
     }
+
 
     private String determineSuspectEmail() {
         if (this.qna != null) {
@@ -155,4 +162,5 @@ public class Report extends BaseTimeEntity {
 //                .reason(this.reason)
 //                .build();
 //    }
+
 

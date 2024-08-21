@@ -23,5 +23,6 @@ public class ReportListResDto {
     private Long commentId;
     private Long commentPostId;
     private Long commentQnaId;
+    private Long chatMessageId;
     private LocalDateTime createdTime;
 }

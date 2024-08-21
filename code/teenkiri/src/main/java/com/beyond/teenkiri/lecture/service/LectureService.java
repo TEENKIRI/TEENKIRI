@@ -177,7 +177,10 @@ public class LectureService {
         if(user.getRole() == Role.TEACHER && !Objects.equals(subject.getUserTeacher().getId(), user.getId())){
             throw new RuntimeException("연결되지 않은 선생님입니다. 강의를 업로드하실 수 없습니다.");
         }
-
+        Integer enrollmentCount = enrollmentService.findCountByLectureId(lecture.getId());
+        if(enrollmentCount > 0){
+            throw new RuntimeException("이미 수강한 학생이 존재하여 수정이 불가합니다.");
+        }
         try {
             if(image != null){
                 MultipartFile imageFile = image;

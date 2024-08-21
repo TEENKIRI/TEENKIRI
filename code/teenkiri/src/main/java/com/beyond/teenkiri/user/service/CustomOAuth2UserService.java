@@ -52,16 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             String address = "임시주소입니다. 변경해주세요";
             user.updateAddress(address);
         }
-//        if (user.getAddress().getCity() == null) {
-//            String address = "임시주소입니다. 변경해주세요";
-//            user.updateAddress(address);
-//        } else if (user.getAddress().getStreet() == null) {
-//            String address = "임시주소입니다. 변경해주세요";
-//            user.updateAddress(address);
-//        } else if (user.getAddress().getZipcode() == null) {
-//            String address = "임시주소입니다. 변경해주세요";
-//            user.updateAddress(address);
-//        }
+
         userRepository.save(user);
 
         return new DefaultOAuth2User(
