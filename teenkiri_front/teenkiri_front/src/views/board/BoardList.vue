@@ -68,7 +68,13 @@
 
       <!-- 작성하기 버튼 -->
       <div class="btnWrap">
-        <button @click="createNewPost" class="btn_write">작성하기</button>
+        <button 
+          v-if="isAdmin || category === 'post'" 
+          @click="createNewPost" 
+          class="btn_write"
+        >
+          작성하기
+        </button>
       </div>
 
       <!-- 페이지네이션 -->
@@ -229,7 +235,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .board-container {
   width: 80%;

@@ -6,6 +6,7 @@
         <template v-if="postId">게시글 신고하기</template>
         <template v-else-if="qnaId">질문글 신고하기</template>
         <template v-else-if="commentId">댓글 신고하기</template>
+        <template v-else-if="chatMessageId">채팅 신고하기</template>
       </h1>
 
       <div class="reason-section">
@@ -17,8 +18,8 @@
             @change="toggleDetails('SPAM')"
           ></v-radio>
           <div v-show="showDetails['SPAM']" class="details">
-            <p>-사행성 오락이나 도박을 홍보하거나 권장하는 내용 등의 부적절한 스팸 홍보 행위</p>
-            <p>-동일하거나 유사한 내용 반복 게시</p>
+            <p>- 사행성 오락이나 도박을 홍보하거나 권장하는 내용 등의 부적절한 스팸 홍보 행위</p>
+            <p>- 동일하거나 유사한 내용 반복 게시</p>
           </div>
 
           <v-radio
@@ -27,10 +28,10 @@
             @change="toggleDetails('PORNOGRAPHY')"
           ></v-radio>
           <div v-show="showDetails['PORNOGRAPHY']" class="details">
-            <p>-성적 수치심을 일으키는 내용</p>
-            <p>-아동이나 청소년을 성 대상화한 표현</p>
-            <p>-과도하거나 의도적인 신체 노출</p>
-            <p>-음란한 행위와 관련된 부적절한 내용</p>
+            <p>- 성적 수치심을 일으키는 내용</p>
+            <p>- 아동이나 청소년을 성 대상화한 표현</p>
+            <p>- 과도하거나 의도적인 신체 노출</p>
+            <p>- 음란한 행위와 관련된 부적절한 내용</p>
           </div>
 
           <v-radio
@@ -39,8 +40,8 @@
             @change="toggleDetails('ILLEGAL_INFORMATION')"
           ></v-radio>
           <div v-show="showDetails['ILLEGAL_INFORMATION']" class="details">
-            <p>-불법 행위, 불법 링크에 대한 정보 제공</p>
-            <p>-불법 상품을 판매하거나 유도하는 내용</p>
+            <p>- 불법 행위, 불법 링크에 대한 정보 제공</p>
+            <p>- 불법 상품을 판매하거나 유도하는 내용</p>
           </div>
 
           <v-radio
@@ -49,7 +50,7 @@
             @change="toggleDetails('HARMFUL_TO_MINORS')"
           ></v-radio>
           <div v-show="showDetails['HARMFUL_TO_MINORS']" class="details">
-            <p>-가출/왕따/학교폭력/자살 등 청소년에게 부정적인 영향을 조성하는 내용</p>
+            <p>- 가출/왕따/학교폭력/자살 등 청소년에게 부정적인 영향을 조성하는 내용</p>
           </div>
 
           <v-radio
@@ -58,10 +59,10 @@
             @change="toggleDetails('ABUSIVE_LANGUAGE')"
           ></v-radio>
           <div v-show="showDetails['ABUSIVE_LANGUAGE']" class="details">
-            <p>-직·간접적인 욕설을 사용하여 타인에게 모욕감을 주는 내용</p>
-            <p>-생명을 경시하거나 비하하는 내용</p>
-            <p>-계층/지역/종교/성별 등을 혐오하거나 비하하는 표현</p>
-            <p>-신체/외모/취향 등을 경멸하는 표현</p>
+            <p>- 직·간접적인 욕설을 사용하여 타인에게 모욕감을 주는 내용</p>
+            <p>- 생명을 경시하거나 비하하는 내용</p>
+            <p>- 계층/지역/종교/성별 등을 혐오하거나 비하하는 표현</p>
+            <p>- 신체/외모/취향 등을 경멸하는 표현</p>
           </div>
 
           <v-radio
@@ -70,8 +71,8 @@
             @change="toggleDetails('PRIVACY_VIOLATION')"
           ></v-radio>
           <div v-show="showDetails['PRIVACY_VIOLATION']" class="details">
-            <p>-법적으로 중요한 타인의 개인정보를 게시</p>
-            <p>-당사자 등의 없는 특정 개인을 인지할 수 있는 정보</p>
+            <p>- 법적으로 중요한 타인의 개인정보를 게시</p>
+            <p>- 당사자 등의 없는 특정 개인을 인지할 수 있는 정보</p>
           </div>
 
           <v-radio
@@ -115,6 +116,10 @@ export default {
       type: Number,
       required: false,
     },
+    chatMessageId: {
+      type: Number,
+      required: false,
+    },
   },
   data() {
     return {
@@ -150,6 +155,7 @@ export default {
           qnaId: this.qnaId || null,
           postId: this.postId || null,
           commentId: this.commentId || null,
+          chatMessageId: this.chatMessageId || null,
           reason: this.selectedReason,
           details: this.reportDetails,
         };
@@ -164,7 +170,6 @@ export default {
         this.cancelReport();
       } catch (error) {
         console.error("신고를 제출하는 데 실패했습니다:", error);
-        console.log(this.reportData)
         alert("신고를 제출하는 데 실패했습니다.");
       }
     },

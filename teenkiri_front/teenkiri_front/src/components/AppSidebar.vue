@@ -42,6 +42,7 @@ export default {
     doLogout() {
       localStorage.removeItem('role');
       localStorage.removeItem('token');
+      localStorage.removeItem('userId');
       this.$router.push('/login');
       console.log('Logged out');
       window.location.reload();

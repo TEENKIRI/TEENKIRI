@@ -88,7 +88,7 @@
         } else if (notification.postId) {
           this.$router.push(`/board/detail/post/${notification.postId}`);
         } else if (notification.reportId) {
-          this.$router.push(`/report/detail/${notification.reportId}`);
+          this.$router.push(`/report/list`);
         }
       },
       goToPage(page) {
