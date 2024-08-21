@@ -216,7 +216,14 @@ export default {
         this.$router.push({ name: 'SubjectDetail', params: { id: this.subjectId } });
 
       } catch (error) {
-        console.error('Error details:', error);
+        console.error('Error details:', error, error.response.data.status_code, error.response.data.status_code === 400);
+        if (error.response.data.status_code === 400) {
+          alert(error.response.data.status_message);
+          this.$router.push(`/subject/detail/${this.subjectId}`);
+        } else {
+          alert(error.response.data.status_message);
+          console.error(error);
+        }
       }
     },
     async getLectureDetail() {
@@ -289,6 +296,7 @@ export default {
 
           videoElement.onloadedmetadata = () => {
             this.lectureData.videoDuration = Math.floor(videoElement.duration); // 소수점 내림으로 고정
+            console.log("@@@@@@@@@@@@@@@",this.lectureData.videoDuration)
           };
         };
         reader.readAsDataURL(this.video);
