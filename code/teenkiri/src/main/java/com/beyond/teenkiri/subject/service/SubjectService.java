@@ -66,6 +66,8 @@ public class SubjectService {
 //    }
 
 
+
+
     // 강좌 list(검색 기능 추가)
 
     public Page<SubjectListResDto> subjectList(Pageable pageable, String search, String searchType, String sortType, String grades, Long courseId) {
@@ -340,4 +342,28 @@ public class SubjectService {
         return subjectRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("없는 강좌입니다."));
     }
+}
+
+{
+        "status": "OK",
+        "message": "return subject list",
+        "result": {
+        "content": [
+        {
+        "id": 1,
+        "title": "Math 101",
+        "teacherName": "John Doe",
+        "isSubscribe": true,
+        "subjectThumUrl": "https://example.com/image.jpg",
+        "createdTime": "2023-08-21T10:20:30",
+        "updatedTime": "2023-08-21T12:00:00"
+        }
+        ],
+        "totalPages": 5,
+        "totalElements": 50,
+        "size": 10,
+        "number": 0,
+        "first": true,
+        "last": false
+        }
 }
