@@ -62,7 +62,7 @@ export default {
   color: #333;
   transform: translateX(100%);
   transition: transform 0.3s ease;
-  z-index: 1000;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
 }

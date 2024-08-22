@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+<<<<<<< HEAD
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11" inherit-compiler-output="true">
+=======
   <component name="NewModuleRootManager" inherit-compiler-output="true">
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />

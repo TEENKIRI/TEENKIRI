@@ -15,7 +15,10 @@ import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
 import org.springframework.security.core.context.SecurityContextHolder;
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +50,13 @@ public class CommentService {
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
         Long userId = dto.getUserId();
+<<<<<<< HEAD
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+=======
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다람."));
+>>>>>>> e6061af56a74160608279f4e5af578e9a1bb9583
         String nickname = user.getNickname();
         String userEmail = user.getEmail();
 

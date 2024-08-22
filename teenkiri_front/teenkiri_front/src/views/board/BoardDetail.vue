@@ -296,9 +296,8 @@ export default {
     },
     async deletePost() {
       try {
-        // const confirmed = confirm(this.deleteDialog);
-
-        if (this.deleteDialog) {
+        const confirmed = confirm("이 게시글을 삭제하시겠습니까?");
+        if (confirmed) {
           const category = this.$route.params.category;
 
           let apiUrl;
@@ -311,8 +310,9 @@ export default {
           } else {
             throw new Error('잘못된 카테고리입니다.');
           }
+
           await axios.get(apiUrl);
-          // alert('게시글이 삭제되었습니다.');
+          alert('게시글이 삭제되었습니다.');
           this.goBack();
         }
       } catch (error) {

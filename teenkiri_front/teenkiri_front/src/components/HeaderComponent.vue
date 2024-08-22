@@ -68,13 +68,16 @@
 
           <v-dialog v-model="showChatModal" max-width="600px">
             <v-card>
-              <v-card-title class="headline">채팅</v-card-title>
               <v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer> <!-- 버튼을 오른쪽으로 밀기 위해 추가 -->
+                  <v-btn color="primary" @click="showChatModal = false">닫기</v-btn>
+                </v-card-actions>
+                
                 <ChatComponent />
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="showChatModal = false">닫기</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
