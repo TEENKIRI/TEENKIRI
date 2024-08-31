@@ -146,9 +146,9 @@ public class SubjectService {
         User user = userService.findByEmailReturnNull(userEmail);
         return subjects.map(a-> {
             Wish wish = null;
-                if(user != null){
-                    wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
-                }
+            if(user != null){
+                wish = wishService.findBySubjectIdAndUserIdReturnNull(a, user);
+            }
             return a.fromListEntity(wish);
         });
     }

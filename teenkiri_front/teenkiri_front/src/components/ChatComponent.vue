@@ -48,10 +48,11 @@
 </template>
 
 <script>
-import ReportCreate from '@/views/report/ReportCreate.vue';  // 모달 컴포넌트 임포트
+import ReportCreate from '@/views/report/ReportCreate.vue'; // 모달 컴포넌트 임포트
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+
 export default {
   data() {
     return {
@@ -85,10 +86,18 @@ export default {
 
       this.stompClient.connect({}, (frame) => {
         console.log('Connected: ' + frame);
-        this.stompClient.subscribe('/topic/public', (tick) => {
-          const message = JSON.parse(tick.body);
-          this.messages.push(message);
+
+        // 기존에 구독된 주제를 구독 해제하거나, 선택한 채널에 따라 동적으로 구독해야 함
+        // 구독할 주제 목록을 미리 정의
+        const topics = ['/topic/korean', '/topic/english', '/topic/math', '/topic/social', '/topic/science'];
+        topics.forEach((topic) => {
+          this.stompClient.subscribe(topic, (tick) => {
+            const message = JSON.parse(tick.body);
+            this.messages.push(message);
+          });
         });
+      }, (error) => {
+        console.error('웹소켓 연결 실패:', error);
       });
     },
     sendMessage() {
@@ -101,8 +110,11 @@ export default {
         const message = {
           content: this.newMessage,
           senderId: this.userId,
+          channel: this.selectedChannel // 선택된 채널을 메시지에 포함
         };
-        this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
+
+        // 선택된 채널에 따라 메시지를 다른 주제로 전송
+        this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
         this.newMessage = '';
       }
     },
@@ -129,6 +141,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .chat-container {

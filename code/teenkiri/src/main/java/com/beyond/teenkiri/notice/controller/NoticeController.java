@@ -8,7 +8,6 @@ import com.beyond.teenkiri.notice.dto.NoticeListResDto;
 import com.beyond.teenkiri.notice.dto.NoticeSaveReqDto;
 import com.beyond.teenkiri.notice.dto.NoticeUpdateDto;
 import com.beyond.teenkiri.notice.service.NoticeService;
-import com.beyond.teenkiri.post.dto.PostListResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
