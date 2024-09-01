@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,8 +34,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
+        if (email == null) {
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            email = (String) kakaoAccount.get("email");
+        }
+
+        System.out.println(email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 구글 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
         Long getUserId = user.getId();
         Long userId = getUserId;
 

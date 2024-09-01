@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -38,8 +39,19 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                 userNameAttributeName, oAuth2User.getAttributes());
 //        System.out.println("att!!!!!!!"+attributes);
+//
+//        System.out.println("!!!!!!!!!!!!!!!");
+//        System.out.println("att!!!!!!!"+attributes.toString());
+        System.out.println(attributes.getEmail());
 
-        User user = saveOrUpdate(attributes);
+
+        User user = null;
+        if ("kakao".equals(registrationId)) {
+            user = kakaoSaveOrUpdate(attributes);
+        }else {
+            user = saveOrUpdate(attributes);
+        }
+
         if (user.getNickname() == null) {
             String uuidNick = String.valueOf(UUID.randomUUID());
             user.updateNick(uuidNick);
@@ -65,7 +77,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName()))
                 .orElse(attributes.toEntity());
+        return userRepository.save(user);
+    }
 
+    private User kakaoSaveOrUpdate(OAuthAttributes attributes) {
+        User user = userRepository.findByEmail(attributes.getEmail())
+                .map(entity -> entity.update(attributes.getName()))
+                .orElse(attributes.toEntity());
 
         return userRepository.save(user);
     }
