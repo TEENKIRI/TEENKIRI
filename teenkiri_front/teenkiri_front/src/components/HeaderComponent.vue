@@ -62,11 +62,6 @@
             </v-menu>
           </v-btn>
 
-          <v-btn icon @click="goToDeleteAccountPage" v-if="isLogin" class="mr-2">
-            <v-icon>mdi-account-remove</v-icon>
-          </v-btn>
-
-
           <v-btn icon @click="showChatModal = true">
             <v-icon>mdi-chat</v-icon>
           </v-btn>
@@ -83,6 +78,12 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
+
+          <v-btn icon @click="goToDeleteAccountPage" v-if="isLogin" class="mr-2">
+            <v-icon>mdi-account-remove</v-icon>
+          </v-btn>
+
         </v-col>
       </v-row>
     </v-container>
