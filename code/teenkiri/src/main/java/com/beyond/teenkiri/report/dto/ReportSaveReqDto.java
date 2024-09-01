@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportSaveReqDto {
+    private User user;
     private String reportEmail;
     private String suspectEmail;
     private Reason reason;
@@ -32,7 +33,7 @@ public class ReportSaveReqDto {
 
     public Report toEntity(User user, QnA qna, Post post, Comment comment, ChatMessage chatMessage) {
         return Report.builder()
-                .user(user)
+                .user(this.user)
                 .reason(this.reason)
                 .qna(qna)
                 .post(post)

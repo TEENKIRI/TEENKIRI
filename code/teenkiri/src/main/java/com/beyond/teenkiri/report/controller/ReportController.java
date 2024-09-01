@@ -36,7 +36,7 @@ public class ReportController {
     public ResponseEntity<?> reportCreate(@RequestBody ReportSaveReqDto dto) {
         try {
             reportService.reportCreate(dto);
-            CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "신고가 성공적으로 등록되었습니다.", dto.getReportEmail());
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "신고가 성공적으로 등록되었습니다.", dto.getUser().getEmail());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (IllegalArgumentException | EntityNotFoundException e) {
             e.printStackTrace();
