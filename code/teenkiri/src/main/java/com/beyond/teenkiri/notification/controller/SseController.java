@@ -1,9 +1,13 @@
 package com.beyond.teenkiri.notification.controller;
 
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.service.NotificationService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -26,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
+
 @RestController
 public class SseController implements MessageListener {
 
@@ -91,7 +96,7 @@ public class SseController implements MessageListener {
         System.out.println("이름 : " + emitters.toString());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
+            Notification notification = objectMapper.readValue(message.getBody(), Notification.class);
             String email = new String(pattern, StandardCharsets.UTF_8);
             SseEmitter emitter = emitters.get(email);
 
@@ -101,6 +106,7 @@ public class SseController implements MessageListener {
                 String channel = new String(message.getChannel());
                 log.info("Received message: {} from channel: {}", body, channel);
                 System.out.println("Received message: {} from channel: {}" + body + "   "+ channel);
+
             }
         } catch (IOException e) {
             // 로깅 추가
@@ -110,7 +116,7 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage(NotificationDto dto) {
+    public void publishMessage(Notification dto) {
 //        NotificationDto dto = new NotificationDto();
 //        dto.setQnaId(qnaId);
 //        dto.setPostId(postId);

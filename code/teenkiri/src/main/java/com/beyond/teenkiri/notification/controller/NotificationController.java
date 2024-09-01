@@ -2,7 +2,7 @@ package com.beyond.teenkiri.notification.controller;
 
 import com.beyond.teenkiri.common.CommonResDto;
 import com.beyond.teenkiri.common.dto.CommonErrorDto;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -29,7 +28,7 @@ public class NotificationController {
     }
 
     @GetMapping("/list")
-    public List<NotificationDto> getNotifications() {
+    public List<Notification> getNotifications() {
         return notificationService.getNotificationsByEmail();
     }
 

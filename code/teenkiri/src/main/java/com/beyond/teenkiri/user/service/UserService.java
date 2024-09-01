@@ -2,7 +2,7 @@ package com.beyond.teenkiri.user.service;
 
 import com.beyond.teenkiri.chat.service.ChatMessageService;
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.dto.NotificationListDto;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
@@ -245,11 +245,11 @@ public class UserService {
 
     public List<NotificationListDto> getNotificationList(){
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<NotificationDto> notificationDtos=  notificationRepository.findByUserEmail(userEmail);
+        List<Notification> notifications =  notificationRepository.findByUserEmail(userEmail);
         List<NotificationListDto> notificationListDtos = new ArrayList<>();
 
-        for(NotificationDto notificationDto : notificationDtos){
-            notificationListDtos.add(notificationDto.listFromEntity());
+        for(Notification notification : notifications){
+            notificationListDtos.add(notification.listFromEntity());
         }
         return notificationListDtos;
     }

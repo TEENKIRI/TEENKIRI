@@ -6,7 +6,7 @@ import com.beyond.teenkiri.comment.dto.CommentSaveReqDto;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.controller.SseController;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
@@ -15,7 +15,9 @@ import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +49,11 @@ public class CommentService {
     @Transactional
     public Comment saveComment(CommentSaveReqDto dto) {
         Long userId = dto.getUserId();
+
+
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다람."));
+
         String nickname = user.getNickname();
         String userEmail = user.getEmail();
 
@@ -59,12 +64,12 @@ public class CommentService {
             savedComment = commentRepository.save(dto.PostToEntity(user, post, nickname));
 
             // 댓글 저장 후 게시글 작성자에게 알림 전송
-//            NotificationDto notificationDto = new NotificationDto(null, post.getId(), post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
+//            Notification notification = new Notification(null, post.getId(), post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
 
-            NotificationDto notificationDto = new NotificationDto();
-            notificationDto = notificationDto.saveDto(null, post.getId(), null, post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
-            notificationRepository.save(notificationDto);
-            sseController.publishMessage(notificationDto);
+            Notification notification = new Notification();
+            notification = notification.saveDto(null, post.getId(), null, post.getUser().getEmail(), post.getTitle() + " 게시글에 새로운 댓글이 달렸습니다.");
+            notificationRepository.save(notification);
+            sseController.publishMessage(notification);
 
         } else if (dto.getQnaId() != null) {
             QnA qna = qnaRepository.findById(dto.getQnaId())
@@ -72,11 +77,11 @@ public class CommentService {
             savedComment = commentRepository.save(dto.QnAToEntity(user, qna, nickname));
 
             // 댓글 저장 후 QnA 작성자에게 알림 전송
-//            NotificationDto notificationDto = new NotificationDto(qna.getId(), null, qna.getUser().getEmail(), qna.getTitle()+" QnA에 새로운 댓글이 달렸습니다.");
-            NotificationDto notificationDto = new NotificationDto();
-            notificationDto = notificationDto.saveDto(qna.getId(), null, null, qna.getUser().getEmail(), qna.getTitle() + " QnA에 새로운 댓글이 달렸습니다.");
-            notificationRepository.save(notificationDto);
-            sseController.publishMessage(notificationDto);
+//            Notification notification = new Notification(qna.getId(), null, qna.getUser().getEmail(), qna.getTitle()+" QnA에 새로운 댓글이 달렸습니다.");
+            Notification notification = new Notification();
+            notification = notification.saveDto(qna.getId(), null, null, qna.getUser().getEmail(), qna.getTitle() + " QnA에 새로운 댓글이 달렸습니다.");
+            notificationRepository.save(notification);
+            sseController.publishMessage(notification);
 
         } else {
             throw new IllegalArgumentException("댓글이 달릴 게시글 또는 QnA ID가 필요합니다.");

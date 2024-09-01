@@ -9,4 +9,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     Page<Report> findByQnaIsNotNull(Pageable pageable);
     Page<Report> findByPostIsNotNull(Pageable pageable);
     Page<Report> findByCommentIsNotNull(Pageable pageable);
+    Page<Report> findByChatMessageIsNotNull(Pageable pageable);
 }
