@@ -56,16 +56,25 @@ public class UserService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
 
+        if (user.getReportCount() >= 5) {
+            user.setDelYN(DelYN.Y);
+            userRepository.save(user);
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
+
         if (!user.getDelYN().equals(DelYN.N)) {
             throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
         }
+
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
+
         return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
     }
 

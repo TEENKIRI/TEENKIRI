@@ -99,11 +99,19 @@ public class UserController {
         try {
             String token = userService.login(loginDto);
             System.out.println("Generated JWT Token: " + token);
-            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"로그인성공",token);
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "로그인성공", token);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            if (e.getMessage().contains("비활성화 상태")) {
+                CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, e.getMessage());
+                return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
+            }
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, "잘못된 이메일/비밀번호 입니다.");
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             e.printStackTrace();
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED,"잘못된 이메일/비밀번호 입니다.");
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, "로그인 중 오류가 발생했습니다.");
             return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         }
     }
