@@ -49,7 +49,7 @@
                               @click="kakaoLogin"
                             >
                               <img 
-                                :src="require('@/assets/images/google.png')"
+                                :src="require('@/assets/images/kakao_login_medium_narrow.png')"
                                 alt="Google"
                                 style="max-width: 85%; height: 60px; object-fit: contain;"
                               />

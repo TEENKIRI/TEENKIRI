@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.notification.controller;
 
 
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.service.NotificationService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,7 +96,7 @@ public class SseController implements MessageListener {
         System.out.println("이름 : " + emitters.toString());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
+            Notification notification = objectMapper.readValue(message.getBody(), Notification.class);
             String email = new String(pattern, StandardCharsets.UTF_8);
             SseEmitter emitter = emitters.get(email);
 
@@ -116,7 +116,7 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage(NotificationDto dto) {
+    public void publishMessage(Notification dto) {
 //        NotificationDto dto = new NotificationDto();
 //        dto.setQnaId(qnaId);
 //        dto.setPostId(postId);
