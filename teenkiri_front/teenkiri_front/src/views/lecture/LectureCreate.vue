@@ -3,6 +3,9 @@
     <v-container>
       <v-card class="mt-5 mx-auto" max-width="800">
         <v-card-title>
+          <div v-if="this.routeName === 'LectureEdit'" class="text-right">
+            <v-btn @click="deleteLecture()" class="teen_red_bg_c_white">삭제</v-btn>
+          </div>
           <h3>강의 관리</h3>
         </v-card-title>
         <v-card-text>
@@ -158,7 +161,7 @@ export default {
 
       if (this.user.token === '') {
         alert('로그인이 필요합니다.');
-        location.href = -1;
+        history.go(-1);
       } else {
         this.lectureId = this.lectureId == undefined || this.lectureId == '' ? '' : this.lectureId;
         console.log('lecture 아이디 >> ', this.lectureId);
@@ -306,6 +309,20 @@ export default {
     },
     goToHistoryGo(){
       history.go(-1);
+    },
+    async deleteLecture(){
+      if (!confirm("강의를 정말 삭제하겠습니까?")) return false;
+
+      try {
+        const response = await axios.delete(
+          `${process.env.VUE_APP_API_BASE_URL}/lecture/delete/${this.lectureId}`
+        );
+        console.log(response);
+        window.location.href=`/subject/detail/${this.subjectId}`
+      } catch (error) {
+        console.error("Error lecture:", error);
+        alert("강의 삭제에 실패했습니다.");
+      }
     }
   },
 };

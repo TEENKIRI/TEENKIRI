@@ -39,10 +39,10 @@ export default {
 
       if (this.user.token === "") {
         alert("로그인이 필요합니다.");
-        location.href = -1;
+        history.go(-1);
       } else if (this.user.role !== "ADMIN") {
         alert("관리자만 생성이 가능합니다!");
-        location.href = -1;
+        history.go(-1);
       } else {
         this.courseId =
           this.courseId == undefined || this.courseId == "" ? "" : this.courseId;
