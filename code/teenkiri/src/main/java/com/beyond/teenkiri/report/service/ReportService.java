@@ -116,6 +116,3 @@ public class ReportService {
         return reports.map(Report::listFromEntity);
     }
 }
-
-
-

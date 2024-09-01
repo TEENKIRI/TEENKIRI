@@ -1,9 +1,13 @@
 package com.beyond.teenkiri.notification.controller;
 
-import com.beyond.teenkiri.notification.domain.Notification;
+
+import com.beyond.teenkiri.notification.dto.NotificationDto;
 import com.beyond.teenkiri.notification.service.NotificationService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -19,12 +23,14 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
+
 @RestController
 public class SseController implements MessageListener {
 
@@ -90,7 +96,7 @@ public class SseController implements MessageListener {
         System.out.println("이름 : " + emitters.toString());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Notification notification = objectMapper.readValue(message.getBody(), Notification.class);
+            NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
             String email = new String(pattern, StandardCharsets.UTF_8);
             SseEmitter emitter = emitters.get(email);
 
@@ -100,6 +106,7 @@ public class SseController implements MessageListener {
                 String channel = new String(message.getChannel());
                 log.info("Received message: {} from channel: {}", body, channel);
                 System.out.println("Received message: {} from channel: {}" + body + "   "+ channel);
+
             }
         } catch (IOException e) {
             // 로깅 추가
@@ -109,8 +116,8 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage(Notification dto) {
-//        Notification dto = new Notification();
+    public void publishMessage(NotificationDto dto) {
+//        NotificationDto dto = new NotificationDto();
 //        dto.setQnaId(qnaId);
 //        dto.setPostId(postId);
 //        dto.setUserEmail(userEmail);
