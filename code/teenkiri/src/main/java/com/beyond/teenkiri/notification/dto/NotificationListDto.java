@@ -25,4 +25,6 @@ public class NotificationListDto {
 
     private String message;
     private String userEmail;
+
+    private LocalDateTime createdTime;
 }

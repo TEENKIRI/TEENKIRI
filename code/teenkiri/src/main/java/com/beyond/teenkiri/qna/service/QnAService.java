@@ -6,10 +6,8 @@ import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.comment.service.CommentService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.common.service.UploadAwsFileService;
-import com.beyond.teenkiri.lecture.domain.Lecture;
-import com.beyond.teenkiri.lecture.dto.LectureListResDto;
 import com.beyond.teenkiri.notification.controller.SseController;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.dto.*;
@@ -86,10 +84,10 @@ public class QnAService {
             throw new RuntimeException("파일 저장에 실패했습니다.", e);
         }
 
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 달렸습니다.");
-        notificationRepository.save(notificationDto);
-        sseController.publishMessage(notificationDto);
+        Notification notification = new Notification();
+        notification = notification.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 달렸습니다.");
+        notificationRepository.save(notification);
+        sseController.publishMessage(notification);
         return qnARepository.save(qnA);
     }
 
@@ -177,10 +175,10 @@ public class QnAService {
         // 댓글 저장 후 게시글 작성자에게 알림 전송
 
 
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
-        notificationRepository.save(notificationDto);
-        sseController.publishMessage(notificationDto);
+        Notification notification = new Notification();
+        notification = notification.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 달렸습니다.");
+        notificationRepository.save(notification);
+        sseController.publishMessage(notification);
         return qnARepository.save(qnA);
     }
 
@@ -211,10 +209,10 @@ public class QnAService {
         } else {
             throw new IllegalArgumentException("작성자 본인만 수정할 수 있습니다.");
         }
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 수정되었습니다.");
-        notificationRepository.save(notificationDto);
-        sseController.publishMessage(notificationDto);
+        Notification notification = new Notification();
+        notification = notification.saveDto(qnA.getId(), null, null, qnA.getSubject().getUserTeacher().getEmail(), qnA.getTitle()+ " 강좌에 대한 질문이 수정되었습니다.");
+        notificationRepository.save(notification);
+        sseController.publishMessage(notification);
 
         qnARepository.save(qnA);
     }
@@ -249,10 +247,10 @@ public class QnAService {
         } else {
             throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto = notificationDto.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 수정되었습니다.");
-        notificationRepository.save(notificationDto);
-        sseController.publishMessage(notificationDto);
+        Notification notification = new Notification();
+        notification = notification.saveDto(qnA.getId(), null, null, qnA.getUser().getEmail(), qnA.getTitle()+ " 질문에 대한 답변이 수정되었습니다.");
+        notificationRepository.save(notification);
+        sseController.publishMessage(notification);
     }
 
 

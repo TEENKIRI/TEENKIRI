@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.notification.controller;
 
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.service.NotificationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -91,7 +90,7 @@ public class SseController implements MessageListener {
         System.out.println("이름 : " + emitters.toString());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            NotificationDto notification = objectMapper.readValue(message.getBody(), NotificationDto.class);
+            Notification notification = objectMapper.readValue(message.getBody(), Notification.class);
             String email = new String(pattern, StandardCharsets.UTF_8);
             SseEmitter emitter = emitters.get(email);
 
@@ -110,8 +109,8 @@ public class SseController implements MessageListener {
     }
 
 
-    public void publishMessage(NotificationDto dto) {
-//        NotificationDto dto = new NotificationDto();
+    public void publishMessage(Notification dto) {
+//        Notification dto = new Notification();
 //        dto.setQnaId(qnaId);
 //        dto.setPostId(postId);
 //        dto.setUserEmail(userEmail);
