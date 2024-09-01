@@ -189,8 +189,7 @@ public class UserService {
         return !userRepository.existsByNickname(nickname);
     }
 
-    public void deleteAccount(String token) {
-        String email = jwtTokenprovider.getEmailFromToken(token);
+    public void deleteAccount(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인할 수 없습니다: " + email));
 

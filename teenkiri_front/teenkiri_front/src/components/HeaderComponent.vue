@@ -222,6 +222,9 @@ export default {
         console.log(section);
       }
     },
+    goToDeleteAccountPage() {
+        this.$router.push({ name: 'DeleteAccount' });
+    },
     goToMember() {
       if (this.isLogin) {
         this.$router.push('/user/edit-info');

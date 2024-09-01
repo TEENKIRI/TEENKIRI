@@ -37,27 +37,42 @@
       };
     },
     methods: {
-      async deleteAccount() {
-        try {
-          const response = await axios.post(
-            `${process.env.VUE_APP_API_BASE_URL}/delete-account`,
-            this.confirmationText,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-              },
-            }
-          );
-          alert('회원 탈퇴가 완료되었습니다.');
-          localStorage.removeItem('token');
-          this.$router.push('/');
-        } catch (error) {
-          alert('회원 탈퇴 중 오류가 발생했습니다.');
-          console.error(error);
+  async deleteAccount() {
+    try {
+      const response = await axios.post(
+        `${process.env.VUE_APP_API_BASE_URL}/user/delete-account`,
+        { confirmation: this.confirmationText },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      },
-    },
-  };
+      );
+
+      if (response.status === 200) {
+        alert('회원 탈퇴가 완료되었습니다.');
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('email');
+        localStorage.removeItem('role');
+
+        this.$router.push('/login');
+      } else {
+        alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(`오류: ${error.response.data.message}`);
+      } else {
+        alert('회원 탈퇴 중 오류가 발생했습니다.');
+      }
+      console.error(error);
+    }
+  },
+},
+
   </script>
   
   <style scoped>

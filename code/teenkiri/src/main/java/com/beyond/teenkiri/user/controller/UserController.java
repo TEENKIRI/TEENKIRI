@@ -26,9 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -196,11 +194,13 @@ public class UserController {
     }
 
     @PostMapping("/delete-account")
-    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String confirmation) {
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String, String> request) {
+        String confirmation = request.get("confirmation");
         if (!"틴끼리 사이트 회원 탈퇴에 동의합니다".equals(confirmation)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "회원 탈퇴 문구가 올바르지 않습니다.", null));
         }
+
         userService.deleteAccount(userDetails.getUsername());
         return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 탈퇴 성공", null));
     }
