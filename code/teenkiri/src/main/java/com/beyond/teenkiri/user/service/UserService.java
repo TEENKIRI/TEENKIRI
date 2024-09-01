@@ -60,13 +60,15 @@ public class UserService {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
 
+        if (!user.getDelYN().equals(DelYN.N)) {
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
-
-        // userId를 추가 인자로 전달하여 토큰 생성
         return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
     }
+
 
 
     public String getEmailFromToken(String token) {

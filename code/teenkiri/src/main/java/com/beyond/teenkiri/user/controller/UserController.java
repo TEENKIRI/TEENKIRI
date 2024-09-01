@@ -93,6 +93,7 @@ public class UserController {
         return checkNickname(saveReqDto.toNicknameCheckDto());
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginDto) {
         try {
@@ -106,6 +107,7 @@ public class UserController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         }
     }
+
 
     @PostMapping("/send-verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestBody EmailVerificationDto verificationDto) {
