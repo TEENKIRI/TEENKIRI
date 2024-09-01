@@ -74,10 +74,10 @@ public class LectureService {
         Subject subject = subjectService.findSubjectById(subjectId);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByEmailReturnNull(userEmail);
-        Page<Lecture> lectures = lectureRepository.findAllBySubjectId(subject.getId() ,pageable);
+        Page<Lecture> lectures = lectureRepository.findBySubjectIdAndDelYN(subject.getId(),  DelYN.N, pageable);
         Page<LectureListResDto> lectureListResDtos = lectures.map(a-> {
             Enrollment enrollment = null;
-            if(user != null){ // 로그인한 상황
+            if(user != null && a.getId() != null){ // 로그인한 상황
                 enrollment = enrollmentService.findByLectureIdAndUserId(user,a);
             }
             LectureListResDto lectureListResDto = a.fromListEntity(enrollment);

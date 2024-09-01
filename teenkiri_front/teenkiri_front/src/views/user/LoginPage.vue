@@ -41,6 +41,20 @@
                                 style="max-width: 85%; height: 60px; object-fit: contain;"
                               />
                             </v-btn>
+                            
+                          </div>
+                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
+                            <v-btn 
+                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
+                              @click="kakaoLogin"
+                            >
+                              <img 
+                                :src="require('@/assets/images/kakao_login_medium_narrow.png')"
+                                alt="Google"
+                                style="max-width: 85%; height: 60px; object-fit: contain;"
+                              />
+                            </v-btn>
+                            
                           </div>
                           
                           <v-divider class="my-4"></v-divider>
@@ -121,7 +135,10 @@ export default {
         },
         googleLogin() {
             window.location.href = 'http://localhost:8088/oauth2/authorization/google';
-    },
+        },
+        kakaoLogin() {
+            window.location.href = 'http://localhost:8088/oauth2/authorization/kakao';
+        },
         findId() {
             this.$router.push("/user/find-id");
         },

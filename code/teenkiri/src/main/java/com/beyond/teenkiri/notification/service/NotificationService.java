@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.notification.service;
 
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,22 +23,22 @@ public class NotificationService{
         this.notificationRepository = notificationRepository;
     }
 
-//    public List<NotificationDto> getNotificationsByEmail() {
+//    public List<Notification> getNotificationsByEmail() {
 //        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 //        return notificationRepository.findByUserEmail(userEmail);
 //    }
-    public List<NotificationDto> getNotificationsByEmail() {
+    public List<Notification> getNotificationsByEmail() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<NotificationDto> notifications = notificationRepository.findByUserEmail(userEmail);
+        List<Notification> notifications = notificationRepository.findByUserEmail(userEmail);
 
         // Id 순으로 내림차순 정렬
         return notifications.stream()
-                .sorted(Comparator.comparingLong(NotificationDto::getId).reversed())
+                .sorted(Comparator.comparingLong(Notification::getId).reversed())
                 .collect(Collectors.toList());
     }
 
     public void updateDelYN(Long id) {
-        NotificationDto dto = notificationRepository.findById(id)
+        Notification dto = notificationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
         dto.updateDelYN(DelYN.Y);
     }

@@ -2,6 +2,9 @@
   <v-container class="mt-5">
     <v-card class="mx-auto" max-width="800">
       <v-card-title>
+        <div v-if="this.routeName === 'SubjectEdit'" class="text-right">
+          <v-btn @click="deleteSubject()" class="teen_red_bg_c_white">삭제</v-btn>
+        </div>
         <h3>강좌 생성</h3>
       </v-card-title>
 
@@ -10,11 +13,7 @@
           <v-row>
             <!-- 강좌명 입력 -->
             <v-col cols="12">
-              <v-text-field
-                label="강좌명"
-                v-model="subject.title"
-                required
-              />
+              <v-text-field label="강좌명" v-model="subject.title" required />
             </v-col>
 
             <!-- 선생님 이메일 선택 -->
@@ -26,7 +25,7 @@
                 item-text="email"
                 item-value="email"
                 required
-              />            
+              />
             </v-col>
 
             <!-- 과목 선택 -->
@@ -43,32 +42,18 @@
 
             <!-- 학년 선택 -->
             <v-col cols="6">
-              <v-select
-                label="학년"
-                v-model="subject.grade"
-                :items="grades"
-                required
-              >
+              <v-select label="학년" v-model="subject.grade" :items="grades" required>
               </v-select>
             </v-col>
 
             <!-- 메인 페이지 상단 노출 여부 -->
             <v-col cols="12">
-              <v-checkbox
-                v-model="subject.isMainSubject"
-                label="메인 페이지 상단 노출"
-              />
+              <v-checkbox v-model="subject.isMainSubject" label="메인 페이지 상단 노출" />
             </v-col>
 
-            
             <!-- 내용 입력 -->
             <v-col cols="12">
-              <v-textarea
-                label="내용"
-                v-model="subject.description"
-                rows="5"
-                required
-              />
+              <v-textarea label="내용" v-model="subject.description" rows="5" required />
             </v-col>
 
             <!-- 썸네일 이미지 업로드 -->
@@ -86,8 +71,8 @@
             <v-col cols="12" class="d-flex justify-space-between">
               <v-col cols="6">
                 <p class="caption">
-                  1. png, jpg, jpeg, gif 형식의 이미지만 업로드 됩니다.<br/>
-                  2. 기타 문의사항 발생 시 아래 연락처로 연락 바랍니다.<br/>
+                  1. png, jpg, jpeg, gif 형식의 이미지만 업로드 됩니다.<br />
+                  2. 기타 문의사항 발생 시 아래 연락처로 연락 바랍니다.<br />
                   070-1111-2222 (09:00-18:00 // 점심시간 12:00-13:00)
                 </p>
               </v-col>
@@ -111,23 +96,23 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       subject: {
-        title: '',
+        title: "",
         userTeacherEmail: null,
         courseId: null,
-        grade: '',
-        description: '',
+        grade: "",
+        description: "",
         thumbnail: null,
-        isMainSubject: false,  // 메인 페이지 상단 노출 여부
+        isMainSubject: false, // 메인 페이지 상단 노출 여부
       },
       teachers: [],
       courses: [],
-      grades: ['GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'GRADE_5', 'GRADE_6'], 
+      grades: ["GRADE_1", "GRADE_2", "GRADE_3", "GRADE_4", "GRADE_5", "GRADE_6"],
       previewImageSrc: null,
 
       subjectId: this.$route.params.id,
@@ -138,7 +123,7 @@ export default {
   created() {
     this.fetchTeacherList();
     this.fetchCourseList();
-    console.log("@@@@",this.routeName)
+    console.log("@@@@", this.routeName);
     if (this.routeName === "SubjectEdit") {
       // 수정용 라우터
       this.getSubjectDetail();
@@ -148,8 +133,10 @@ export default {
   methods: {
     async fetchTeacherList() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/teachers`);
-        this.teachers = response.data.result.map(teacher => teacher.email);
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/user/teachers`
+        );
+        this.teachers = response.data.result.map((teacher) => teacher.email);
         console.log(this.teachers);
       } catch (error) {
         console.error("Error fetching teachers:", error);
@@ -159,9 +146,12 @@ export default {
 
     async fetchCourseList() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/course/list`, {
-          params: { page: 0, size: 100, sort: 'id,desc' },
-        });
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/course/list`,
+          {
+            params: { page: 0, size: 100, sort: "id,desc" },
+          }
+        );
         this.courses = response.data.result.content;
         console.log(this.courses);
       } catch (error) {
@@ -194,58 +184,56 @@ export default {
     },
 
     async submitForm() {
-
       const formData = new FormData();
-      formData.append('title', this.subject.title);
-      formData.append('userTeacherEmail', this.subject.userTeacherEmail);
-      formData.append('courseId', this.subject.courseId);
-      formData.append('grade', this.subject.grade);
-      formData.append('description', this.subject.description);
-      formData.append('isMainSubject', this.subject.isMainSubject);  // 추가된 필드
-      
+      formData.append("title", this.subject.title);
+      formData.append("userTeacherEmail", this.subject.userTeacherEmail);
+      formData.append("courseId", this.subject.courseId);
+      formData.append("grade", this.subject.grade);
+      formData.append("description", this.subject.description);
+      formData.append("isMainSubject", this.subject.isMainSubject); // 추가된 필드
 
       if (this.subject.thumbnail) {
-        formData.append('subjectThum', this.subject.thumbnail);
+        formData.append("subjectThum", this.subject.thumbnail);
       }
 
       try {
-
         let response = null;
         let apiUrl = `${process.env.VUE_APP_API_BASE_URL}/subject/create`;
 
-        if (this.routeName === 'SubjectEdit') {
+        if (this.routeName === "SubjectEdit") {
           apiUrl = `${process.env.VUE_APP_API_BASE_URL}/subject/update/${this.subjectId}`;
           response = await axios.patch(apiUrl, formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
           });
-          alert('강좌가 성공적으로 수정되었습니다!');
+          alert("강좌가 성공적으로 수정되었습니다!");
           window.reload();
-        }else{
+        } else {
           response = await axios.post(apiUrl, formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
           });
-          alert('강의가 성공적으로 등록되었습니다!');
-          this.$router.push('/subject/list');
+          alert("강의가 성공적으로 등록되었습니다!");
+          this.$router.push("/subject/list");
         }
         console.log(response);
-
       } catch (error) {
-        console.error('Error creating subject:', error);
+        console.error("Error creating subject:", error);
       }
     },
 
     goBack() {
-      this.$router.push('/subject/list');
+      this.$router.push("/subject/list");
     },
 
-    async getSubjectDetail(){
-      console.log("수정용 콘솔")
+    async getSubjectDetail() {
+      console.log("수정용 콘솔");
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`);
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/detail/${this.subjectId}`
+        );
         console.log(response);
         const subjectData = response.data.result;
         this.subject = {
@@ -255,15 +243,28 @@ export default {
           grade: subjectData.grade,
           description: subjectData.description,
           thumbnail: null,
-          isMainSubject: subjectData.isMainSubject,  // 메인 페이지 상단 노출 여부
-        }
+          isMainSubject: subjectData.isMainSubject, // 메인 페이지 상단 노출 여부
+        };
         this.previewImageSrc = subjectData.subjectThumUrl;
-        
       } catch (error) {
-        console.error('Error creating subject:', error);
-        alert('강좌 생성에 실패했습니다.');
+        console.error("Error creating subject:", error);
+        alert("강좌 생성에 실패했습니다.");
       }
-    }
+    },
+    async deleteSubject() {
+      if (!confirm("강좌를 정말 삭제하겠습니까?")) return false;
+
+      try {
+        const response = await axios.delete(
+          `${process.env.VUE_APP_API_BASE_URL}/subject/delete/${this.subjectId}`
+        );
+        console.log(response);
+        window.location.href="/subject/list"
+      } catch (error) {
+        console.error("Error subject:", error);
+        alert("강좌 삭제에 실패했습니다.");
+      }
+    },
   },
 };
 </script>

@@ -1,10 +1,8 @@
-package com.beyond.teenkiri.notification.dto;
+package com.beyond.teenkiri.notification.domain;
 
 import com.beyond.teenkiri.common.domain.BaseTimeEntity;
 import com.beyond.teenkiri.common.domain.DelYN;
-import com.beyond.teenkiri.comment.domain.Comment;
-import com.beyond.teenkiri.post.domain.Post;
-import com.beyond.teenkiri.qna.domain.QnA;
+import com.beyond.teenkiri.notification.dto.NotificationListDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Builder
-public class NotificationDto implements Serializable  {
+public class Notification extends BaseTimeEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +35,8 @@ public class NotificationDto implements Serializable  {
     private DelYN delYN;
 
 
-    public NotificationDto saveDto(Long qnaId, Long postId, Long reportId, String userEmail, String message) {
-        return NotificationDto.builder()
+    public Notification saveDto(Long qnaId, Long postId, Long reportId, String userEmail, String message) {
+        return Notification.builder()
                 .id(this.id)
                 .qnaId(qnaId)
                 .postId(postId)
@@ -57,6 +55,7 @@ public class NotificationDto implements Serializable  {
                 .reportId(reportId)
                 .message(message)
                 .userEmail(userEmail)
+                .createdTime(this.getCreatedTime())
                 .build();
     }
 

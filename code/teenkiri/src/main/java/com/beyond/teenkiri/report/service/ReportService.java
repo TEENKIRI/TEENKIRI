@@ -5,7 +5,7 @@ import com.beyond.teenkiri.chat.repository.ChatMessageRepository;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.notification.controller.SseController;
-import com.beyond.teenkiri.notification.dto.NotificationDto;
+import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
@@ -93,10 +93,10 @@ public class ReportService {
 
         // 필터링된 이메일 목록에 대해 알림 전송
         for (String email : filteredAdminEmails) {
-            NotificationDto notificationDto = new NotificationDto();
-            notificationDto = notificationDto.saveDto(null, null, report.getId(), email, report.getReason() + "으로 신고가 접수되었습니다.");
-            notificationRepository.save(notificationDto);
-            sseController.publishMessage(notificationDto);
+            Notification notification = new Notification();
+            notification = notification.saveDto(null, null, report.getId(), email, report.getReason() + "으로 신고가 접수되었습니다.");
+            notificationRepository.save(notification);
+            sseController.publishMessage(notification);
         }
 
         return report;
@@ -116,6 +116,3 @@ public class ReportService {
         return reports.map(Report::listFromEntity);
     }
 }
-
-
-

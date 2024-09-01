@@ -123,7 +123,7 @@ export default {
 
       if (this.user.token === '') {
         alert('로그인이 필요합니다.');
-        location.href = -1;
+        history.go(-1);
       } else {
         this.fetchReviews();
         this.checkSubject();
