@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,6 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    //private JwtTokenProvider jwtTokenProvider;
     private JwtTokenprovider jwtTokenprovider;
 
     @Autowired
@@ -56,17 +56,33 @@ public class UserService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public UserService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
+
+        if (user.getReportCount() >= 5) {
+            user.setDelYN(DelYN.Y);
+            userRepository.save(user);
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
+
+        if (!user.getDelYN().equals(DelYN.N)) {
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("잘못된 이메일/비밀번호 입니다.");
         }
 
-        // userId를 추가 인자로 전달하여 토큰 생성
         return jwtTokenprovider.createToken(user.getEmail(), user.getRole().name(), user.getId());
     }
+
 
 
     public String getEmailFromToken(String token) {
@@ -189,8 +205,18 @@ public class UserService {
         return !userRepository.existsByNickname(nickname);
     }
 
-    public void deleteAccount(String token) {
-        String email = jwtTokenprovider.getEmailFromToken(token);
+    public void checkreportcount(User user) {
+        if (user.getReportCount() >= 5) {
+            user.setDelYN(DelYN.Y);
+            userRepository.save(user);
+
+            messagingTemplate.convertAndSend("/topic/logout", user.getEmail());
+
+            deleteAccount(user.getEmail());
+        }
+    }
+
+    public void deleteAccount(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 확인할 수 없습니다: " + email));
 
