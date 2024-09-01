@@ -9,6 +9,9 @@ resources/application.yml
 resources/application**.yml
 application**.yml
 application.yml
+code/.idea
+application.log
+
 
 ### STS ###
 .apt_generated
