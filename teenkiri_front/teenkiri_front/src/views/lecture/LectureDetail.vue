@@ -9,7 +9,7 @@
           </template>
         </v-progress-linear>
       </div>
-      <div class="d-flex justify-center mt-5">
+      <div class="d-flex justify-center mt-5" @keydown="keyupEvent" tabindex="0">
         <video
           ref="videoPlayer"
           class="video-js vjs-theme-city vjs-16-9 vjs-big-play-centered"
@@ -72,7 +72,7 @@ export default {
 
       if (this.user.token === "") {
         alert("로그인이 필요합니다.");
-        location.href = -1;
+        history.go(-1);
       }
 
       this.lectureId = this.$route.params.id;
@@ -89,6 +89,7 @@ export default {
   mounted() {
     // player를 초기화합니다.
     this.initPlayer();
+    window.addEventListener("keyupEvent", this.handleKeydown);
   },
   watch: {
     "videoOptions.sources": {
@@ -279,6 +280,35 @@ export default {
         }
       }
     },
+    keyupEvent(event) {
+      // 오른쪽 방향키 (Key code: 39)
+      if (event.key === 'ArrowRight') {
+        this.skip(5);
+      }
+
+      // 왼쪽 방향키 (Key code: 37)
+      else if (event.key === 'ArrowLeft') {
+        this.skip(-5);
+      }
+
+      // 스페이스바 (Key code: 32)
+      else if (event.key === ' ') {
+        if (this.player.paused()) {
+          this.player.play();
+        } else {
+          this.player.pause();
+        }
+      }
+    },
+    skip(seconds) {
+      let currentTime = this.player.currentTime();
+      let newTime = currentTime + seconds;
+
+      if (newTime < 0) newTime = 0;
+      if (newTime > this.player.duration()) newTime = this.player.duration();
+
+      this.player.currentTime(newTime);
+    },
   },
   beforeUnmount() {
     if (this.player) {
@@ -292,6 +322,7 @@ export default {
     if (this.updateUserProgressInterval) {
       clearInterval(this.updateUserProgressInterval);
     }
+    window.removeEventListener("keyupEvent", this.handleKeydown);
   },
 };
 </script>
