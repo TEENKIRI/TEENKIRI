@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,6 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    //private JwtTokenProvider jwtTokenProvider;
     private JwtTokenprovider jwtTokenprovider;
 
     @Autowired
@@ -56,6 +56,11 @@ public class UserService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public UserService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
 
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
@@ -198,6 +203,17 @@ public class UserService {
         }
 
         return !userRepository.existsByNickname(nickname);
+    }
+
+    public void checkreportcount(User user) {
+        if (user.getReportCount() >= 5) {
+            user.setDelYN(DelYN.Y);
+            userRepository.save(user);
+
+            messagingTemplate.convertAndSend("/topic/logout", user.getEmail());
+
+            deleteAccount(user.getEmail());
+        }
     }
 
     public void deleteAccount(String email) {
