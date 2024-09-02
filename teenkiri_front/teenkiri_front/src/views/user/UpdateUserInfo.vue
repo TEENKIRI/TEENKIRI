@@ -16,7 +16,7 @@
                 label="이름"
                 v-model="userEditInfo.name"
                 prepend-icon="mdi-account-box"
-                disabled
+                required
               ></v-text-field>
               <v-text-field
                 label="이메일"

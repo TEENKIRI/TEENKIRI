@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,9 +60,11 @@ public class UserController {
     }
 
     @PostMapping("/edit-info")
-    public ResponseEntity<?> editUserInfo(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserEditReqDto editReqDto) {
+    public ResponseEntity<?> editUserInfo(@RequestBody UserEditReqDto editReqDto) {
         try {
-            userService.updateUserInfo(userDetails.getUsername(), editReqDto);
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findByEmail(email);
+            userService.updateUserDetails(user, editReqDto);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 정보 수정 성공", null));
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,19 +96,29 @@ public class UserController {
         return checkNickname(saveReqDto.toNicknameCheckDto());
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDto loginDto) {
         try {
             String token = userService.login(loginDto);
             System.out.println("Generated JWT Token: " + token);
-            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK,"로그인성공",token);
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "로그인성공", token);
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            if (e.getMessage().contains("비활성화 상태")) {
+                CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, e.getMessage());
+                return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
+            }
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, "잘못된 이메일/비밀번호 입니다.");
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             e.printStackTrace();
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED,"잘못된 이메일/비밀번호 입니다.");
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.UNAUTHORIZED, "로그인 중 오류가 발생했습니다.");
             return new ResponseEntity<>(commonErrorDto, HttpStatus.UNAUTHORIZED);
         }
     }
+
 
     @PostMapping("/send-verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestBody EmailVerificationDto verificationDto) {
@@ -196,11 +207,13 @@ public class UserController {
     }
 
     @PostMapping("/delete-account")
-    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String confirmation) {
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String, String> request) {
+        String confirmation = request.get("confirmation");
         if (!"틴끼리 사이트 회원 탈퇴에 동의합니다".equals(confirmation)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new CommonResDto(HttpStatus.BAD_REQUEST, "회원 탈퇴 문구가 올바르지 않습니다.", null));
         }
+
         userService.deleteAccount(userDetails.getUsername());
         return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 탈퇴 성공", null));
     }

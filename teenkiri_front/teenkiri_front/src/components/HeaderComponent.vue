@@ -78,6 +78,12 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
+
+          <v-btn icon @click="goToDeleteAccountPage" v-if="isLogin" class="mr-2">
+            <v-icon>mdi-account-remove</v-icon>
+          </v-btn>
+
         </v-col>
       </v-row>
     </v-container>
@@ -102,6 +108,8 @@
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import axios from 'axios';
 import ChatComponent from '@/components/ChatComponent.vue'; // 채팅 컴포넌트 추가
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
   name: 'HeaderComponent',
@@ -116,6 +124,8 @@ export default {
       isAdmin: false,
       notifications: [],
       loginSnackbar: false, // 로그인 안내 스낵바 상태
+      stompClient: null,    // WebSocket 클라이언트
+      connected: false,     // WebSocket 연결 상태
     };
   },
   computed: {
@@ -134,9 +144,39 @@ export default {
       this.isAdmin = localStorage.getItem('role') === 'ADMIN';
       this.fetchNotifications();
       this.initEventSource(token);
+      this.connectWebSocket();  // WebSocket 연결 설정
     }
   },
   methods: {
+    connectWebSocket() {
+      const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
+      this.stompClient = Stomp.over(socket);
+
+      this.stompClient.connect({}, () => {
+        this.connected = true;
+        this.stompClient.subscribe("/topic/logout", (message) => {
+          const email = message.body;
+          if (email === this.getUserEmail()) {  
+            alert("누적 신고 횟수가 5회 이상이므로 계정이 영구 정지 되었습니다.");
+            this.logout();
+          }
+        });
+      }, (error) => {
+        console.error('WebSocket 연결 오류:', error);
+        this.connected = false;
+      });
+    },
+    getUserEmail() {
+      return localStorage.getItem("email");
+    },
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("email");
+      localStorage.removeItem("role");
+      this.$router.push("/login");
+    },
     initEventSource(token) {
       const eventSource = new EventSourcePolyfill(`${process.env.VUE_APP_API_BASE_URL}/subscribe`, {
         headers: {
@@ -215,6 +255,9 @@ export default {
       } else {
         console.log(section);
       }
+    },
+    goToDeleteAccountPage() {
+        this.$router.push({ name: 'DeleteAccount' });
     },
     goToMember() {
       if (this.isLogin) {

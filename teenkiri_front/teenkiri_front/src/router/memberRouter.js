@@ -8,6 +8,8 @@ import UpdateUserInfo from "@/views/user/UpdateUserInfo.vue";
 import ReportCreate from "@/views/report/ReportCreate.vue";
 import SubscribePage from "@/views/user/SubscribePage.vue";
 import WishListPage from "@/views/user/WishListPage.vue";
+import DeleteAccount from "@/views/user/DeleteAccount.vue";
+
 
 import UserNotificaiton from "@/views/user/UserNotificaion.vue"
 import { jwtDecode } from "jwt-decode";
@@ -36,6 +38,11 @@ export const memberRouter = [
         path: '/user/list',
         name: 'UserList',
         component: UserList
+    },
+    {
+        path: '/user/delete-account',
+        name: 'DeleteAccount',
+        component: DeleteAccount
     },
     {
         path: '/user/reset-password',

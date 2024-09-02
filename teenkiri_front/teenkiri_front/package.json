@@ -20,7 +20,8 @@
     "vue": "^3.2.13",
     "vue-router": "^4.4.3",
     "vuetify": "^3.6.14",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

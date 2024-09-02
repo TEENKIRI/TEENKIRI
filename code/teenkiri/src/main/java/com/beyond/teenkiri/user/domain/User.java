@@ -112,4 +112,8 @@ public class User extends BaseTimeEntity {
         this.address = new Address(temp, temp, temp);
         return this;
     }
+    public User updateName(String name) {
+        this.name = name;
+        return this;
+    }
 }

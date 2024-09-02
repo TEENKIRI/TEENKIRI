@@ -1,7 +1,9 @@
 .DS_Store
-node_modules
 /dist
 
+../node_modules
+.idea
+node_modules
 
 # local env files
 .env.local
@@ -21,3 +23,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+
+teenkiri_front/teenkiri_front/package.json
+package.json
+package-lock.json
