@@ -54,9 +54,19 @@
                                 style="max-width: 85%; height: 60px; object-fit: contain;"
                               />
                             </v-btn>
-                            
                           </div>
-                          
+                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
+                            <v-btn 
+                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
+                              @click="naverLogin"
+                            >
+                              <img 
+                                :src="require('@/assets/images/naver_login_medium_narrow.png')"
+                                alt="NAVER"
+                                style="max-width: 85%; height: 60px; object-fit: contain;"
+                              />
+                            </v-btn>
+                          </div>
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
@@ -138,6 +148,9 @@ export default {
         },
         kakaoLogin() {
             window.location.href = 'http://localhost:8088/oauth2/authorization/kakao';
+        },
+        naverLogin() {
+            window.location.href = "http://localhost:8088/oauth2/authorization/naver";
         },
         findId() {
             this.$router.push("/user/find-id");
