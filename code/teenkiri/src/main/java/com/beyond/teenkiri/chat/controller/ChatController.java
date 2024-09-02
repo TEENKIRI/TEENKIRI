@@ -79,7 +79,7 @@ public class ChatController {
         }
 
         // 메시지를 저장 (채널 정보를 추가로 전달)
-        ChatMessageDto savedMessage = chatMessageService.saveMessage(chatMessageDto.getContent(), chatMessageDto.getSenderId(), channel);
+        ChatMessageDto savedMessage = chatMessageService.saveMessage(chatMessageDto.getContent(), chatMessageDto.getUser(), channel);
 
         // 결정된 주제(topic)로 저장된 메시지를 전송함
         messagingTemplate.convertAndSend(topic, savedMessage);

@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.chat.dto;
 
 import com.beyond.teenkiri.chat.domain.ChatMessage;
+import com.beyond.teenkiri.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class ChatMessageDto {
     private Long id;
     private String content;
-    private Long senderId;
+    private User user;
     private String senderNickname;
     private String createdTime;
     private String channel;
@@ -22,7 +23,7 @@ public class ChatMessageDto {
         return ChatMessageDto.builder()
                 .id(chatMessage.getId())
                 .content(chatMessage.getContent())
-                .senderId(chatMessage.getSenderId())
+                .user(chatMessage.getUser())
                 .senderNickname(nickname)
                 .createdTime(chatMessage.getCreatedTime().toString())
                 .channel(chatMessage.getChannel())

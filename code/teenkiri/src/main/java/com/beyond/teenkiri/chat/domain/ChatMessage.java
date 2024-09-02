@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.chat.domain;
 
+import com.beyond.teenkiri.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,9 +28,10 @@ public class ChatMessage {
     @Column(nullable = false)
     private String content;
 
-    // 메시지를 보낸 사람의 ID
+
+    @ManyToOne
     @Column(nullable = false)
-    private Long senderId;
+    private User user;
 
     @Column(nullable = false)
     private String channel;

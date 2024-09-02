@@ -3,6 +3,7 @@ package com.beyond.teenkiri.chat.service;
 import com.beyond.teenkiri.chat.domain.ChatMessage;
 import com.beyond.teenkiri.chat.dto.ChatMessageDto;
 import com.beyond.teenkiri.chat.repository.ChatMessageRepository;
+import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -52,7 +53,7 @@ public class ChatMessageService {
     }
 
     // 메시지를 저장하는 메서드
-    public ChatMessageDto saveMessage(String content, Long senderId, String channel) {
+    public ChatMessageDto saveMessage(String content, User user, String channel) {
         if (channel == null || channel.isEmpty()) {
             throw new IllegalArgumentException("Channel must not be null or empty");
         }
@@ -61,7 +62,7 @@ public class ChatMessageService {
         content = filterMessage(content);
         ChatMessage chatMessage = ChatMessage.builder()
                 .content(content)
-                .senderId(senderId)
+                .user(user)
                 .channel(channel)
                 .build();
 
@@ -69,7 +70,7 @@ public class ChatMessageService {
         chatMessage = chatMessageRepository.save(chatMessage);
 
         // 사용자 닉네임을 가져와서
-        String nickname = userRepository.findById(senderId).orElseThrow().getNickname();
+        String nickname = userRepository.findById(user.getId()).orElseThrow().getNickname();
 
         // DTO 객체로 변환하여 반환
         return ChatMessageDto.fromEntity(chatMessage, nickname);
@@ -79,7 +80,7 @@ public class ChatMessageService {
     public List<ChatMessageDto> getAllMessages() {
         return chatMessageRepository.findAll().stream()
                 .map(chatMessage -> {
-                    String nickname = userRepository.findById(chatMessage.getSenderId()).orElseThrow().getNickname();
+                    String nickname = userRepository.findById(chatMessage.getUser().getId()).orElseThrow().getNickname();
                     return ChatMessageDto.fromEntity(chatMessage, nickname);
                 })
                 .collect(Collectors.toList());
@@ -97,7 +98,7 @@ public class ChatMessageService {
     public List<ChatMessageDto> getMessagesSince(LocalDateTime since) {
         return chatMessageRepository.findByCreatedTimeAfter(since).stream()
                 .map(chatMessage -> {
-                    String nickname = userRepository.findById(chatMessage.getSenderId()).orElseThrow().getNickname();
+                    String nickname = userRepository.findById(chatMessage.getUser().getId()).orElseThrow().getNickname();
                     return ChatMessageDto.fromEntity(chatMessage, nickname);
                 })
                 .collect(Collectors.toList());
