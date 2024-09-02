@@ -1,28 +1,28 @@
 <template>
-    <v-container>
-      <v-list>
-        <v-list-item v-for="message in messages" :key="message.id">
-          <v-list-item-content>
-            <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
-            <v-list-item-subtitle>{{ message.content }}</v-list-item-subtitle>
-            <v-list-item-subtitle>{{ message.createdTime }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-  
-      <v-text-field
-        v-model="newMessage"
-        label="메시지를 입력하세요..."
-        @keyup.enter="sendMessage"
-      ></v-text-field>
-    </v-container>
-  </template>
-  
-  <script>
+  <v-container>
+    <v-list>
+      <v-list-item v-for="message in messages" :key="message.id">
+        <v-list-item-content>
+          <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
+          <v-list-item-subtitle>{{ message.content }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ message.createdTime }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
 
-  import SockJS from 'sockjs-client';
-  import { Stomp } from '@stomp/stompjs';
-  export default {
+    <v-text-field
+      v-model="newMessage"
+      label="메시지를 입력하세요..."
+      @keyup.enter="sendMessage"
+    ></v-text-field>
+  </v-container>
+</template>
+
+<script>
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+
+export default {
   data() {
     return {
       messages: [],
@@ -47,22 +47,27 @@
       });
     },
     sendMessage() {
-      const userId = localStorage.getItem('userId');
+  const userEmail = localStorage.getItem('email');
+  const channel = 'korean';  // 필요에 따라 동적으로 설정할 수 있습니다.
 
-      if (!userId) {
-        console.error("유저가 없습니다.");
-        return;
-      }
+  if (!userEmail) {
+    console.error("유저 이메일이 없습니다.");
+    return;
+  }
 
-      if (this.stompClient && this.stompClient.connected) {
-        const message = {
-          content: this.newMessage,
-          senderId: userId, 
-        };
-        this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
-        this.newMessage = '';
-      }
-    }
+  if (this.stompClient && this.stompClient.connected) {
+    const message = {
+      content: this.newMessage,
+      user: {
+        email: userEmail,  // 여기에 이메일을 포함하여 user 객체를 생성
+      },
+      channel: channel
+    };
+    this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
+    this.newMessage = '';
+  }
+}
+
   },
   beforeUnmount() {
     if (this.stompClient) {
@@ -70,19 +75,17 @@
     }
   },
 };
+</script>
 
-  </script>
-  
-  <style scoped>
-  .v-container {
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  .v-list-item {
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
-  </style>
-  
+<style scoped>
+.v-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.v-list-item {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+</style>

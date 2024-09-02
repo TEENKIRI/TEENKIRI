@@ -3,6 +3,8 @@ package com.beyond.teenkiri.chat.controller;
 // 필요한 클래스와 어노테이션을 가져옴
 import com.beyond.teenkiri.chat.dto.ChatMessageDto;
 import com.beyond.teenkiri.chat.service.ChatMessageService;
+import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,6 +22,7 @@ import java.util.*;
 @RequestMapping("/api/chat")
 public class ChatController {
 
+    private final UserRepository userRepository;
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations messagingTemplate;
 
@@ -48,16 +51,31 @@ public class ChatController {
      */
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(ChatMessageDto chatMessageDto) {
-        // 사용자가 선택한 채널에 따라 적절한 주제를 결정
-        String channel = chatMessageDto.getChannel(); // 클라이언트로부터 받은 채널 정보
+        if (chatMessageDto == null) {
+            throw new IllegalArgumentException("ChatMessageDto must not be null");
+        }
 
-        // 채널 정보가 null이거나 잘못된 경우 예외 처리
+        // 클라이언트로부터 받은 채널 정보와 이메일 정보
+        String channel = chatMessageDto.getChannel();
+        User dtoUser = chatMessageDto.getUser();
+        if (dtoUser == null) {
+            throw new IllegalArgumentException("User information in ChatMessageDto must not be null");
+        }
+
+        String userEmail = dtoUser.getEmail();
+
+        // 채널 정보가 null이거나 비어 있으면 예외 처리
         if (channel == null || channel.isEmpty()) {
             throw new IllegalArgumentException("Channel must not be null or empty");
         }
 
+        // 이메일로 사용자 정보 조회
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user: " + userEmail));
+
+        // 채널에 따른 주제(topic) 설정
         String topic;
-        switch (channel) {
+        switch (channel.toLowerCase()) {
             case "korean":
                 topic = "/topic/korean";
                 break;
@@ -74,14 +92,18 @@ public class ChatController {
                 topic = "/topic/science";
                 break;
             default:
-                // 유효하지 않은 채널의 경우 예외 발생
                 throw new IllegalArgumentException("Invalid channel: " + channel);
         }
 
-        // 메시지를 저장 (채널 정보를 추가로 전달)
-        ChatMessageDto savedMessage = chatMessageService.saveMessage(chatMessageDto.getContent(), chatMessageDto.getUser(), channel);
+        // 메시지를 저장
+        ChatMessageDto savedMessage = chatMessageService.saveMessage(
+                chatMessageDto.getContent(),
+                user,
+                channel
+        );
 
-        // 결정된 주제(topic)로 저장된 메시지를 전송함
+        // 결정된 주제(topic)로 저장된 메시지를 전송
         messagingTemplate.convertAndSend(topic, savedMessage);
     }
+
 }
