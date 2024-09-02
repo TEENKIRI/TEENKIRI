@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,9 +60,11 @@ public class UserController {
     }
 
     @PostMapping("/edit-info")
-    public ResponseEntity<?> editUserInfo(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserEditReqDto editReqDto) {
+    public ResponseEntity<?> editUserInfo(@RequestBody UserEditReqDto editReqDto) {
         try {
-            userService.updateUserInfo(userDetails.getUsername(), editReqDto);
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findByEmail(email);
+            userService.updateUserDetails(user, editReqDto);
             return ResponseEntity.ok(new CommonResDto(HttpStatus.OK, "회원 정보 수정 성공", null));
         } catch (Exception e) {
             e.printStackTrace();

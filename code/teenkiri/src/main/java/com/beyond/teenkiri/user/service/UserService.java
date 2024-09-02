@@ -84,7 +84,6 @@ public class UserService {
     }
 
 
-
     public String getEmailFromToken(String token) {
         return jwtTokenprovider.getEmailFromToken(token);
     }
@@ -98,6 +97,7 @@ public class UserService {
         return userRepository.findAllByRole(role);
 
     }
+
     public String findId(UserFindIdDto findIdDto) {
         User user = userRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone())
                 .orElseThrow(() -> new EntityNotFoundException("없는 사용자 입니다."));
@@ -232,10 +232,12 @@ public class UserService {
     }
 
 
-    private void updateUserDetails(User user, UserEditReqDto editReqDto) {
+    public void updateUserDetails(User user, UserEditReqDto editReqDto) {
+        User savedUser = findByEmail(user.getEmail());
+
         if (editReqDto.getPassword() != null && !editReqDto.getPassword().isEmpty()) {
             validatePassword(editReqDto.getPassword(), editReqDto.getConfirmPassword(), user.getPassword());
-            user.setPassword(passwordEncoder.encode(editReqDto.getPassword()));
+            savedUser.setPassword(passwordEncoder.encode(editReqDto.getPassword()));
         }
 
         if (editReqDto.getNickname() != null && !editReqDto.getNickname().isEmpty()) {
@@ -244,17 +246,19 @@ public class UserService {
                 throw new RuntimeException("비속어는 닉네임으로 설정할 수 없습니다.");
             }
             // 닉네임이 변경된 경우에만 중복 검사를 수행
-            if (!user.getNickname().equals(editReqDto.getNickname())) {
+            if (!savedUser.getNickname().equals(editReqDto.getNickname())) {
                 if (userRepository.existsByNickname(editReqDto.getNickname())) {
                     throw new RuntimeException("이미 사용 중인 닉네임입니다.");
                 }
-                user.setNickname(editReqDto.getNickname());
+                savedUser.setNickname(editReqDto.getNickname());
             }
         }
 
         if (editReqDto.getAddress() != null) {
-            user.setAddress(editReqDto.getAddress());
+            savedUser.setAddress(editReqDto.getAddress());
         }
+        savedUser.setName(editReqDto.getName());
+        userRepository.save(savedUser);
     }
 
     public List<QnAListResDto> getUserQnAList(String userEmail) {
@@ -269,37 +273,37 @@ public class UserService {
         return qnaListResDtos;
     }
 
-    public List<NotificationListDto> getNotificationList(){
+    public List<NotificationListDto> getNotificationList() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Notification> notifications =  notificationRepository.findByUserEmail(userEmail);
+        List<Notification> notifications = notificationRepository.findByUserEmail(userEmail);
         List<NotificationListDto> notificationListDtos = new ArrayList<>();
 
-        for(Notification notification : notifications){
+        for (Notification notification : notifications) {
             notificationListDtos.add(notification.listFromEntity());
         }
         return notificationListDtos;
     }
 
 
-    public void updateUserInfo(String username, UserEditReqDto editReqDto) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+//    public void updateUserInfo(String username, UserEditReqDto editReqDto) {
+//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User user = userRepository.findByEmail(userEmail)
+//                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+//
+//        user = updateUserDetails(user, editReqDto);
+//        userRepository.save(user);
+//    }
 
-        updateUserDetails(user, editReqDto);
-        userRepository.save(user);
-    }
-
-    public Page<UserListDto> userList(Pageable pageable){
+    public Page<UserListDto> userList(Pageable pageable) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
-        if (!user.getRole().toString().equals("ADMIN")){
+        if (!user.getRole().toString().equals("ADMIN")) {
             System.out.println("접근권한없음");
             throw new SecurityException("접근권한이 없습니다.");
         }
         Page<User> users = userRepository.findAll(pageable);
-        return users.map(a-> a.listFromEntity());
+        return users.map(a -> a.listFromEntity());
     }
 
     public String getNicknameByUserId(Long userId) {

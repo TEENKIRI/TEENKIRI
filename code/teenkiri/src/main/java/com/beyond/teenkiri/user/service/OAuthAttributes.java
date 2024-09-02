@@ -51,9 +51,9 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofKakao(String userNameAttributeName,
                                            Map<String, Object> attributes) {
-        System.out.println("집중!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(attributes);
-        System.out.println(attributes.toString());
+//        System.out.println("집중!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        System.out.println(attributes);
+//        System.out.println(attributes.toString());
 
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");

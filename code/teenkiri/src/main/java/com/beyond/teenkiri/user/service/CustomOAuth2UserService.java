@@ -35,14 +35,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        //OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 저장
+        // OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 저장
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                 userNameAttributeName, oAuth2User.getAttributes());
 //        System.out.println("att!!!!!!!"+attributes);
 //
 //        System.out.println("!!!!!!!!!!!!!!!");
 //        System.out.println("att!!!!!!!"+attributes.toString());
-        System.out.println(attributes.getEmail());
+//        System.out.println(attributes.getEmail());
 
 
         User user = null;
@@ -50,6 +50,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             user = kakaoSaveOrUpdate(attributes);
         }else {
             user = saveOrUpdate(attributes);
+        }
+        if (user.getName() == null){
+            String temp = "이름을 변경해주세요";
+            user.updateName(temp);
         }
 
         if (user.getNickname() == null) {
