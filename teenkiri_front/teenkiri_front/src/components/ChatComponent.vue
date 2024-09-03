@@ -56,9 +56,9 @@
 
 <script>
 import ReportCreate from '@/views/report/ReportCreate.vue';
-import axios from 'axios';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import axios from 'axios';
 
 export default {
   data() {
@@ -115,19 +115,21 @@ export default {
       }
     },
     connectWebSocket() {
-      const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
-      this.stompClient = Stomp.over(socket);
+    const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
+    this.stompClient = Stomp.over(socket);
 
-      this.stompClient.connect({}, frame => {
-        console.log('Connected: ' + frame);
-        this.subscribeToTopic(this.selectedTopic);
-      }, error => {
-        console.error('웹소켓 연결 실패:', error);
+    this.stompClient.connect({}, frame => {
+      console.log('Connected: ' + frame);
+      this.stompClient.subscribe(`/topic/${this.channel}`, message => {
+        const receivedMessage = JSON.parse(message.body);
+        this.messages.push(receivedMessage); 
       });
-    },
+    }, error => {
+      console.error('웹소켓 연결 실패:', error);
+    });
+  },
     subscribeToTopic(topic) {
       if (this.stompClient) {
-        // 구독 ID 저장
         this.stompClient.unsubscribe(this.selectedTopic);
         this.selectedTopic = topic;
         this.stompClient.subscribe(topic, message => {
@@ -161,11 +163,16 @@ export default {
         const message = {
           content: filteredContent,
           senderId: this.userId,
-          email: this.email,  // email 필드로 수정
+          email: this.email,
           channel: channel
         };
 
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
+        this.messages.push({
+        ...message,
+        senderNickname: 'You', 
+        createdTime: new Date().toISOString() 
+      });
         this.newMessage = '';
       }
     },
@@ -193,13 +200,12 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 800px; /* 높이를 약간 더 늘려서 버튼이 들어갈 공간을 확보 */
-  width: 550px; /* 가로 크기를 고정 */
+  height: 800px;
+  width: 550px;
   margin: 20px auto;
   background: #f9f9f9;
   border-radius: 8px;
@@ -222,7 +228,7 @@ export default {
   flex-direction: column;
   gap: 15px;
   overflow-y: auto;
-  overflow-x: hidden; /* 가로 스크롤 안보이게 설정 */
+  overflow-x: hidden;
 }
 
 .message-item {
@@ -233,7 +239,7 @@ export default {
 
 .report-button {
   position: absolute;
-  right: -30px; /* 말풍선 오른쪽으로 이동 */
+  right: -30px;
   top: 50%;
   transform: translateY(-50%);
   width: 40px;
@@ -248,7 +254,7 @@ export default {
   border-top: 1px solid #ccc;
   padding: 10px;
   background: #f9f9f9;
-  margin-bottom: 0px; /* 메시지 입력 창과 버튼 사이의 간격 */
+  margin-bottom: 0px;
 }
 
 .message-input {
@@ -270,7 +276,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  max-width: 50%; /* 말풍선 가로 크기를 줄임 */
+  max-width: 50%;
 }
 
 .message-content {
@@ -307,9 +313,9 @@ export default {
 }
 
 .left-align {
-  text-align: left !important; /* 왼쪽 정렬을 강제로 적용 */
-  padding-left: 0; /* 왼쪽으로 붙이기 위해 패딩 제거 */
-  margin-left: 0; /* 왼쪽으로 붙이기 위해 마진 제거 */
+  text-align: left !important;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .topic-buttons {
@@ -317,9 +323,9 @@ export default {
   justify-content: center;
   gap: 10px;
   padding: 10px 0;
-  margin-top: 50px; /* 메시지 입력 창과 버튼 사이의 간격 */
+  margin-top: 50px;
   margin-bottom: 0px;
-  background: #f9f9f9; /* 버튼 배경 색상 */
+  background: #f9f9f9;
 }
 
 .topic-button {

@@ -4,10 +4,13 @@ import com.beyond.teenkiri.chat.dto.ChatMessageDto;
 import com.beyond.teenkiri.chat.service.ChatService;
 import com.beyond.teenkiri.chat.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -54,5 +57,10 @@ public class ChatController {
             throw new IllegalArgumentException("Invalid channel: " + channel);
         }
         redisPublisher.publishMessage(topic, chatMessageDto);
+    }
+
+    @GetMapping("/messages")
+    public List<ChatMessageDto> getMessages(@RequestParam("since") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since) {
+        return chatService.getMessagesSince(since);
     }
 }

@@ -32,9 +32,9 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      channel: 'science',  // 기본 채널 설정
-      userId: localStorage.getItem('userId'),  // localStorage에서 직접 가져옴
-      email: localStorage.getItem('email')  // localStorage에서 직접 가져옴
+      channel: 'science',
+      userId: localStorage.getItem('userId'),
+      email: localStorage.getItem('email')
     };
   },
   mounted() {
@@ -62,7 +62,7 @@ export default {
       const message = {
         content: this.newMessage,
         senderId: this.userId,
-        email: this.email,  // email 필드로 수정
+        senderEmail: this.email,
         channel: this.channel,
       };
 
@@ -81,7 +81,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .v-container {
