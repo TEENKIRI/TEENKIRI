@@ -1,5 +1,6 @@
 package com.beyond.teenkiri.user.Handler;
 
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
@@ -33,6 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             , Authentication authentication) throws IOException {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
         String email = oAuth2User.getAttribute("email");
         if (email == null) {
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
@@ -41,7 +43,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         System.out.println(email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 소셜 회원입니다."));
+        if (!user.getDelYN().equals(DelYN.N)) {
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
         Long getUserId = user.getId();
         Long userId = getUserId;
 
