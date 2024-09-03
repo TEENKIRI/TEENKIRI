@@ -67,7 +67,7 @@ export default {
       newMessage: '',
       stompClient: null,
       userId: localStorage.getItem('userId'),
-      userEmail: localStorage.getItem('email'),
+      email: localStorage.getItem('email'),
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
       selectedChatMessageId: null,
@@ -115,11 +115,6 @@ export default {
       }
     },
     connectWebSocket() {
-      if (!this.userId || !this.userEmail) {
-        console.error('User ID or Email is not available');
-        return;
-      }
-
       const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
       this.stompClient = Stomp.over(socket);
 
@@ -149,37 +144,31 @@ export default {
       return content;
     },
     sendMessage() {
-   // localStorage에서 직접 값을 가져옵니다.
-   const senderId = localStorage.getItem('userId');
-   const senderEmail = localStorage.getItem('email');
+      if (!this.userId || !this.email) {
+        console.error('User ID or Email is not available');
+        return;
+      }
 
-   if (!senderId) {
-     console.error('User ID is not available');
-     return;
-   }
+      const channel = this.selectedTopic.replace('/topic/', '');
+      if (!channel) {
+        console.error('Channel is not set.');
+        alert('채널이 설정되지 않았습니다.');
+        return;
+      }
 
-   const channel = this.selectedTopic.replace('/topic/', '');
-   if (!channel) {
-     console.error('Channel is not set.');
-     alert('채널이 설정되지 않았습니다.');
-     return;
-   }
+      if (this.stompClient && this.stompClient.connected) {
+        const filteredContent = this.filterMessage(this.newMessage);
+        const message = {
+          content: filteredContent,
+          senderId: this.userId,
+          email: this.email,  // email 필드로 수정
+          channel: channel
+        };
 
-   if (this.stompClient && this.stompClient.connected) {
-     const filteredContent = this.filterMessage(this.newMessage);
-     const message = {
-       content: filteredContent,
-       senderId: senderId, 
-       senderEmail: senderEmail, 
-       channel: channel
-     };
-     console.log('Sending message:', message);
-
-     this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
-     this.newMessage = '';
-   }
- },
-
+        this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
+        this.newMessage = '';
+      }
+    },
     isMyMessage(senderId) {
       return senderId === this.userId;
     },

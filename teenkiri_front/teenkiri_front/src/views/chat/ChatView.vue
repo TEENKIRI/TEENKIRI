@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-alert v-if="!userId || !userEmail" type="error">
+    <v-alert v-if="!userId || !email" type="error">
       유저 정보가 없습니다. 다시 로그인 해주세요.
     </v-alert>
 
-    <v-list v-if="userId && userEmail">
+    <v-list v-if="userId && email">
       <v-list-item v-for="message in messages" :key="message.id">
         <v-list-item-content>
           <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
@@ -33,19 +33,12 @@ export default {
       newMessage: '',
       stompClient: null,
       channel: 'science',  // 기본 채널 설정
-      userId: localStorage.getItem('userId'),
-      userEmail: localStorage.getItem('email'),
+      userId: localStorage.getItem('userId'),  // localStorage에서 직접 가져옴
+      email: localStorage.getItem('email')  // localStorage에서 직접 가져옴
     };
   },
   mounted() {
-    console.log('Mounted Hook - User ID:', this.userId);
-    console.log('Mounted Hook - User Email:', this.userEmail);
-
-    if (!this.userId || !this.userEmail) {
-      console.error("유저 정보가 없습니다.");
-    } else {
-      this.connectWebSocket();
-    }
+    this.connectWebSocket();
   },
   methods: {
     connectWebSocket() {
@@ -61,7 +54,7 @@ export default {
       });
     },
     sendMessage() {
-      if (!this.userId || !this.userEmail) {
+      if (!this.userId || !this.email) {
         console.error("유저 정보가 없습니다.");
         return;
       }
@@ -69,9 +62,10 @@ export default {
       const message = {
         content: this.newMessage,
         senderId: this.userId,
-        senderEmail: this.userEmail,
+        email: this.email,  // email 필드로 수정
         channel: this.channel,
       };
+
       console.log('Sending message:', message);  
 
       if (this.stompClient && this.stompClient.connected) {
@@ -87,6 +81,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .v-container {

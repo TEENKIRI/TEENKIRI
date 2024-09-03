@@ -39,7 +39,7 @@ public class Chat {
         return ChatMessageDto.builder()
                 .id(chat.getId())
                 .content(chat.getContent())
-                .userEmail(chat.getUser().getEmail())
+                .email(chat.getUser().getEmail())
                 .createdTime(chat.getCreatedTime().toString())
                 .channel(chat.getChannel())
                 .build();

@@ -23,6 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.email FROM User u WHERE u.email LIKE 'admin%'")
     List<String> findAllAdminEmails();
     List<User> findAllByRole(Role role);
-
     Optional<User> findByEmailIgnoreCase(String email);
 }
