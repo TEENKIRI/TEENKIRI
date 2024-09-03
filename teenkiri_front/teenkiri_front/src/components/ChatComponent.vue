@@ -4,7 +4,7 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
-    <v-list ref="chatBox" class="chat-box">
+    <v-list class="chat-box">
       <v-list-item
         v-for="message in filteredMessages"
         :key="message.id"
@@ -24,7 +24,7 @@
           <v-icon small>mdi-alarm-light-outline</v-icon>
         </v-btn>
         <v-list-item-content>
-          <v-list-item-title>{{ message.senderNickname || "Unknown" }}</v-list-item-title>
+          <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
           <v-list-item-subtitle class="message-content">
             {{ filterMessage(message.content) }}
           </v-list-item-subtitle>
@@ -81,8 +81,9 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      userId: localStorage.getItem('userId'),
+      userId: localStorage.getItem('userId'),  // 현재 사용자의 userId
       email: localStorage.getItem('email'),
+      nickname: localStorage.getItem('nickname'),
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
       selectedChatMessageId: null,
@@ -114,7 +115,10 @@ export default {
     this.loadChatHistory();
     this.connectWebSocket();
     this.loadForbiddenWords();
-    this.scrollToBottom(); // 초기 로드 시 맨 밑으로 스크롤
+
+    this.$nextTick(() => {
+      this.scrollToBottom();
+    });
   },
   methods: {
     async loadChatHistory() {
@@ -126,7 +130,7 @@ export default {
           }
         );
         this.messages = response.data;
-        this.scrollToBottom(); // 채팅 기록을 불러온 후 맨 밑으로 스크롤
+        this.scrollToBottom();
       } catch (error) {
         console.error('채팅 기록을 불러오는 중 오류 발생:', error);
       }
@@ -162,10 +166,10 @@ export default {
       if (this.stompClient) {
         this.stompClient.unsubscribe(this.selectedTopic);
         this.selectedTopic = topic;
-        this.stompClient.subscribe(topic, message => {
+        this.stompClient.subscribe(`/topic/${this.selectedTopic.replace('/topic/', '')}`, message => {
           const receivedMessage = JSON.parse(message.body);
           this.messages.push(receivedMessage);
-          this.scrollToBottom(); // 새 메시지가 도착할 때 스크롤
+          this.scrollToBottom();  // 스크롤을 맨 아래로 이동
         });
       }
     },
@@ -199,24 +203,28 @@ export default {
         const filteredContent = this.filterMessage(this.newMessage);
         const message = {
           content: filteredContent,
-          senderId: this.userId,
+          senderId: this.userId,  // 메시지에 현재 사용자의 userId를 포함시킵니다.
           email: this.email,
-          channel: channel
+          channel: channel,
+          senderNickname: this.nickname,
         };
 
+        // 서버로 메시지 전송
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
 
-        // 자신의 메시지 추가
-        this.messages.push({
-          ...message,
-          senderNickname: 'You',
-          createdTime: new Date().toISOString()
-        });
-        this.scrollToBottom(); // 메시지 보낸 후 스크롤
         this.newMessage = '';
+        this.scrollToBottom();
       }
     },
-    isMyMessage(senderId) {
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatBox = this.$el.querySelector('.chat-box');
+        if (chatBox) {
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      });
+    },
+    isMyMessage(senderId) {  // userId로 메시지의 발신자를 비교합니다.
       return senderId === this.userId;
     },
     formatTime(datetime) {
@@ -232,19 +240,15 @@ export default {
     },
     closeReportModal() {
       this.showReportModal = false;
-    },
-    scrollToBottom() {
-      this.$nextTick(() => {
-        const chatBox = this.$refs.chatBox;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
     }
   },
   components: {
-    ReportCreate
+    ReportCreate,
   }
 };
 </script>
+
+
 
 <style scoped>
 .chat-container {
