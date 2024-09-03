@@ -34,11 +34,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             , Authentication authentication) throws IOException {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-
         String email = oAuth2User.getAttribute("email");
         if (email == null) {
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
-            email = (String) kakaoAccount.get("email");
+            if (kakaoAccount != null && kakaoAccount.containsKey("email")) {
+                email = (String) kakaoAccount.get("email");
+            }
+            if (email == null) {
+                Object naverObject = oAuth2User.getAttributes().get("response");
+                Map<String, Object> naverAccount = (Map<String, Object>) naverObject;
+                if (naverAccount != null && naverAccount.containsKey("email")) {
+                    email = (String) naverAccount.get("email");
+                }
+            }
         }
 
         System.out.println(email);
