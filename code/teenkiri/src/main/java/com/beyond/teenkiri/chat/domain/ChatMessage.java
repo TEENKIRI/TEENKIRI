@@ -30,7 +30,7 @@ public class ChatMessage {
 
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)

@@ -1,10 +1,9 @@
 package com.beyond.teenkiri.user.Handler;
 
-import ch.qos.logback.core.joran.conditional.IfAction;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
-import com.beyond.teenkiri.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,10 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.naming.Name;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -38,15 +35,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
-
-        //for naver
-//        Object responseObject = oAuth2User.getAttributes().get("response");
-//        Map<String, Object> responseMap = (Map<String, Object>) responseObject;
-//        String naverEmail = (String) responseMap.get("email");
-
-//        System.out.println("responseObject : " + responseObject);
-//        System.out.println("email : " + naverEmail);
-
         if (email == null) {
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
             if (kakaoAccount != null && kakaoAccount.containsKey("email")) {
@@ -61,10 +49,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             }
         }
 
-        System.out.println("찾아@!!!!!!!!!!!!!!!!!!!!");
         System.out.println(email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new EntityNotFoundException("존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 소셜 회원입니다."));
+        if (!user.getDelYN().equals(DelYN.N)) {
+            throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
+        }
         Long getUserId = user.getId();
         Long userId = getUserId;
 
