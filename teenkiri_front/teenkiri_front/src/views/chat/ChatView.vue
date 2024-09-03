@@ -33,18 +33,24 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      channel: 'korean',  // 기본 채널 설정
+      channel: 'science',  // 기본 채널 설정
     };
   },
   computed: {
     ...mapGetters('user', ['getUserId', 'getUserEmail']),
   },
+  created() {
+    this.$store.dispatch('setUserAllInfoActions');  // Vuex 상태 초기화
+    console.log('Created Hook - User ID:', this.getUserId);
+    console.log('Created Hook - User Email:', this.getUserEmail);
+
+    if (!this.getUserId || !this.getUserEmail) {
+        console.error("유저 정보가 없습니다. Vuex 상태를 확인해주세요.");
+    }
+  },
+
   mounted() {
     this.connectWebSocket();
-
-    // 확인용 콘솔 로그
-    console.log('User ID:', this.getUserId);
-    console.log('User Email:', this.getUserEmail);
 
     if (!this.getUserId || !this.getUserEmail) {
       console.error("유저 정보가 없습니다. Vuex 상태를 확인해주세요.");
@@ -69,13 +75,16 @@ export default {
         return;
       }
 
+      const message = {
+        content: this.newMessage,
+        senderId: this.getUserId,
+        senderEmail: this.getUserEmail,
+        channel: this.channel,
+      };
+
+      console.log('Sending message:', message);  
+
       if (this.stompClient && this.stompClient.connected) {
-        const message = {
-          content: this.newMessage,
-          senderId: this.getUserId,
-          senderEmail: this.getUserEmail,
-          channel: this.channel,
-        };
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
         this.newMessage = '';
       }

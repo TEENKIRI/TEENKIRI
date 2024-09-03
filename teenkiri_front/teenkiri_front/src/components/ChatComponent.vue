@@ -1,11 +1,9 @@
 <template>
   <v-container class="chat-container">
-    <!-- 닫기 버튼 -->
     <v-btn icon @click="closeChat" class="close-button">
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
-    <!-- 채팅 메시지 -->
     <v-list class="chat-box">
       <v-list-item
         v-for="message in filteredMessages"
@@ -13,14 +11,13 @@
         :class="{'my-message': isMyMessage(message.senderId), 'other-message': !isMyMessage(message.senderId)}"
         class="message-item"
       >
-        <!-- 자신이 보낸 메시지에는 신고 버튼을 숨김 -->
         <v-btn v-if="!isMyMessage(message.senderId)" icon small class="report-button" @click="reportMessage(message)">
           <v-icon small>mdi-alarm-light-outline</v-icon>
         </v-btn>
         <v-list-item-content>
           <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
           <v-list-item-subtitle class="message-content">
-            {{ filterMessage(message.content) }} <!-- 필터링된 메시지 표시 -->
+            {{ filterMessage(message.content) }}
           </v-list-item-subtitle>
           <v-list-item-subtitle :class="['message-timestamp', { 'left-align': !isMyMessage(message.senderId) }]">
             {{ formatTime(message.createdTime) }}
@@ -29,7 +26,6 @@
       </v-list-item>
     </v-list>
 
-    <!-- 메시지 입력 및 전송 버튼 -->
     <div class="message-input-wrapper">
       <v-text-field
         v-model="newMessage"
@@ -42,7 +38,6 @@
       <v-btn @click="sendMessage" class="send-button" color="primary">전송</v-btn>
     </div>
 
-    <!-- 주제 선택 버튼 -->
     <div class="topic-buttons">
       <v-btn
         v-for="topic in topics"
@@ -55,16 +50,16 @@
       </v-btn>
     </div>
 
-    <!-- 신고 작성 모달 -->
     <ReportCreate v-if="showReportModal" :chatMessageId="selectedChatMessageId" @close="closeReportModal" />
   </v-container>
 </template>
 
 <script>
-import ReportCreate from '@/views/report/ReportCreate.vue'; // 모달 컴포넌트 임포트
+import ReportCreate from '@/views/report/ReportCreate.vue';
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -72,7 +67,7 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      userId: localStorage.getItem('userId'),
+      userId: null,  // Vuex에서 가져옴
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
       selectedChatMessageId: null,
@@ -84,21 +79,22 @@ export default {
         '/topic/social': '사회',
         '/topic/science': '과학',
       },
-      selectedTopic: '/topic/korean', // 기본 선택 주제
-      forbiddenWords: [], // 필터링할 금지된 단어 목록
+      selectedTopic: '/topic/korean',
+      forbiddenWords: [],
     };
   },
   computed: {
+    ...mapGetters('user', ['getUserId', 'getUserEmail']),
     filteredMessages() {
-      // 현재 선택된 주제에 맞는 메시지만 필터링
       const currentChannel = this.selectedTopic.replace('/topic/', '');
       return this.messages.filter(message => message.channel === currentChannel);
     }
   },
   mounted() {
+    this.userId = this.getUserId;  // Vuex에서 userId 가져오기
     this.loadChatHistory();
     this.connectWebSocket();
-    this.loadForbiddenWords(); // 금지된 단어 목록 로드
+    this.loadForbiddenWords();
   },
   methods: {
     async loadChatHistory() {
@@ -113,75 +109,49 @@ export default {
     },
     async loadForbiddenWords() {
       try {
-        const response = await axios.get('/badwords.txt'); // 로컬 경로에서 badwords.txt 파일을 불러옵니다.
-        this.forbiddenWords = response.data.split('\n').map(word => word.trim()).filter(word => word); // 줄바꿈을 기준으로 단어를 분리하고, 공백을 제거
-        
-        // 금지된 단어 목록을 콘솔에 출력하여 확인
+        const response = await axios.get('/badwords.txt');
+        this.forbiddenWords = response.data.split('\n').map(word => word.trim()).filter(word => word);
         console.log('Loaded forbidden words:', this.forbiddenWords);
       } catch (error) {
-        if (error.response && error.response.status === 404) {
-          console.error('Error 404: Resource not found. Please check the file path.');
-        } else {
-          console.error('An unexpected error occurred:', error.message);
-        }
+        console.error('금지된 단어를 로드하는 중 오류 발생:', error);
       }
     },
     connectWebSocket() {
       const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
       this.stompClient = Stomp.over(socket);
 
-      this.stompClient.connect({}, (frame) => {
+      this.stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
-
-        // 기본 주제를 구독합니다.
         this.subscribeToTopic(this.selectedTopic);
-      }, (error) => {
+      }, error => {
         console.error('웹소켓 연결 실패:', error);
       });
     },
     subscribeToTopic(topic) {
       if (this.stompClient) {
-        // 기존 구독을 해제합니다.
-        if (this.selectedTopic) {
-          this.stompClient.unsubscribe(this.selectedTopic);
-        }
-
-        // 새로운 주제에 대해서만 구독합니다.
+        // 구독 ID 저장
+        this.stompClient.unsubscribe(this.selectedTopic);
         this.selectedTopic = topic;
-        this.stompClient.subscribe(topic, (message) => {
+        this.stompClient.subscribe(topic, message => {
           const receivedMessage = JSON.parse(message.body);
-
-          // 메시지를 모두 추가합니다. 필터링은 computed 속성에서 수행
           this.messages.push(receivedMessage);
         });
       }
     },
     filterMessage(content) {
-  this.forbiddenWords.forEach(word => {
-    // 각 문자의 사이에 다양한 특수 문자가 올 수 있도록 허용하는 정규식
-    const regex = new RegExp(
-      word
-        .split('')
-        .map(char => `[${char}]+[^\\w\\s]*`)  // 각 글자 사이에 어떤 문자가 오든 필터링 되도록 처리
-        .join(''),
-      'gi'
-    );
-    content = content.replace(regex, '*'.repeat(word.length));
-  });
-
-  // 필터링된 내용을 콘솔에 출력하여 확인
-  console.log('Filtered content:', content);
-  return content;
-},
-
+      this.forbiddenWords.forEach(word => {
+        const regex = new RegExp(word.split('').map(char => `[${char}]+[^\\w\\s]*`).join(''), 'gi');
+        content = content.replace(regex, '*'.repeat(word.length));
+      });
+      return content;
+    },
     sendMessage() {
       if (!this.userId) {
-        console.error('User ID is not available in localStorage');
+        console.error('User ID is not available');
         return;
       }
 
-      // 채널이 올바르게 설정되어 있는지 확인
-      const channel = this.selectedTopic ? this.selectedTopic.replace('/topic/', '') : '';
+      const channel = this.selectedTopic.replace('/topic/', '');
       if (!channel) {
         console.error('Channel is not set.');
         alert('채널이 설정되지 않았습니다.');
@@ -189,21 +159,19 @@ export default {
       }
 
       if (this.stompClient && this.stompClient.connected) {
-        // 사용자가 입력한 메시지 내용을 필터링
         const filteredContent = this.filterMessage(this.newMessage);
-
         const message = {
-          content: filteredContent,  // 필터링된 내용을 사용
+          content: filteredContent,
           senderId: this.userId,
           channel: channel
         };
 
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
-        this.newMessage = '';  // 메시지를 전송한 후 입력창을 비웁니다.
+        this.newMessage = '';
       }
     },
     isMyMessage(senderId) {
-      return senderId == this.userId;
+      return senderId === this.userId;
     },
     formatTime(datetime) {
       const date = new Date(datetime);
