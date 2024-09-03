@@ -66,7 +66,7 @@ public class ChatService implements MessageListener {
         }
         return content;
     }
-    
+
     public ChatMessageDto saveMessage(ChatMessageDto chatMessageDto) {
         log.debug("Received email: {}", chatMessageDto.getEmail());
 
@@ -109,13 +109,13 @@ public class ChatService implements MessageListener {
 
     public List<ChatMessageDto> getAllMessages() {
         return chatRepository.findAll().stream()
-                .map(Chat::fromEntity)
+                .map(ChatMessageDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public List<ChatMessageDto> getMessagesSince(LocalDateTime since) {
         return chatRepository.findByCreatedTimeAfter(since).stream()
-                .map(Chat::fromEntity)
+                .map(ChatMessageDto::fromEntity)
                 .collect(Collectors.toList());
     }
 }
