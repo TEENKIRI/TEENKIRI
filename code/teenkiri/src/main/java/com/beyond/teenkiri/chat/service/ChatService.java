@@ -65,15 +65,19 @@ public class ChatService implements MessageListener {
         return content;
     }
 
+
     public ChatMessageDto saveMessage(ChatMessageDto chatMessageDto) {
+        log.debug("Attempting to save message for userEmail: {}", chatMessageDto.getUserEmail());
+
         User user = userRepository.findByEmail(chatMessageDto.getUserEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        log.debug("User found: {}", user.getEmail());
 
         String filteredContent = filterMessage(chatMessageDto.getContent());
         chatMessageDto.setContent(filteredContent);
 
         Chat chat = chatMessageDto.toEntity(user);
-
         Chat savedChat = chatRepository.save(chat);
 
         return Chat.fromEntity(savedChat);
