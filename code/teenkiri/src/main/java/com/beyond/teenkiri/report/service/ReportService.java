@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.report.service;
 
-import com.beyond.teenkiri.chat.domain.ChatMessage;
+import com.beyond.teenkiri.chat.domain.Chat;
 import com.beyond.teenkiri.chat.repository.ChatMessageRepository;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
@@ -67,7 +67,7 @@ public class ReportService {
         QnA qnA = null;
         Post post = null;
         Comment comment = null;
-        ChatMessage chatMessage = null;
+        Chat chat = null;
 
         // DTO에서 전달된 ID를 사용해 해당 엔티티들을 조회합니다.
         if (dto.getCommentId() != null) {
@@ -82,12 +82,12 @@ public class ReportService {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         } else if (dto.getChatMessageId() != null) {
-            chatMessage = chatMessageRepository.findById(dto.getChatMessageId())
+            chat = chatMessageRepository.findById(dto.getChatMessageId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 ChatMessage입니다."));
         }
 
         // Report 엔티티를 생성하고 데이터베이스에 저장합니다.
-        Report report = dto.toEntity(user, qnA, post, comment, chatMessage);
+        Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);
 
         // 관리자 이메일 목록을 조회합니다.
