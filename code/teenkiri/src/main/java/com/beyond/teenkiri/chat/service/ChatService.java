@@ -65,11 +65,15 @@ public class ChatService implements MessageListener {
         return content;
     }
 
-
     public ChatMessageDto saveMessage(ChatMessageDto chatMessageDto) {
-        log.debug("Received userEmail: {}", chatMessageDto.getUserEmail());
+        String senderEmail = chatMessageDto.getUserEmail();
+        log.debug("Sender Email received in saveMessage: {}", senderEmail);
 
-        User user = userRepository.findByEmail(chatMessageDto.getUserEmail())
+        if (senderEmail == null || senderEmail.isEmpty()) {
+            throw new IllegalArgumentException("Sender email is required");
+        }
+
+        User user = userRepository.findByEmailIgnoreCase(senderEmail)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         log.debug("User found: {}", user.getEmail());
@@ -82,6 +86,7 @@ public class ChatService implements MessageListener {
 
         return Chat.fromEntity(savedChat);
     }
+
 
 
     @Override

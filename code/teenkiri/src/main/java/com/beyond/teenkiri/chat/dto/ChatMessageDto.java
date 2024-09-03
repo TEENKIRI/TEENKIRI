@@ -2,13 +2,13 @@ package com.beyond.teenkiri.chat.dto;
 
 import com.beyond.teenkiri.chat.domain.Chat;
 import com.beyond.teenkiri.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatMessageDto {
     private Long id;
     private String content;

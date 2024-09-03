@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-alert v-if="!getUserId || !getUserEmail" type="error">
+    <v-alert v-if="!userId || !userEmail" type="error">
       유저 정보가 없습니다. 다시 로그인 해주세요.
     </v-alert>
 
-    <v-list v-if="getUserId && getUserEmail">
+    <v-list v-if="userId && userEmail">
       <v-list-item v-for="message in messages" :key="message.id">
         <v-list-item-content>
           <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
@@ -25,7 +25,6 @@
 <script>
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -34,26 +33,18 @@ export default {
       newMessage: '',
       stompClient: null,
       channel: 'science',  // 기본 채널 설정
+      userId: localStorage.getItem('userId'),
+      userEmail: localStorage.getItem('email'),
     };
   },
-  computed: {
-    ...mapGetters('user', ['getUserId', 'getUserEmail']),
-  },
-  created() {
-    this.$store.dispatch('setUserAllInfoActions');  // Vuex 상태 초기화
-    console.log('Created Hook - User ID:', this.getUserId);
-    console.log('Created Hook - User Email:', this.getUserEmail);
-
-    if (!this.getUserId || !this.getUserEmail) {
-        console.error("유저 정보가 없습니다. Vuex 상태를 확인해주세요.");
-    }
-  },
-
   mounted() {
-    this.connectWebSocket();
+    console.log('Mounted Hook - User ID:', this.userId);
+    console.log('Mounted Hook - User Email:', this.userEmail);
 
-    if (!this.getUserId || !this.getUserEmail) {
-      console.error("유저 정보가 없습니다. Vuex 상태를 확인해주세요.");
+    if (!this.userId || !this.userEmail) {
+      console.error("유저 정보가 없습니다.");
+    } else {
+      this.connectWebSocket();
     }
   },
   methods: {
@@ -70,18 +61,17 @@ export default {
       });
     },
     sendMessage() {
-      if (!this.getUserId || !this.getUserEmail) {
+      if (!this.userId || !this.userEmail) {
         console.error("유저 정보가 없습니다.");
         return;
       }
 
       const message = {
         content: this.newMessage,
-        senderId: this.getUserId,
-        senderEmail: this.getUserEmail,
+        senderId: this.userId,
+        senderEmail: this.userEmail,
         channel: this.channel,
       };
-
       console.log('Sending message:', message);  
 
       if (this.stompClient && this.stompClient.connected) {

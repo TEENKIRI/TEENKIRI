@@ -59,7 +59,6 @@ import ReportCreate from '@/views/report/ReportCreate.vue';
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -67,7 +66,8 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      userId: null,  // Vuex에서 가져옴
+      userId: localStorage.getItem('userId'),
+      userEmail: localStorage.getItem('email'),
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
       selectedChatMessageId: null,
@@ -84,14 +84,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getUserId', 'getUserEmail']),
     filteredMessages() {
       const currentChannel = this.selectedTopic.replace('/topic/', '');
       return this.messages.filter(message => message.channel === currentChannel);
     }
   },
   mounted() {
-    this.userId = this.getUserId;  // Vuex에서 userId 가져오기
     this.loadChatHistory();
     this.connectWebSocket();
     this.loadForbiddenWords();
@@ -117,6 +115,11 @@ export default {
       }
     },
     connectWebSocket() {
+      if (!this.userId || !this.userEmail) {
+        console.error('User ID or Email is not available');
+        return;
+      }
+
       const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
       this.stompClient = Stomp.over(socket);
 
@@ -146,30 +149,37 @@ export default {
       return content;
     },
     sendMessage() {
-      if (!this.userId) {
-        console.error('User ID is not available');
-        return;
-      }
+   // localStorage에서 직접 값을 가져옵니다.
+   const senderId = localStorage.getItem('userId');
+   const senderEmail = localStorage.getItem('email');
 
-      const channel = this.selectedTopic.replace('/topic/', '');
-      if (!channel) {
-        console.error('Channel is not set.');
-        alert('채널이 설정되지 않았습니다.');
-        return;
-      }
+   if (!senderId) {
+     console.error('User ID is not available');
+     return;
+   }
 
-      if (this.stompClient && this.stompClient.connected) {
-        const filteredContent = this.filterMessage(this.newMessage);
-        const message = {
-          content: filteredContent,
-          senderId: this.userId,
-          channel: channel
-        };
+   const channel = this.selectedTopic.replace('/topic/', '');
+   if (!channel) {
+     console.error('Channel is not set.');
+     alert('채널이 설정되지 않았습니다.');
+     return;
+   }
 
-        this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
-        this.newMessage = '';
-      }
-    },
+   if (this.stompClient && this.stompClient.connected) {
+     const filteredContent = this.filterMessage(this.newMessage);
+     const message = {
+       content: filteredContent,
+       senderId: senderId, 
+       senderEmail: senderEmail, 
+       channel: channel
+     };
+     console.log('Sending message:', message);
+
+     this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
+     this.newMessage = '';
+   }
+ },
+
     isMyMessage(senderId) {
       return senderId === this.userId;
     },
