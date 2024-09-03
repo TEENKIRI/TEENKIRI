@@ -28,7 +28,7 @@
                 label="핸드폰 번호"
                 v-model="userEditInfo.phone"
                 prepend-icon="mdi-phone"
-                disabled
+                required
               ></v-text-field>
 
               <!-- 주소 필드 -->

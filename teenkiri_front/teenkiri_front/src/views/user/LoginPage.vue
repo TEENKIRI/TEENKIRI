@@ -30,43 +30,39 @@
                           ></v-checkbox>
                           <v-btn block type="submit" color="primary">로그인</v-btn>
                           <v-divider class="my-4"></v-divider>
-                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
-                            <v-btn 
-                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
+                          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 5px;">
+                            <v-btn
+                              style="flex: 1; height: auto; padding: 0; border: none; display: flex; justify-content: center; align-items: center;"
                               @click="googleLogin"
                             >
-                              <img 
+                              <img
                                 :src="require('@/assets/images/google.png')"
                                 alt="Google"
-                                style="max-width: 85%; height: 60px; object-fit: contain;"
+                                style="width: 100%; height: auto; object-fit: contain;"
                               />
                             </v-btn>
-                            
-                          </div>
-                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
-                            <v-btn 
-                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
-                              @click="kakaoLogin"
+                            <v-btn
+                                style="flex: 1; height: auto; padding: 0; border: none; display: flex; justify-content: center; align-items: center;"
+                                @click="kakaoLogin"
                             >
-                              <img 
+                            <img
                                 :src="require('@/assets/images/kakao_login_medium_narrow.png')"
-                                alt="Google"
-                                style="max-width: 85%; height: 60px; object-fit: contain;"
-                              />
+                                alt="Kakao"
+                                style="width: 100%; height: auto; object-fit: contain;"
+                            />
                             </v-btn>
-                          </div>
-                          <div style="display: flex; justify-content: center; align-items: center; height: 7vh;">
-                            <v-btn 
-                              style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;" 
+                            <v-btn
+                              style="flex: 1; height: auto; padding: 0; border: none; display: flex; justify-content: center; align-items: center;"
                               @click="naverLogin"
                             >
-                              <img 
+                              <img
                                 :src="require('@/assets/images/naver_login_medium_narrow.png')"
                                 alt="NAVER"
-                                style="max-width: 85%; height: 60px; object-fit: contain;"
+                                style="width: 100%; height: auto; object-fit: contain;"
                               />
                             </v-btn>
-                          </div>
+                        </div>
+
                           <v-divider class="my-4"></v-divider>
                           <v-list>
                               <v-list-item @click="findId">
