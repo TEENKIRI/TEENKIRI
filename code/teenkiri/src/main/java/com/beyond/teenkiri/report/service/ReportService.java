@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.report.service;
 
 import com.beyond.teenkiri.chat.domain.Chat;
-import com.beyond.teenkiri.chat.repository.ChatMessageRepository;
+import com.beyond.teenkiri.chat.repository.ChatRepository;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.notification.controller.SseController;
@@ -39,19 +39,19 @@ public class ReportService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final ChatMessageRepository chatMessageRepository;
+    private final ChatRepository chatRepository;
     private final NotificationRepository notificationRepository;
     private final SseController sseController;
 
     @Autowired
-    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatMessageRepository chatMessageRepository, NotificationRepository notificationRepository, SseController sseController) {
+    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatRepository chatRepository, NotificationRepository notificationRepository, SseController sseController) {
         this.reportRepository = reportRepository;
         this.userService = userService;
         this.qnARepository = qnARepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
-        this.chatMessageRepository = chatMessageRepository;
+        this.chatRepository = chatRepository;
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
     }
@@ -82,7 +82,7 @@ public class ReportService {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         } else if (dto.getChatMessageId() != null) {
-            chat = chatMessageRepository.findById(dto.getChatMessageId())
+            chat = chatRepository.findById(dto.getChatMessageId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 ChatMessage입니다."));
         }
 

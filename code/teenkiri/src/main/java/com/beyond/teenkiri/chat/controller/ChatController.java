@@ -5,7 +5,6 @@ import com.beyond.teenkiri.chat.service.ChatService;
 import com.beyond.teenkiri.chat.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,7 +17,6 @@ public class ChatController {
 
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
-    private final SimpMessageSendingOperations messagingTemplate;
 
     private static final Map<String, String> CHANNEL_TOPIC_MAP = new HashMap<>();
 
@@ -46,27 +44,6 @@ public class ChatController {
 
         ChatMessageDto savedMessage = chatService.saveMessage(chatMessageDto);
         redisPublisher.publishMessage(topic, savedMessage);
-    }
-
-    @GetMapping("/subscribe/{channel}")
-    public void subscribe(@PathVariable String channel) {
-        String topic = CHANNEL_TOPIC_MAP.getOrDefault(channel, null);
-
-        if (topic == null) {
-            throw new IllegalArgumentException("Invalid channel: " + channel);
-        }
-
-        messagingTemplate.convertAndSend(topic, "Subscribed to " + channel);
-    }
-
-    @PostMapping("/onMessage")
-    public void onMessage(@RequestBody ChatMessageDto chatMessageDto) {
-        String topic = CHANNEL_TOPIC_MAP.getOrDefault(chatMessageDto.getChannel(), null);
-
-        if (topic == null) {
-            throw new IllegalArgumentException("Invalid channel: " + chatMessageDto.getChannel());
-        }
-        messagingTemplate.convertAndSend(topic, chatMessageDto);
     }
 
     @PostMapping("/publish/{channel}")
