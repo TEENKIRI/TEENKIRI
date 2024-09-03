@@ -119,15 +119,17 @@ export default {
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, frame => {
-      console.log('Connected: ' + frame);
-      this.stompClient.subscribe(`/topic/${this.channel}`, message => {
-        const receivedMessage = JSON.parse(message.body);
-        this.messages.push(receivedMessage); 
-      });
+        console.log('Connected: ' + frame);
+        this.stompClient.subscribe(`/topic/${this.selectedTopic.replace('/topic/', '')}`, message => {
+            const receivedMessage = JSON.parse(message.body);
+            console.log('Received message:', receivedMessage);
+            this.messages.push(receivedMessage);
+        });
     }, error => {
-      console.error('웹소켓 연결 실패:', error);
+        console.error('웹소켓 연결 실패:', error);
     });
-  },
+},
+
     subscribeToTopic(topic) {
       if (this.stompClient) {
         this.stompClient.unsubscribe(this.selectedTopic);
@@ -168,6 +170,7 @@ export default {
         };
 
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
+        
         this.messages.push({
         ...message,
         senderNickname: 'You', 

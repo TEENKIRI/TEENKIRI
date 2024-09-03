@@ -13,6 +13,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +39,7 @@ public class ChatService implements MessageListener {
     private final ObjectMapper objectMapper;
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate; // 추가된 부분
 
     private Set<Pattern> forbiddenWordsPatterns = new HashSet<>();
 
@@ -83,6 +85,8 @@ public class ChatService implements MessageListener {
         Chat chat = chatMessageDto.toEntity(user);
         Chat savedChat = chatRepository.save(chat);
 
+        messagingTemplate.convertAndSend("/topic/" + chatMessageDto.getChannel(), Chat.fromEntity(savedChat));
+
         return Chat.fromEntity(savedChat);
     }
 
@@ -92,6 +96,8 @@ public class ChatService implements MessageListener {
             String msg = new String(message.getBody());
             ChatMessageDto chatMessageDto = objectMapper.readValue(msg, ChatMessageDto.class);
             log.info("Received message from Redis: {}", chatMessageDto);
+
+            messagingTemplate.convertAndSend("/topic/" + chatMessageDto.getChannel(), chatMessageDto);
 
         } catch (Exception e) {
             log.error("Failed to process received message", e);
