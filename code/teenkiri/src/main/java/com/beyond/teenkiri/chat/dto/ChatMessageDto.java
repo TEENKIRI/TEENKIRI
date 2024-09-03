@@ -13,6 +13,7 @@ public class ChatMessageDto {
     private Long id;
     private String content;
     private String email;
+    private String senderNickname;
     private String createdTime;
     private String channel;
 
@@ -21,6 +22,17 @@ public class ChatMessageDto {
                 .content(this.content)
                 .user(user)
                 .channel(this.channel)
+                .build();
+    }
+
+    public static ChatMessageDto fromEntity(Chat chat) {
+        return ChatMessageDto.builder()
+                .id(chat.getId())
+                .content(chat.getContent())
+                .email(chat.getUser().getEmail())
+                .senderNickname(chat.getUser().getNickname())
+                .createdTime(chat.getCreatedTime().toString())
+                .channel(chat.getChannel())
                 .build();
     }
 }

@@ -4,22 +4,33 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
-    <v-list class="chat-box">
+    <v-list ref="chatBox" class="chat-box">
       <v-list-item
         v-for="message in filteredMessages"
         :key="message.id"
-        :class="{'my-message': isMyMessage(message.senderId), 'other-message': !isMyMessage(message.senderId)}"
+        :class="{
+          'my-message': isMyMessage(message.senderId),
+          'other-message': !isMyMessage(message.senderId)
+        }"
         class="message-item"
       >
-        <v-btn v-if="!isMyMessage(message.senderId)" icon small class="report-button" @click="reportMessage(message)">
+        <v-btn
+          v-if="!isMyMessage(message.senderId)"
+          icon
+          small
+          class="report-button"
+          @click="reportMessage(message)"
+        >
           <v-icon small>mdi-alarm-light-outline</v-icon>
         </v-btn>
         <v-list-item-content>
-          <v-list-item-title>{{ message.senderNickname }}</v-list-item-title>
+          <v-list-item-title>{{ message.senderNickname || "Unknown" }}</v-list-item-title>
           <v-list-item-subtitle class="message-content">
             {{ filterMessage(message.content) }}
           </v-list-item-subtitle>
-          <v-list-item-subtitle :class="['message-timestamp', { 'left-align': !isMyMessage(message.senderId) }]">
+          <v-list-item-subtitle
+            :class="['message-timestamp', { 'left-align': !isMyMessage(message.senderId) }]"
+          >
             {{ formatTime(message.createdTime) }}
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -43,14 +54,18 @@
         v-for="topic in topics"
         :key="topic"
         @click="subscribeToTopic(topic)"
-        :class="{'selected-topic': selectedTopic === topic}"
+        :class="{ 'selected-topic': selectedTopic === topic }"
         class="topic-button"
       >
         {{ topicNames[topic] }}
       </v-btn>
     </div>
 
-    <ReportCreate v-if="showReportModal" :chatMessageId="selectedChatMessageId" @close="closeReportModal" />
+    <ReportCreate
+      v-if="showReportModal"
+      :chatMessageId="selectedChatMessageId"
+      @close="closeReportModal"
+    />
   </v-container>
 </template>
 
@@ -71,16 +86,22 @@ export default {
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
       selectedChatMessageId: null,
-      topics: ['/topic/korean', '/topic/english', '/topic/math', '/topic/social', '/topic/science'],
+      topics: [
+        '/topic/korean',
+        '/topic/english',
+        '/topic/math',
+        '/topic/social',
+        '/topic/science'
+      ],
       topicNames: {
         '/topic/korean': '국어',
         '/topic/english': '영어',
         '/topic/math': '수학',
         '/topic/social': '사회',
-        '/topic/science': '과학',
+        '/topic/science': '과학'
       },
       selectedTopic: '/topic/korean',
-      forbiddenWords: [],
+      forbiddenWords: []
     };
   },
   computed: {
@@ -93,14 +114,19 @@ export default {
     this.loadChatHistory();
     this.connectWebSocket();
     this.loadForbiddenWords();
+    this.scrollToBottom(); // 초기 로드 시 맨 밑으로 스크롤
   },
   methods: {
     async loadChatHistory() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/chat/messages`, {
-          params: { since: this.loginTime },
-        });
+        const response = await axios.get(
+          `${process.env.VUE_APP_API_BASE_URL}/api/chat/messages`,
+          {
+            params: { since: this.loginTime }
+          }
+        );
         this.messages = response.data;
+        this.scrollToBottom(); // 채팅 기록을 불러온 후 맨 밑으로 스크롤
       } catch (error) {
         console.error('채팅 기록을 불러오는 중 오류 발생:', error);
       }
@@ -108,28 +134,30 @@ export default {
     async loadForbiddenWords() {
       try {
         const response = await axios.get('/badwords.txt');
-        this.forbiddenWords = response.data.split('\n').map(word => word.trim()).filter(word => word);
+        this.forbiddenWords = response.data
+          .split('\n')
+          .map(word => word.trim())
+          .filter(word => word);
         console.log('Loaded forbidden words:', this.forbiddenWords);
       } catch (error) {
         console.error('금지된 단어를 로드하는 중 오류 발생:', error);
       }
     },
     connectWebSocket() {
-    const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
-    this.stompClient = Stomp.over(socket);
+      const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
+      this.stompClient = Stomp.over(socket);
 
-    this.stompClient.connect({}, frame => {
-        console.log('Connected: ' + frame);
-        this.stompClient.subscribe(`/topic/${this.selectedTopic.replace('/topic/', '')}`, message => {
-            const receivedMessage = JSON.parse(message.body);
-            console.log('Received message:', receivedMessage);
-            this.messages.push(receivedMessage);
-        });
-    }, error => {
-        console.error('웹소켓 연결 실패:', error);
-    });
-},
-
+      this.stompClient.connect(
+        {},
+        frame => {
+          console.log('Connected: ' + frame);
+          this.subscribeToTopic(this.selectedTopic);
+        },
+        error => {
+          console.error('웹소켓 연결 실패:', error);
+        }
+      );
+    },
     subscribeToTopic(topic) {
       if (this.stompClient) {
         this.stompClient.unsubscribe(this.selectedTopic);
@@ -137,12 +165,19 @@ export default {
         this.stompClient.subscribe(topic, message => {
           const receivedMessage = JSON.parse(message.body);
           this.messages.push(receivedMessage);
+          this.scrollToBottom(); // 새 메시지가 도착할 때 스크롤
         });
       }
     },
     filterMessage(content) {
       this.forbiddenWords.forEach(word => {
-        const regex = new RegExp(word.split('').map(char => `[${char}]+[^\\w\\s]*`).join(''), 'gi');
+        const regex = new RegExp(
+          word
+            .split('')
+            .map(char => `[${char}]+[^\\w\\s]*`)
+            .join(''),
+          'gi'
+        );
         content = content.replace(regex, '*'.repeat(word.length));
       });
       return content;
@@ -170,12 +205,14 @@ export default {
         };
 
         this.stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(message));
-        
+
+        // 자신의 메시지 추가
         this.messages.push({
-        ...message,
-        senderNickname: 'You', 
-        createdTime: new Date().toISOString() 
-      });
+          ...message,
+          senderNickname: 'You',
+          createdTime: new Date().toISOString()
+        });
+        this.scrollToBottom(); // 메시지 보낸 후 스크롤
         this.newMessage = '';
       }
     },
@@ -187,7 +224,7 @@ export default {
       return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
     },
     closeChat() {
-      console.log("Chat closed");
+      console.log('Chat closed');
     },
     reportMessage(message) {
       this.selectedChatMessageId = message.id;
@@ -195,10 +232,16 @@ export default {
     },
     closeReportModal() {
       this.showReportModal = false;
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatBox = this.$refs.chatBox;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
     }
   },
   components: {
-    ReportCreate,
+    ReportCreate
   }
 };
 </script>

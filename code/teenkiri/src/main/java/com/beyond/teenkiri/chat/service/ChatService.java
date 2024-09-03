@@ -73,22 +73,20 @@ public class ChatService implements MessageListener {
         if (chatMessageDto.getEmail() == null || chatMessageDto.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email is required");
         }
-
         User user = userRepository.findByEmailIgnoreCase(chatMessageDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         log.debug("User found: {}", user.getEmail());
-
         String filteredContent = filterMessage(chatMessageDto.getContent());
         chatMessageDto.setContent(filteredContent);
 
         Chat chat = chatMessageDto.toEntity(user);
         Chat savedChat = chatRepository.save(chat);
-
-        messagingTemplate.convertAndSend("/topic/" + chatMessageDto.getChannel(), Chat.fromEntity(savedChat));
-
-        return Chat.fromEntity(savedChat);
+        ChatMessageDto responseMessage = ChatMessageDto.fromEntity(savedChat);
+        messagingTemplate.convertAndSend("/topic/" + chatMessageDto.getChannel(), responseMessage);
+        return responseMessage;
     }
+
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
