@@ -83,7 +83,7 @@ public class ReportService {
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
         } else if (dto.getChatMessageId() != null) {
             chat = chatRepository.findById(dto.getChatMessageId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 ChatMessage입니다."));
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
         }
 
         // Report 엔티티를 생성하고 데이터베이스에 저장합니다.

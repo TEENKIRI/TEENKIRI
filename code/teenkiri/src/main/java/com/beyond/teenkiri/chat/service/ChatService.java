@@ -58,7 +58,7 @@ public class ChatService implements MessageListener {
         }
     }
 
-    private String filterMessage(String content) {
+    public String filterMessage(String content) {
         for (Pattern pattern : forbiddenWordsPatterns) {
             content = pattern.matcher(content).replaceAll(m -> "*".repeat(m.group().length()));
         }
