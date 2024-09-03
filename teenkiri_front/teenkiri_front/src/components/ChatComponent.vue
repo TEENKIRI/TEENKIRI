@@ -9,13 +9,13 @@
         v-for="message in filteredMessages"
         :key="message.id"
         :class="{
-          'my-message': isMyMessage(message.senderId),
-          'other-message': !isMyMessage(message.senderId)
+          'my-message': isMyMessage(message),
+          'other-message': !isMyMessage(message)
         }"
         class="message-item"
       >
         <v-btn
-          v-if="!isMyMessage(message.senderId)"
+          v-if="!isMyMessage(message)"
           icon
           small
           class="report-button"
@@ -81,8 +81,8 @@ export default {
       messages: [],
       newMessage: '',
       stompClient: null,
-      userId: localStorage.getItem('userId'),  // 현재 사용자의 userId
-      email: localStorage.getItem('email'),
+      email: localStorage.getItem('email'),  
+      userId: localStorage.getItem('userId'),
       nickname: localStorage.getItem('nickname'),
       loginTime: new Date().toISOString().slice(0, 19),
       showReportModal: false,
@@ -187,8 +187,8 @@ export default {
       return content;
     },
     sendMessage() {
-      if (!this.userId || !this.email) {
-        console.error('User ID or Email is not available');
+      if (!this.email) {
+        console.error('Email is not available');
         return;
       }
 
@@ -203,8 +203,8 @@ export default {
         const filteredContent = this.filterMessage(this.newMessage);
         const message = {
           content: filteredContent,
-          senderId: this.userId,  // 메시지에 현재 사용자의 userId를 포함시킵니다.
-          email: this.email,
+          senderId: this.userId,
+          email: this.email,  // email을 메시지에 포함시킵니다.
           channel: channel,
           senderNickname: this.nickname,
         };
@@ -224,8 +224,12 @@ export default {
         }
       });
     },
-    isMyMessage(senderId) {  // userId로 메시지의 발신자를 비교합니다.
-      return senderId === this.userId;
+    isMyMessage(message) {  
+        if (!message || typeof message.email === 'undefined') {
+            console.error('Message object or email is undefined:', message);
+            return false; 
+        }
+        return message.email === this.email; 
     },
     formatTime(datetime) {
       const date = new Date(datetime);
