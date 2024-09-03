@@ -4,6 +4,7 @@ package com.beyond.teenkiri.user.service;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -38,16 +39,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // OAuth2UserSevice를 통해 가져온 OAuth2User의 attribute를 저장
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                 userNameAttributeName, oAuth2User.getAttributes());
-//        System.out.println("att!!!!!!!"+attributes);
-//
-//        System.out.println("!!!!!!!!!!!!!!!");
-//        System.out.println("att!!!!!!!"+attributes.toString());
-//        System.out.println(attributes.getEmail());
-
 
         User user = null;
         if ("kakao".equals(registrationId)) {
             user = kakaoSaveOrUpdate(attributes);
+        }else {
+            user = saveOrUpdate(attributes);
+        }
+        if ("naver".equals(registrationId)) {
+            user = naverSaveOrUpdate(attributes);
         }else {
             user = saveOrUpdate(attributes);
         }
@@ -90,5 +90,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .orElse(attributes.toEntity());
 
         return userRepository.save(user);
+    }
+    private User naverSaveOrUpdate(OAuthAttributes attributes){
+        User user = userRepository.findByEmail(attributes.getEmail())
+                .map(entity -> entity.update(attributes.getName()))
+                .orElse(attributes.toEntity());
+        return  userRepository.save(user);
     }
 }
