@@ -10,9 +10,11 @@ import com.beyond.teenkiri.qna.dto.QnAListResDto;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 
 import com.beyond.teenkiri.user.config.JwtTokenprovider;
+import com.beyond.teenkiri.user.domain.DelUser;
 import com.beyond.teenkiri.user.domain.Role;
 import com.beyond.teenkiri.user.domain.User;
 import com.beyond.teenkiri.user.dto.*;
+import com.beyond.teenkiri.user.repository.DelUserRepository;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,6 +56,10 @@ public class UserService {
     private QnARepository qnARepository;
 
     @Autowired
+    private DelUserRepository delUserRepository;
+
+
+    @Autowired
     private NotificationRepository notificationRepository;
 
     private final SimpMessagingTemplate messagingTemplate;
@@ -61,14 +67,23 @@ public class UserService {
     public UserService(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
-
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("잘못된 이메일/비밀번호 입니다."));
 
+        if (delUserRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("영구 정지된 계정입니다.");
+        }
+
         if (user.getReportCount() >= 5) {
-            user.setDelYN(DelYN.Y);
+            String email = user.getEmail();
+            user = user.deleteEmail(); // 이메일 삭제
             userRepository.save(user);
+
+            // del_user 테이블에 이메일 삽입
+            DelUser delUser = DelUser.toEntity(email);
+            delUserRepository.save(delUser);
+
             throw new RuntimeException("해당 계정은 비활성화 상태입니다.");
         }
 

@@ -116,4 +116,14 @@ public class User extends BaseTimeEntity {
         this.name = name;
         return this;
     }
+
+    public User deleteEmail() {
+        this.email = null;
+        this.delYN = DelYN.Y;
+        return this;
+    }
+    public User increaseReportCount() {
+        this.reportCount += 1;
+        return this;
+    }
 }

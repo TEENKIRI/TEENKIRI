@@ -4,6 +4,7 @@ import com.beyond.teenkiri.chat.domain.Chat;
 import com.beyond.teenkiri.chat.repository.ChatRepository;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
+import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.controller.SseController;
 import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.repository.NotificationRepository;
@@ -15,7 +16,9 @@ import com.beyond.teenkiri.report.domain.Report;
 import com.beyond.teenkiri.report.dto.ReportListResDto;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.repository.ReportRepository;
+import com.beyond.teenkiri.user.domain.DelUser;
 import com.beyond.teenkiri.user.domain.User;
+import com.beyond.teenkiri.user.repository.DelUserRepository;
 import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +45,10 @@ public class ReportService {
     private final ChatRepository chatRepository;
     private final NotificationRepository notificationRepository;
     private final SseController sseController;
+    private final DelUserRepository delUserRepository;
 
     @Autowired
-    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatRepository chatRepository, NotificationRepository notificationRepository, SseController sseController) {
+    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatRepository chatRepository, NotificationRepository notificationRepository, SseController sseController, DelUserRepository delUserRepository) {
         this.reportRepository = reportRepository;
         this.userService = userService;
         this.qnARepository = qnARepository;
@@ -54,7 +58,10 @@ public class ReportService {
         this.chatRepository = chatRepository;
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
+        this.delUserRepository = delUserRepository;
     }
+
+
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -87,10 +94,23 @@ public class ReportService {
             suspectUser = chat.getUser();
         }
 
+
         if (suspectUser != null) {
             suspectUser.setReportCount(suspectUser.getReportCount() + 1); // reportCount 증가
-            userRepository.save(suspectUser);
+
+            if (suspectUser.getReportCount() >= 5) {
+                String email = suspectUser.getEmail();
+                suspectUser.setEmail(null);
+                suspectUser.setDelYN(DelYN.Y);
+                userRepository.save(suspectUser);
+
+                DelUser delUser = DelUser.toEntity(email);
+                delUserRepository.save(delUser);
+            } else {
+                userRepository.save(suspectUser);
+            }
         }
+
 
         Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);
