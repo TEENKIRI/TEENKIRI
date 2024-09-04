@@ -137,18 +137,20 @@ public class Report extends BaseTimeEntity {
                 .build();
     }
 
-
-    private String determineSuspectEmail() {
+    public String determineSuspectEmail() {
         if (this.qna != null) {
             return this.qna.getUser().getEmail();
         } else if (this.post != null) {
             return this.post.getUser().getEmail();
         } else if (this.comment != null) {
             return this.comment.getUser().getEmail();
+        } else if (this.chat != null) {
+            return this.chat.getUser().getEmail();
         } else {
             return null;
         }
     }
+
 }
 
 

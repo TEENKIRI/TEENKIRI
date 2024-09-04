@@ -55,42 +55,45 @@ public class ReportService {
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
     }
-
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto) {
-        // SecurityContextHolder에서 현재 인증된 사용자의 이메일을 가져옵니다.
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        // 이메일을 기반으로 User 객체를 조회합니다.
         User user = userService.findByEmail(userEmail);
 
-        // 신고 대상 엔티티들을 각각 초기화합니다.
         QnA qnA = null;
         Post post = null;
         Comment comment = null;
         Chat chat = null;
+        String suspectEmail = null;
 
-        // DTO에서 전달된 ID를 사용해 해당 엔티티들을 조회합니다.
         if (dto.getCommentId() != null) {
             comment = commentRepository.findById(dto.getCommentId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
             post = comment.getPost();
             qnA = comment.getQna();
+            suspectEmail = comment.getUser().getEmail();
         } else if (dto.getPostId() != null) {
             post = postRepository.findById(dto.getPostId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
+            suspectEmail = post.getUser().getEmail();
         } else if (dto.getQnaId() != null) {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
+            suspectEmail = qnA.getUser().getEmail();
         } else if (dto.getChatMessageId() != null) {
-            chat = chatRepository.findById(dto.getChatMessageId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
-        }
+                chat = chatRepository.findById(dto.getChatMessageId())
+                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
+                if (chat.getUser() == null) {
+                    throw new IllegalStateException("Chat에 연관된 User가 없습니다.");
+                }
+                suspectEmail = chat.getUser().getEmail();
+                System.out.println("피신고자 이메일 (채팅): " + suspectEmail);
+            }
 
-        // Report 엔티티를 생성하고 데이터베이스에 저장합니다.
+
         Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);
 
-        // 관리자 이메일 목록을 조회합니다.
         List<String> adminEmails = userRepository.findAllAdminEmails();
 
         List<String> filteredAdminEmails = adminEmails.stream()

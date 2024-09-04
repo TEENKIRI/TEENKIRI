@@ -8,6 +8,7 @@ import com.beyond.teenkiri.qna.domain.QnA;
 import com.beyond.teenkiri.qna.repository.QnARepository;
 import com.beyond.teenkiri.post.domain.Post;
 import com.beyond.teenkiri.post.repository.PostRepository;
+import com.beyond.teenkiri.report.domain.Report;
 import com.beyond.teenkiri.report.dto.ReportSaveReqDto;
 import com.beyond.teenkiri.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,7 @@ public class ReportController {
             return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
