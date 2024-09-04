@@ -64,32 +64,33 @@ public class ReportService {
         Post post = null;
         Comment comment = null;
         Chat chat = null;
-        String suspectEmail = null;
+        User suspectUser = null;
 
         if (dto.getCommentId() != null) {
             comment = commentRepository.findById(dto.getCommentId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
-            post = comment.getPost();
-            qnA = comment.getQna();
-            suspectEmail = comment.getUser().getEmail();
+            suspectUser = comment.getUser();
         } else if (dto.getPostId() != null) {
             post = postRepository.findById(dto.getPostId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Post입니다."));
-            suspectEmail = post.getUser().getEmail();
+            suspectUser = post.getUser();
         } else if (dto.getQnaId() != null) {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-            suspectEmail = qnA.getUser().getEmail();
+            suspectUser = qnA.getUser();
         } else if (dto.getChatMessageId() != null) {
-                chat = chatRepository.findById(dto.getChatMessageId())
-                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
-                if (chat.getUser() == null) {
-                    throw new IllegalStateException("Chat에 연관된 User가 없습니다.");
-                }
-                suspectEmail = chat.getUser().getEmail();
-                System.out.println("피신고자 이메일 (채팅): " + suspectEmail);
+            chat = chatRepository.findById(dto.getChatMessageId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
+            if (chat.getUser() == null) {
+                throw new IllegalStateException("Chat에 연관된 User가 없습니다.");
             }
+            suspectUser = chat.getUser();
+        }
 
+        if (suspectUser != null) {
+            suspectUser.setReportCount(suspectUser.getReportCount() + 1); // reportCount 증가
+            userRepository.save(suspectUser);
+        }
 
         Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);
@@ -109,6 +110,7 @@ public class ReportService {
 
         return report;
     }
+
 
     public Page<ReportListResDto> reportList(Pageable pageable, String type) {
         Page<Report> reports;
