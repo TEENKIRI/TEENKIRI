@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportSaveReqDto {
-    private User user;
     private String reportEmail;
     private String suspectEmail;
     private Reason reason;
@@ -26,21 +25,21 @@ public class ReportSaveReqDto {
     private Long postId;
     private Long commentId;
     private Long chatMessageId;
-    private String details;  // 상세 내용 추가
+    private String details;
 
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
     public Report toEntity(User user, QnA qna, Post post, Comment comment, Chat chat) {
         return Report.builder()
-                .user(this.user)
+                .user(user)
                 .reason(this.reason)
                 .qna(qna)
                 .post(post)
                 .delYN(this.delYN)
                 .comment(comment)
                 .chat(chat)
-                .details(this.details)  // 상세 내용 저장
+                .details(this.details)
                 .build();
     }
 }

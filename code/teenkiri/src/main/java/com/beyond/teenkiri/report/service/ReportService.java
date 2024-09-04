@@ -93,12 +93,10 @@ public class ReportService {
         // 관리자 이메일 목록을 조회합니다.
         List<String> adminEmails = userRepository.findAllAdminEmails();
 
-        // 'admin'으로 시작하는 이메일을 필터링합니다.
         List<String> filteredAdminEmails = adminEmails.stream()
                 .filter(email -> email.startsWith("admin"))
                 .collect(Collectors.toList());
 
-        // 각 관리자에게 알림을 전송합니다.
         for (String email : filteredAdminEmails) {
             Notification notification = new Notification();
             notification = notification.saveDto(null, null, report.getId(), email, report.getReason() + "으로 신고가 접수되었습니다.");
@@ -112,7 +110,6 @@ public class ReportService {
     public Page<ReportListResDto> reportList(Pageable pageable, String type) {
         Page<Report> reports;
 
-        // 신고 유형에 따라 적절한 리스트를 조회합니다.
         if ("qna".equals(type)) {
             reports = reportRepository.findByQnaIsNotNull(pageable);
         } else if ("post".equals(type)) {
@@ -123,7 +120,6 @@ public class ReportService {
             reports = reportRepository.findAll(pageable);
         }
 
-        // 조회된 Report 엔티티들을 DTO로 변환하여 반환합니다.
         return reports.map(Report::listFromEntity);
     }
 }
