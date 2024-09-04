@@ -1,7 +1,7 @@
 package com.beyond.teenkiri.report.service;
 
-import com.beyond.teenkiri.chat.domain.ChatMessage;
-import com.beyond.teenkiri.chat.repository.ChatMessageRepository;
+import com.beyond.teenkiri.chat.domain.Chat;
+import com.beyond.teenkiri.chat.repository.ChatRepository;
 import com.beyond.teenkiri.comment.domain.Comment;
 import com.beyond.teenkiri.comment.repository.CommentRepository;
 import com.beyond.teenkiri.notification.controller.SseController;
@@ -32,38 +32,44 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class ReportService {
+
     private final UserService userService;
     private final ReportRepository reportRepository;
     private final QnARepository qnARepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final ChatMessageRepository chatMessageRepository;
+    private final ChatRepository chatRepository;
     private final NotificationRepository notificationRepository;
     private final SseController sseController;
 
     @Autowired
-    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatMessageRepository chatMessageRepository, NotificationRepository notificationRepository, SseController sseController) {
+    public ReportService(ReportRepository reportRepository, UserService userService, QnARepository qnARepository, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository, ChatRepository chatRepository, NotificationRepository notificationRepository, SseController sseController) {
         this.reportRepository = reportRepository;
         this.userService = userService;
         this.qnARepository = qnARepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
-        this.chatMessageRepository = chatMessageRepository;
+        this.chatRepository = chatRepository;
         this.notificationRepository = notificationRepository;
         this.sseController = sseController;
     }
 
     @Transactional
     public Report reportCreate(ReportSaveReqDto dto) {
+        // SecurityContextHolder에서 현재 인증된 사용자의 이메일을 가져옵니다.
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 이메일을 기반으로 User 객체를 조회합니다.
         User user = userService.findByEmail(userEmail);
+
+        // 신고 대상 엔티티들을 각각 초기화합니다.
         QnA qnA = null;
         Post post = null;
         Comment comment = null;
-        ChatMessage chatMessage = null; // ChatMessage 변수 추가
+        Chat chat = null;
 
+        // DTO에서 전달된 ID를 사용해 해당 엔티티들을 조회합니다.
         if (dto.getCommentId() != null) {
             comment = commentRepository.findById(dto.getCommentId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Comment입니다."));
@@ -75,23 +81,22 @@ public class ReportService {
         } else if (dto.getQnaId() != null) {
             qnA = qnARepository.findById(dto.getQnaId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 QnA입니다."));
-        } else if (dto.getChatMessageId() != null) { // ChatMessage 처리 추가
-            chatMessage = chatMessageRepository.findById(dto.getChatMessageId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 ChatMessage입니다."));
+        } else if (dto.getChatMessageId() != null) {
+            chat = chatRepository.findById(dto.getChatMessageId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Chat입니다."));
         }
 
-        // Report 엔티티 생성
-        Report report = dto.toEntity(user, qnA, post, comment, chatMessage); // ChatMessage 포함
+        // Report 엔티티를 생성하고 데이터베이스에 저장합니다.
+        Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);
 
-        List<String> adminEmails = userRepository.findAllAdminEmails(); // 모든 관리자 이메일을 가져오는 메서드
+        // 관리자 이메일 목록을 조회합니다.
+        List<String> adminEmails = userRepository.findAllAdminEmails();
 
-        // 이메일이 'admin'으로 시작하는 관리자 필터링
         List<String> filteredAdminEmails = adminEmails.stream()
                 .filter(email -> email.startsWith("admin"))
                 .collect(Collectors.toList());
 
-        // 필터링된 이메일 목록에 대해 알림 전송
         for (String email : filteredAdminEmails) {
             Notification notification = new Notification();
             notification = notification.saveDto(null, null, report.getId(), email, report.getReason() + "으로 신고가 접수되었습니다.");
@@ -104,6 +109,7 @@ public class ReportService {
 
     public Page<ReportListResDto> reportList(Pageable pageable, String type) {
         Page<Report> reports;
+
         if ("qna".equals(type)) {
             reports = reportRepository.findByQnaIsNotNull(pageable);
         } else if ("post".equals(type)) {
@@ -113,6 +119,7 @@ public class ReportService {
         } else {
             reports = reportRepository.findAll(pageable);
         }
+
         return reports.map(Report::listFromEntity);
     }
 }

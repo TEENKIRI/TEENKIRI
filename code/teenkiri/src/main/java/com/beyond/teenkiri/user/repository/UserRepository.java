@@ -18,10 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u.nickname FROM User u WHERE u.id = :userId")
     String findNicknameById(@Param("userId") Long userId);
-
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
     @Query("SELECT u.email FROM User u WHERE u.email LIKE 'admin%'")
     List<String> findAllAdminEmails();
     List<User> findAllByRole(Role role);
+    Optional<User> findByEmailIgnoreCase(String email);
 }

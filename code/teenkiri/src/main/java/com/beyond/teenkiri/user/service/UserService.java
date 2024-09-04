@@ -1,6 +1,6 @@
 package com.beyond.teenkiri.user.service;
 
-import com.beyond.teenkiri.chat.service.ChatMessageService;
+import com.beyond.teenkiri.chat.service.ChatService;
 import com.beyond.teenkiri.common.domain.DelYN;
 import com.beyond.teenkiri.notification.domain.Notification;
 import com.beyond.teenkiri.notification.dto.NotificationListDto;
@@ -48,7 +48,7 @@ public class UserService {
     private RedisService redisService;
 
     @Autowired
-    private ChatMessageService chatService;
+    private ChatService chatService;
 
     @Autowired
     private QnARepository qnARepository;
