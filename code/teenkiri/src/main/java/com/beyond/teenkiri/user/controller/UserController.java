@@ -43,6 +43,19 @@ public class UserController {
     @Autowired
     private QnAService qnaService;
 
+    @GetMapping("/current-user")
+    public ResponseEntity<UserDetailDto> getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        UserDetailDto userDto = new UserDetailDto(user.getId(), user.getEmail());
+        return ResponseEntity.ok(userDto);
+    }
+
 
 
     // user-info와 같은 기능.

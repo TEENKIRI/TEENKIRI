@@ -20,18 +20,55 @@ app.config.globalProperties.emitter = emitter;
 
 // axios 요청 인터셉터를 설정하여 모든 요청에 엑세스 토큰을 추가
 axios.interceptors.request.use(
-    config => {
+    async config => {
         const token = localStorage.getItem('token');
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+        const storedEmail = localStorage.getItem('email'); // localStorage에서 email 가져오기
+        
+        if (config.skipInterceptor) {
+            console.log("skip")
+            return config;
+        }else{
+            console.log("noooskip", config.skipInterceptor)
+
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+                
+                try {
+                    const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user/current-user`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        skipInterceptor: true
+                    });
+    
+                    const serverEmail = response.data.email;  // 서버에서 받은 email
+    
+                    if (storedEmail && serverEmail && storedEmail !== serverEmail) {
+                        console.warn('Local Storage의 이메일과 서버 이메일이 일치하지 않습니다. 로그아웃합니다.');
+    
+                        handleLogout();
+                    }
+                } catch (error) {
+                    console.error('서버의 사용자 정보를 가져오는 중 오류 발생:', error);
+                    handleLogout();
+                }
+            }
+            return config;
         }
-        return config;
     },
     error => {
         console.error('Axios 요청 인터셉터 오류:', error);
         return Promise.reject(error);
     }
 );
+
+function handleLogout() {
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('email');
+    localStorage.clear();
+    window.location.href = '/login';
+}
+
 
 // axios 응답 인터셉터를 설정하여 401 오류 처리 및 토큰 갱신
 axios.interceptors.response.use(

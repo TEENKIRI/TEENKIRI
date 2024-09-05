@@ -1,6 +1,7 @@
 package com.beyond.teenkiri.user.config;
 
 import com.beyond.teenkiri.user.Handler.OAuth2SuccessHandler;
+import com.beyond.teenkiri.user.repository.UserRepository;
 import com.beyond.teenkiri.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +25,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final UserRepository userRepository;
 
     @Autowired
     public SecurityConfig(JwtTokenprovider jwtTokenProvider,
                           UserDetailsService userDetailsService,
                           CustomOAuth2UserService customOAuth2UserService,
-                          OAuth2SuccessHandler oAuth2SuccessHandler) {
+                          OAuth2SuccessHandler oAuth2SuccessHandler, UserRepository userRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
         this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+        this.userRepository = userRepository;
     }
 
     @Bean
@@ -57,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(oAuth2SuccessHandler) // OAuth2 로그인 성공 핸들러 설정
 //                .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉션할 URL
                 .and()
-                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider, userDetailsService),
+                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider, userDetailsService, userRepository),
                         UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     }
 }

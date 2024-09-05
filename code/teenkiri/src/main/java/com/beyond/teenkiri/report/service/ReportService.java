@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,21 +97,23 @@ public class ReportService {
 
 
         if (suspectUser != null) {
-            suspectUser.setReportCount(suspectUser.getReportCount() + 1); // reportCount 증가
+            suspectUser.setReportCount(suspectUser.getReportCount() + 1);
 
             if (suspectUser.getReportCount() >= 5) {
-                String email = suspectUser.getEmail();
-                suspectUser.setEmail(null);
+                String originalEmail = suspectUser.getEmail();
+
+                String updatedEmail = originalEmail + "_" + Instant.now().toEpochMilli();
+                suspectUser.setEmail(updatedEmail);
+
                 suspectUser.setDelYN(DelYN.Y);
                 userRepository.save(suspectUser);
 
-                DelUser delUser = DelUser.toEntity(email);
+                DelUser delUser = DelUser.toEntity(originalEmail);
                 delUserRepository.save(delUser);
             } else {
                 userRepository.save(suspectUser);
             }
         }
-
 
         Report report = dto.toEntity(user, qnA, post, comment, chat);
         report = reportRepository.save(report);

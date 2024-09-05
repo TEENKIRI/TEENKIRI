@@ -136,6 +136,9 @@ export default {
       return this.notifications.filter((notification) => notification.delYN === 'N');
     },
   },
+  watch: {
+    '$route': 'getIsUserCertificate', // router가 변경될 때마다 호출
+  },
   mounted() {
     const token = localStorage.getItem('token');
     this.isLogin = !!token;
@@ -148,6 +151,18 @@ export default {
     }
   },
   methods: {
+    async getIsUserCertificate(){
+      const path = this.$route.path; // 현재 URL의 경로
+      const isContain= ['create', 'edit', 'detail'].some(keyword => path.includes(keyword));
+      console.log("이 주소는?", path, "포함여부는? : ", isContain)
+      if(isContain){ // 주소에 위 3개의 배열 중 하나가 있다면
+        if(this.isLogin){ // 로그인이 되어있다면
+         
+        }
+      }
+    },
+
+
     connectWebSocket() {
       const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/ws`);
       this.stompClient = Stomp.over(socket);
